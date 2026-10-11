@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1E2A24">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Boldregnskab · RTK personale</title>
+<style>
+  :root{--bg:#F4F1E8;--card:#FFFDF7;--ink:#1E2A24;--muted:#56625B;--line:#DDD7C6;--accent:#A8481F;--ok:#2F6B45;--okbg:#E3F0E6;--wait:#7A5A12;--waitbg:#F6EBCF;--bad:#A3261B;--badbg:#F7E1DD;--dark:#1E2A24;--soft:#EEE9DB;--ball:#D7E36B}
+  *{box-sizing:border-box}
+  html{background:var(--bg)}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
+  header{background:var(--dark);color:#F4F1E8;padding:14px 16px}
+  header .wrap{display:flex;align-items:center;gap:12px}
+  header h1{margin:0;font-size:21px;letter-spacing:.4px;line-height:1.25}
+  header p{margin:1px 0 0;color:#C9D4CC;font-size:14px}
+  a.hjem{display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:rgba(244,241,232,.12);color:#F4F1E8;text-decoration:none}
+  a.hjem:active{background:rgba(244,241,232,.25)}
+  header.personale{border-bottom:4px solid var(--accent)}
+  .wrap{max-width:720px;margin:0 auto}
+  main{padding:16px 16px 56px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+  h2{font-size:19px;margin:0 0 12px}
+  h3{font-size:15px;margin:14px 0 6px;color:var(--muted);font-weight:600}
+  label{display:block;font-size:14px;color:var(--muted);margin:0 0 4px}
+  input,select,button{font:inherit}
+  input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-height:48px}
+  button{border:0;border-radius:10px;padding:12px 18px;min-height:48px;white-space:nowrap;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+  button.ok{background:var(--ok)}
+  button.small{padding:7px 12px;min-height:38px;font-size:15px}
+  button:disabled{opacity:.55;cursor:default}
+  .row{display:flex;gap:10px;align-items:stretch}
+  .row>*{flex:1}
+  .big input{font-size:26px;letter-spacing:3px;text-align:center}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips button{background:var(--soft);color:var(--ink);font-weight:500;min-height:44px;padding:9px 14px}
+  .chips button[aria-pressed="true"]{background:var(--dark);color:#fff}
+  .stepper{display:flex;align-items:center;gap:10px}
+  .stepper button{width:56px;font-size:24px;padding:0}
+  .stepper output{min-width:56px;text-align:center;font-size:28px;font-weight:700}
+  .stepper span{color:var(--muted)}
+  .go{width:100%;font-size:19px;min-height:58px;margin-top:16px;background:var(--ok);white-space:normal;line-height:1.3}
+  .msg{margin-top:10px;font-size:15px;min-height:1.2em}
+  .msg.err{color:var(--bad)}
+  .msg.okm{color:var(--ok)}
+  .hint{color:var(--muted);font-size:15px;margin:10px 0 0}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{color:var(--muted);font-weight:600}
+  td.n,th.n{text-align:right}
+  .minus{color:var(--bad);font-weight:700}
+  .pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;font-weight:600;background:var(--badbg);color:var(--bad)}
+  .hidden{display:none !important}
+  .tabs{display:flex;gap:6px;overflow-x:auto;margin:0 -2px 14px;padding:2px}
+  .tabs button{background:var(--soft);color:var(--ink);font-weight:600;flex:0 0 auto}
+  .tabs button[aria-selected="true"]{background:var(--dark);color:#fff}
+  .who{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;color:var(--muted);margin-bottom:10px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .grid .full{grid-column:1/-1}
+  .kvit{background:var(--okbg);color:var(--ok);border-radius:12px;padding:12px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .kvit.adv{background:var(--waitbg);color:var(--wait)}
+  .total{font-size:15px;color:var(--muted);margin-top:8px}
+  @media (max-width:520px){.tabs button{padding:10px 12px;font-size:15px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="personale">
+  <div class="wrap">
+    <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+    <div><h1>Boldregnskab</h1><p>RTK · Personale og frivillige</p></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+
+  <div id="omraade" class="hidden">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div class="tabs" role="tablist" id="faner">
+      <button role="tab" data-fane="tag" aria-selected="true">Tag bolde</button>
+      <button role="tab" data-fane="lager" aria-selected="false">Lager</button>
+      <button role="tab" data-fane="forbrug" aria-selected="false" class="ansvarlig hidden">Forbrug</button>
+      <button role="tab" data-fane="optael" aria-selected="false" class="ansvarlig hidden">Optælling</button>
+      <button role="tab" data-fane="ind" aria-selected="false" class="ansvarlig hidden">Modtag og flyt</button>
+      <button role="tab" data-fane="bestil" aria-selected="false" class="ansvarlig hidden">Bestilling</button>
+    </div>
+
+    <!-- Tag bolde -->
+    <section class="fane" id="fane-tag">
+      <div class="card">
+        <h2>Tag bolde</h2>
+        <label>Lager</label><div class="chips" id="cSted" role="group" aria-label="Lager"></div>
+        <h3>Bold</h3><div class="chips" id="cBold" role="group" aria-label="Bold"></div>
+        <h3>Antal</h3>
+        <div class="stepper"><button type="button" class="ghost" id="minus" aria-label="Færre">−</button><output id="antal">1</output><button type="button" class="ghost" id="plus" aria-label="Flere">+</button><span id="enhed">pose</span></div>
+        <h3>Til</h3><div class="chips" id="cFormaal" role="group" aria-label="Formål"></div>
+        <div id="holdBoks"><h3>Hold</h3><select id="hold" aria-label="Hold"></select></div>
+        <button type="button" class="go" id="tagKnap">Tag</button>
+        <div id="tagMsg" class="msg" aria-live="polite"></div>
+        <div id="kvit"></div>
+      </div>
+      <div class="card">
+        <h2>Mine seneste</h2>
+        <div id="mine"></div>
+        <p class="hint">Har du tastet forkert, kan du fortryde i 30 minutter.</p>
+      </div>
+    </section>
+
+    <!-- Lager -->
+    <section class="fane hidden" id="fane-lager">
+      <div class="card"><h2>Lager nu</h2><div id="lagerTabel">Henter …</div></div>
+    </section>
+
+    <!-- Forbrug -->
+    <section class="fane hidden" id="fane-forbrug">
+      <div class="card">
+        <h2>Forbrug</h2>
+        <div class="chips" id="cPeriode" role="group" aria-label="Periode">
+          <button type="button" data-p="denne" aria-pressed="true">Denne uge</button>
+          <button type="button" data-p="forrige" aria-pressed="false">Forrige uge</button>
+          <button type="button" data-p="maaned" aria-pressed="false">Denne måned</button>
+        </div>
+        <div id="forbrugUd" style="margin-top:12px"></div>
+      </div>
+    </section>
+
+    <!-- Optælling -->
+    <section class="fane hidden" id="fane-optael">
+      <div class="card">
+        <h2>Optælling</h2>
+        <label>Lager</label><div class="chips" id="cOptSted" role="group" aria-label="Lager"></div>
+        <form id="optForm" style="margin-top:12px"><div id="optLinjer"></div><button type="submit" style="width:100%;margin-top:12px">Gem optælling</button></form>
+        <div id="optMsg" class="msg" aria-live="polite"></div>
+        <div id="optUd"></div>
+        <p class="hint">Skriv det antal hele rør og poser, der står på hylden. Tomme felter springes over. Forskellen bogføres som svind eller fundet, så lageret passer igen.</p>
+      </div>
+    </section>
+
+    <!-- Modtag og flyt -->
+    <section class="fane hidden" id="fane-ind">
+      <div class="card">
+        <h2>Modtag bolde</h2>
+        <form id="indForm" class="grid">
+          <div><label for="iSted">Lager</label><select id="iSted"></select></div>
+          <div><label for="iBold">Bold</label><select id="iBold"></select></div>
+          <div><label for="iAntal">Antal rør eller poser</label><input id="iAntal" inputmode="numeric" required></div>
+          <div><label for="iNote">Note, fx faktura</label><input id="iNote" maxlength="200"></div>
+          <div class="full"><button type="submit" style="width:100%">Modtag</button></div>
+        </form>
+        <div id="indMsg" class="msg" aria-live="polite"></div>
+      </div>
+      <div class="card">
+        <h2>Flyt mellem steder</h2>
+        <form id="flytForm" class="grid">
+          <div><label for="fFra">Fra</label><select id="fFra"></select></div>
+          <div><label for="fTil">Til</label><select id="fTil"></select></div>
+          <div><label for="fBold">Bold</label><select id="fBold"></select></div>
+          <div><label for="fAntal">Antal</label><input id="fAntal" inputmode="numeric" required></div>
+          <div class="full"><button type="submit" style="width:100%">Flyt</button></div>
+        </form>
+        <div id="flytMsg" class="msg" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Bestilling -->
+    <section class="fane hidden" id="fane-bestil">
+      <div class="card">
+        <h2>Bestillingsforslag</h2>
+        <div id="bestilUd">Henter …</div>
+        <p class="hint">Forslaget fylder op til målet for alle bolde, der er på eller under minimum. Minimum og mål rettes i arket RTK boldlager under Boldtyper.</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+const MOTOR = {
+  test: 'https://script.google.com/macros/s/AKfycbz_-LFD4pLRRxJjBI1kosmF3e0rKs8xPzZmgm4JLzl9oK6CQiMQrz-qPjxpvscDpn0r/exec',
+  produktion: ''
+};
+const MILJOE = new URLSearchParams(location.search).get('miljoe') === 'produktion' && MOTOR.produktion ? 'produktion' : 'test';
+const URL_MOTOR = MOTOR[MILJOE];
+
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+let enhed = hent('rtk.enhed'); if (!enhed) { enhed = nyId(); gem('rtk.enhed', enhed); }
+let token = hent('rtk.token') || '';
+let person = null, valg = null;
+const valgt = { sted: hent('rtk.bold.sted') || '', bold: hent('rtk.bold.bold') || '', formaal: 'Holdtræning', antal: 1 };
+
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+
+async function motor(modul, handling, data, id) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: id || '' }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  const svar = await res.json();
+  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  return svar.data;
+}
+
+function logUd(udloebet) {
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null);
+  location.replace(udloebet ? './?til=bolde.html&igen=1' : './');
+}
+$('logud').addEventListener('click', () => logUd(false));
+
+const erAnsvarlig = () => person && person.roller.some((r) => ['admin', 'cheftraener', 'boldansvarlig'].indexOf(r) >= 0);
+
+async function start() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn;
+  document.querySelectorAll('.ansvarlig').forEach((b) => b.classList.toggle('hidden', !erAnsvarlig()));
+  try { valg = await motor('bold', 'valg'); } catch (err) { besked($('tagMsg'), err.message, 'err'); return; }
+  if (valg.steder.indexOf(valgt.sted) < 0) valgt.sted = valg.steder[0] || '';
+  if (!valg.bolde.some((b) => b.bold === valgt.bold)) valgt.bold = (valg.bolde[0] || {}).bold || '';
+  vaelgFane('tag'); tegnTag(); fyldSelects(); hentMine();
+}
+
+// ---------------- tag bolde
+function chips(el, liste, aktiv, vaelg) {
+  el.innerHTML = '';
+  liste.forEach((v) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = v; b.setAttribute('aria-pressed', String(v === aktiv));
+    b.addEventListener('click', () => vaelg(v)); el.append(b);
+  });
+}
+function enhedTekst(n) {
+  const b = valg.bolde.find((x) => x.bold === valgt.bold);
+  const pose = b && b.enhed === 'Pose';
+  return pose ? (n === 1 ? 'pose' : 'poser') : 'rør';
+}
+function tegnTag() {
+  chips($('cSted'), valg.steder, valgt.sted, (v) => { valgt.sted = v; gem('rtk.bold.sted', v); tegnTag(); });
+  chips($('cBold'), valg.bolde.map((b) => b.bold), valgt.bold, (v) => { valgt.bold = v; gem('rtk.bold.bold', v); tegnTag(); });
+  chips($('cFormaal'), valg.formaal, valgt.formaal, (v) => { valgt.formaal = v; tegnTag(); });
+  $('antal').textContent = valgt.antal; $('enhed').textContent = enhedTekst(valgt.antal);
+  $('holdBoks').classList.toggle('hidden', ['Holdtræning', 'Kamp eller holdturnering', 'Privattime'].indexOf(valgt.formaal) < 0);
+  const h = $('hold'); const forrige = h.value || hent('rtk.bold.hold') || '';
+  h.innerHTML = '<option value="">Vælg hold</option>' + valg.hold.map((x) => '<option>' + esc(x) + '</option>').join('');
+  if (valg.hold.indexOf(forrige) >= 0) h.value = forrige;
+  $('tagKnap').textContent = 'Tag ' + valgt.antal + ' ' + enhedTekst(valgt.antal) + ' ' + valgt.bold;
+}
+$('minus').addEventListener('click', () => { valgt.antal = Math.max(1, valgt.antal - 1); tegnTag(); });
+$('plus').addEventListener('click', () => { valgt.antal = Math.min(60, valgt.antal + 1); tegnTag(); });
+$('hold').addEventListener('change', () => gem('rtk.bold.hold', $('hold').value));
+
+let tagId = nyId();
+$('tagKnap').addEventListener('click', async () => {
+  const knap = $('tagKnap'); knap.disabled = true; besked($('tagMsg'), 'Gemmer …'); $('kvit').innerHTML = '';
+  try {
+    const visHold = !$('holdBoks').classList.contains('hidden');
+    const r = await motor('bold', 'tag', { sted: valgt.sted, bold: valgt.bold, antal: valgt.antal, formaal: valgt.formaal, hold: visHold ? $('hold').value : '' }, tagId);
+    tagId = nyId(); besked($('tagMsg'), '');
+    $('kvit').innerHTML = '<div class="kvit' + (r.advarsel ? ' adv' : '') + '"><span>Registreret: ' + r.antal + ' ' + esc(enhedTekst(r.antal)) + ' ' + esc(r.bold) + '. ' + (r.advarsel ? esc(r.advarsel) : 'Tilbage på ' + esc(r.sted) + ': ' + r.tilbage + '.') + '</span></div>';
+    valgt.antal = 1; tegnTag(); hentMine();
+  } catch (err) { besked($('tagMsg'), err.message, 'err'); tagId = nyId(); }
+  knap.disabled = false;
+});
+
+async function hentMine() {
+  try {
+    const l = await motor('bold', 'mine');
+    $('mine').innerHTML = l.length ? '<table>' + l.map((r) => '<tr><td>' + esc(r.tid.slice(5).replace('-', '/')) + '</td><td>' + r.antal + ' × ' + esc(r.bold) + '<br><small style="color:var(--muted)">' + esc(r.formaal) + (r.hold ? ', ' + esc(r.hold) : '') + ', ' + esc(r.sted) + '</small></td><td class="n">' +
+      (r.fortrudt ? '<small>fortrudt</small>' : r.kanFortrydes ? '<button class="ghost small" data-r="' + r.raekke + '">Fortryd</button>' : '') + '</td></tr>').join('') + '</table>' : 'Ingen endnu.';
+    $('mine').querySelectorAll('button[data-r]').forEach((b) => b.addEventListener('click', async () => {
+      b.disabled = true;
+      try { await motor('bold', 'fortryd', { raekke: Number(b.dataset.r) }, nyId()); hentMine(); } catch (err) { alertMsg(err.message); b.disabled = false; }
+    }));
+  } catch (err) { $('mine').textContent = err.message; }
+}
+function alertMsg(t) { besked($('tagMsg'), t, 'err'); }
+
+// ---------------- faner
+function vaelgFane(navn) {
+  document.querySelectorAll('#faner button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.fane === navn)));
+  document.querySelectorAll('.fane').forEach((f) => f.classList.toggle('hidden', f.id !== 'fane-' + navn));
+  if (navn === 'lager') hentLager();
+  if (navn === 'forbrug') hentForbrug();
+  if (navn === 'optael') tegnOptael();
+  if (navn === 'bestil') hentBestil();
+}
+$('faner').addEventListener('click', (e) => { const b = e.target.closest('button[data-fane]'); if (b) vaelgFane(b.dataset.fane); });
+
+// ---------------- lager
+function lagerHtml(l) {
+  const steder = valg.steder;
+  return '<table><tr><th>Bold</th>' + steder.map((s) => '<th class="n">' + esc(s.split(' ')[0]) + '</th>').join('') + '<th class="n">I alt</th><th></th></tr>' +
+    l.map((b) => '<tr><td>' + esc(b.bold) + '</td>' + steder.map((s) => '<td class="n' + (b.prSted[s] < 0 ? ' minus' : '') + '">' + b.prSted[s] + '</td>').join('') +
+      '<td class="n"><b>' + b.ialt + '</b></td><td>' + (b.bestil ? '<span class="pill">bestil</span>' : '') + '</td></tr>').join('') + '</table>';
+}
+async function hentLager() {
+  try { $('lagerTabel').innerHTML = lagerHtml(await motor('bold', 'lager')); } catch (err) { $('lagerTabel').textContent = err.message; }
+}
+
+// ---------------- forbrug
+let periode = 'denne';
+$('cPeriode').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-p]'); if (!b) return; periode = b.dataset.p;
+  $('cPeriode').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); hentForbrug();
+});
+function sumTabel(titel, o) {
+  const k = Object.keys(o).sort((a, b) => o[b].bolde - o[a].bolde);
+  return '<h3>' + titel + '</h3>' + (k.length ? '<table>' + k.map((n) => '<tr><td>' + esc(n) + '</td><td class="n">' + o[n].enheder + '</td><td class="n">' + o[n].bolde + ' bolde</td></tr>').join('') + '</table>' : '<div class="total">Intet</div>');
+}
+async function hentForbrug() {
+  const ud = $('forbrugUd'); ud.textContent = 'Henter …';
+  const d = periode === 'maaned' ? { maaned: new Date().toISOString().slice(0, 7) } : { uge: periode };
+  try {
+    const f = await motor('bold', 'forbrug', d);
+    ud.innerHTML = '<div class="total">' + esc(f.fra) + ' til ' + esc(f.til) + ': <b>' + f.bolde + ' bolde</b></div>' +
+      sumTabel('Pr. træner', f.prTraener) + sumTabel('Pr. hold', f.prHold) + sumTabel('Pr. formål', f.prFormaal) + sumTabel('Pr. bold', f.prBold);
+  } catch (err) { ud.textContent = err.message; }
+}
+
+// ---------------- optælling
+let optSted = '';
+function tegnOptael() {
+  if (!optSted) optSted = valg.steder[0];
+  chips($('cOptSted'), valg.steder, optSted, (v) => { optSted = v; tegnOptael(); });
+  $('optLinjer').innerHTML = '<div class="grid">' + valg.bolde.map((b, i) => '<div><label for="o' + i + '">' + esc(b.bold) + ' (' + (b.enhed === 'Pose' ? 'poser' : 'rør') + ')</label><input id="o' + i + '" data-bold="' + esc(b.bold) + '" inputmode="numeric"></div>').join('') + '</div>';
+  $('optUd').innerHTML = ''; besked($('optMsg'), '');
+}
+let optId = nyId();
+$('optForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const linjer = Array.from($('optLinjer').querySelectorAll('input')).filter((i) => i.value.trim() !== '').map((i) => ({ bold: i.dataset.bold, talt: Number(i.value) }));
+  if (!linjer.length) { besked($('optMsg'), 'Skriv mindst ét antal', 'err'); return; }
+  besked($('optMsg'), 'Gemmer …');
+  try {
+    const r = await motor('bold', 'optael', { sted: optSted, linjer }, optId); optId = nyId();
+    besked($('optMsg'), 'Optællingen er gemt.', 'okm');
+    $('optUd').innerHTML = '<table><tr><th>Bold</th><th class="n">Talt</th><th class="n">Bogført</th><th class="n">Forskel</th></tr>' + r.map((x) => '<tr><td>' + esc(x.bold) + '</td><td class="n">' + x.talt + '</td><td class="n">' + x.beregnet + '</td><td class="n' + (x.forskel < 0 ? ' minus' : '') + '">' + (x.forskel > 0 ? '+' : '') + x.forskel + '</td></tr>').join('') + '</table>';
+  } catch (err) { besked($('optMsg'), err.message, 'err'); optId = nyId(); }
+});
+
+// ---------------- modtag og flyt
+function fyldSelects() {
+  const steder = valg.steder.map((s) => '<option>' + esc(s) + '</option>').join('');
+  const bolde = valg.bolde.map((b) => '<option>' + esc(b.bold) + '</option>').join('');
+  $('iSted').innerHTML = steder; $('fFra').innerHTML = steder; $('fTil').innerHTML = steder;
+  if (valg.steder[1]) $('fTil').value = valg.steder[1];
+  $('iBold').innerHTML = bolde; $('fBold').innerHTML = bolde;
+}
+let indId = nyId(), flytId = nyId();
+$('indForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); besked($('indMsg'), 'Gemmer …');
+  try { await motor('bold', 'ind', { sted: $('iSted').value, bold: $('iBold').value, antal: $('iAntal').value, note: $('iNote').value }, indId); indId = nyId(); besked($('indMsg'), 'Modtaget.', 'okm'); $('iAntal').value = ''; $('iNote').value = ''; }
+  catch (err) { besked($('indMsg'), err.message, 'err'); indId = nyId(); }
+});
+$('flytForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); besked($('flytMsg'), 'Gemmer …');
+  try { await motor('bold', 'flyt', { fra: $('fFra').value, til: $('fTil').value, bold: $('fBold').value, antal: $('fAntal').value }, flytId); flytId = nyId(); besked($('flytMsg'), 'Flyttet.', 'okm'); $('fAntal').value = ''; }
+  catch (err) { besked($('flytMsg'), err.message, 'err'); flytId = nyId(); }
+});
+
+// ---------------- bestilling
+async function hentBestil() {
+  const ud = $('bestilUd'); ud.textContent = 'Henter …';
+  try {
+    const b = await motor('bold', 'bestilling');
+    if (!b.linjer.length) { ud.textContent = 'Intet under minimum. Ingen bestilling nu.'; return; }
+    const kr = (n) => n.toLocaleString('da-DK', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    ud.innerHTML = '<table><tr><th>Bold</th><th class="n">Lager</th><th class="n">Bestil</th><th class="n">Kr. ekskl. moms</th></tr>' +
+      b.linjer.map((l) => '<tr><td>' + esc(l.bold) + '</td><td class="n">' + l.lager + '</td><td class="n"><b>' + l.antal + '</b></td><td class="n">' + (l.beloeb ? kr(l.beloeb) : 'pris mangler') + '</td></tr>').join('') + '</table>' +
+      '<div class="total">I alt ' + kr(b.ialtEkslMoms) + ' kr. ekskl. moms. ' + (b.fragtfri ? 'Fri fragt.' : 'Mangler ' + kr(b.mangler) + ' kr. til fri fragt ved ' + kr(b.fragtfriGraense) + ' kr.') + '</div>';
+    const tekst = 'Hej\n\nRoskilde Tennis Klub vil gerne bestille:\n\n' + b.linjer.map((l) => l.antal + ' ' + l.enhed.toLowerCase() + ' ' + l.bold).join('\n') + '\n\nVenlig hilsen\n' + person.navn;
+    const a = document.createElement('a');
+    a.href = 'mailto:' + encodeURIComponent(b.modtager || '') + '?subject=' + encodeURIComponent('Boldbestilling Roskilde Tennis Klub') + (b.kopi ? '&cc=' + encodeURIComponent(b.kopi) : '') + '&body=' + encodeURIComponent(tekst);
+    a.textContent = 'Lav mail med bestillingen'; a.className = 'ghost'; a.style.cssText = 'display:inline-block;margin-top:12px;color:var(--accent)';
+    ud.append(a);
+  } catch (err) { ud.textContent = err.message; }
+}
+
+// ---------------- start
+if (!token) location.replace('./?til=bolde.html');
+else motor('kerne', 'mig').then((p) => { person = p; start(); }).catch(() => {});
+</script>
+</body>
+</html>

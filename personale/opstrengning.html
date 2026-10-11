@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1E2A24">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Opstrengere · RTK personale</title>
+<style>
+  :root{--bg:#F4F1E8;--card:#FFFDF7;--ink:#1E2A24;--muted:#56625B;--line:#DDD7C6;--accent:#A8481F;--ok:#2F6B45;--okbg:#E3F0E6;--wait:#7A5A12;--waitbg:#F6EBCF;--bad:#A3261B;--badbg:#F7E1DD;--dark:#1E2A24;--soft:#EEE9DB}
+  *{box-sizing:border-box}
+  html{background:var(--bg)}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
+  header{background:var(--dark);color:#F4F1E8;padding:14px 16px}
+  header .wrap{display:flex;align-items:center;gap:12px}
+  header h1{margin:0;font-size:21px;letter-spacing:.4px;line-height:1.25}
+  header p{margin:1px 0 0;color:#C9D4CC;font-size:14px}
+  a.hjem{display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:rgba(244,241,232,.12);color:#F4F1E8;text-decoration:none}
+  a.hjem:active{background:rgba(244,241,232,.25)}
+  header.personale{border-bottom:4px solid var(--accent)}
+  .wrap{max-width:720px;margin:0 auto}
+  main{padding:16px 16px 56px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+  h2{font-size:19px;margin:0 0 12px}
+  label{display:block;font-size:14px;color:var(--muted);margin:0 0 4px}
+  input,select,textarea,button{font:inherit}
+  input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-height:48px}
+  textarea{min-height:84px;resize:vertical}
+  button{border:0;border-radius:10px;padding:12px 18px;min-height:48px;white-space:nowrap;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+  button.ok{background:var(--ok)}
+  button.small{padding:7px 12px;min-height:38px;font-size:15px}
+  button:disabled{opacity:.55;cursor:default}
+  .row{display:flex;gap:10px;align-items:stretch}
+  .row>*{flex:1}
+  .big input{font-size:26px;letter-spacing:3px;text-align:center}
+  .result{margin-top:14px;padding:14px 16px;border-radius:12px;font-size:17px}
+  .result b{display:block;font-size:21px;margin-bottom:2px}
+  .klar{background:var(--okbg);color:var(--ok)}
+  .vent{background:var(--waitbg);color:var(--wait)}
+  .neutral{background:var(--soft);color:var(--muted)}
+  .fejl{background:var(--badbg);color:var(--bad)}
+  .hint{color:var(--muted);font-size:15px;margin:10px 0 0}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{color:var(--muted);font-weight:600}
+  .pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;font-weight:600}
+  .pill.Modtaget{background:var(--waitbg);color:var(--wait)}
+  .pill.Klar{background:var(--okbg);color:var(--ok)}
+  .pill.Eftersyn{background:var(--badbg);color:var(--bad)}
+  .over{color:var(--bad);font-weight:700}
+  .idag{color:var(--wait);font-weight:700}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .grid .full{grid-column:1/-1}
+  .msg{margin-top:10px;font-size:15px;min-height:1.2em}
+  .msg.err{color:var(--bad)}
+  .msg.okm{color:var(--ok)}
+  .hidden{display:none !important}
+  .tabs{display:flex;gap:6px;overflow-x:auto;margin:0 -2px 14px;padding:2px}
+  .tabs button{background:var(--soft);color:var(--ink);font-weight:600;flex:0 0 auto}
+  .tabs button[aria-selected="true"]{background:var(--dark);color:#fff}
+  .who{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;color:var(--muted);margin-bottom:10px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+  .stat{background:var(--soft);border-radius:12px;padding:10px;text-align:center}
+  .stat b{display:block;font-size:24px;line-height:1.2;color:var(--ink)}
+  .stat span{font-size:13px;color:var(--muted)}
+  .meter{height:12px;background:var(--soft);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+  .meter i{display:block;height:100%;background:var(--ok)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips button{background:var(--soft);color:var(--ink);font-weight:500;min-height:42px}
+  .chips button[aria-pressed="true"]{background:var(--dark);color:#fff}
+  .done-list{font-size:15px;color:var(--muted);margin-top:8px}
+  @media (max-width:520px){.tabs button{padding:10px 12px;font-size:15px}.grid{grid-template-columns:1fr}.hide-sm{display:none}.stat b{font-size:20px}}
+</style>
+</head>
+<body>
+<header class="personale">
+  <div class="wrap">
+    <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+    <div><h1>Opstrengere</h1><p>RTK · Personale og frivillige</p></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="testBanner" class="card neutral hidden" style="padding:10px 14px;font-size:14px">Testmiljø med opdigtede data.</div>
+
+  <!-- ===================== OPSTRENGERE ===================== -->
+  <section>
+    <div id="omraade" class="hidden">
+      <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+      <div class="tabs" role="tablist">
+        <button role="tab" data-fane="koe" aria-selected="true">Kø</button>
+        <button role="tab" data-fane="toem" aria-selected="false">Tøm skabet</button>
+        <button role="tab" data-fane="klar" aria-selected="false">Meld klar</button>
+        <button role="tab" data-fane="taeller" aria-selected="false">Måneden</button>
+        <button role="tab" data-fane="strenge" aria-selected="false">Strenge</button>
+      </div>
+
+      <!-- Kø -->
+      <div class="card fane" id="fane-koe">
+        <div class="stats">
+          <div class="stat"><b id="sModtaget">·</b><span>i skabet</span></div>
+          <div class="stat"><b id="sOver">·</b><span>over frist</span></div>
+          <div class="stat"><b id="sKlar">·</b><span>klar</span></div>
+        </div>
+        <div class="row" style="align-items:center;justify-content:space-between">
+          <h2 style="margin:0">Køen</h2>
+          <div style="flex:0"><button class="ghost small" id="opdater" type="button">Opdatér</button></div>
+        </div>
+        <div id="koeListe" style="margin-top:10px"></div>
+        <div id="koeMsg" class="msg" aria-live="polite"></div>
+      </div>
+
+      <!-- Tøm skabet -->
+      <div class="card fane hidden" id="fane-toem">
+        <h2>Tøm skabet</h2>
+        <form id="toemForm" class="row big" autocomplete="off">
+          <input id="tNr" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Nr." aria-label="Nummer på ordresedlen">
+          <button type="submit" style="flex:0 0 auto">Modtaget</button>
+        </form>
+        <div class="grid" style="margin-top:10px">
+          <div><label for="tDato">Afleveret</label><input id="tDato" type="date"></div>
+          <div><label for="tNote">Note</label><input id="tNote" maxlength="300"></div>
+        </div>
+        <div id="toemMsg" class="msg" aria-live="polite"></div>
+        <div id="toemListe" class="done-list"></div>
+        <p class="hint">Skriv nummeret på hver seddel og tryk Modtaget. Fristen på tre hverdage regnes ud fra afleveringsdatoen, som er i dag, medmindre du vælger en anden.</p>
+      </div>
+
+      <!-- Meld klar -->
+      <div class="card fane hidden" id="fane-klar">
+        <h2>Meld klar</h2>
+        <form id="klarForm" class="grid" autocomplete="off">
+          <div><label for="mNr">Nummer</label><input id="mNr" inputmode="numeric" maxlength="6" required></div>
+          <div><label for="mType">Type</label><select id="mType" required><option value="">Vælg</option></select></div>
+          <div class="full"><label for="mStreng">Streng</label><select id="mStreng" required><option value="">Vælg type først</option></select></div>
+          <div><label for="mKg">Hårdhed kg</label><input id="mKg" inputmode="decimal" placeholder="fx 23" required></div>
+          <div><label for="mMm">Tykkelse mm</label><select id="mMm" required><option value="">Vælg</option></select></div>
+          <div><label for="mTimer">På timer</label><select id="mTimer" required><option value="">Vælg</option><option>Nej</option><option>Ja</option></select></div>
+          <div><label for="mNote">Note</label><input id="mNote" maxlength="300"></div>
+          <div class="full"><button type="submit" class="ok" style="width:100%">Meld klar</button></div>
+        </form>
+        <div id="klarMsg" class="msg" aria-live="polite"></div>
+        <p class="hint">Dine initialer sættes på af sig selv. Strengen trækkes fra lageret, 1/16 rulle, eller 1/32 af hver ved hybrid.</p>
+      </div>
+
+      <!-- Måneden -->
+      <div class="card fane hidden" id="fane-taeller">
+        <h2 id="tTitel">Måneden</h2>
+        <div class="stats">
+          <div class="stat"><b id="tUden">·</b><span>uden timer</span></div>
+          <div class="stat"><b id="tPaa">·</b><span>på timer</span></div>
+          <div class="stat"><b id="tSats">·</b><span>kr. pr. stk. nu</span></div>
+        </div>
+        <div class="meter" aria-hidden="true"><i id="tMeter" style="width:0"></i></div>
+        <div id="tNaeste" class="hint" style="margin-top:4px"></div>
+        <div id="tPr" style="margin-top:12px"></div>
+        <p class="hint">Trappen gælder for alle opstrengere samlet: 65 kr. til nr. 20, 75 kr. fra nr. 21 til 40 og 85 kr. derover. På timer er 50 kr.</p>
+      </div>
+
+      <!-- Strenge -->
+      <div class="card fane hidden" id="fane-strenge">
+        <h2>Strengelager</h2>
+        <div id="lagerListe"></div>
+        <h2 style="margin-top:18px">Ruller ind</h2>
+        <form id="indForm" class="grid" autocomplete="off">
+          <div><label for="iStreng">Streng</label><select id="iStreng" required></select></div>
+          <div><label for="iAntal">Antal ruller</label><input id="iAntal" inputmode="decimal" placeholder="1" required></div>
+          <div class="full"><label for="iNote">Note, fx faktura</label><input id="iNote" maxlength="200"></div>
+          <div class="full"><button type="submit" style="width:100%">Registrér ruller</button></div>
+        </form>
+        <div id="indMsg" class="msg" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+// Adressen til motoren. Test og produktion har hver sin. Ingen hemmeligheder her.
+const MOTOR = {
+  test: 'https://script.google.com/macros/s/AKfycbz_-LFD4pLRRxJjBI1kosmF3e0rKs8xPzZmgm4JLzl9oK6CQiMQrz-qPjxpvscDpn0r/exec',
+  produktion: ''
+};
+const MILJOE = new URLSearchParams(location.search).get('miljoe') === 'produktion' && MOTOR.produktion ? 'produktion' : 'test';
+const URL_MOTOR = MOTOR[MILJOE];
+
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+
+let enhed = hent('rtk.enhed');
+if (!enhed) { enhed = nyId(); gem('rtk.enhed', enhed); }
+let token = hent('rtk.token') || '';
+let person = null;
+let valg = null;
+
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+
+function besked(el, tekst, slags) { el.textContent = tekst || ''; el.className = 'msg' + (slags ? ' ' + slags : ''); }
+function datoTekst(d) {
+  if (!d) return '';
+  const [y, m, dag] = d.split('-').map(Number);
+  return new Date(y, m - 1, dag).toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+function kort(d) { return d ? d.slice(8, 10) + '/' + d.slice(5, 7) : ''; }
+
+/** Ét kald til motoren. Registrerings-id holdes fast, til kaldet lykkes, så et nyt tryk ikke gemmer to gange. */
+async function motor(modul, handling, data, id) {
+  const krop = { modul, handling, data: data || {}, token, id: id || '' };
+  let res;
+  try {
+    res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(krop) });
+  } catch (e) {
+    throw new Error('Ingen forbindelse. Tjek net og prøv igen.');
+  }
+  const svar = await res.json();
+  if (!svar.ok) {
+    if (svar.login) { logUd(true); }
+    throw new Error(svar.fejl || 'Noget gik galt');
+  }
+  return svar.data;
+}
+
+// ===================== OPSTRENGERE =====================
+function logUd(udloebet) {
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null);
+  location.replace(udloebet ? './?til=opstrengning.html&igen=1' : './');
+}
+$('logud').addEventListener('click', () => logUd(false));
+
+async function visOmraade() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn + (person.initialer ? ' (' + person.initialer + ')' : '');
+  $('tDato').value = new Date().toISOString().slice(0, 10);
+  vaelgFane('koe');
+  try { valg = await motor('opstrengning', 'valg'); fyldValg(); } catch (e) {}
+}
+
+function vaelgFane(navn) {
+  document.querySelectorAll('.tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.fane === navn)));
+  document.querySelectorAll('.fane').forEach((f) => f.classList.toggle('hidden', f.id !== 'fane-' + navn));
+  if (navn === 'koe') hentKoe();
+  if (navn === 'taeller') hentTaeller();
+  if (navn === 'strenge') hentLager();
+  if (navn === 'toem') setTimeout(() => $('tNr').focus(), 50);
+}
+document.querySelector('.tabs').addEventListener('click', (e) => { const b = e.target.closest('button[data-fane]'); if (b) vaelgFane(b.dataset.fane); });
+
+// ---- Kø
+async function hentKoe() {
+  const boks = $('koeListe'); boks.textContent = 'Henter …'; besked($('koeMsg'), '');
+  try {
+    const k = await motor('opstrengning', 'koe');
+    $('sModtaget').textContent = k.antal.modtaget; $('sOver').textContent = k.antal.overFrist; $('sKlar').textContent = k.antal.klar;
+    boks.innerHTML = '';
+    if (!k.raekker.length) { boks.textContent = 'Skabet er tomt.'; return; }
+    const t = document.createElement('table');
+    t.innerHTML = '<tr><th>Nr</th><th>Status</th><th>Frist</th><th class="hide-sm">Type</th><th></th></tr>';
+    k.raekker.forEach((r) => {
+      const tr = document.createElement('tr');
+      const nr = document.createElement('td'); nr.textContent = r.nr; nr.style.fontWeight = '600';
+      const st = document.createElement('td'); const pill = document.createElement('span');
+      pill.className = 'pill ' + (r.eftersyn ? 'Eftersyn' : r.status); pill.textContent = r.eftersyn ? 'Eftersyn' : r.status; st.append(pill);
+      const fr = document.createElement('td'); fr.textContent = r.status === 'Klar' ? 'klar ' + kort(r.klarDato) : kort(r.klarSenest);
+      if (r.overFrist) fr.className = 'over'; else if (r.senestIdag) { fr.className = 'idag'; fr.textContent = 'i dag'; }
+      const ty = document.createElement('td'); ty.className = 'hide-sm'; ty.textContent = r.type;
+      const kn = document.createElement('td'); kn.style.textAlign = 'right';
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'small ' + (r.status === 'Klar' ? 'ghost' : 'ok');
+      b.textContent = r.status === 'Klar' ? 'Hentet' : 'Meld klar';
+      b.addEventListener('click', () => r.status === 'Klar' ? hentet(r.nr, b) : aabnKlar(r));
+      kn.append(b);
+      tr.append(nr, st, fr, ty, kn); t.append(tr);
+    });
+    boks.append(t);
+  } catch (err) { boks.textContent = ''; besked($('koeMsg'), err.message, 'err'); }
+}
+$('opdater').addEventListener('click', hentKoe);
+
+async function hentet(nr, knap) {
+  knap.disabled = true;
+  try { await motor('opstrengning', 'hentet', { nr }, nyId()); hentKoe(); }
+  catch (err) { besked($('koeMsg'), err.message, 'err'); knap.disabled = false; }
+}
+
+// ---- Tøm skabet
+let toemId = nyId();
+const modtaget = [];
+$('toemForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const nr = $('tNr').value.trim(); if (!nr) return;
+  besked($('toemMsg'), 'Gemmer …');
+  try {
+    const r = await motor('opstrengning', 'registrer', { nr, afleveret: $('tDato').value, note: $('tNote').value }, toemId);
+    toemId = nyId();
+    besked($('toemMsg'), 'Nr. ' + r.nr + ' modtaget. Klar senest ' + datoTekst(r.klarSenest) + '.', 'okm');
+    modtaget.unshift(r.nr); $('toemListe').textContent = 'Registreret nu: ' + modtaget.join(', ');
+    $('tNr').value = ''; $('tNote').value = ''; $('tNr').focus();
+  } catch (err) { besked($('toemMsg'), err.message, 'err'); toemId = nyId(); $('tNr').select(); }
+});
+
+// ---- Meld klar
+function fyldValg() {
+  if (!valg) return;
+  $('mType').innerHTML = '<option value="">Vælg</option>' + valg.typer.map((t) => '<option>' + t + '</option>').join('');
+  $('mMm').innerHTML = '<option value="">Vælg</option>' + valg.tykkelser.map((t) => '<option>' + t + '</option>').join('');
+  $('iStreng').innerHTML = valg.strenge.map((t) => '<option>' + t + '</option>').join('');
+}
+$('mType').addEventListener('change', () => {
+  const liste = $('mType').value === 'Hybrid' ? valg.hybrider : valg.strenge;
+  $('mStreng').innerHTML = '<option value="">Vælg</option>' + liste.map((s) => '<option>' + s + '</option>').join('');
+});
+function aabnKlar(r) {
+  vaelgFane('klar');
+  $('mNr').value = r.nr;
+  if (r.type) { $('mType').value = r.type; $('mType').dispatchEvent(new Event('change')); }
+  if (r.streng) $('mStreng').value = r.streng;
+  $('mNote').value = r.eftersyn ? r.note : '';
+  besked($('klarMsg'), r.eftersyn ? 'Eftersyn: ' + r.note : '');
+  setTimeout(() => $(r.type ? 'mKg' : 'mType').focus(), 50);
+}
+let klarId = nyId();
+$('klarForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const knap = $('klarForm').querySelector('button[type=submit]'); knap.disabled = true;
+  besked($('klarMsg'), 'Gemmer …');
+  try {
+    const r = await motor('opstrengning', 'meldKlar', {
+      nr: $('mNr').value, type: $('mType').value, streng: $('mStreng').value, haardhed: $('mKg').value,
+      tykkelse: $('mMm').value, paaTimer: $('mTimer').value, note: $('mNote').value
+    }, klarId);
+    klarId = nyId();
+    const t = r.taeller;
+    besked($('klarMsg'), 'Nr. ' + r.nr + ' er klar. Måneden: ' + t.udenTimer + ' uden timer' + (t.tilNaesteTrin ? ', ' + t.tilNaesteTrin + ' til ' + t.naesteSats + ' kr' : '') + '.', 'okm');
+    $('mNr').value = ''; $('mKg').value = ''; $('mNote').value = '';
+  } catch (err) { besked($('klarMsg'), err.message, 'err'); klarId = nyId(); }
+  knap.disabled = false;
+});
+
+// ---- Måneden
+async function hentTaeller() {
+  try {
+    const t = await motor('opstrengning', 'taeller');
+    const [y, m] = t.maaned.split('-').map(Number);
+    $('tTitel').textContent = new Date(y, m - 1, 1).toLocaleDateString('da-DK', { month: 'long', year: 'numeric' }).replace(/^./, (c) => c.toUpperCase());
+    $('tUden').textContent = t.udenTimer; $('tPaa').textContent = t.paaTimer; $('tSats').textContent = t.satsNu;
+    const maal = t.tilNaesteTrin ? t.udenTimer + t.tilNaesteTrin : Math.max(t.udenTimer, 1);
+    $('tMeter').style.width = Math.min(100, Math.round(100 * t.udenTimer / maal)) + '%';
+    $('tNaeste').textContent = t.tilNaesteTrin ? t.tilNaesteTrin + ' opstrengninger til ' + t.naesteSats + ' kr. pr. stk.' : 'Øverste trin er nået.';
+    const pr = Object.entries(t.prOpstrenger);
+    $('tPr').innerHTML = pr.length ? '<table><tr><th>Opstrenger</th><th>Antal</th></tr>' + pr.map(([k, v]) => '<tr><td>' + k.replace(/</g, '') + '</td><td>' + v + '</td></tr>').join('') + '</table>' : '';
+  } catch (err) { $('tNaeste').textContent = err.message; }
+}
+
+// ---- Strenge
+async function hentLager() {
+  const boks = $('lagerListe'); boks.textContent = 'Henter …';
+  try { visLager(await motor('opstrengning', 'strengelager')); } catch (err) { boks.textContent = err.message; }
+}
+function visLager(l) {
+  $('lagerListe').innerHTML = '<table><tr><th>Streng</th><th>Ruller</th><th>Opstr.</th><th></th></tr>' + l.map((s) =>
+    '<tr><td>' + s.streng.replace(/</g, '') + '</td><td>' + String(s.ruller).replace('.', ',') + '</td><td>' + s.opstrengninger + '</td><td>' + (s.bestil ? '<span class="pill Eftersyn">bestil</span>' : '') + '</td></tr>').join('') + '</table>';
+}
+let indId = nyId();
+$('indForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  besked($('indMsg'), 'Gemmer …');
+  try {
+    visLager(await motor('opstrengning', 'strengeInd', { streng: $('iStreng').value, ruller: $('iAntal').value, note: $('iNote').value }, indId));
+    indId = nyId(); besked($('indMsg'), 'Registreret.', 'okm'); $('iAntal').value = ''; $('iNote').value = '';
+  } catch (err) { besked($('indMsg'), err.message, 'err'); indId = nyId(); }
+});
+
+// ---- Start
+if (!token) location.replace('./?til=opstrengning.html');
+else motor('kerne', 'mig').then((p) => { person = p; visOmraade(); }).catch(() => {});
+</script>
+</body>
+</html>
