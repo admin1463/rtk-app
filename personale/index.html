@@ -72,6 +72,7 @@
     <span class="hoejre">
       <span>Testversion. Data er opdigtede.</span>
       <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
     </span>
   </div>
 </footer>
@@ -154,6 +155,7 @@ $('loginForm').addEventListener('submit', async (e) => {
     const r = await motor('kerne', 'login', { pin: $('pin').value, enhed });
     token = r.token; gem('rtk.token', token); $('pin').value = ''; besked($('loginMsg'), '');
     visFelter(r.person);
+    if (window.RTK_VELKOMST) window.RTK_VELKOMST.tjek();
   } catch (err) { besked($('loginMsg'), err.message, 'err'); }
 });
 
@@ -167,5 +169,6 @@ $('logud').addEventListener('click', () => {
 if (!token) visLogin(qs.get('igen') ? 'Log ind igen.' : '');
 else motor('kerne', 'mig').then(visFelter).catch(() => {});
 </script>
+<script src="../velkomst.js"></script>
 </body>
 </html>
