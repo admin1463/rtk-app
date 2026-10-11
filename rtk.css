@@ -141,6 +141,23 @@ td.n,th.n{text-align:right}
 .bund b{color:#FFFFFF;font-weight:600}
 .bund .hoejre{gap:24px;flex-wrap:wrap}
 .diskret{color:var(--dim);font-size:13px;text-decoration:underline;text-decoration-color:rgba(143,169,166,.4);text-underline-offset:3px;padding:6px 0}
+.privat{color:var(--sub);font-size:13px;text-decoration:underline;text-decoration-color:rgba(200,220,217,.5);text-underline-offset:3px;padding:12px 0}
+.privat[aria-current="page"]{color:#FFFFFF;font-weight:600;text-decoration:none}
+
+/* tekstsider, fx privatliv */
+.tekstside p,.tekstside li{max-width:68ch}
+.tekstside p{margin:0 0 12px}
+.tekstside ul{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.tekstside h1{margin-bottom:14px}
+.udkast{display:inline-block;margin:0 0 14px;padding:6px 12px;border:1px solid #C9A54A;border-radius:6px;background:var(--waitbg);color:var(--wait);font-size:14px;font-weight:600}
+.opbevaring{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.opbevaring .card{margin:0;padding:16px;display:flex;flex-direction:column;gap:6px}
+.opbevaring .card>span{display:flex;justify-content:space-between;gap:12px;font-size:15px}
+.opbevaring .card>span>span:first-child{color:var(--muted)}
+.opbevaring .card>span>span:last-child{font-weight:600;text-align:right}
+.kontakt{display:flex;flex-direction:column;gap:6px;border-color:var(--frost);max-width:520px}
+.kontakt a{font-size:17px;font-weight:600;text-underline-offset:3px;padding:6px 0;align-self:flex-start}
+.kontakt .hint{margin:0;font-size:13px}
 
 @media (hover:hover){
   button:hover{background:#FFF4F8}
@@ -182,6 +199,8 @@ td.n,th.n{text-align:right}
   .bund{font-size:13px}
   .bund .wrap{flex-direction:column;align-items:flex-start;gap:10px}
   .bund .klub img{height:34px}
+  .bund .hoejre{align-self:stretch;gap:6px 20px}
+  .bund .privat{margin-left:auto}
   .monster{width:100%;height:60%}
   .monster.lav{height:300px}
 }
