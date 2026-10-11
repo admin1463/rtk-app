@@ -1,0 +1,22 @@
+{
+ "name": "Mit RTK",
+ "short_name": "Mit RTK",
+ "lang": "da",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#F4F1E8",
+ "theme_color": "#1E2A24",
+ "icons": [
+  {
+   "src": "ikon-medlem-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "ikon-medlem-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}

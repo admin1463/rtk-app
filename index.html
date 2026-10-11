@@ -4,37 +4,44 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1E2A24">
+<meta name="apple-mobile-web-app-title" content="Mit RTK">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-medlem-180.png">
+<link rel="icon" type="image/png" href="ikon-medlem-180.png">
 <title>Mit RTK</title>
 <style>
   :root{--bg:#F4F1E8;--card:#FFFDF7;--ink:#1E2A24;--muted:#56625B;--line:#DDD7C6;--accent:#A8481F;--dark:#1E2A24;--soft:#EEE9DB}
   *{box-sizing:border-box}
   html{background:var(--bg)}
-  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
   header{background:var(--dark);color:#F4F1E8;padding:22px 16px}
   header h1{margin:0;font-size:24px;letter-spacing:.4px}
   header p{margin:2px 0 0;color:#C9D4CC;font-size:15px}
   .wrap{max-width:720px;margin:0 auto}
-  main{padding:18px 16px 56px}
+  main{padding:18px 16px 40px}
   .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  a.tile{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;color:var(--ink);text-decoration:none;min-height:120px}
-  a.tile b{display:block;font-size:19px;margin-bottom:4px}
-  a.tile span{color:var(--muted);font-size:15px}
+  .tile{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;color:var(--ink);text-decoration:none;min-height:120px}
+  .tile b{display:block;font-size:19px;margin-bottom:4px}
+  .tile span{color:var(--muted);font-size:15px}
   a.tile:active{background:var(--soft)}
-  .soon{opacity:.55;pointer-events:none}
+  .tile.snart{background:transparent;border-style:dashed}
+  .tile.snart em{display:inline-block;font-style:normal;font-size:13px;font-weight:600;color:var(--muted);background:var(--soft);border-radius:99px;padding:1px 10px;margin-top:8px}
   .hint{color:var(--muted);font-size:14px;margin-top:18px}
-  @media (max-width:420px){.tiles{grid-template-columns:1fr}}
+  footer{padding:0 16px 40px}
+  footer a{color:var(--muted);font-size:15px}
+  @media (max-width:420px){.tiles{grid-template-columns:1fr}.tile{min-height:0}}
 </style>
 </head>
 <body>
 <header><div class="wrap"><h1>Mit RTK</h1><p>Roskilde Tennis Klub</p></div></header>
 <main class="wrap">
   <div class="tiles">
-    <a class="tile" href="opstrengning.html"><b>Opstrengning</b><span>Er min ketsjer klar? Skriv til opstrengeren.</span></a>
-    <a class="tile" href="opstrengning.html#opstrenger"><b>For opstrengere</b><span>Kø, meld klar og månedens tæller.</span></a>
-    <a class="tile soon" href="#"><b>Pro shop</b><span>Kommer snart.</span></a>
-    <a class="tile" href="bolde.html"><b>Bolde</b><span>Tag bolde til træning. Lager og forbrug.</span></a>
+    <a class="tile" href="opstrengning.html"><b>Opstrengning</b><span>Er min ketsjer klar? Skriv til opstrengeren, og se priserne.</span></a>
+    <div class="tile snart" aria-disabled="true"><b>Holdkampe</b><span>Resultater for Roskilde-holdene og tilmelding til kampe.</span><br><em>Kommer snart</em></div>
+    <div class="tile snart" aria-disabled="true"><b>Medlemsfordele</b><span>Rabatter og tilbud til medlemmer.</span><br><em>Kommer snart</em></div>
   </div>
   <p class="hint">Testversion. Data er opdigtede.</p>
 </main>
+<footer class="wrap"><a href="personale/">Personale og frivillige? Log ind</a></footer>
 </body>
 </html>
