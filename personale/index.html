@@ -44,7 +44,8 @@
       <form id="mobilForm" autocomplete="on">
         <p class="hint" style="margin:0 0 12px">Skriv dit mobilnummer, så sender vi en kode på sms. Ingen pinkode at huske.</p>
         <label for="mobil">Dit mobilnummer</label>
-        <input id="mobil" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" style="font-size:20px;letter-spacing:.04em">
+        <input id="mobil" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="landekode" maxlength="16" style="font-size:20px;letter-spacing:.04em">
+        <p class="hint" id="landekode" style="margin:6px 0 0">Danske numre skrives uden +45. Udenlandske med landekode, fx +46.</p>
         <button type="submit" style="width:100%;margin-top:12px">Send kode på sms</button>
       </form>
       <form id="kodeForm" class="hidden" autocomplete="off">
