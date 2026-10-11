@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="Mit RTK">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-medlem-180.png">
+<link rel="icon" type="image/png" href="ikon-medlem-180.png">
+<title>Mine børn · Mit RTK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="rtk.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" data-t-aria="tilForsiden" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b data-t="sideTitel">Mine børn</b><span><span class="klub-d">Mit RTK · </span><span data-t="side">Medlemssiden</span></span></span>
+    </div>
+    <div class="hoejre">
+      <div class="sprog" role="group" aria-label="Sprog / Language">
+        <button type="button" data-sprog="da" lang="da" aria-label="Dansk" aria-pressed="true">DA</button>
+        <button type="button" data-sprog="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold smal">
+
+    <section id="loginDel" class="hidden">
+      <p class="kicker" data-t="kicker">For forældre</p>
+      <h1 class="lille" data-t="h1Login">Bestem over beskederne om dit barn</h1>
+      <p class="hint" style="font-size:16px;max-width:560px" data-t="introLogin">Log ind med det mobilnummer, du gav ved indmeldelsen. Du får en kode på sms.</p>
+      <div class="card" id="login" style="max-width:520px;margin-top:16px"></div>
+      <p class="hint" style="max-width:560px"><span data-t="kunNumre">Kun numre, der står som forælder i klubbens system, kan få en kode. Får du ingen kode? Skriv til</span> <a href="mailto:kontakt@roskildetennisklub.dk">kontakt@roskildetennisklub.dk</a>.</p>
+    </section>
+
+    <section id="indeDel" class="hidden">
+      <div class="who"><span id="hvem"></span><button type="button" class="ghost small" id="logud" data-t="kLogUd">Log ud</button></div>
+      <div id="hentMsg" class="msg" aria-live="polite"></div>
+      <h1 class="lille" data-t="h1">Beskeder om dine børn</h1>
+      <p class="hint" style="font-size:16px;max-width:560px" data-t="intro">Fx at en træning er flyttet, eller at en holdkamp er aflyst. Barnets navn står først i hver besked.</p>
+      <div id="ingenBoern" class="card hidden" style="margin-top:16px">
+        <b data-t="ingenH">Vi kan ikke se børn under 18 på dit nummer</b>
+        <p class="hint" data-t="ingenTekst">Mangler et barn, så skriv til klubben herunder.</p>
+      </div>
+      <div id="boern"></div>
+
+      <section class="afsnit">
+        <p class="underoverskrift" style="margin-top:0" data-t="saadan">Sådan ser en besked ud</p>
+        <div class="eksempel" style="margin-top:8px" id="eksempel"></div>
+        <p class="hint" data-t="atten">Når et barn fylder 18, stopper beskederne til dig automatisk.</p>
+        <p class="hint" style="margin-top:4px" data-t="aldrigNyheder">Dine børn får aldrig nyt fra pro shoppen og partnerne.</p>
+      </section>
+
+      <section class="afsnit" id="skrivDel">
+        <h2 data-t="skrivH">Skriv til klubben</h2>
+        <p class="hint" style="margin-top:0" data-t="skrivIntro">Mangler et barn, er noget forkert, eller har du et spørgsmål? Beskeden går til klubbens kontor.</p>
+        <form id="skrivForm" novalidate style="margin-top:12px">
+          <label for="skrivTekst" data-t="dinBesked">Din besked</label>
+          <textarea id="skrivTekst" maxlength="2000" data-t-ph="eksPh" placeholder="Vores datter Ida (9 år) mangler på listen."></textarea>
+          <label for="skrivMail" style="margin-top:12px" data-t="skrivMail">Din mail, så kontoret kan svare</label>
+          <input id="skrivMail" type="email" inputmode="email" autocomplete="email" maxlength="120">
+          <button type="submit" style="width:100%;margin-top:14px" data-t="sendKlub">Send til klubben</button>
+          <div id="skrivMsg" class="msg" aria-live="polite"></div>
+        </form>
+        <div id="skrivTak" class="tak hidden" tabindex="-1">
+          <b data-t="takH">Tak, beskeden er sendt.</b>
+          <span><span data-t="takTekst">Kontoret svarer på din mail. Du kan også skrive direkte til</span> <a href="mailto:kontakt@roskildetennisklub.dk">kontakt@roskildetennisklub.dk</a>.</span>
+          <p style="margin:10px 0 0"><button type="button" class="ghost small" id="skrivIgen" data-t="skrivIgen">Skriv en besked mere</button></p>
+        </div>
+      </section>
+
+      <p class="afsnit"><a href="privatliv.html" data-t="laesPrivatliv">Læs om privatliv i Mit RTK</a></p>
+    </section>
+  </div>
+
+  <div class="wrap partnere">
+    <img class="p-babolat" src="ikoner/babolat.png" alt="Babolat">
+    <span data-t="partnere">Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" data-t-aria="racketlifeLink" aria-label="Racketlife (åbner i ny fane)"><img src="ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span data-t="test">Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="personale/" lang="da">Personale og frivillige</a>
+      <a class="privat" href="privatliv.html" data-t="privatliv">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+window.TEKSTER = {
+  da: {
+    titel: 'Mine børn · Mit RTK', side: 'Medlemssiden', tilForsiden: 'Til forsiden',
+    klubLink: 'Roskilde Tennis Klubs hjemmeside (åbner i ny fane)', racketlifeLink: 'Racketlife (åbner i ny fane)',
+    partnere: 'Officielle partnere', test: 'Testversion. Data er opdigtede.', privatliv: 'Privatliv',
+    sideTitel: 'Mine børn',
+    kicker: 'For forældre', h1Login: 'Bestem over beskederne om dit barn',
+    introLogin: 'Log ind med det mobilnummer, du gav ved indmeldelsen. Du får en kode på sms.',
+    kunNumre: 'Kun numre, der står som forælder i klubbens system, kan få en kode. Får du ingen kode? Skriv til',
+    hvemF: 'Logget ind som forælder · {nr}', h1: 'Beskeder om dine børn',
+    intro: 'Fx at en træning er flyttet, eller at en holdkamp er aflyst. Barnets navn står først i hver besked.',
+    ingenH: 'Vi kan ikke se børn under 18 på dit nummer', ingenTekst: 'Mangler et barn, så skriv til klubben herunder.',
+    aar: '{n} år', tilDig: 'Til dig',
+    vSms: 'Sms eller notifikation', vSmsTekst: 'Notifikation, hvis du har slået det til, ellers sms.',
+    vMail: 'Kun mail', vMailTekst: 'Alt om {navn} kommer på mail.', vFra: 'Fra', vFraTekst: 'Du får ingen beskeder om {navn}.',
+    advMed: 'Du får ikke besked, hvis en træning eller kamp for {navn} bliver aflyst eller flyttet. {navn} får dem stadig selv.',
+    advUden: 'Du får ikke besked, hvis en træning eller kamp for {navn} bliver aflyst eller flyttet. Overvej at lægge {navn}s eget nummer ind.',
+    egetNr: '{navn}s eget nummer', gem: 'Gem',
+    nrMed: '{navn} får de samme beskeder som sms. Lad feltet stå tomt, hvis {navn} ikke skal have dem.',
+    nrUden: 'Valgfrit. Skriv {navn}s nummer, hvis {navn} også selv skal have beskederne.',
+    saadan: 'Sådan ser en besked ud', eksempelTekst: 'RTK: {navn}: Holdkamp aflyst lørdag. Se mere: mitrtk.dk/b/7K3Q',
+    atten: 'Når et barn fylder 18, stopper beskederne til dig automatisk.', aldrigNyheder: 'Dine børn får aldrig nyt fra pro shoppen og partnerne.',
+    skrivH: 'Skriv til klubben', skrivIntro: 'Mangler et barn, er noget forkert, eller har du et spørgsmål? Beskeden går til klubbens kontor.',
+    dinBesked: 'Din besked', eksPh: 'Vores datter Ida (9 år) mangler på listen.', skrivMail: 'Din mail, så kontoret kan svare',
+    sendKlub: 'Send til klubben', takH: 'Tak, beskeden er sendt.', takTekst: 'Kontoret svarer på din mail. Du kan også skrive direkte til',
+    skrivIgen: 'Skriv en besked mere', laesPrivatliv: 'Læs om privatliv i Mit RTK',
+    henter: 'Henter …', gemmer: 'Gemmer …', gemt: 'Gemt.', sender: 'Sender …'
+  },
+  en: {
+    titel: 'My children · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
+    klubLink: 'Roskilde Tennis Klub website (opens in a new tab)', racketlifeLink: 'Racketlife (opens in a new tab)',
+    partnere: 'Official partners', test: 'Test version. All data is fictitious.', privatliv: 'Privacy',
+    sideTitel: 'My children',
+    kicker: 'For parents', h1Login: 'Decide about messages concerning your child',
+    introLogin: 'Log in with the mobile number you gave when your child joined. You will get a code by text message.',
+    kunNumre: 'Only numbers registered as a parent in the club system can get a code. No code? Write to',
+    hvemF: 'Logged in as a parent · {nr}', h1: 'Messages about your children',
+    intro: 'For example that training has moved or that a team match is cancelled. The child’s name comes first in every message.',
+    ingenH: 'We cannot see any children under 18 on your number', ingenTekst: 'If a child is missing, write to the club below.',
+    aar: '{n} years', tilDig: 'To you',
+    vSms: 'Text message or notification', vSmsTekst: 'A notification if you have turned them on, otherwise a text message.',
+    vMail: 'Email only', vMailTekst: 'Everything about {navn} comes by email.', vFra: 'Off', vFraTekst: 'You get no messages about {navn}.',
+    advMed: 'You will not be told if training or a match for {navn} is cancelled or moved. {navn} still gets them.',
+    advUden: 'You will not be told if training or a match for {navn} is cancelled or moved. Consider adding {navn}’s own number.',
+    egetNr: '{navn}’s own number', gem: 'Save',
+    nrMed: '{navn} gets the same messages by text. Leave the field empty if {navn} should not get them.',
+    nrUden: 'Optional. Enter {navn}’s number if {navn} should also get the messages.',
+    saadan: 'What a message looks like', eksempelTekst: 'RTK: {navn}: Team match cancelled on Saturday. More: mitrtk.dk/b/7K3Q',
+    atten: 'When a child turns 18, the messages to you stop automatically.', aldrigNyheder: 'Your children never get news from the pro shop and partners.',
+    skrivH: 'Write to the club', skrivIntro: 'Is a child missing, is something wrong, or do you have a question? Your message goes to the club office.',
+    dinBesked: 'Your message', eksPh: 'Our daughter Ida (9) is missing from the list.', skrivMail: 'Your email, so the office can reply',
+    sendKlub: 'Send to the club', takH: 'Thank you, your message has been sent.', takTekst: 'The office will reply by email. You can also write directly to',
+    skrivIgen: 'Write another message', laesPrivatliv: 'Read about privacy in Mit RTK',
+    henter: 'Loading …', gemmer: 'Saving …', gemt: 'Saved.', sender: 'Sending …'
+  }
+};
+</script>
+<script src="konto.js"></script>
+<script src="sprog.js"></script>
+<script src="velkomst.js"></script>
+<script>
+const K = window.RTK_KONTO;
+const $ = (id) => document.getElementById(id);
+const t = K.t;
+let data = null;
+const kladde = {}; // numre, der er skrevet, men ikke gemt endnu
+
+function visLogin() {
+  data = null;
+  $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
+  K.loginKort($('login'), { onLogin: hent });
+}
+K.vedLogud(visLogin);
+
+async function hent() {
+  $('loginDel').classList.add('hidden'); $('indeDel').classList.remove('hidden');
+  K.besked($('hentMsg'), t('henter'));
+  try { data = await K.motor('beskeder', 'mineBoern'); K.besked($('hentMsg'), ''); vis(); }
+  catch (err) { if (K.loggetInd()) K.besked($('hentMsg'), K.fejlTekst(err.message), 'err'); }
+}
+
+function barnKort(b) {
+  const kort = K.el('section', { 'class': 'card barn', 'aria-labelledby': 'h-' + b.id, style: 'margin-top:16px' });
+  kort.append(K.el('h2', { id: 'h-' + b.id }, b.navn));
+  kort.append(K.el('p', { 'class': 'info' }, [b.alder !== null ? t('aar', { n: b.alder }) : '', b.hold].filter(Boolean).join(' · ')));
+  const fs = K.el('fieldset', { 'class': 'valg' });
+  fs.append(K.el('legend', null, t('tilDig')));
+  [['sms', 'vSms', 'vSmsTekst'], ['mail', 'vMail', 'vMailTekst'], ['fra', 'vFra', 'vFraTekst']].forEach(([id, navn, tekst]) => {
+    const valgt = b.kanal === id;
+    const l = K.el('label', { 'class': valgt ? 'valgt' : '' });
+    const r = K.el('input', { type: 'radio', name: 'kanal-' + b.id, value: id });
+    r.checked = valgt;
+    r.addEventListener('change', () => gem(b, { kanal: id }, msg));
+    const s = K.el('span');
+    s.append(K.el('b', null, t(navn, { navn: b.navn })), K.el('span', { 'class': 'smaa' }, t(tekst, { navn: b.navn })));
+    l.append(r, s); fs.append(l);
+  });
+  kort.append(fs);
+  if (b.kanal === 'fra') kort.append(K.el('p', { 'class': 'advarsel', role: 'note' }, t(b.nummer ? 'advMed' : 'advUden', { navn: b.navn })));
+  const f = K.el('form', { novalidate: '', style: 'margin-top:16px' });
+  f.append(K.el('label', { 'for': 'nr-' + b.id }, t('egetNr', { navn: b.navn })));
+  const raekke = K.el('div', { 'class': 'row' });
+  const nr = K.el('input', { id: 'nr-' + b.id, type: 'tel', inputmode: 'tel', autocomplete: 'off', maxlength: '16' });
+  nr.value = kladde[b.id] !== undefined ? kladde[b.id] : b.nummer;
+  nr.addEventListener('input', () => { kladde[b.id] = nr.value; });
+  raekke.append(nr, K.el('button', { type: 'submit', 'class': 'ghost', style: 'flex:0 0 auto' }, t('gem')));
+  f.append(raekke);
+  f.append(K.el('p', { 'class': 'hint' }, t(b.nummer ? 'nrMed' : 'nrUden', { navn: b.navn })));
+  f.addEventListener('submit', (e) => { e.preventDefault(); gem(b, { nummer: nr.value }, msg); });
+  kort.append(f);
+  const msg = K.el('div', { 'class': 'msg', 'aria-live': 'polite' });
+  kort.append(msg);
+  return kort;
+}
+
+function vis() {
+  if (!data) return;
+  $('hvem').textContent = t('hvemF', { nr: data.mobil });
+  const liste = $('boern');
+  liste.innerHTML = '';
+  data.boern.forEach((b) => liste.append(barnKort(b)));
+  $('ingenBoern').classList.toggle('hidden', data.boern.length > 0);
+  $('eksempel').textContent = t('eksempelTekst', { navn: data.boern[0] ? data.boern[0].navn : 'Oliver' });
+  if (!$('skrivMail').value) $('skrivMail').value = data.mail || '';
+}
+
+async function gem(b, aendring, msg) {
+  const ny = Object.assign({ barnId: b.id, kanal: b.kanal, nummer: kladde[b.id] !== undefined ? kladde[b.id] : b.nummer }, aendring);
+  K.besked(msg, t('gemmer'));
+  try {
+    data = await K.motor('beskeder', 'gemBarn', ny, K.nyId());
+    if (aendring.nummer !== undefined) delete kladde[b.id];
+    vis();
+    const nyMsg = document.querySelector('#h-' + CSS.escape(b.id)).parentNode.querySelector('.msg');
+    K.besked(nyMsg, t('gemt'), 'okm');
+  } catch (err) { vis(); const m2 = document.querySelector('#h-' + CSS.escape(b.id)).parentNode.querySelector('.msg'); K.besked(m2, K.fejlTekst(err.message), 'err'); }
+}
+$('logud').addEventListener('click', () => K.logud());
+
+let skrivId = K.nyId();
+$('skrivForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  K.besked($('skrivMsg'), t('sender'));
+  try {
+    await K.motor('beskeder', 'skrivTilKlubben', { tekst: $('skrivTekst').value, mail: $('skrivMail').value.trim(), side: 'boern' }, skrivId);
+    skrivId = K.nyId(); $('skrivTekst').value = ''; K.besked($('skrivMsg'), '');
+    $('skrivForm').classList.add('hidden'); $('skrivTak').classList.remove('hidden'); $('skrivTak').focus();
+  } catch (err) { K.besked($('skrivMsg'), K.fejlTekst(err.message), 'err'); }
+});
+$('skrivIgen').addEventListener('click', () => { $('skrivTak').classList.add('hidden'); $('skrivForm').classList.remove('hidden'); $('skrivTekst').focus(); });
+document.addEventListener('sprog', vis);
+
+if (K.loggetInd()) hent(); else visLogin();
+</script>
+</body>
+</html>

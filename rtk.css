@@ -216,3 +216,31 @@ td.n,th.n{text-align:right}
 .kvit.adv{background:var(--waitbg);color:var(--wait);border-color:#C9A54A}
 .total{font-size:15px;color:var(--muted);margin-top:8px}
 #testBanner{display:none !important}
+
+/* ---------- Beskeder og Mine børn. Efter mockuppet "Mit RTK privatliv og beskeder", 11. oktober 2026 */
+.valg{display:flex;flex-direction:column;gap:10px;margin:14px 0 0;padding:0;border:0;min-width:0}
+.valg legend{padding:0;margin:0 0 4px;font-size:14px;font-weight:600}
+.valg label{display:flex;align-items:flex-start;gap:14px;padding:14px;border:1px solid var(--line2);border-radius:6px;margin:0;cursor:pointer;font-size:16px;font-weight:400;background:#FFFFFF}
+.valg label.valgt{border:2px solid var(--pink);padding:13px}
+.valg input{-webkit-appearance:none;appearance:none;flex-shrink:0;width:18px;height:18px;min-height:0;padding:0;margin:3px 0 0;border:1.5px solid var(--frost);border-radius:999px;background:#FFFFFF}
+.valg input:checked{border:6px solid var(--pink)}
+.valg input:focus-visible{outline:2px solid var(--frost);outline-offset:3px}
+.valg label.slaaet-fra{background:var(--soft);color:var(--mute2);cursor:default}
+.valg b{display:block;font-size:16px}
+.valg .smaa{display:block;font-size:14px;color:var(--muted);line-height:1.4}
+.valg .snart{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute2)}
+.linje{display:flex;gap:16px;align-items:flex-start;justify-content:space-between}
+.vippe{position:relative;flex-shrink:0;width:60px;height:36px;min-height:0;padding:0;border-radius:999px;border:2px solid var(--frost);background:#FFFFFF}
+.vippe::after{content:'';position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:999px;background:var(--frost);transition:left .15s}
+.vippe[aria-checked="true"]{background:var(--pink);border-color:var(--pink)}
+.vippe[aria-checked="true"]::after{left:28px;background:#FFFFFF}
+.advarsel{padding:12px 14px;border:1px solid var(--wait);background:var(--waitbg);color:var(--wait);border-radius:6px;font-size:15px;line-height:1.45;margin:12px 0 0}
+.eksempel{max-width:360px;padding:12px 14px;border-radius:16px 16px 16px 4px;background:#EEF2F4;font-size:14px;line-height:1.45}
+.adresser{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:12px 0 0;font-size:16px}
+.adresser dt{color:var(--muted)}
+.adresser dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.barn h2{margin-bottom:2px}
+.barn .info{margin:0 0 10px;color:var(--muted);font-size:15px}
+.underoverskrift{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--frost);margin:18px 0 0}
+.tak{padding:16px;border:1px solid var(--ok);border-radius:6px;background:var(--okbg);color:var(--ok)}
+.tak b{display:block;font-size:17px}
