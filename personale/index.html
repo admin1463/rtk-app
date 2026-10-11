@@ -40,13 +40,32 @@
     <div id="testBanner" class="hidden"></div>
     <div class="card hidden" id="loginKort" style="max-width:520px">
       <h2>Log ind</h2>
-      <form id="loginForm" class="row big">
+      <!-- Login med mobilnummer og engangskode på sms. Besluttet af Lars 11. oktober 2026. -->
+      <form id="mobilForm" autocomplete="on">
+        <p class="hint" style="margin:0 0 12px">Skriv dit mobilnummer, så sender vi en kode på sms. Ingen pinkode at huske.</p>
+        <label for="mobil">Dit mobilnummer</label>
+        <input id="mobil" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" style="font-size:20px;letter-spacing:.04em">
+        <button type="submit" style="width:100%;margin-top:12px">Send kode på sms</button>
+      </form>
+      <form id="kodeForm" class="hidden" autocomplete="off">
+        <label for="kode" id="kodeLabel">Koden fra sms'en</label>
+        <div class="big"><input id="kode" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code"></div>
+        <p class="hint" style="margin:6px 0 0">Koden gælder i 10 minutter.</p>
+        <label style="display:flex;align-items:center;gap:12px;margin:14px 0 0;font-size:15px;min-height:44px"><input type="checkbox" id="husk" checked style="width:22px;height:22px;min-height:0;margin:0;accent-color:#E6005C"> Husk mig på denne enhed i 30 dage</label>
+        <button type="submit" style="width:100%;margin-top:10px">Log ind</button>
+        <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:8px">
+          <button type="button" class="ghost small" id="sendIgen">Send igen</button>
+          <button type="button" class="ghost small" id="sendMail">Send koden på mail i stedet</button>
+        </div>
+        <button type="button" class="ghost small" id="andetNr" style="margin-top:8px">Brug et andet nummer</button>
+      </form>
+      <form id="loginForm" class="row big hidden">
         <label for="pin" class="sr">Din sekscifrede pinkode</label>
         <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Pinkode" autocomplete="current-password">
         <button type="submit" style="flex:0 0 auto">Log ind</button>
       </form>
       <div id="loginMsg" class="msg" aria-live="polite"></div>
-      <p class="hint">Din personlige pinkode på seks cifre. Du forbliver logget ind på denne enhed i 30 dage.</p>
+      <p class="hint" id="pinSkift"><button type="button" class="ghost small" id="brugPin">Log ind med pinkode (kun i testen)</button></p>
     </div>
 
     <div id="omraade" class="hidden">
@@ -125,8 +144,55 @@ function visLogin(tekst) {
   token = ''; gem('rtk.token', null);
   $('omraade').classList.add('hidden'); $('loginKort').classList.remove('hidden');
   besked($('loginMsg'), tekst || '', tekst ? 'err' : '');
-  setTimeout(() => $('pin').focus(), 50);
+  visTrin('mobil');
+  setTimeout(() => $('mobil').focus(), 50);
 }
+
+// ---- Login med mobilnummer og kode
+let loginMobil = '';
+function visTrin(t) {
+  $('mobilForm').classList.toggle('hidden', t !== 'mobil');
+  $('kodeForm').classList.toggle('hidden', t !== 'kode');
+  $('loginForm').classList.toggle('hidden', t !== 'pin');
+  $('pinSkift').classList.toggle('hidden', t === 'pin' || MILJOE === 'produktion');
+}
+async function sendKode(kanal) {
+  besked($('loginMsg'), kanal === 'mail' ? 'Sender koden på mail …' : 'Sender koden …');
+  try {
+    const r = await motor('kerne', 'sendKode', { mobil: loginMobil, kanal });
+    $('kodeLabel').textContent = r.kanal === 'mail' ? 'Koden fra mailen til ' + r.til : "Koden fra sms'en til " + r.til;
+    $('sendMail').classList.toggle('hidden', !r.harMail || r.kanal === 'mail');
+    visTrin('kode'); besked($('loginMsg'), '');
+    $('kode').value = ''; setTimeout(() => $('kode').focus(), 50);
+    venterPaaSms();
+  } catch (err) { besked($('loginMsg'), err.message, 'err'); }
+}
+// Android: hent koden direkte fra sms'en (sidste linje "@mitrtk.dk #kode"). iPhone foreslår den selv over tastaturet.
+function venterPaaSms() {
+  if (!('OTPCredential' in window)) return;
+  const ac = new AbortController(); setTimeout(() => ac.abort(), 600000);
+  navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal })
+    .then((o) => { if (o && o.code && !$('kodeForm').classList.contains('hidden')) { $('kode').value = o.code; $('kodeForm').requestSubmit(); } })
+    .catch(() => {});
+}
+$('mobilForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  loginMobil = $('mobil').value.trim();
+  sendKode('sms');
+});
+$('kodeForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); besked($('loginMsg'), 'Logger ind …');
+  try {
+    const r = await motor('kerne', 'kodeLogin', { mobil: loginMobil, kode: $('kode').value, enhed, husk: $('husk').checked });
+    token = r.token; gem('rtk.token', token); $('kode').value = ''; besked($('loginMsg'), '');
+    visFelter(r.person);
+    if (window.RTK_VELKOMST) window.RTK_VELKOMST.tjek();
+  } catch (err) { besked($('loginMsg'), err.message, 'err'); }
+});
+$('sendIgen').addEventListener('click', () => sendKode('sms'));
+$('sendMail').addEventListener('click', () => sendKode('mail'));
+$('andetNr').addEventListener('click', () => { visTrin('mobil'); besked($('loginMsg'), ''); $('mobil').focus(); });
+$('brugPin').addEventListener('click', () => { visTrin('pin'); besked($('loginMsg'), ''); setTimeout(() => $('pin').focus(), 50); });
 
 function visFelter(p) {
   // Kom man fra en underside uden at være logget ind, går man direkte tilbage dertil.
