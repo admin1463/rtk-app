@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Drift og forbrug · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Drift og forbrug</b><span>Personale og frivillige</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold smal">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+  <div id="omraade" class="hidden">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div id="hentMsg" class="msg" aria-live="polite">Henter …</div>
+    <div id="ikkeAdmin" class="card hidden"><b>Kun for administratorer</b><p class="hint">Siden viser klubbens forbrug af sms og mail.</p></div>
+    <div id="indhold" class="hidden">
+      <div id="status"></div>
+
+      <section class="afsnit" style="margin-top:8px">
+        <h2>Sms i dag</h2>
+        <div class="linje" style="align-items:baseline"><span>Beskeder</span><span><b id="iDag" style="font-size:28px"></b> <span class="hint" style="margin:0" id="iDagAf"></span></span></div>
+        <div class="meter" style="margin-top:6px"><i id="meter"></i></div>
+        <p class="hint" id="loftHint"></p>
+        <div class="stats" style="margin-top:14px;grid-template-columns:1fr 1fr">
+          <div class="stat"><b id="koder"></b><span>Login-koder (tæller ikke med)</span></div>
+          <div class="stat"><b id="time"></b><span id="timeTekst">Seneste time</span></div>
+          <div class="stat"><b id="flest"></b><span>Flest til ét nummer</span></div>
+          <div class="stat"><b id="loft"></b><span>Over loftet, sendt som mail</span></div>
+        </div>
+      </section>
+
+      <section class="afsnit">
+        <h2>De sidste 30 dage</h2>
+        <div id="graf" style="margin-top:10px"></div>
+        <dl class="adresser">
+          <dt>Denne måned</dt><dd id="mdr"></dd>
+          <dt>Sidste 30 dage</dt><dd id="tredive"></dd>
+          <dt>Heraf login-koder</dt><dd id="koder30"></dd>
+        </dl>
+        <p class="hint" id="prisHint"></p>
+      </section>
+
+      <section class="afsnit">
+        <h2>Saldo og mail</h2>
+        <dl class="adresser">
+          <dt>Saldo hos GatewayAPI</dt><dd id="saldo"></dd>
+          <dt>Mail i dag</dt><dd id="mail"></dd>
+        </dl>
+        <p class="hint" id="saldoHint"></p>
+        <p style="margin:10px 0 0"><a id="gwLink" href="https://app.gatewayapi.com" target="_blank" rel="noopener" style="font-weight:600;text-underline-offset:3px">Køb kredit hos GatewayAPI ↗</a></p>
+      </section>
+
+      <section class="afsnit">
+        <h2>Seneste alarmer</h2>
+        <div id="alarmer"></div>
+      </section>
+
+      <section class="afsnit">
+        <h2>Grænser</h2>
+        <dl class="adresser" id="graenser"></dl>
+        <p style="margin:10px 0 0"><a id="arkLink" href="#" target="_blank" rel="noopener" style="font-weight:600;text-underline-offset:3px">Ret i driftsarket, fanen Indstillinger ↗</a></p>
+        <p class="hint">Opdateret <span id="tid"></span>. <button type="button" class="ghost small" id="opdater">Opdater</button></p>
+      </section>
+    </div>
+  </div>
+  </div>
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+const MOTOR = {
+  test: 'https://script.google.com/macros/s/AKfycbz_-LFD4pLRRxJjBI1kosmF3e0rKs8xPzZmgm4JLzl9oK6CQiMQrz-qPjxpvscDpn0r/exec',
+  produktion: ''
+};
+const MILJOE = new URLSearchParams(location.search).get('miljoe') === 'produktion' && MOTOR.produktion ? 'produktion' : 'test';
+const URL_MOTOR = MOTOR[MILJOE];
+
+// Drift og forbrug: kun for administratorer. Besluttet af Lars 11. oktober kl. 17.24, mockup godkendt kl. 18.36.
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const kr = (n) => Number(n).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' kr.';
+let token = hent('rtk.token') || '';
+let person = null;
+
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+
+async function motor(modul, handling, data) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: '' }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  const svar = await res.json();
+  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  return svar.data;
+}
+function logUd(udloebet) {
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null);
+  location.replace(udloebet ? './?til=drift.html&igen=1' : './');
+}
+$('logud').addEventListener('click', () => logUd(false));
+
+function graf(dage, loft) {
+  const B = 360, H = 120, top = 20, bund = 110, n = dage.length, w = B / n;
+  const maks = Math.max(loft, ...dage.map((d) => d.drift + d.koder));
+  const y = (v) => bund - (v / maks) * (bund - top);
+  let s = '<svg viewBox="0 0 ' + B + ' ' + H + '" width="100%" role="img" aria-label="Sms pr. dag de sidste 30 dage">';
+  s += '<line x1="0" y1="' + bund + '" x2="' + B + '" y2="' + bund + '" stroke="#B8C0C8"/>';
+  s += '<line x1="0" y1="' + y(loft) + '" x2="' + B + '" y2="' + y(loft) + '" stroke="#E6005C" stroke-dasharray="4 4"/>';
+  s += '<text x="' + B + '" y="' + (y(loft) - 5) + '" text-anchor="end" font-size="11" fill="#3A4652">loft ' + loft + '</text>';
+  dage.forEach((d, i) => {
+    const x = i * w + 1, bw = Math.max(w - 3, 2), sidst = i === n - 1;
+    if (d.drift) s += '<rect x="' + x + '" y="' + y(d.drift) + '" width="' + bw + '" height="' + (bund - y(d.drift)) + '" fill="' + (sidst ? '#E6005C' : '#0F2537') + '"><title>' + d.dato + ': ' + d.drift + ' beskeder, ' + d.koder + ' login-koder</title></rect>';
+    if (d.koder) s += '<rect x="' + x + '" y="' + y(d.drift + d.koder) + '" width="' + bw + '" height="' + (y(d.drift) - y(d.drift + d.koder)) + '" fill="#8FB8DE"><title>' + d.dato + ': ' + d.koder + ' login-koder</title></rect>';
+  });
+  s += '</svg>';
+  const dato = (iso) => { const [a, m, dd] = iso.split('-').map(Number); return new Date(a, m - 1, dd).toLocaleDateString('da-DK', { day: 'numeric', month: 'short' }); };
+  return s + '<div class="linje" style="font-size:12px;color:var(--muted)"><span>' + dato(dage[0].dato) + '</span><span><i style="display:inline-block;width:10px;height:10px;background:#0F2537"></i> beskeder <i style="display:inline-block;width:10px;height:10px;background:#8FB8DE;margin-left:8px"></i> login-koder</span><span>i dag</span></div>';
+}
+
+function vis(d) {
+  const l = d.lofter;
+  $('status').innerHTML = d.problemer.length
+    ? '<section class="card" style="border-color:var(--bad);background:var(--badbg);color:#7A1A12"><b style="display:block;font-size:17px;margin-bottom:6px">' + d.problemer.length + (d.problemer.length === 1 ? ' ting kræver' : ' ting kræver') + ' opmærksomhed</b>' + d.problemer.map((p) => '<div style="margin-top:4px">• ' + esc(((t) => t.charAt(0).toUpperCase() + t.slice(1))(p.replace(/^Sms: /, ''))) + '</div>').join('') + '<div class="hint" style="color:#7A1A12">Vagthunden sender også alarmen på mail til administratorerne.</div></section>'
+    : '<section class="tak"><b>Alt kører normalt.</b></section>';
+  $('iDag').textContent = d.idag.drift;
+  $('iDagAf').textContent = 'af højst ' + l.dag;
+  const pct = Math.min(100, Math.round(d.idag.drift / l.dag * 100));
+  $('meter').style.width = pct + '%';
+  $('meter').style.background = pct >= 50 ? 'var(--pink)' : 'var(--frost)';
+  $('loftHint').textContent = 'Alarm ved ' + Math.ceil(l.dag / 2) + ' og ' + l.dag + '. Over ' + l.dag + ' går beskeder som mail resten af dagen.';
+  $('koder').textContent = d.idag.koder;
+  $('time').textContent = d.idag.sidsteTime;
+  $('timeTekst').textContent = 'Seneste time (alarm over ' + l.time + ')';
+  $('flest').textContent = d.idag.flest + ' af ' + l.nummer;
+  $('loft').textContent = d.idag.loft;
+  $('graf').innerHTML = graf(d.dage, l.dag);
+  $('mdr').textContent = d.maaned.sms + ' sms · ca. ' + kr(d.maaned.kr);
+  $('tredive').textContent = d.tredive.sms + ' sms · ca. ' + kr(d.tredive.kr);
+  $('koder30').textContent = d.tredive.koder;
+  $('prisHint').textContent = 'Prisen er regnet med ' + kr(d.pris).replace(' kr.', '') + ' kr. pr. sms. Den står i Indstillinger som sms.pris.';
+  $('saldo').textContent = d.saldo === null ? 'kunne ikke hentes' : kr(d.saldo);
+  $('saldo').style.color = d.saldo !== null && d.saldo < l.saldo ? 'var(--bad)' : '';
+  $('mail').textContent = d.mail.sendt + ' sendt' + (d.mail.tilbage !== null ? ', ' + d.mail.tilbage + ' tilbage' : '');
+  $('saldoHint').textContent = 'Alarm ved saldo under ' + l.saldo + ' kr. Google tillader 100 mails om dagen, indtil prøveperioden i Workspace er slut.';
+  $('alarmer').innerHTML = d.alarmer.length ? d.alarmer.map((a) => '<div class="linje" style="justify-content:flex-start;gap:12px;font-size:14px;margin-top:6px"><span style="color:var(--muted);flex-shrink:0;width:120px">' + esc(a.tid) + '</span><span>' + esc(a.tekst) + '</span></div>').join('') : '<p class="hint">Ingen alarmer endnu.</p>';
+  $('graenser').innerHTML = [['Sms pr. nummer pr. dag', l.nummer], ['Sms for klubben pr. dag', l.dag], ['Alarm pr. time', l.time], ['Alarm ved saldo under', l.saldo + ' kr.']].map((g) => '<dt>' + g[0] + '</dt><dd>' + esc(g[1]) + '</dd>').join('');
+  if (d.links.driftsark) $('arkLink').href = d.links.driftsark; else $('arkLink').classList.add('hidden');
+  $('tid').textContent = d.tid;
+}
+
+async function hentData() {
+  besked($('hentMsg'), 'Henter …');
+  try { const d = await motor('kerne', 'drift'); vis(d); besked($('hentMsg'), ''); $('indhold').classList.remove('hidden'); }
+  catch (err) { besked($('hentMsg'), err.message, 'err'); }
+}
+$('opdater').addEventListener('click', hentData);
+
+function start() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn;
+  if ((person.roller || []).indexOf('admin') < 0) { besked($('hentMsg'), ''); $('ikkeAdmin').classList.remove('hidden'); return; }
+  hentData();
+}
+
+if (!token) location.replace('./?til=drift.html');
+else motor('kerne', 'mig').then((p) => { person = p; start(); }).catch(() => {});
+</script>
+<script src="../velkomst.js"></script>
+</body>
+</html>
