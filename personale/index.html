@@ -3,69 +3,78 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1E2A24">
+<meta name="theme-color" content="#0B3D3A">
 <meta name="apple-mobile-web-app-title" content="RTK personale">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="ikon-personale-180.png">
 <link rel="icon" type="image/png" href="ikon-personale-180.png">
 <title>RTK personale og frivillige</title>
-<style>
-  :root{--bg:#F4F1E8;--card:#FFFDF7;--ink:#1E2A24;--muted:#56625B;--line:#DDD7C6;--accent:#A8481F;--ok:#2F6B45;--bad:#A3261B;--dark:#1E2A24;--soft:#EEE9DB}
-  *{box-sizing:border-box}
-  html{background:var(--bg)}
-  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
-  header{background:var(--dark);color:#F4F1E8;padding:22px 16px;border-bottom:4px solid var(--accent)}
-  header h1{margin:0;font-size:24px;letter-spacing:.4px}
-  header p{margin:2px 0 0;color:#C9D4CC;font-size:15px}
-  .wrap{max-width:720px;margin:0 auto}
-  main{padding:18px 16px 40px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
-  h2{font-size:19px;margin:0 0 12px}
-  input,button{font:inherit}
-  input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-height:48px}
-  button{border:0;border-radius:10px;padding:12px 18px;min-height:48px;white-space:nowrap;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
-  button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-  button.small{padding:7px 12px;min-height:38px;font-size:15px}
-  .row{display:flex;gap:10px;align-items:stretch}
-  .row>*{flex:1}
-  .big input{font-size:26px;letter-spacing:3px;text-align:center}
-  .msg{margin-top:10px;font-size:15px;min-height:1.2em}
-  .msg.err{color:var(--bad)}
-  .hint{color:var(--muted);font-size:15px;margin:10px 0 0}
-  .who{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;color:var(--muted);margin-bottom:12px}
-  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  a.tile{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;color:var(--ink);text-decoration:none;min-height:120px}
-  a.tile b{display:block;font-size:19px;margin-bottom:4px}
-  a.tile span{color:var(--muted);font-size:15px}
-  a.tile:active{background:var(--soft)}
-  .hidden{display:none !important}
-  footer{padding:0 16px 40px}
-  footer a{color:var(--muted);font-size:15px}
-  @media (max-width:420px){.tiles{grid-template-columns:1fr}a.tile{min-height:0}}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css">
 </head>
 <body>
-<header><div class="wrap"><h1>Personale og frivillige</h1><p>Mit RTK · Roskilde Tennis Klub</p></div></header>
-<main class="wrap">
-  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <a class="navn" href="./"><b>Mit RTK</b><span class="klub-d">Roskilde Tennis Klub</span><span class="hvor-m"><i class="prik"></i>Personale og frivillige</span></a>
+    </div>
+    <div class="hoejre">
+      <span class="hvor"><i class="prik" aria-hidden="true"></i><span>Du er på: <b>Personale og frivillige</b></span></span>
+    </div>
+  </div>
+</header>
 
-  <div class="card hidden" id="loginKort">
-    <h2>Log ind</h2>
-    <form id="loginForm" class="row big">
-      <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Pinkode" aria-label="Din sekscifrede pinkode" autocomplete="current-password">
-      <button type="submit" style="flex:0 0 auto">Log ind</button>
-    </form>
-    <div id="loginMsg" class="msg" aria-live="polite"></div>
-    <p class="hint">Din personlige pinkode på seks cifre. Du forbliver logget ind på denne enhed i 30 dage.</p>
+<main class="side">
+  <div class="monster" aria-hidden="true"></div>
+  <section class="wrap hero" style="padding-bottom:8px">
+    <div>
+      <p class="kicker">For personale og frivillige</p>
+      <h1>Klubbens værktøjer.</h1>
+    </div>
+  </section>
+
+  <div class="wrap indhold" style="padding-top:16px">
+    <div id="testBanner" class="hidden"></div>
+    <div class="card hidden" id="loginKort" style="max-width:520px">
+      <h2>Log ind</h2>
+      <form id="loginForm" class="row big">
+        <label for="pin" class="sr">Din sekscifrede pinkode</label>
+        <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Pinkode" autocomplete="current-password">
+        <button type="submit" style="flex:0 0 auto">Log ind</button>
+      </form>
+      <div id="loginMsg" class="msg" aria-live="polite"></div>
+      <p class="hint">Din personlige pinkode på seks cifre. Du forbliver logget ind på denne enhed i 30 dage.</p>
+    </div>
+
+    <div id="omraade" class="hidden">
+      <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+      <div class="tiles" id="felter" style="padding-top:0"></div>
+      <p class="hint hidden" id="ingen">Der er ikke noget til din rolle her endnu. Kontakt Lars eller Henrik, hvis du mener, du burde have adgang.</p>
+    </div>
   </div>
 
-  <div id="omraade" class="hidden">
-    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
-    <div class="tiles" id="felter"></div>
-    <p class="hint hidden" id="ingen">Der er ikke noget til din rolle her endnu. Kontakt Lars eller Henrik, hvis du mener, du burde have adgang.</p>
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
   </div>
 </main>
-<footer class="wrap"><a href="../">Til medlemssiden</a></footer>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+    </span>
+  </div>
+</footer>
 
 <script>
 const MOTOR = {
@@ -75,11 +84,17 @@ const MOTOR = {
 const MILJOE = new URLSearchParams(location.search).get('miljoe') === 'produktion' && MOTOR.produktion ? 'produktion' : 'test';
 const URL_MOTOR = MOTOR[MILJOE];
 
+// Ikoner i felterne: stregtegninger i mørkeblå.
+const IKON = {
+  bold: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="22" cy="22" r="15"/><path d="M10 12c6 5 6 15 0 20"/><path d="M34 12c-6 5-6 15 0 20"/></svg>',
+  ketsjer: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><ellipse cx="17" cy="16" rx="11" ry="13"/><line x1="9" y1="10" x2="25" y2="10"/><line x1="7" y1="16" x2="27" y2="16"/><line x1="9" y1="22" x2="25" y2="22"/><line x1="12" y1="4" x2="12" y2="28"/><line x1="17" y1="3" x2="17" y2="29"/><line x1="22" y1="4" x2="22" y2="28"/><line x1="24" y1="27" x2="38" y2="41" stroke-width="3"/></svg>'
+};
+
 // Felterne på personalesiden. Man ser kun dem, ens roller giver adgang til. Motoren tjekker rollerne igen på hvert kald.
 const FELTER = [
-  { navn: 'Boldregnskab', side: 'bolde.html', roller: ['admin', 'traener', 'cheftraener', 'boldansvarlig'],
+  { navn: 'Boldregnskab', side: 'bolde.html', ikon: 'bold', roller: ['admin', 'traener', 'cheftraener', 'boldansvarlig'],
     tekst: (p) => harRolle(p, ['admin', 'cheftraener', 'boldansvarlig']) ? 'Tag bolde, lager, forbrug, optælling og bestilling.' : 'Tag bolde til træning, og se lageret.' },
-  { navn: 'Opstrengere', side: 'opstrengning.html', roller: ['admin', 'opstrenger'],
+  { navn: 'Opstrengere', side: 'opstrengning.html', ikon: 'ketsjer', roller: ['admin', 'opstrenger'],
     tekst: () => 'Kø, tøm skabet, meld klar, måneden og strengelager.' }
 ];
 
@@ -94,7 +109,6 @@ let token = hent('rtk.token') || '';
 const qs = new URLSearchParams(location.search);
 let til = FELTER.map((f) => f.side).indexOf(qs.get('til')) >= 0 ? qs.get('til') : '';
 
-if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
 function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
 
 async function motor(modul, handling, data) {
@@ -123,9 +137,13 @@ function visFelter(p) {
   $('felter').innerHTML = '';
   mine.forEach((f) => {
     const a = document.createElement('a'); a.className = 'tile'; a.href = f.side;
+    a.insertAdjacentHTML('afterbegin', IKON[f.ikon]);
+    const tk = document.createElement('span'); tk.className = 'tk';
     const b = document.createElement('b'); b.textContent = f.navn;
-    const s = document.createElement('span'); s.textContent = f.tekst(p);
-    a.append(b, s); $('felter').append(a);
+    const s = document.createElement('span'); s.className = 'tekst'; s.textContent = f.tekst(p);
+    tk.append(b, s);
+    const aabn = document.createElement('span'); aabn.className = 'aabn'; aabn.innerHTML = '<span class="ord">Åbn</span> &#8594;';
+    a.append(tk, aabn); $('felter').append(a);
   });
   $('ingen').classList.toggle('hidden', mine.length > 0);
 }
