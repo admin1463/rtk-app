@@ -244,3 +244,23 @@ td.n,th.n{text-align:right}
 .underoverskrift{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--frost);margin:18px 0 0}
 .tak{padding:16px;border:1px solid var(--ok);border-radius:6px;background:var(--okbg);color:var(--ok)}
 .tak b{display:block;font-size:17px}
+
+/* ---------- Samtykke og ønsker for juniorer. Efter mockuppene "Mine børn: adgang og moduler" og "Juniorens side", 11. oktober 2026 */
+.samtykke{display:flex;flex-direction:column;gap:14px;margin:6px 0 4px;padding:0 0 16px;border-bottom:1px solid var(--line)}
+.samtykke .linje b{display:block;font-size:16px}
+.samtykke .adgang{padding-bottom:14px;border-bottom:1px solid var(--line)}
+.samtykke .adgang b{font-size:17px}
+.samtykke .smaa{display:block;font-size:14px;color:var(--muted);line-height:1.4;margin-top:2px}
+.samtykke .underoverskrift{margin:0}
+.samtykke .altid{flex-shrink:0;font-size:13px;color:var(--muted);padding-top:8px}
+.vippe.laast,.vippe:disabled{background:var(--soft);border:2px dashed #8FA9A6;cursor:not-allowed}
+.vippe.laast::after,.vippe:disabled::after{background:#8FA9A6}
+.oenske{padding:16px;border:2px solid var(--pink);border-radius:6px;display:flex;flex-direction:column;gap:10px;margin:0 0 14px}
+.oenske .knapper{display:flex;gap:10px}
+.oenske .knapper button{flex:1 1 0}
+.boble{font-size:15px;line-height:1.45;padding:10px 12px;background:#EEF2F4;border-radius:12px 12px 12px 4px;overflow-wrap:anywhere}
+.moduler{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.moduler li{border:1px solid var(--line2);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:4px}
+.moduler li.fra{border:1px dashed #8FA9A6;background:var(--soft);color:var(--mute2)}
+.moduler li span{font-size:13px;color:var(--muted)}
+.oenskeliste{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:15px}

@@ -46,8 +46,8 @@
     <section id="indeDel" class="hidden">
       <div class="who"><span id="hvem"></span><button type="button" class="ghost small" id="logud" data-t="kLogUd">Log ud</button></div>
       <div id="hentMsg" class="msg" aria-live="polite"></div>
-      <h1 class="lille" data-t="h1">Beskeder om dine børn</h1>
-      <p class="hint" style="font-size:16px;max-width:560px" data-t="intro">Fx at en træning er flyttet, eller at en holdkamp er aflyst. Barnets navn står først i hver besked.</p>
+      <h1 class="lille" data-t="h1">Mine børn</h1>
+      <p class="hint" style="font-size:16px;max-width:560px" data-t="intro">Bestem, hvad dine børn kan se i Mit RTK, og hvordan beskederne om dem kommer. Barnets navn står først i hver besked.</p>
       <div id="ingenBoern" class="card hidden" style="margin-top:16px">
         <b data-t="ingenH">Vi kan ikke se børn under 18 på dit nummer</b>
         <p class="hint" data-t="ingenTekst">Mangler et barn, så skriv til klubben herunder.</p>
@@ -114,8 +114,8 @@ window.TEKSTER = {
     kicker: 'For forældre', h1Login: 'Bestem over beskederne om dit barn',
     introLogin: 'Log ind med det mobilnummer, du gav ved indmeldelsen. Du får en kode på sms.',
     kunNumre: 'Kun numre, der står som forælder i klubbens system, kan få en kode. Får du ingen kode? Skriv til',
-    hvemF: 'Logget ind som forælder · {nr}', h1: 'Beskeder om dine børn',
-    intro: 'Fx at en træning er flyttet, eller at en holdkamp er aflyst. Barnets navn står først i hver besked.',
+    hvemF: 'Logget ind som forælder · {nr}', h1: 'Mine børn',
+    intro: 'Bestem, hvad dine børn kan se i Mit RTK, og hvordan beskederne om dem kommer. Barnets navn står først i hver besked.',
     ingenH: 'Vi kan ikke se børn under 18 på dit nummer', ingenTekst: 'Mangler et barn, så skriv til klubben herunder.',
     aar: '{n} år', tilDig: 'Til dig',
     vSms: 'Sms eller notifikation', vSmsTekst: 'Notifikation, hvis du har slået det til, ellers sms.',
@@ -131,7 +131,18 @@ window.TEKSTER = {
     dinBesked: 'Din besked', eksPh: 'Vores datter Ida (9 år) mangler på listen.', skrivMail: 'Din mail, så kontoret kan svare',
     sendKlub: 'Send til klubben', takH: 'Tak, beskeden er sendt.', takTekst: 'Kontoret svarer på din mail. Du kan også skrive direkte til',
     skrivIgen: 'Skriv en besked mere', laesPrivatliv: 'Læs om privatliv i Mit RTK',
-    henter: 'Henter …', gemmer: 'Gemmer …', gemt: 'Gemt.', sender: 'Sender …'
+    henter: 'Henter …', gemmer: 'Gemmer …', gemt: 'Gemt.', sender: 'Sender …',
+    mAdgang: 'Adgang til Mit RTK', mAdgangTekst: '{navn} logger ind med sit eget nummer.', mAdgangUdenNr: '{navn} logger ind med sit eget nummer. Skriv nummeret herunder først.',
+    detKan: 'Det kan {navn} se', mHoldkampe: 'Mine hold og holdkampe', mHoldkampeTekst: 'Holdkampe, hvem der spiller, mødetid og sted.',
+    mGrupper: 'Grupper', mGrupperTekst: 'Juniorgrupper med træner som ordstyrer.', mProshop: 'Pro shop', mProshopTekst: 'Se varer og priser. Aldrig tilbud eller nyheder.',
+    mOpstrengning: 'Opstrengning', mOpstrengningTekst: 'Se status med nummeret fra kvitteringen.', altid: 'Altid',
+    sTil: 'Til', sFra: 'Fra', sAf: 'sat af {af}', dig: 'dig', ingenValg: 'ingen har valgt endnu', laast: '{af} har sagt nej, så kun {af} kan slå det til.',
+    nejVinder: 'Et nej vinder: har en af jer sagt nej, er det fra, til den samme ændrer det. Den anden forælder får besked ved hver ændring.',
+    oenskeFra: 'Ønske fra {navn} · {tid}', oenskeH: '{navn} vil gerne have {modul} slået til',
+    grupperRegler: 'Grupper for juniorer har en træner som ordstyrer, ingen private beskeder og ingen telefonnumre.',
+    slaaTil: 'Slå til', nejTak: 'Nej tak', svarJa: '{modul} er slået til for {navn}.', svarNej: 'Du har sagt nej tak.', svarEfter: '{navn} kan se svaret på sin side.',
+    beskederOm: 'Beskeder om {navn}',
+    mdr: 'jan.,feb.,mar.,apr.,maj,jun.,jul.,aug.,sep.,okt.,nov.,dec.', idag: 'i dag'
   },
   en: {
     titel: 'My children · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
@@ -141,8 +152,8 @@ window.TEKSTER = {
     kicker: 'For parents', h1Login: 'Decide about messages concerning your child',
     introLogin: 'Log in with the mobile number you gave when your child joined. You will get a code by text message.',
     kunNumre: 'Only numbers registered as a parent in the club system can get a code. No code? Write to',
-    hvemF: 'Logged in as a parent · {nr}', h1: 'Messages about your children',
-    intro: 'For example that training has moved or that a team match is cancelled. The child’s name comes first in every message.',
+    hvemF: 'Logged in as a parent · {nr}', h1: 'My children',
+    intro: 'Decide what your children can see in Mit RTK and how messages about them reach you. The child’s name comes first in every message.',
     ingenH: 'We cannot see any children under 18 on your number', ingenTekst: 'If a child is missing, write to the club below.',
     aar: '{n} years', tilDig: 'To you',
     vSms: 'Text message or notification', vSmsTekst: 'A notification if you have turned them on, otherwise a text message.',
@@ -158,7 +169,18 @@ window.TEKSTER = {
     dinBesked: 'Your message', eksPh: 'Our daughter Ida (9) is missing from the list.', skrivMail: 'Your email, so the office can reply',
     sendKlub: 'Send to the club', takH: 'Thank you, your message has been sent.', takTekst: 'The office will reply by email. You can also write directly to',
     skrivIgen: 'Write another message', laesPrivatliv: 'Read about privacy in Mit RTK',
-    henter: 'Loading …', gemmer: 'Saving …', gemt: 'Saved.', sender: 'Sending …'
+    henter: 'Loading …', gemmer: 'Saving …', gemt: 'Saved.', sender: 'Sending …',
+    mAdgang: 'Access to Mit RTK', mAdgangTekst: '{navn} logs in with their own number.', mAdgangUdenNr: '{navn} logs in with their own number. Add the number below first.',
+    detKan: 'What {navn} can see', mHoldkampe: 'My teams and team matches', mHoldkampeTekst: 'Team matches, who is playing, meeting time and place.',
+    mGrupper: 'Groups', mGrupperTekst: 'Junior groups with a coach as moderator.', mProshop: 'Pro shop', mProshopTekst: 'See products and prices. Never offers or news.',
+    mOpstrengning: 'Stringing', mOpstrengningTekst: 'See the status with the number on the receipt.', altid: 'Always',
+    sTil: 'On', sFra: 'Off', sAf: 'set by {af}', dig: 'you', ingenValg: 'nobody has chosen yet', laast: '{af} has said no, so only {af} can turn it on.',
+    nejVinder: 'A no wins: if one of you has said no, it stays off until the same person changes it. The other parent is told about every change.',
+    oenskeFra: 'Request from {navn} · {tid}', oenskeH: '{navn} would like {modul} turned on',
+    grupperRegler: 'Junior groups have a coach as moderator, no private messages and no phone numbers.',
+    slaaTil: 'Turn on', nejTak: 'No thanks', svarJa: '{modul} is turned on for {navn}.', svarNej: 'You have said no thanks.', svarEfter: '{navn} can see the answer on their page.',
+    beskederOm: 'Messages about {navn}',
+    mdr: 'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec', idag: 'today'
   }
 };
 </script>
@@ -174,6 +196,7 @@ const kladde = {}; // numre, der er skrevet, men ikke gemt endnu
 
 function visLogin() {
   data = null;
+  $('skrivTak').classList.add('hidden'); $('skrivForm').classList.remove('hidden'); $('skrivMail').value = '';
   $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
   K.loginKort($('login'), { onLogin: hent });
 }
@@ -186,10 +209,87 @@ async function hent() {
   catch (err) { if (K.loggetInd()) K.besked($('hentMsg'), K.fejlTekst(err.message), 'err'); }
 }
 
+const MODULER = [['holdkampe', 'mHoldkampe', 'mHoldkampeTekst'], ['grupper', 'mGrupper', 'mGrupperTekst'], ['proshop', 'mProshop', 'mProshopTekst']];
+const svar = {}; // svar på ønsker, vises indtil siden hentes igen
+function modulNavn(m) { return t({ adgang: 'mAdgang', holdkampe: 'mHoldkampe', grupper: 'mGrupper', proshop: 'mProshop' }[m] || m); }
+function visDato(s) {
+  const m = /^(\d{4})-(\d\d)-(\d\d)(?: (\d\d):(\d\d))?/.exec(String(s || ''));
+  if (!m) return '';
+  const nu = new Date();
+  const iDag = m[1] == nu.getFullYear() && +m[2] === nu.getMonth() + 1 && +m[3] === nu.getDate();
+  const d = iDag ? t('idag') : (+m[3]) + (document.documentElement.lang === 'en' ? ' ' : '. ') + t('mdr').split(',')[+m[2] - 1];
+  return d + (m[4] ? ' ' + m[4] + '.' + m[5] : '');
+}
+function statusTekst(st) {
+  const af = st.af === 'dig' ? t('dig') : st.af;
+  let s = t(st.til ? 'sTil' : 'sFra') + ' · ' + (af ? t('sAf', { af }) + (st.tid ? ' ' + visDato(st.tid) : '') : t('ingenValg'));
+  if (st.laast && !st.til) s += (/\.$/.test(s) ? ' ' : '. ') + t('laast', { af });
+  return s;
+}
+function vippeRaekke(b, modul, navn, tekst, klasse) {
+  const st = (b.samtykke || {})[modul] || { til: false, af: '', laast: false };
+  const r = K.el('div', { 'class': 'linje' + (klasse ? ' ' + klasse : ''), 'data-modul': modul });
+  const id = 'sm-' + b.id + '-' + modul;
+  const tx = K.el('div');
+  tx.append(K.el('b', { id: id }, navn), K.el('span', { 'class': 'smaa' }, tekst + ' ' + statusTekst(st)));
+  const v = K.el('button', { type: 'button', role: 'switch', 'class': 'vippe' + (st.laast ? ' laast' : ''), 'aria-checked': String(!!st.til), 'aria-labelledby': id });
+  if (st.laast) v.disabled = true;
+  v.addEventListener('click', () => gemSamtykke(b, modul, st.til ? 'Nej' : 'Ja'));
+  r.append(tx, v);
+  return r;
+}
+function samtykkeDel(b) {
+  const d = K.el('div', { 'class': 'samtykke' });
+  d.append(vippeRaekke(b, 'adgang', t('mAdgang'), t(b.nummer ? 'mAdgangTekst' : 'mAdgangUdenNr', { navn: b.navn }), 'adgang'));
+  d.append(K.el('p', { 'class': 'underoverskrift' }, t('detKan', { navn: b.navn })));
+  MODULER.forEach(([m, n, tx]) => d.append(vippeRaekke(b, m, t(n), t(tx))));
+  const op = K.el('div', { 'class': 'linje' });
+  const opt = K.el('div');
+  opt.append(K.el('b', null, t('mOpstrengning')), K.el('span', { 'class': 'smaa' }, t('mOpstrengningTekst')));
+  op.append(opt, K.el('span', { 'class': 'altid' }, t('altid')));
+  d.append(op);
+  d.append(K.el('p', { 'class': 'hint', style: 'margin:0' }, t('nejVinder')));
+  d.append(K.el('div', { 'class': 'msg', id: 'smsg-' + b.id, 'aria-live': 'polite', style: 'margin:0' }));
+  return d;
+}
+function oenskeKort(b, o) {
+  const s = K.el('section', { 'class': 'oenske', 'aria-label': t('oenskeH', { navn: b.navn, modul: modulNavn(o.modul) }) });
+  s.append(K.el('p', { 'class': 'underoverskrift', style: 'margin:0' }, t('oenskeFra', { navn: b.navn, tid: visDato(o.tid) })));
+  s.append(K.el('b', { style: 'font-size:18px' }, t('oenskeH', { navn: b.navn, modul: modulNavn(o.modul) })));
+  if (o.tekst) s.append(K.el('span', { 'class': 'boble' }, '"' + o.tekst + '"'));
+  if (o.modul === 'grupper') s.append(K.el('span', { 'class': 'hint', style: 'margin:0' }, t('grupperRegler')));
+  const k = K.el('div', { 'class': 'knapper' });
+  const ja = K.el('button', { type: 'button' }, t('slaaTil'));
+  const nej = K.el('button', { type: 'button', 'class': 'ghost' }, t('nejTak'));
+  ja.addEventListener('click', () => gemSamtykke(b, o.modul, 'Ja', o.id));
+  nej.addEventListener('click', () => gemSamtykke(b, o.modul, 'Nej', o.id));
+  k.append(ja, nej); s.append(k);
+  return s;
+}
+async function gemSamtykke(b, modul, valg, oenske) {
+  const sm = () => document.getElementById('smsg-' + b.id);
+  K.besked(sm(), t('gemmer'));
+  try {
+    data = await K.motor('beskeder', 'gemSamtykke', { barnId: b.id, modul, valg, oenske: oenske || '' }, K.nyId());
+    if (oenske) svar[b.id] = { modul, valg }; else delete svar[b.id];
+    vis();
+    K.besked(sm(), oenske ? '' : t('gemt'), oenske ? '' : 'okm');
+  } catch (err) { vis(); K.besked(sm(), K.fejlTekst(err.message), 'err'); }
+}
+
 function barnKort(b) {
   const kort = K.el('section', { 'class': 'card barn', 'aria-labelledby': 'h-' + b.id, style: 'margin-top:16px' });
   kort.append(K.el('h2', { id: 'h-' + b.id }, b.navn));
   kort.append(K.el('p', { 'class': 'info' }, [b.alder !== null ? t('aar', { n: b.alder }) : '', b.hold].filter(Boolean).join(' · ')));
+  (b.oensker || []).forEach((o) => kort.append(oenskeKort(b, o)));
+  if (svar[b.id]) {
+    const s = svar[b.id];
+    const tk = K.el('div', { 'class': 'tak', style: 'margin:0 0 14px' });
+    tk.append(K.el('b', null, s.valg === 'Ja' ? t('svarJa', { modul: modulNavn(s.modul), navn: b.navn }) : t('svarNej')), K.el('span', null, t('svarEfter', { navn: b.navn })));
+    kort.append(tk);
+  }
+  kort.append(samtykkeDel(b));
+  kort.append(K.el('p', { 'class': 'underoverskrift', style: 'margin:16px 0 0' }, t('beskederOm', { navn: b.navn })));
   const fs = K.el('fieldset', { 'class': 'valg' });
   fs.append(K.el('legend', null, t('tilDig')));
   [['sms', 'vSms', 'vSmsTekst'], ['mail', 'vMail', 'vMailTekst'], ['fra', 'vFra', 'vFraTekst']].forEach(([id, navn, tekst]) => {
@@ -238,9 +338,9 @@ async function gem(b, aendring, msg) {
     data = await K.motor('beskeder', 'gemBarn', ny, K.nyId());
     if (aendring.nummer !== undefined) delete kladde[b.id];
     vis();
-    const nyMsg = document.querySelector('#h-' + CSS.escape(b.id)).parentNode.querySelector('.msg');
+    const nyMsg = document.querySelector('#h-' + CSS.escape(b.id)).parentNode.querySelector(':scope > .msg');
     K.besked(nyMsg, t('gemt'), 'okm');
-  } catch (err) { vis(); const m2 = document.querySelector('#h-' + CSS.escape(b.id)).parentNode.querySelector('.msg'); K.besked(m2, K.fejlTekst(err.message), 'err'); }
+  } catch (err) { vis(); const m2 = document.querySelector('#h-' + CSS.escape(b.id)).parentNode.querySelector(':scope > .msg'); K.besked(m2, K.fejlTekst(err.message), 'err'); }
 }
 $('logud').addEventListener('click', () => K.logud());
 

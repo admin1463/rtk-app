@@ -87,6 +87,26 @@
           </dl>
           <p class="hint" data-t="ungTekst">Dine forældre bestemmer, hvordan beskederne kommer, og hvilket nummer de går til. Når du fylder 18, bestemmer du selv.</p>
         </section>
+        <section class="afsnit" id="ungModulDel">
+          <h2 data-t="detKanDu">Det kan du se</h2>
+          <ul class="moduler" id="ungModuler"></ul>
+          <ul class="oenskeliste" id="ungOensker"></ul>
+          <div id="oenskeSendt" class="advarsel hidden" role="status"></div>
+          <div id="oenskeStart" style="margin-top:16px">
+            <button type="button" id="oenskeKnap" style="width:100%" data-t="bedForaeldre">Bed mine forældre om at ændre noget</button>
+            <p class="hint" data-t="foraeldreBestemmer">Dine forældre bestemmer, hvad du kan se her, indtil du fylder 18.</p>
+          </div>
+          <p id="altTil" class="hint hidden" data-t="altTil">Dine forældre har slået det hele til.</p>
+          <form id="oenskeForm" class="hidden" novalidate style="margin-top:16px">
+            <fieldset class="valg" id="oenskeValg"><legend data-t="hvadVil">Hvad vil du gerne have?</legend></fieldset>
+            <label for="oenskeTekst" style="margin-top:12px" data-t="beskedTilForaeldre">Besked til dine forældre (frivillig)</label>
+            <textarea id="oenskeTekst" maxlength="300" data-t-ph="oenskePh" placeholder="Må jeg komme i U12-gruppen? Alle fra holdet er der."></textarea>
+            <button type="submit" style="width:100%;margin-top:14px" data-t="sendForaeldre">Send til dine forældre</button>
+            <button type="button" class="ghost small" id="oenskeFortryd" style="margin-top:10px" data-t="fortryd">Fortryd</button>
+            <div id="oenskeMsg" class="msg" aria-live="polite"></div>
+            <p class="hint" data-t="oenskeHint">De får en mail med et link til Mine børn. Du kan sende ét ønske om dagen pr. ting.</p>
+          </form>
+        </section>
       </div>
 
       <div id="foraelderKort" class="card hidden" style="margin-top:24px">
@@ -173,7 +193,15 @@ window.TEKSTER = {
     skrivH: 'Skriv til klubben', skrivLabel: 'Skriv til klubbens kontor, hvad der skal rettes', skrivMail: 'Din mail, så kontoret kan svare',
     sendKlub: 'Send til klubben', skrivHint: 'Beskeden går til kontakt@roskildetennisklub.dk, og kontoret svarer på din mail.',
     takH: 'Tak, beskeden er sendt.', takTekst: 'Kontoret svarer på din mail.', skrivIgen: 'Skriv en besked mere',
-    laesPrivatliv: 'Læs om privatliv i Mit RTK', henter: 'Henter …', gemmer: 'Gemmer …', gemt: 'Gemt.', sender: 'Sender …'
+    laesPrivatliv: 'Læs om privatliv i Mit RTK', henter: 'Henter …', gemmer: 'Gemmer …', gemt: 'Gemt.', sender: 'Sender …',
+    detKanDu: 'Det kan du se', mHoldkampe: 'Mine hold og holdkampe', mGrupper: 'Grupper', mProshop: 'Pro shop', mOpstrengning: 'Opstrengning',
+    mOpstrengningTekst: 'Er min ketsjer klar?', erTil: 'Slået til', ikkeTil: 'Ikke slået til af dine forældre', venter: 'Venter på dine forældre',
+    bedForaeldre: 'Bed mine forældre om at ændre noget', foraeldreBestemmer: 'Dine forældre bestemmer, hvad du kan se her, indtil du fylder 18.',
+    altTil: 'Dine forældre har slået det hele til.', hvadVil: 'Hvad vil du gerne have?', slaaXTil: 'Slå {modul} til',
+    beskedTilForaeldre: 'Besked til dine forældre (frivillig)', oenskePh: 'Må jeg komme i U12-gruppen? Alle fra holdet er der.',
+    sendForaeldre: 'Send til dine forældre', fortryd: 'Fortryd', oenskeHint: 'De får en mail med et link til Mine børn. Du kan sende ét ønske om dagen pr. ting.',
+    vaelgEn: 'Vælg, hvad du vil bede om', sendtKl: 'Sendt til dine forældre kl. {kl}.', ventSvar: '{modul}: venter på svar.',
+    oVenter: '{modul} · venter på svar', oJa: '{modul} · {af} sagde ja', oNej: '{modul} · {af} sagde nej tak'
   },
   en: {
     titel: 'Messages · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
@@ -199,7 +227,15 @@ window.TEKSTER = {
     skrivH: 'Write to the club', skrivLabel: 'Tell the club office what needs to be corrected', skrivMail: 'Your email, so the office can reply',
     sendKlub: 'Send to the club', skrivHint: 'Your message goes to kontakt@roskildetennisklub.dk, and the office replies by email.',
     takH: 'Thank you, your message has been sent.', takTekst: 'The office will reply by email.', skrivIgen: 'Write another message',
-    laesPrivatliv: 'Read about privacy in Mit RTK', henter: 'Loading …', gemmer: 'Saving …', gemt: 'Saved.', sender: 'Sending …'
+    laesPrivatliv: 'Read about privacy in Mit RTK', henter: 'Loading …', gemmer: 'Saving …', gemt: 'Saved.', sender: 'Sending …',
+    detKanDu: 'What you can see', mHoldkampe: 'My teams and team matches', mGrupper: 'Groups', mProshop: 'Pro shop', mOpstrengning: 'Stringing',
+    mOpstrengningTekst: 'Is my racket ready?', erTil: 'Turned on', ikkeTil: 'Not turned on by your parents', venter: 'Waiting for your parents',
+    bedForaeldre: 'Ask my parents to change something', foraeldreBestemmer: 'Your parents decide what you can see here until you turn 18.',
+    altTil: 'Your parents have turned everything on.', hvadVil: 'What would you like?', slaaXTil: 'Turn on {modul}',
+    beskedTilForaeldre: 'Message to your parents (optional)', oenskePh: 'Can I join the U12 group? Everyone from the team is there.',
+    sendForaeldre: 'Send to your parents', fortryd: 'Cancel', oenskeHint: 'They get an email with a link to My children. You can send one request a day for each thing.',
+    vaelgEn: 'Choose what you want to ask for', sendtKl: 'Sent to your parents at {kl}.', ventSvar: '{modul}: waiting for an answer.',
+    oVenter: '{modul} · waiting for an answer', oJa: '{modul} · {af} said yes', oNej: '{modul} · {af} said no thanks'
   }
 };
 </script>
@@ -214,6 +250,8 @@ let data = null;
 
 function visLogin() {
   data = null;
+  $('skrivTak').classList.add('hidden'); $('skrivForm').classList.remove('hidden'); $('skrivMail').value = '';
+  sendtBesked = null; $('oenskeForm').classList.add('hidden');
   $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
   K.loginKort($('login'), { onLogin: hent });
 }
@@ -260,12 +298,75 @@ function vis() {
   if (ung) {
     $('ungTilDig').textContent = data.mobil ? t('smsTil', { nr: data.mobil }) : t('ingenNr');
     $('ungForaeldre').textContent = (data.foraeldre || []).join(', ') || t('ingenForaeldre');
+    visModuler();
     return;
   }
   kanalKort();
   $('vippe').setAttribute('aria-checked', String(!!data.nyheder));
   $('nyhStatus').textContent = t(data.nyheder ? 'nyhTil' : 'nyhFra');
 }
+
+const MNAVN = { holdkampe: 'mHoldkampe', grupper: 'mGrupper', proshop: 'mProshop' };
+const mNavn = (m) => t(MNAVN[m] || m);
+let sendtBesked = null;
+function visModuler() {
+  const moduler = data.moduler || [];
+  const oensker = data.oensker || [];
+  const venter = (m) => oensker.some((o) => o.modul === m && o.status === 'venter');
+  const ul = $('ungModuler'); ul.innerHTML = '';
+  moduler.forEach((m) => {
+    const li = K.el('li', { 'class': m.til ? '' : 'fra', 'data-modul': m.modul });
+    li.append(K.el('b', null, mNavn(m.modul)), K.el('span', null, t(m.til ? 'erTil' : (venter(m.modul) ? 'venter' : 'ikkeTil'))));
+    ul.append(li);
+  });
+  const op = K.el('li'); op.append(K.el('b', null, t('mOpstrengning')), K.el('span', null, t('mOpstrengningTekst'))); ul.append(op);
+  const ol = $('ungOensker'); ol.innerHTML = '';
+  oensker.slice(0, 5).forEach((o) => ol.append(K.el('li', { 'class': 'hint', style: 'margin:0' },
+    t(o.status === 'venter' ? 'oVenter' : (o.status === 'ja' ? 'oJa' : 'oNej'), { modul: mNavn(o.modul), af: o.svarAf || '' }))));
+  const muligt = moduler.filter((m) => !m.til);
+  $('altTil').classList.toggle('hidden', muligt.length > 0 || !moduler.length);
+  const formAaben = !$('oenskeForm').classList.contains('hidden');
+  $('oenskeStart').classList.toggle('hidden', !muligt.length || formAaben);
+  if (!muligt.length) $('oenskeForm').classList.add('hidden');
+  const fs = $('oenskeValg');
+  const valgt = (fs.querySelector('input:checked') || {}).value;
+  fs.querySelectorAll('label').forEach((l) => l.remove());
+  muligt.forEach((m) => {
+    const l = K.el('label', { 'class': valgt === m.modul ? 'valgt' : '' });
+    const r = K.el('input', { type: 'radio', name: 'oenske', value: m.modul });
+    r.checked = valgt === m.modul;
+    r.addEventListener('change', () => fs.querySelectorAll('label').forEach((x) => x.classList.toggle('valgt', x.contains(r))));
+    const sp = K.el('span'); sp.append(K.el('b', null, t('slaaXTil', { modul: mNavn(m.modul) })));
+    l.append(r, sp); fs.append(l);
+  });
+  $('oenskeSendt').classList.toggle('hidden', !sendtBesked);
+  if (sendtBesked) $('oenskeSendt').textContent = t('sendtKl', { kl: sendtBesked.kl }) + ' ' + t('ventSvar', { modul: mNavn(sendtBesked.modul) });
+}
+$('oenskeKnap').addEventListener('click', () => {
+  sendtBesked = null;
+  $('oenskeStart').classList.add('hidden'); $('oenskeForm').classList.remove('hidden'); K.besked($('oenskeMsg'), '');
+  visModuler();
+  const f = $('oenskeValg').querySelector('input'); if (f) f.focus();
+});
+$('oenskeFortryd').addEventListener('click', () => { $('oenskeForm').classList.add('hidden'); visModuler(); $('oenskeKnap').focus(); });
+let oenskeId = K.nyId();
+$('oenskeForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const r = $('oenskeValg').querySelector('input:checked');
+  if (!r) { K.besked($('oenskeMsg'), t('vaelgEn'), 'err'); return; }
+  K.besked($('oenskeMsg'), t('sender'));
+  try {
+    const svar = await K.motor('beskeder', 'oenske', { modul: r.value, tekst: $('oenskeTekst').value }, oenskeId);
+    oenskeId = K.nyId();
+    data.oensker = svar.oensker;
+    const nu = new Date();
+    sendtBesked = { modul: r.value, kl: String(nu.getHours()).padStart(2, '0') + '.' + String(nu.getMinutes()).padStart(2, '0') };
+    $('oenskeTekst').value = ''; K.besked($('oenskeMsg'), '');
+    $('oenskeForm').classList.add('hidden');
+    visModuler();
+    $('oenskeSendt').focus && $('oenskeSendt').setAttribute('tabindex', '-1'); $('oenskeSendt').focus();
+  } catch (err) { K.besked($('oenskeMsg'), K.fejlTekst(err.message), 'err'); }
+});
 
 async function gemValg(aendring, msg) {
   const ny = Object.assign({ kanal: data.kanal, nyheder: data.nyheder, nyhederKanal: data.nyhederKanal }, aendring);

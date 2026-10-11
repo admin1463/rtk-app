@@ -47,7 +47,13 @@
     'Skriv en kort besked': 'Please write a short message',
     'Skriv din mail, så kontoret kan svare': 'Please enter your email so the office can reply',
     'Du har sendt mange beskeder. Prøv igen om en time, eller skriv direkte til kontakt@roskildetennisklub.dk.': 'You have sent many messages. Please try again in an hour, or write directly to kontakt@roskildetennisklub.dk.',
-    'Beskeden kunne ikke sendes. Skriv direkte til kontakt@roskildetennisklub.dk.': 'The message could not be sent. Please write directly to kontakt@roskildetennisklub.dk.'
+    'Beskeden kunne ikke sendes. Skriv direkte til kontakt@roskildetennisklub.dk.': 'The message could not be sent. Please write directly to kontakt@roskildetennisklub.dk.',
+    'Dine forældre skal give dig adgang til Mit RTK under Mine børn først.': 'Your parents must give you access to Mit RTK under My children first.',
+    'Ukendt valg': 'Unknown choice',
+    'Kun for juniorer': 'For juniors only',
+    'Vælg, hvad du vil bede om': 'Choose what you want to ask for',
+    'Det er allerede slået til': 'It is already turned on',
+    'Du har allerede bedt om det i dag. Prøv igen i morgen.': 'You have already asked for this today. Try again tomorrow.'
   };
   window.TEKSTER = window.TEKSTER || { da: {}, en: {} };
   ['da', 'en'].forEach(function (s) { Object.keys(TEKST[s]).forEach(function (k) { if (window.TEKSTER[s][k] === undefined) window.TEKSTER[s][k] = TEKST[s][k]; }); });
