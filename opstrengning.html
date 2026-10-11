@@ -3,137 +3,155 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1E2A24">
+<meta name="theme-color" content="#0B3D3A">
 <meta name="apple-mobile-web-app-title" content="Mit RTK">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="ikon-medlem-180.png">
 <link rel="icon" type="image/png" href="ikon-medlem-180.png">
 <title>Opstrengning · Mit RTK</title>
-<style>
-  :root{--bg:#F4F1E8;--card:#FFFDF7;--ink:#1E2A24;--muted:#56625B;--line:#DDD7C6;--accent:#A8481F;--ok:#2F6B45;--okbg:#E3F0E6;--wait:#7A5A12;--waitbg:#F6EBCF;--bad:#A3261B;--badbg:#F7E1DD;--dark:#1E2A24;--soft:#EEE9DB}
-  *{box-sizing:border-box}
-  html{background:var(--bg)}
-  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
-  header{background:var(--dark);color:#F4F1E8;padding:14px 16px}
-  header .wrap{display:flex;align-items:center;gap:12px}
-  header h1{margin:0;font-size:21px;letter-spacing:.4px;line-height:1.25}
-  header p{margin:1px 0 0;color:#C9D4CC;font-size:14px}
-  a.hjem{display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:rgba(244,241,232,.12);color:#F4F1E8;text-decoration:none}
-  a.hjem:active{background:rgba(244,241,232,.25)}
-  header.personale{border-bottom:4px solid var(--accent)}
-  .wrap{max-width:720px;margin:0 auto}
-  main{padding:16px 16px 56px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
-  h2{font-size:19px;margin:0 0 12px}
-  label{display:block;font-size:14px;color:var(--muted);margin:0 0 4px}
-  input,select,textarea,button{font:inherit}
-  input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);min-height:48px}
-  textarea{min-height:84px;resize:vertical}
-  button{border:0;border-radius:10px;padding:12px 18px;min-height:48px;white-space:nowrap;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
-  button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-  button.ok{background:var(--ok)}
-  button.small{padding:7px 12px;min-height:38px;font-size:15px}
-  button:disabled{opacity:.55;cursor:default}
-  .row{display:flex;gap:10px;align-items:stretch}
-  .row>*{flex:1}
-  .big input{font-size:26px;letter-spacing:3px;text-align:center}
-  .result{margin-top:14px;padding:14px 16px;border-radius:12px;font-size:17px}
-  .result b{display:block;font-size:21px;margin-bottom:2px}
-  .klar{background:var(--okbg);color:var(--ok)}
-  .vent{background:var(--waitbg);color:var(--wait)}
-  .neutral{background:var(--soft);color:var(--muted)}
-  .fejl{background:var(--badbg);color:var(--bad)}
-  .hint{color:var(--muted);font-size:15px;margin:10px 0 0}
-  table{width:100%;border-collapse:collapse;font-size:15px}
-  th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
-  th{color:var(--muted);font-weight:600}
-  .pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;font-weight:600}
-  .pill.Modtaget{background:var(--waitbg);color:var(--wait)}
-  .pill.Klar{background:var(--okbg);color:var(--ok)}
-  .pill.Eftersyn{background:var(--badbg);color:var(--bad)}
-  .over{color:var(--bad);font-weight:700}
-  .idag{color:var(--wait);font-weight:700}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .grid .full{grid-column:1/-1}
-  .msg{margin-top:10px;font-size:15px;min-height:1.2em}
-  .msg.err{color:var(--bad)}
-  .msg.okm{color:var(--ok)}
-  .hidden{display:none !important}
-  .tabs{display:flex;gap:6px;overflow-x:auto;margin:0 -2px 14px;padding:2px}
-  .tabs button{background:var(--soft);color:var(--ink);font-weight:600;flex:0 0 auto}
-  .tabs button[aria-selected="true"]{background:var(--dark);color:#fff}
-  .who{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;color:var(--muted);margin-bottom:10px}
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
-  .stat{background:var(--soft);border-radius:12px;padding:10px;text-align:center}
-  .stat b{display:block;font-size:24px;line-height:1.2;color:var(--ink)}
-  .stat span{font-size:13px;color:var(--muted)}
-  .meter{height:12px;background:var(--soft);border-radius:99px;overflow:hidden;margin:8px 0 4px}
-  .meter i{display:block;height:100%;background:var(--ok)}
-  .chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chips button{background:var(--soft);color:var(--ink);font-weight:500;min-height:42px}
-  .chips button[aria-pressed="true"]{background:var(--dark);color:#fff}
-  .done-list{font-size:15px;color:var(--muted);margin-top:8px}
-  @media (max-width:520px){.tabs button{padding:10px 12px;font-size:15px}.grid{grid-template-columns:1fr}.hide-sm{display:none}.stat b{font-size:20px}}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="rtk.css">
 </head>
 <body>
-<header>
+<header class="top">
   <div class="wrap">
-    <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
-    <div><h1>Opstrengning</h1><p>Mit RTK · Roskilde Tennis Klub</p></div>
+    <div class="brand">
+      <a class="hjem" href="./" data-t-aria="tilForsiden" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b data-t="sideTitel">Opstrengning</b><span><span class="klub-d">Mit RTK · </span><span data-t="side">Medlemssiden</span></span></span>
+    </div>
+    <div class="hoejre">
+      <div class="sprog" role="group" aria-label="Sprog / Language">
+        <button type="button" data-sprog="da" lang="da" aria-label="Dansk" aria-pressed="true">DA</button>
+        <button type="button" data-sprog="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+      </div>
+    </div>
   </div>
 </header>
 
-<main class="wrap">
-  <div id="testBanner" class="card neutral hidden" style="padding:10px 14px;font-size:14px">Testmiljø med opdigtede data.</div>
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold smal">
 
-  <!-- ===================== MEDLEMMER ===================== -->
-  <section>
-    <div class="card">
-      <h2>Er min ketsjer klar?</h2>
-      <form id="opslagForm" class="row big" autocomplete="off">
-        <input id="nr" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="0147" aria-label="Nummer fra din kvittering">
-        <button type="submit" style="flex:0 0 auto">Se status</button>
+    <section>
+      <h1 class="lille" data-t="klarSpm">Er min ketsjer klar?</h1>
+      <form id="opslagForm" class="row big" autocomplete="off" style="margin-top:14px">
+        <label for="nr" class="sr" data-t="nrLabel">Nummer fra din kvittering</label>
+        <input id="nr" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="0147">
+        <button type="submit" style="flex:0 0 auto" data-t="seStatus">Se status</button>
       </form>
-      <p class="hint">Skriv nummeret fra din kvittering. Ketsjeren er klar senest tre hverdage efter aflevering og ligger i afhentningsskabet.</p>
       <div id="opslagSvar" aria-live="polite"></div>
-    </div>
+      <p class="hint" data-t="opslagHint">Skriv nummeret fra din kvittering. Ketsjeren er klar senest tre hverdage efter aflevering og ligger i afhentningsskabet.</p>
+    </section>
 
-    <div class="card">
-      <h2>Skriv til opstrengeren</h2>
+    <section class="afsnit">
+      <h2 data-t="skrivTil">Skriv til opstrengeren</h2>
       <form id="kontaktForm" autocomplete="on">
-        <label>Hvad drejer det sig om?</label>
-        <div class="chips" id="grunde" role="group" aria-label="Emne">
-          <button type="button" data-g="spoergsmaal" aria-pressed="true">Spørgsmål</button>
-          <button type="button" data-g="glemt" aria-pressed="false">Glemt nummer</button>
-          <button type="button" data-g="ikkeiorden" aria-pressed="false">Ketsjer ikke i orden</button>
+        <label id="emneLabel" data-t="emne">Hvad drejer det sig om?</label>
+        <div class="chips" id="grunde" role="group" aria-labelledby="emneLabel">
+          <button type="button" data-g="spoergsmaal" aria-pressed="true" data-t="gSpm">Spørgsmål</button>
+          <button type="button" data-g="glemt" aria-pressed="false" data-t="gGlemt">Glemt nummer</button>
+          <button type="button" data-g="ikkeiorden" aria-pressed="false" data-t="gIkke">Ketsjer ikke i orden</button>
         </div>
-        <div class="grid" style="margin-top:12px">
-          <div><label for="kNr">Nummer, hvis du har det</label><input id="kNr" inputmode="numeric" maxlength="6"></div>
-          <div><label for="kMobil">Dit mobilnummer</label><input id="kMobil" type="tel" inputmode="tel" autocomplete="tel" required></div>
-          <div class="full"><label for="kBesked">Besked</label><textarea id="kBesked" maxlength="300"></textarea></div>
+        <div class="grid" style="margin-top:14px">
+          <div><label for="kNr" data-t="kNr">Nummer, hvis du har det</label><input id="kNr" inputmode="numeric" maxlength="6"></div>
+          <div><label for="kMobil" data-t="kMobil">Dit mobilnummer</label><input id="kMobil" type="tel" inputmode="tel" autocomplete="tel" required></div>
+          <div class="full"><label for="kBesked" data-t="kBesked">Besked</label><textarea id="kBesked" maxlength="300"></textarea></div>
         </div>
-        <button type="submit" style="margin-top:12px">Send</button>
+        <button type="submit" style="margin-top:14px;width:100%" data-t="send">Send besked</button>
         <div id="kontaktMsg" class="msg" aria-live="polite"></div>
-        <p class="hint">Beskeden går som sms til den opstrenger, der har vagten, med dit nummer, så du kan få svar.</p>
+        <p class="hint" data-t="kontaktHint">Beskeden går som sms til den opstrenger, der har vagten, med dit nummer, så du kan få svar.</p>
       </form>
-    </div>
+    </section>
 
-    <div class="card">
-      <h2>Priser</h2>
+    <section class="afsnit">
+      <h2 data-t="priser">Priser</h2>
       <table>
-        <tr><th>Type</th><th>Strenge</th><th>Pris</th></tr>
-        <tr><td>Basis</td><td>Syn Gut</td><td>195 kr.</td></tr>
-        <tr><td>Hybrid</td><td>RPM og Syn Gut</td><td>215 kr.</td></tr>
-        <tr><td>Spin</td><td>RPM-serien</td><td>225 kr.</td></tr>
-        <tr><td>Komfort</td><td>Addixion+</td><td>245 kr.</td></tr>
+        <tr><th data-t="thType">Type</th><th data-t="thStrenge">Strenge</th><th class="n" data-t="thPris">Pris</th></tr>
+        <tr><td><b>Basis</b></td><td>Syn Gut</td><td class="n">195 kr.</td></tr>
+        <tr><td><b>Hybrid</b></td><td data-t="rpmSyn">RPM og Syn Gut</td><td class="n">215 kr.</td></tr>
+        <tr><td><b>Spin</b></td><td data-t="rpmSerie">RPM-serien</td><td class="n">225 kr.</td></tr>
+        <tr><td><b data-t="komfort">Komfort</b></td><td>Addixion+</td><td class="n">245 kr.</td></tr>
       </table>
-      <p class="hint">Betaling med MobilePay ved aflevering. Skriv nummeret fra sedlen i beskeden.</p>
-    </div>
-  </section>
+      <p class="hint" data-t="betaling">Betaling med MobilePay ved aflevering. Skriv nummeret fra sedlen i beskeden.</p>
+    </section>
+  </div>
 
+  <div class="wrap partnere">
+    <img class="p-babolat" src="ikoner/babolat.png" alt="Babolat">
+    <span data-t="partnere">Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" data-t-aria="racketlifeLink" aria-label="Racketlife (åbner i ny fane)"><img src="ikoner/racketlife.png" alt=""></a>
+  </div>
 </main>
 
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span data-t="test">Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="personale/" lang="da">Personale og frivillige</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+window.TEKSTER = {
+  da: {
+    titel: 'Opstrengning · Mit RTK', sideTitel: 'Opstrengning', side: 'Medlemssiden', tilForsiden: 'Til forsiden',
+    klubLink: 'Roskilde Tennis Klubs hjemmeside (åbner i ny fane)', racketlifeLink: 'Racketlife (åbner i ny fane)',
+    klarSpm: 'Er min ketsjer klar?', nrLabel: 'Nummer fra din kvittering', seStatus: 'Se status',
+    opslagHint: 'Skriv nummeret fra din kvittering. Ketsjeren er klar senest tre hverdage efter aflevering og ligger i afhentningsskabet.',
+    skrivTil: 'Skriv til opstrengeren', emne: 'Hvad drejer det sig om?', gSpm: 'Spørgsmål', gGlemt: 'Glemt nummer', gIkke: 'Ketsjer ikke i orden',
+    kNr: 'Nummer, hvis du har det', kMobil: 'Dit mobilnummer', kBesked: 'Besked', send: 'Send besked',
+    kontaktHint: 'Beskeden går som sms til den opstrenger, der har vagten, med dit nummer, så du kan få svar.',
+    priser: 'Priser', thType: 'Type', thStrenge: 'Strenge', thPris: 'Pris', rpmSyn: 'RPM og Syn Gut', rpmSerie: 'RPM-serien', komfort: 'Komfort',
+    betaling: 'Betaling med MobilePay ved aflevering. Skriv nummeret fra sedlen i beskeden.',
+    partnere: 'Officielle partnere', test: 'Testversion. Data er opdigtede.',
+    henter: 'Henter …', sender: 'Sender …',
+    ikkeReg: 'Nr. {nr} er ikke registreret endnu', ikkeRegTekst: 'Ketsjerne registreres, når skabet tømmes. Prøv igen senere, eller skriv til opstrengeren herunder.',
+    erKlar: 'Nr. {nr} er klar til afhentning', erKlarTekst: 'Strenget {dato}. Den ligger i afhentningsskabet.',
+    erHentet: 'Nr. {nr} er hentet', erHentetTekst: 'God fornøjelse med de nye strenge.',
+    erModtaget: 'Nr. {nr} er modtaget', erModtagetTekst: 'Afleveret {afl}. Klar senest {frist}.',
+    tak: 'Tak. Beskeden er sendt til {til}.', opstrengeren: 'opstrengeren'
+  },
+  en: {
+    titel: 'Racket stringing · Mit RTK', sideTitel: 'Racket stringing', side: 'Members’ area', tilForsiden: 'To the front page',
+    klubLink: 'Roskilde Tennis Klub website (opens in a new tab)', racketlifeLink: 'Racketlife (opens in a new tab)',
+    klarSpm: 'Is my racket ready?', nrLabel: 'Number on your receipt', seStatus: 'Check status',
+    opslagHint: 'Enter the number on your receipt. Your racket is ready no later than three working days after drop-off and will be in the collection locker.',
+    skrivTil: 'Message the stringer', emne: 'What is it about?', gSpm: 'Question', gGlemt: 'Forgot my number', gIkke: 'Racket not right',
+    kNr: 'Number, if you have it', kMobil: 'Your mobile number', kBesked: 'Message', send: 'Send message',
+    kontaktHint: 'Your message is sent as a text to the stringer on duty, with your number, so they can reply.',
+    priser: 'Prices', thType: 'Type', thStrenge: 'Strings', thPris: 'Price', rpmSyn: 'RPM and Syn Gut', rpmSerie: 'RPM range', komfort: 'Comfort',
+    betaling: 'Pay with MobilePay when you drop off your racket. Put the number from the slip in the payment note.',
+    partnere: 'Official partners', test: 'Test version. All data is fictitious.',
+    henter: 'Loading …', sender: 'Sending …',
+    ikkeReg: 'No. {nr} has not been registered yet', ikkeRegTekst: 'Rackets are registered when the drop-off locker is emptied. Please try again later, or message the stringer below.',
+    erKlar: 'No. {nr} is ready for collection', erKlarTekst: 'Strung on {dato}. It is in the collection locker.',
+    erHentet: 'No. {nr} has been collected', erHentetTekst: 'Enjoy your new strings.',
+    erModtaget: 'No. {nr} has been received', erModtagetTekst: 'Dropped off on {afl}. Ready no later than {frist}.',
+    tak: 'Thank you. Your message has been sent to {til}.', opstrengeren: 'the stringer'
+  }
+};
+/* Motorens beskeder på dansk, oversat til engelsk på medlemssiden. */
+window.MOTOR_EN = {
+  'Ingen forbindelse. Tjek net og prøv igen.': 'No connection. Check your internet and try again.',
+  'Noget gik galt': 'Something went wrong',
+  'Skriv et nummer': 'Please enter a number',
+  'Nummeret er for langt': 'The number is too long',
+  'Skriv dit mobilnummer, så opstrengeren kan svare': 'Please enter your mobile number so the stringer can reply',
+  'Skriv en kort besked': 'Please write a short message',
+  'Systemet er optaget. Prøv igen om et øjeblik.': 'The system is busy. Please try again in a moment.',
+  'Ugyldig forespørgsel': 'Invalid request',
+  'Ukendt handling': 'Unknown request'
+};
+</script>
+<script src="sprog.js"></script>
 <script>
 // Adressen til motoren. Test og produktion har hver sin. Ingen hemmeligheder her.
 const MOTOR = {
@@ -144,20 +162,17 @@ const MILJOE = new URLSearchParams(location.search).get('miljoe') === 'produktio
 const URL_MOTOR = MOTOR[MILJOE];
 
 const $ = (id) => document.getElementById(id);
-const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
-const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
-
-
-if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+const S = window.RTK_SPROG;
+const t = (k, v) => String(S.t(k)).replace(/\{(\w+)\}/g, (m, n) => (v && v[n] !== undefined ? v[n] : m));
+const fejlTekst = (m) => (S.sprog === 'en' && window.MOTOR_EN[m]) ? window.MOTOR_EN[m] : m;
 
 function besked(el, tekst, slags) { el.textContent = tekst || ''; el.className = 'msg' + (slags ? ' ' + slags : ''); }
 function datoTekst(d) {
   if (!d) return '';
   const [y, m, dag] = d.split('-').map(Number);
-  return new Date(y, m - 1, dag).toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' });
+  return new Date(y, m - 1, dag).toLocaleDateString(S.lokal(), { weekday: 'long', day: 'numeric', month: 'long' });
 }
-function kort(d) { return d ? d.slice(8, 10) + '/' + d.slice(5, 7) : ''; }
 
 /** Ét kald til motoren. Registrerings-id holdes fast, til kaldet lykkes, så et nyt tryk ikke gemmer to gange. */
 async function motor(modul, handling, data, id) {
@@ -169,44 +184,42 @@ async function motor(modul, handling, data, id) {
     throw new Error('Ingen forbindelse. Tjek net og prøv igen.');
   }
   const svar = await res.json();
-  if (!svar.ok) {
-    throw new Error(svar.fejl || 'Noget gik galt');
-  }
+  if (!svar.ok) throw new Error(svar.fejl || 'Noget gik galt');
   return svar.data;
 }
 
-// ===================== MEDLEMMER =====================
+// ---- Opslag. Det seneste svar huskes, så det kan vises igen på det andet sprog.
+let sidsteSvar = null;
+function visSvar() {
+  const ud = $('opslagSvar');
+  if (!sidsteSvar) { ud.className = ''; ud.textContent = ''; return; }
+  ud.innerHTML = '';
+  if (sidsteSvar.fejl) { ud.className = 'result fejl'; ud.textContent = fejlTekst(sidsteSvar.fejl); return; }
+  const s = sidsteSvar.s;
+  const b = document.createElement('b'); const p = document.createElement('span');
+  if (!s.fundet) {
+    ud.className = 'result neutral'; b.textContent = t('ikkeReg', { nr: s.nr }); p.textContent = t('ikkeRegTekst');
+  } else if (s.status === 'Klar') {
+    ud.className = 'result klar'; b.textContent = t('erKlar', { nr: s.nr }); p.textContent = t('erKlarTekst', { dato: datoTekst(s.klarDato) });
+  } else if (s.status === 'Hentet') {
+    ud.className = 'result neutral'; b.textContent = t('erHentet', { nr: s.nr }); p.textContent = t('erHentetTekst');
+  } else {
+    ud.className = 'result vent'; b.textContent = t('erModtaget', { nr: s.nr }); p.textContent = t('erModtagetTekst', { afl: datoTekst(s.afleveret), frist: datoTekst(s.klarSenest) });
+  }
+  ud.append(b, p);
+}
 $('opslagForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const ud = $('opslagSvar');
   const nr = $('nr').value.trim();
   if (!nr) return;
-  ud.className = 'result neutral'; ud.textContent = 'Henter …';
-  try {
-    const s = await motor('opstrengning', 'opslag', { nr });
-    ud.innerHTML = '';
-    const b = document.createElement('b'); const p = document.createElement('span');
-    if (!s.fundet) {
-      ud.className = 'result neutral';
-      b.textContent = 'Nr. ' + s.nr + ' er ikke registreret endnu';
-      p.textContent = 'Ketsjerne registreres, når skabet tømmes. Prøv igen senere, eller skriv til opstrengeren herunder.';
-    } else if (s.status === 'Klar') {
-      ud.className = 'result klar';
-      b.textContent = 'Nr. ' + s.nr + ' er klar til afhentning';
-      p.textContent = 'Strenget ' + datoTekst(s.klarDato) + '. Den ligger i afhentningsskabet.';
-    } else if (s.status === 'Hentet') {
-      ud.className = 'result neutral';
-      b.textContent = 'Nr. ' + s.nr + ' er hentet';
-      p.textContent = 'God fornøjelse med de nye strenge.';
-    } else {
-      ud.className = 'result vent';
-      b.textContent = 'Nr. ' + s.nr + ' er modtaget';
-      p.textContent = 'Afleveret ' + datoTekst(s.afleveret) + '. Klar senest ' + datoTekst(s.klarSenest) + '.';
-    }
-    ud.append(b, p);
-  } catch (err) { ud.className = 'result fejl'; ud.textContent = err.message; }
+  ud.className = 'result neutral'; ud.textContent = t('henter');
+  try { sidsteSvar = { s: await motor('opstrengning', 'opslag', { nr }) }; }
+  catch (err) { sidsteSvar = { fejl: err.message }; }
+  visSvar();
 });
 
+// ---- Skriv til opstrengeren
 let grund = 'spoergsmaal';
 $('grunde').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-g]'); if (!b) return;
@@ -214,17 +227,29 @@ $('grunde').addEventListener('click', (e) => {
   $('grunde').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
 });
 let kontaktId = nyId();
+let sidsteKontakt = null;
+function visKontakt() {
+  if (!sidsteKontakt) return;
+  if (sidsteKontakt.fejl) besked($('kontaktMsg'), fejlTekst(sidsteKontakt.fejl), 'err');
+  else {
+    const til = (!sidsteKontakt.til || sidsteKontakt.til === 'opstrengeren') ? t('opstrengeren') : sidsteKontakt.til;
+    besked($('kontaktMsg'), t('tak', { til }), 'okm');
+  }
+}
 $('kontaktForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const knap = e.submitter || $('kontaktForm').querySelector('button[type=submit]');
-  knap.disabled = true; besked($('kontaktMsg'), 'Sender …');
+  const knap = $('kontaktForm').querySelector('button[type=submit]');
+  knap.disabled = true; besked($('kontaktMsg'), t('sender'));
   try {
     const r = await motor('opstrengning', 'kontakt', { grund, nr: $('kNr').value, mobil: $('kMobil').value, besked: $('kBesked').value }, kontaktId);
-    besked($('kontaktMsg'), 'Tak. Beskeden er sendt til ' + r.til + '.', 'okm');
+    sidsteKontakt = { til: r.til };
     $('kBesked').value = ''; kontaktId = nyId();
-  } catch (err) { besked($('kontaktMsg'), err.message, 'err'); }
+  } catch (err) { sidsteKontakt = { fejl: err.message }; }
+  visKontakt();
   knap.disabled = false;
 });
+
+document.addEventListener('sprog', () => { visSvar(); visKontakt(); });
 
 // ---- Start
 // Gamle links til opstrengernes del går nu til personalesiden.

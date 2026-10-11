@@ -1,0 +1,199 @@
+/* Mit RTK: fælles udseende for alle sider. Besluttet af Lars 11. oktober 2026.
+   Hvid baggrund, sort tekst, dyb teal i top og bund. Pink ramme = kan trykkes på inde på siden.
+   Isblå ramme = links i top og bund. Mørkeblå = stregtegninger. */
+:root{
+  --bg:#FFFFFF; --ink:#000000; --teal:#0B3D3A; --pink:#E6005C; --frost:#0F2537; --ice:#8FB8DE;
+  --sub:#C8DCD9; --dim:#8FA9A6; --line:#D5DADF; --line2:#B8C0C8; --muted:#3A4652; --mute2:#4A5560; --soft:#F3F5F7;
+  --ok:#1E6B45; --okbg:#E7F3EC; --wait:#7A5A12; --waitbg:#F8EFDB; --bad:#B42318; --badbg:#FBEAE8;
+  --pad:56px; --accent:var(--pink); --card:#FFFFFF; --dark:var(--teal);
+}
+*{box-sizing:border-box}
+html{background:var(--teal)}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);
+  font:17px/1.5 'Archivo','Helvetica Neue',Arial,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--ink)}
+input,select,textarea,button{font:inherit}
+.hidden{display:none !important}
+.sr{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.wrap{width:100%;max-width:1600px;margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+
+/* ---------- top */
+.top{background:var(--teal);color:#FFFFFF}
+.top .wrap{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand .logo{display:block;flex-shrink:0}
+.brand .logo img{display:block;height:44px;width:auto}
+.brand .navn{display:flex;flex-direction:column;line-height:1.15;color:#FFFFFF;text-decoration:none;min-width:0}
+.brand .navn b{font-weight:800;font-size:19px;letter-spacing:.08em;text-transform:uppercase}
+.brand .navn span{font-size:13px;color:var(--sub);letter-spacing:.02em}
+.brand .titel b{font-size:20px;font-weight:700;letter-spacing:0;text-transform:none}
+.brand .titel span{letter-spacing:.06em;text-transform:uppercase;font-size:12px}
+.hjem{width:44px;height:44px;flex-shrink:0;border:1px solid var(--ice);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#FFFFFF}
+.hoejre{display:flex;align-items:center;gap:24px;flex-shrink:0}
+.hvor{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--sub)}
+.hvor b{color:#FFFFFF;font-weight:600}
+.prik{display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--ice);flex-shrink:0}
+.hvor-m{display:none !important}
+.sprog{display:inline-flex;border:1px solid var(--ice);border-radius:99px;padding:3px;gap:2px}
+.sprog button{min-width:44px;height:36px;border:0;border-radius:99px;background:transparent;color:#FFFFFF;font-size:13px;font-weight:500;letter-spacing:.06em;cursor:pointer;padding:0 10px}
+.sprog button[aria-pressed="true"]{background:var(--ice);color:var(--teal);font-weight:700}
+
+/* ---------- indhold */
+main.side{flex-grow:1;position:relative;z-index:0;background:var(--bg);display:flex;flex-direction:column}
+.monster{position:absolute;right:0;bottom:0;width:60%;height:100%;max-height:900px;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(#FFFFFF 0 2px,transparent 2px),linear-gradient(90deg,#FFFFFF 0 2px,var(--ice) 2px);
+  background-size:6px 6px;background-position:right bottom;
+  -webkit-mask-image:radial-gradient(ellipse 100% 100% at 100% 100%,rgba(0,0,0,.6) 0%,rgba(0,0,0,.3) 22%,rgba(0,0,0,.08) 45%,transparent 68%);
+  mask-image:radial-gradient(ellipse 100% 100% at 100% 100%,rgba(0,0,0,.6) 0%,rgba(0,0,0,.3) 22%,rgba(0,0,0,.08) 45%,transparent 68%)}
+.monster.lav{height:420px}
+.indhold{padding-top:32px;padding-bottom:40px}
+.indhold.smal{max-width:860px;margin-left:0}
+.kicker{margin:0 0 12px;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--frost)}
+h1{margin:0;font-size:52px;line-height:1.05;font-weight:800;letter-spacing:-.02em}
+h1.lille{font-size:30px;letter-spacing:-.01em}
+h2{font-size:22px;margin:0 0 12px;font-weight:700}
+h3{font-size:14px;margin:16px 0 8px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.intro{margin:18px 0 0;font-size:19px;max-width:560px}
+.hero{display:flex;flex-wrap:wrap;gap:40px;align-items:center;justify-content:space-between;padding-top:56px;padding-bottom:24px}
+.hero>div{flex:1 1 420px;min-width:0}
+.hero svg{flex:0 1 380px;max-width:100%;height:auto}
+
+/* felter */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;padding-top:24px;padding-bottom:40px}
+.tile{display:flex;flex-direction:column;gap:14px;padding:28px;border:1px solid var(--line);border-radius:6px;min-height:220px;
+  background:rgba(255,255,255,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--ink);text-decoration:none}
+a.tile{border:2px solid var(--pink)}
+.tile svg{flex-shrink:0}
+.tile b{font-size:24px;font-weight:700;letter-spacing:-.01em}
+.tile .tekst{font-size:16px;flex-grow:1}
+.tile .aabn{font-size:15px;font-weight:600;color:var(--pink)}
+.tile .snart{align-self:flex-start;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute2)}
+
+/* kort, formularer og knapper */
+.card{background:#FFFFFF;border:1px solid var(--line);border-radius:6px;padding:22px;margin-bottom:16px}
+.afsnit{padding-top:24px;margin-top:24px;border-top:1px solid var(--line)}
+label{display:block;font-size:14px;font-weight:500;color:var(--ink);margin:0 0 4px}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:6px;background:#FFFFFF;color:var(--ink);min-height:50px}
+textarea{min-height:96px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--frost);box-shadow:0 0 0 3px rgba(143,184,222,.5)}
+button{border:2px solid var(--pink);border-radius:6px;padding:10px 18px;min-height:48px;white-space:nowrap;background:#FFFFFF;color:var(--ink);font-weight:700;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
+button.ghost{border:1px solid var(--line2);font-weight:600}
+button.ok{border-color:var(--pink)}
+button.small{padding:6px 12px;min-height:40px;font-size:15px}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;align-items:stretch}
+.row>*{flex:1}
+.big input{font-size:24px;letter-spacing:.2em;text-align:center;border-color:var(--frost);min-height:56px}
+.big button{min-height:56px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid .full{grid-column:1/-1}
+.hint{color:var(--muted);font-size:14px;margin:10px 0 0}
+.msg{margin-top:10px;font-size:15px;min-height:1.2em}
+.msg.err{color:var(--bad)}
+.msg.okm{color:var(--ok)}
+.who{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;color:var(--muted);margin-bottom:14px}
+
+/* status */
+.result{margin-top:14px;padding:16px;border-radius:6px;border:1px solid var(--frost);font-size:16px;display:flex;flex-direction:column;gap:2px}
+.result b{font-size:18px}
+.klar{border-color:var(--ok);background:var(--okbg)}
+.vent{border-color:#C9A54A;background:var(--waitbg)}
+.neutral{border-color:var(--line);background:var(--soft);color:var(--muted)}
+.fejl{border-color:var(--bad);background:var(--badbg);color:var(--bad)}
+
+/* tabeller */
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-bottom:1.5px solid var(--frost)}
+td.n,th.n{text-align:right}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;font-weight:600;background:var(--badbg);color:var(--bad)}
+.pill.Modtaget{background:var(--waitbg);color:var(--wait)}
+.pill.Klar{background:var(--okbg);color:var(--ok)}
+.pill.Eftersyn{background:var(--badbg);color:var(--bad)}
+.over,.minus{color:var(--bad);font-weight:700}
+.idag{color:var(--wait);font-weight:700}
+
+/* faner og valg */
+.tabs{display:flex;gap:8px;overflow-x:auto;margin:0 -2px 16px;padding:2px}
+.tabs button{border:1px solid var(--line2);font-weight:600;flex:0 0 auto;background:#FFFFFF}
+.tabs button[aria-selected="true"]{border:2px solid var(--pink);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{border:1px solid var(--line2);border-radius:99px;font-weight:500;min-height:44px;padding:8px 16px}
+.chips button[aria-pressed="true"]{border:2px solid var(--pink);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{border:1px solid var(--line);border-radius:6px;padding:10px;text-align:center}
+.stat b{display:block;font-size:24px;line-height:1.2}
+.stat span{font-size:13px;color:var(--muted)}
+.meter{height:10px;background:var(--soft);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.meter i{display:block;height:100%;background:var(--frost)}
+.done-list{font-size:15px;color:var(--muted);margin-top:8px}
+
+/* partnere og bund */
+.partnere{margin-top:auto;padding-top:8px;padding-bottom:28px;display:flex;justify-content:space-between;align-items:center;gap:24px}
+.partnere .p-babolat{height:20px;width:auto;display:block}
+.partnere .p-racketlife img{height:30px;width:auto;display:block}
+.partnere span{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--frost);text-align:center}
+.bund{background:var(--teal);color:var(--sub);font-size:14px}
+.bund .wrap{padding-top:24px;padding-bottom:24px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+.bund .klub{display:flex;align-items:center;gap:14px}
+.bund .klub img{height:40px;width:auto;display:block}
+.bund b{color:#FFFFFF;font-weight:600}
+.bund .hoejre{gap:24px;flex-wrap:wrap}
+.diskret{color:var(--dim);font-size:13px;text-decoration:underline;text-decoration-color:rgba(143,169,166,.4);text-underline-offset:3px;padding:6px 0}
+
+@media (hover:hover){
+  button:hover{background:#FFF4F8}
+  button.ghost:hover,.tabs button:hover,.chips button:hover{background:var(--soft)}
+  .sprog button:hover{background:rgba(143,184,222,.2)}
+  .sprog button[aria-pressed="true"]:hover{background:var(--ice)}
+  a.tile:hover{background:rgba(255,255,255,.9)}
+  .hjem:hover{background:rgba(143,184,222,.15)}
+}
+@media (max-width:640px){
+  :root{--pad:16px}
+  body{font-size:16px}
+  .top .wrap{min-height:64px;gap:10px}
+  .brand{gap:10px}
+  .brand .logo img{height:36px}
+  .brand .navn b{font-size:16px}
+  .brand .titel b{font-size:18px}
+  .hvor{display:none}
+  .hvor-m{display:inline-flex !important;align-items:center;gap:6px}
+  .klub-d{display:none}
+  h1{font-size:34px}
+  h1.lille{font-size:26px}
+  .hero{padding-top:28px;gap:20px}
+  .hero svg{display:none}
+  .tiles{gap:14px;padding-top:8px}
+  .tile{min-height:0;padding:18px;flex-direction:row;align-items:center;gap:16px}
+  .tile .tk{display:flex;flex-direction:column;gap:4px;flex-grow:1}
+  .tile b{font-size:20px}
+  .tile .tekst{font-size:15px}
+  .tile .aabn .ord{display:none}
+  .grid{grid-template-columns:1fr}
+  .tabs button{padding:8px 12px;font-size:15px}
+  .hide-sm{display:none}
+  .stat b{font-size:20px}
+  .partnere{gap:12px}
+  .partnere .p-babolat{height:14px}
+  .partnere .p-racketlife img{height:22px}
+  .partnere span{font-size:9px}
+  .bund{font-size:13px}
+  .bund .wrap{flex-direction:column;align-items:flex-start;gap:10px}
+  .bund .klub img{height:34px}
+  .monster{width:100%;height:60%}
+  .monster.lav{height:300px}
+}
+@media (min-width:641px){ .tile .tk{display:contents} }
+
+/* boldregnskab */
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:56px;font-size:24px;padding:0;border:1px solid var(--line2);font-weight:500}
+.stepper output{min-width:56px;text-align:center;font-size:28px;font-weight:700}
+.stepper span{color:var(--muted)}
+.go{width:100%;font-size:19px;min-height:58px;margin-top:18px;white-space:normal;line-height:1.3}
+.kvit{background:var(--okbg);color:var(--ok);border:1px solid var(--ok);border-radius:6px;padding:12px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.kvit.adv{background:var(--waitbg);color:var(--wait);border-color:#C9A54A}
+.total{font-size:15px;color:var(--muted);margin-top:8px}
+#testBanner{display:none !important}

@@ -3,45 +3,110 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1E2A24">
+<meta name="theme-color" content="#0B3D3A">
 <meta name="apple-mobile-web-app-title" content="Mit RTK">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="ikon-medlem-180.png">
 <link rel="icon" type="image/png" href="ikon-medlem-180.png">
 <title>Mit RTK</title>
-<style>
-  :root{--bg:#F4F1E8;--card:#FFFDF7;--ink:#1E2A24;--muted:#56625B;--line:#DDD7C6;--accent:#A8481F;--dark:#1E2A24;--soft:#EEE9DB}
-  *{box-sizing:border-box}
-  html{background:var(--bg)}
-  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-text-size-adjust:100%}
-  header{background:var(--dark);color:#F4F1E8;padding:22px 16px}
-  header h1{margin:0;font-size:24px;letter-spacing:.4px}
-  header p{margin:2px 0 0;color:#C9D4CC;font-size:15px}
-  .wrap{max-width:720px;margin:0 auto}
-  main{padding:18px 16px 40px}
-  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .tile{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;color:var(--ink);text-decoration:none;min-height:120px}
-  .tile b{display:block;font-size:19px;margin-bottom:4px}
-  .tile span{color:var(--muted);font-size:15px}
-  a.tile:active{background:var(--soft)}
-  .tile.snart{background:transparent;border-style:dashed}
-  .tile.snart em{display:inline-block;font-style:normal;font-size:13px;font-weight:600;color:var(--muted);background:var(--soft);border-radius:99px;padding:1px 10px;margin-top:8px}
-  .hint{color:var(--muted);font-size:14px;margin-top:18px}
-  footer{padding:0 16px 40px}
-  footer a{color:var(--muted);font-size:15px}
-  @media (max-width:420px){.tiles{grid-template-columns:1fr}.tile{min-height:0}}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="rtk.css">
 </head>
 <body>
-<header><div class="wrap"><h1>Mit RTK</h1><p>Roskilde Tennis Klub</p></div></header>
-<main class="wrap">
-  <div class="tiles">
-    <a class="tile" href="opstrengning.html"><b>Opstrengning</b><span>Er min ketsjer klar? Skriv til opstrengeren, og se priserne.</span></a>
-    <div class="tile snart" aria-disabled="true"><b>Holdkampe</b><span>Resultater for Roskilde-holdene og tilmelding til kampe.</span><br><em>Kommer snart</em></div>
-    <div class="tile snart" aria-disabled="true"><b>Medlemsfordele</b><span>Rabatter og tilbud til medlemmer.</span><br><em>Kommer snart</em></div>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <a class="navn" href="./"><b>Mit RTK</b><span class="klub-d">Roskilde Tennis Klub</span><span class="hvor-m"><i class="prik"></i><span data-t="side">Medlemssiden</span></span></a>
+    </div>
+    <div class="hoejre">
+      <span class="hvor"><i class="prik" aria-hidden="true"></i><span><span data-t="duErPaa">Du er på:</span> <b data-t="side">Medlemssiden</b></span></span>
+      <div class="sprog" role="group" aria-label="Sprog / Language">
+        <button type="button" data-sprog="da" lang="da" aria-label="Dansk" aria-pressed="true">DA</button>
+        <button type="button" data-sprog="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+      </div>
+    </div>
   </div>
-  <p class="hint">Testversion. Data er opdigtede.</p>
+</header>
+
+<main class="side">
+  <div class="monster" aria-hidden="true"></div>
+  <section class="wrap hero">
+    <div>
+      <p class="kicker" data-t="forMedlemmer">For medlemmer</p>
+      <h1 data-t="overskrift">Klubben i lommen.</h1>
+      <p class="intro" data-t="intro">Se om din ketsjer er klar, følg holdkampene og find dine medlemsfordele.</p>
+    </div>
+    <svg role="img" data-t-aria="bane" aria-label="Tennisbane set ovenfra" width="380" height="200" viewBox="0 0 380 200" fill="none" stroke="#0F2537" stroke-width="1.5">
+      <rect x="10" y="10" width="360" height="180"/><line x1="10" y1="32" x2="370" y2="32"/><line x1="10" y1="168" x2="370" y2="168"/>
+      <line x1="190" y1="4" x2="190" y2="196" stroke-width="2.5"/><line x1="95" y1="32" x2="95" y2="168"/><line x1="285" y1="32" x2="285" y2="168"/>
+      <line x1="95" y1="100" x2="285" y2="100"/><line x1="10" y1="100" x2="18" y2="100"/><line x1="362" y1="100" x2="370" y2="100"/>
+      <circle cx="236" cy="72" r="5" stroke="#E6005C" stroke-width="2"/>
+    </svg>
+  </section>
+
+  <section class="wrap tiles">
+    <a class="tile" href="opstrengning.html">
+      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><ellipse cx="17" cy="16" rx="11" ry="13"/><line x1="9" y1="10" x2="25" y2="10"/><line x1="7" y1="16" x2="27" y2="16"/><line x1="9" y1="22" x2="25" y2="22"/><line x1="12" y1="4" x2="12" y2="28"/><line x1="17" y1="3" x2="17" y2="29"/><line x1="22" y1="4" x2="22" y2="28"/><line x1="24" y1="27" x2="38" y2="41" stroke-width="3"/></svg>
+      <span class="tk"><b data-t="opstrengning">Opstrengning</b><span class="tekst" data-t="opstrengningTekst">Er min ketsjer klar? Skriv til opstrengeren, og se priserne.</span></span>
+      <span class="aabn"><span class="ord" data-t="aabn">Åbn</span> &#8594;</span>
+    </a>
+    <div class="tile" aria-disabled="true">
+      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><rect x="4" y="8" width="36" height="28"/><line x1="22" y1="8" x2="22" y2="36"/><line x1="4" y1="14" x2="40" y2="14"/><line x1="4" y1="30" x2="40" y2="30"/><line x1="12" y1="14" x2="12" y2="30"/><line x1="32" y1="14" x2="32" y2="30"/></svg>
+      <span class="tk"><b data-t="holdkampe">Holdkampe</b><span class="tekst" data-t="holdkampeTekst">Resultater for Roskilde-holdene og tilmelding til kampe.</span><span class="snart" data-t="snart">Kommer snart</span></span>
+    </div>
+    <div class="tile" aria-disabled="true">
+      <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><path d="M6 20 V8 H18 L38 28 L28 38 Z"/><circle cx="13" cy="13" r="2.5"/></svg>
+      <span class="tk"><b data-t="fordele">Medlemsfordele</b><span class="tekst" data-t="fordeleTekst">Rabatter og tilbud til medlemmer.</span><span class="snart" data-t="snart">Kommer snart</span></span>
+    </div>
+  </section>
+
+  <div class="wrap partnere">
+    <img class="p-babolat" src="ikoner/babolat.png" alt="Babolat">
+    <span data-t="partnere">Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" data-t-aria="racketlifeLink" aria-label="Racketlife (åbner i ny fane)"><img src="ikoner/racketlife.png" alt=""></a>
+  </div>
 </main>
-<footer class="wrap"><a href="personale/">Personale og frivillige? Log ind</a></footer>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span data-t="test">Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="personale/" lang="da">Personale og frivillige</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+window.TEKSTER = {
+  da: {
+    titel: 'Mit RTK', duErPaa: 'Du er på:', side: 'Medlemssiden', forMedlemmer: 'For medlemmer',
+    overskrift: 'Klubben i lommen.', intro: 'Se om din ketsjer er klar, følg holdkampene og find dine medlemsfordele.',
+    bane: 'Tennisbane set ovenfra',
+    opstrengning: 'Opstrengning', opstrengningTekst: 'Er min ketsjer klar? Skriv til opstrengeren, og se priserne.', aabn: 'Åbn',
+    holdkampe: 'Holdkampe', holdkampeTekst: 'Resultater for Roskilde-holdene og tilmelding til kampe.',
+    fordele: 'Medlemsfordele', fordeleTekst: 'Rabatter og tilbud til medlemmer.', snart: 'Kommer snart',
+    partnere: 'Officielle partnere', test: 'Testversion. Data er opdigtede.',
+    klubLink: 'Roskilde Tennis Klubs hjemmeside (åbner i ny fane)', racketlifeLink: 'Racketlife (åbner i ny fane)'
+  },
+  en: {
+    titel: 'Mit RTK', duErPaa: 'You are on:', side: 'Members’ area', forMedlemmer: 'For members',
+    overskrift: 'The club in your pocket.', intro: 'Check whether your racket is ready, follow the team matches and find your member benefits.',
+    bane: 'Tennis court seen from above',
+    opstrengning: 'Racket stringing', opstrengningTekst: 'Is my racket ready? Message the stringer and see the prices.', aabn: 'Open',
+    holdkampe: 'Team matches', holdkampeTekst: 'Results for the Roskilde teams and sign-up for matches.',
+    fordele: 'Member benefits', fordeleTekst: 'Discounts and offers for members.', snart: 'Coming soon',
+    partnere: 'Official partners', test: 'Test version. All data is fictitious.',
+    klubLink: 'Roskilde Tennis Klub website (opens in a new tab)', racketlifeLink: 'Racketlife (opens in a new tab)'
+  }
+};
+</script>
+<script src="sprog.js"></script>
 </body>
 </html>
