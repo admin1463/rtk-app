@@ -11,13 +11,13 @@
 
   var TEKST = {
     da: {
-      kMobil: 'Dit mobilnummer', kSend: 'Send kode på sms', kKode: "Koden fra sms'en", kKodeTil: "Koden fra sms'en til {til}",
+      kMobil: 'Dit mobilnummer', kLandekode: 'Danske numre skrives uden +45. Udenlandske med landekode, fx +46.', kSend: 'Send kode på sms', kKode: "Koden fra sms'en", kKodeTil: "Koden fra sms'en til {til}",
       kKodeMail: 'Koden fra mailen til {til}', kGaelder: 'Koden gælder i 10 minutter.', kHusk: 'Husk mig på denne enhed i 30 dage',
       kLogInd: 'Log ind', kIgen: 'Send igen', kMail: 'Send koden på mail i stedet', kAndet: 'Brug et andet nummer',
       kSender: 'Sender koden …', kLogger: 'Logger ind …', kLogUd: 'Log ud', kLoggetInd: 'Logget ind som {navn}'
     },
     en: {
-      kMobil: 'Your mobile number', kSend: 'Send code by text', kKode: 'The code from the text message', kKodeTil: 'The code from the text message to {til}',
+      kMobil: 'Your mobile number', kLandekode: 'Danish numbers without +45. Other countries with the country code, e.g. +46.', kSend: 'Send code by text', kKode: 'The code from the text message', kKodeTil: 'The code from the text message to {til}',
       kKodeMail: 'The code from the email to {til}', kGaelder: 'The code is valid for 10 minutes.', kHusk: 'Remember me on this device for 30 days',
       kLogInd: 'Log in', kIgen: 'Send again', kMail: 'Send the code by email instead', kAndet: 'Use another number',
       kSender: 'Sending the code …', kLogger: 'Logging in …', kLogUd: 'Log out', kLoggetInd: 'Logged in as {navn}'
@@ -103,6 +103,8 @@
     f1.appendChild(el('label', { 'for': 'kMobil', 'data-t': 'kMobil' }, t('kMobil')));
     var mobil = el('input', { id: 'kMobil', type: 'tel', inputmode: 'tel', autocomplete: 'tel', maxlength: '16', style: 'font-size:20px;letter-spacing:.04em' });
     f1.appendChild(mobil);
+    f1.appendChild(el('p', { 'class': 'hint', id: 'kLandekode', 'data-t': 'kLandekode', style: 'margin:6px 0 0' }, t('kLandekode')));
+    mobil.setAttribute('aria-describedby', 'kLandekode');
     var send = el('button', { type: 'submit', style: 'width:100%;margin-top:12px', 'data-t': 'kSend' }, t('kSend'));
     f1.appendChild(send);
 
