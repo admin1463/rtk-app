@@ -300,6 +300,9 @@ td.n,th.n{text-align:right}
 .gr-spil.aflyst b{text-decoration:line-through}
 .gr-form label{margin-top:14px}
 .gr-form .valg{margin-top:16px}
+.gr-valg2{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+.gr-valg2 legend{grid-column:1/-1}
+.gr-valg2 label{margin:0}
 .gr-knapper{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:16px}
 .gr-fortryd{font-weight:600}
 .gr-tre{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 12px}

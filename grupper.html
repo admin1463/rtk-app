@@ -65,7 +65,7 @@
         <h1 class="lille" data-t="nyGruppeH">Ny gruppe</h1>
         <label for="nyNavn" data-t="navn">Navn</label>
         <input id="nyNavn" maxlength="60" autocomplete="off" required>
-        <fieldset class="valg gr-sport" id="nySport"><legend data-t="sport">Sport</legend></fieldset>
+        <fieldset class="valg gr-valg2" id="nySport"><legend data-t="sport">Sport</legend></fieldset>
         <label for="nyBeskrivelse" data-t="beskrivelse">Om gruppen</label>
         <textarea id="nyBeskrivelse" maxlength="1000" rows="3" data-t-ph="beskrivelsePh"></textarea>
         <fieldset class="valg" id="nySynlighed"><legend data-t="hvemSer">Hvem kan se gruppen?</legend></fieldset>
@@ -215,21 +215,21 @@ window.TEKSTER = {
     tomH: 'Du er ikke med i nogen grupper endnu', tomTekst: 'Opret en gruppe til dem, du spiller med, eller bed en, du kender, om at tilføje dig.',
     kLoggetInd: 'Logget ind som {navn}', tilbage: '← Grupper', tilbageGruppe: '← Tilbage', nyGruppeH: 'Ny gruppe', navn: 'Navn', sport: 'Sport',
     beskrivelse: 'Om gruppen', beskrivelsePh: 'Fx: Fast double søndag formiddag. Niveau 3 til 4.',
-    hvemSer: 'Hvem kan se gruppen?', lukket: 'Kun medlemmerne', lukketTekst: 'Gruppen kan ikke findes af andre.',
-    klub: 'Alle i klubben', klubTekst: 'Andre medlemmer kan se gruppen og beskrivelsen.',
-    hvemInviterer: 'Hvem må tilføje nye?', invAlle: 'Alle i gruppen', invAdmin: 'Kun administratorer og dem, der må invitere',
+    hvemSer: 'Hvem kan se gruppen?', lukket: 'Kun medlemmerne', lukketTekst: 'Andre medlemmer kan ikke finde gruppen. Klubbens administratorer kan altid se den.',
+    klub: 'Alle i klubben', klubTekst: 'Alle medlemmer kan finde gruppen og læse beskrivelsen.',
+    hvemInviterer: 'Hvem må tilføje nye?', invAlle: 'Alle i gruppen', invAdmin: 'Kun gruppeadministratorer og dem, der må invitere',
     opret: 'Opret gruppen', fortryd: 'Fortryd', opretter: 'Opretter …', mangerNavn: 'Giv gruppen et navn',
     fChat: 'Chat', fSpil: 'Spil', fMedlemmer: 'Medlemmer · {n}', fOm: 'Om',
     medlemmerN: '{n} medlemmer', medlemmer1: '1 medlem',
     skrivBesked: 'Skriv en besked', send: 'Send', retter: 'Retter besked', idag: 'I dag', igaar: 'I går',
     handlinger: 'Muligheder for beskeden', synesGodtOm: '♥ Synes godt om', fjernHjerte: '♥ Fjern', ret: 'Ret', slet: 'Slet', slettet: 'Beskeden er slettet', rettet: 'rettet',
-    hjerter: '{n} synes godt om', dig: 'Dig', ingenBeskeder: 'Ingen beskeder endnu. Sig hej.',
+    hjerter: '{n} synes godt om', dig: 'dig', du: 'Du', ingenBeskeder: 'Ingen beskeder endnu. Sig hej.',
     kommende: 'Kommende spil og arrangementer', nytSpil: '+ Nyt spil', ingenSpil: 'Ingen spil planlagt. Opret det næste.',
     duErMed: 'Du er med', duVenter: 'Venteliste nr. {nr}', duMaaske: 'Måske', ikkeSvaret: 'Ikke svaret', aflyst: 'Aflyst', booket: 'booket', ikkeBooket: 'ikke booket',
     pladserAf: '{a} af {b}', paaVente: '{n} på venteliste',
     tilfoej: 'Tilføj et medlem af klubben', soegPh: 'Søg på navn', soegHint: 'Skriv mindst to bogstaver af navnet.', tilfoejKnap: 'Tilføj', erMed: 'Er med',
     tilfoejet: '{navn} er tilføjet', ingenFund: 'Ingen fundet',
-    rAdmin: 'Administrator', rInviter: 'Må invitere', rMedlem: 'Medlem', rolleFor: 'Rolle for {navn}', fjern: 'Fjern', fjernFor: 'Fjern {navn} fra gruppen',
+    rAdmin: 'Gruppeadministrator', rInviter: 'Må invitere', rMedlem: 'Medlem', rolleFor: 'Rolle for {navn}', fjern: 'Fjern', fjernFor: 'Fjern {navn} fra gruppen',
     tryk: 'Tryk igen for at bekræfte', forlad: 'Forlad gruppen', forladIgen: 'Tryk igen for at forlade gruppen', forladt: 'Du har forladt gruppen.',
     retGruppen: 'Ret gruppen', gem: 'Gem', gemmer: 'Gemmer …', gemt: 'Gemt', oprettetAf: 'Oprettet af', oprettetDen: 'Oprettet', synlighed: 'Kan ses af', invitation: 'Kan tilføje nye',
     ingenBeskrivelse: 'Ingen beskrivelse endnu.',
@@ -242,7 +242,7 @@ window.TEKSTER = {
     stPlads: 'Du har en plads.', stVente: 'Du er nr. {nr} på ventelisten. Du får plads, hvis nogen melder fra.', stMaaske: 'Du har svaret måske.', stNej: 'Du har meldt fra.', stIngen: 'Du har ikke svaret endnu.',
     sender: 'Sender …', spillere: 'Spillere', venteliste: 'Venteliste', maaske: 'Måske', ingenSpillere: 'Ingen har meldt sig endnu.',
     bBooker: 'Booker', bRykket: 'Rykket op', bBetalt: 'Betalt',
-    erBooket: 'Banen er booket', erBooketAf: '{navn} har booket i ForeningsLet.', ikkeBooketH: 'Banen er ikke booket endnu', ikkeBooketAf: '{navn} booker i ForeningsLet.', ingenBane: 'Der skal ikke bookes bane.',
+    erBooket: 'Banen er booket', erBooketAf: '{navn} har booket i ForeningsLet.', ikkeBooketH: 'Banen er ikke booket endnu', ikkeBooketAf: '{navn} booker i ForeningsLet.', erBooketDu: 'Du har booket i ForeningsLet.', ikkeBooketDu: 'Du booker banen i ForeningsLet.', ingenBane: 'Der skal ikke bookes bane.',
     jegHarBooket: 'Jeg har booket banen', fortrydBooket: 'Banen er alligevel ikke booket',
     betaling: 'Betaling', iAlt: '{kr} i alt', duSkylder: 'Du skylder {kr} til {navn}.', duModtager: 'Du lægger ud. De andre betaler {kr} hver.',
     aabnMobilepay: 'Åbn MobilePay', jegHarBetalt: 'Jeg har betalt', ikkeBetalt: 'Jeg har ikke betalt alligevel', mobilepayHint: 'MobilePay åbner med nummer og beløb udfyldt.',
@@ -264,21 +264,21 @@ window.TEKSTER = {
     tomH: 'You are not in any groups yet', tomTekst: 'Create a group for the people you play with, or ask someone you know to add you.',
     kLoggetInd: 'Logged in as {navn}', tilbage: '← Groups', tilbageGruppe: '← Back', nyGruppeH: 'New group', navn: 'Name', sport: 'Sport',
     beskrivelse: 'About the group', beskrivelsePh: 'E.g. Regular doubles Sunday morning. Level 3 to 4.',
-    hvemSer: 'Who can see the group?', lukket: 'Only the members', lukketTekst: 'Others cannot find the group.',
-    klub: 'Everyone in the club', klubTekst: 'Other members can see the group and the description.',
-    hvemInviterer: 'Who can add new people?', invAlle: 'Everyone in the group', invAdmin: 'Only admins and those allowed to invite',
+    hvemSer: 'Who can see the group?', lukket: 'Only the members', lukketTekst: 'Other members cannot find the group. The club’s administrators can always see it.',
+    klub: 'Everyone in the club', klubTekst: 'All members can find the group and read the description.',
+    hvemInviterer: 'Who can add new people?', invAlle: 'Everyone in the group', invAdmin: 'Only group admins and those allowed to invite',
     opret: 'Create the group', fortryd: 'Cancel', opretter: 'Creating …', mangerNavn: 'Give the group a name',
     fChat: 'Chat', fSpil: 'Games', fMedlemmer: 'Members · {n}', fOm: 'About',
     medlemmerN: '{n} members', medlemmer1: '1 member',
     skrivBesked: 'Write a message', send: 'Send', retter: 'Editing message', idag: 'Today', igaar: 'Yesterday',
     handlinger: 'Message options', synesGodtOm: '♥ Like', fjernHjerte: '♥ Remove', ret: 'Edit', slet: 'Delete', slettet: 'Message deleted', rettet: 'edited',
-    hjerter: '{n} likes', dig: 'You', ingenBeskeder: 'No messages yet. Say hello.',
+    hjerter: '{n} likes', dig: 'you', du: 'You', ingenBeskeder: 'No messages yet. Say hello.',
     kommende: 'Upcoming games and events', nytSpil: '+ New game', ingenSpil: 'No games planned. Create the next one.',
     duErMed: 'You are in', duVenter: 'Waiting list no. {nr}', duMaaske: 'Maybe', ikkeSvaret: 'Not answered', aflyst: 'Cancelled', booket: 'booked', ikkeBooket: 'not booked',
     pladserAf: '{a} of {b}', paaVente: '{n} waiting',
     tilfoej: 'Add a club member', soegPh: 'Search by name', soegHint: 'Type at least two letters of the name.', tilfoejKnap: 'Add', erMed: 'Member',
     tilfoejet: '{navn} has been added', ingenFund: 'No one found',
-    rAdmin: 'Admin', rInviter: 'Can invite', rMedlem: 'Member', rolleFor: 'Role for {navn}', fjern: 'Remove', fjernFor: 'Remove {navn} from the group',
+    rAdmin: 'Group admin', rInviter: 'Can invite', rMedlem: 'Member', rolleFor: 'Role for {navn}', fjern: 'Remove', fjernFor: 'Remove {navn} from the group',
     tryk: 'Tap again to confirm', forlad: 'Leave the group', forladIgen: 'Tap again to leave the group', forladt: 'You have left the group.',
     retGruppen: 'Edit the group', gem: 'Save', gemmer: 'Saving …', gemt: 'Saved', oprettetAf: 'Created by', oprettetDen: 'Created', synlighed: 'Visible to', invitation: 'Can add new people',
     ingenBeskrivelse: 'No description yet.',
@@ -291,7 +291,7 @@ window.TEKSTER = {
     stPlads: 'You have a place.', stVente: 'You are no. {nr} on the waiting list. You get a place if someone drops out.', stMaaske: 'You answered maybe.', stNej: 'You have dropped out.', stIngen: 'You have not answered yet.',
     sender: 'Sending …', spillere: 'Players', venteliste: 'Waiting list', maaske: 'Maybe', ingenSpillere: 'No one has signed up yet.',
     bBooker: 'Booker', bRykket: 'Moved up', bBetalt: 'Paid',
-    erBooket: 'The court is booked', erBooketAf: '{navn} has booked it in ForeningsLet.', ikkeBooketH: 'The court is not booked yet', ikkeBooketAf: '{navn} books it in ForeningsLet.', ingenBane: 'No court needs booking.',
+    erBooket: 'The court is booked', erBooketAf: '{navn} has booked it in ForeningsLet.', ikkeBooketH: 'The court is not booked yet', ikkeBooketAf: '{navn} books it in ForeningsLet.', erBooketDu: 'You have booked it in ForeningsLet.', ikkeBooketDu: 'You book the court in ForeningsLet.', ingenBane: 'No court needs booking.',
     jegHarBooket: 'I have booked the court', fortrydBooket: 'The court is not booked after all',
     betaling: 'Payment', iAlt: '{kr} in total', duSkylder: 'You owe {kr} to {navn}.', duModtager: 'You pay up front. The others pay {kr} each.',
     aabnMobilepay: 'Open MobilePay', jegHarBetalt: 'I have paid', ikkeBetalt: 'I have not paid after all', mobilepayHint: 'MobilePay opens with the number and amount filled in.',
@@ -322,11 +322,11 @@ Object.assign(window.MOTOR_EN, {
   'Gruppen findes ikke': 'The group does not exist',
   'Du er ikke med i gruppen': 'You are not in the group',
   'Personen kan ikke komme med i grupper': 'This person cannot join groups',
-  'Kun administratorer kan invitere i denne gruppe': 'Only admins can invite in this group',
-  'Kun administratorer kan ændre roller': 'Only admins can change roles',
-  'Kun administratorer kan fjerne medlemmer': 'Only admins can remove members',
-  'Gruppen skal have mindst én administrator': 'The group must have at least one admin',
-  'Du er den eneste administrator. Gør en anden til administrator først.': 'You are the only admin. Make someone else an admin first.',
+  'Kun gruppeadministratorer kan invitere i denne gruppe': 'Only group admins can invite in this group',
+  'Kun gruppeadministratorer kan ændre roller': 'Only group admins can change roles',
+  'Kun gruppeadministratorer kan fjerne medlemmer': 'Only group admins can remove members',
+  'Gruppen skal have mindst én gruppeadministrator': 'The group must have at least one group admin',
+  'Du er den eneste gruppeadministrator. Gør en anden til gruppeadministrator først.': 'You are the only group admin. Make someone else a group admin first.',
   'Svar ja, måske eller nej': 'Answer yes, maybe or no',
   'Spillet er aflyst': 'The game is cancelled',
   'Spillet er slut': 'The game is over',
@@ -368,6 +368,7 @@ function farve(id) { let h = 0; for (const c of String(id)) h = (h * 31 + c.char
 function initialer(navn) { return String(navn || '?').replace(/^Test\s+/, '').split(/\s+/).filter(Boolean).map((x) => x[0]).join('').slice(0, 2).toUpperCase(); }
 function avatar(id, navn) { const a = K.el('span', { 'class': 'gr-av', 'aria-hidden': 'true', style: 'background:' + farve(id) }, initialer(navn)); return a; }
 function fornavn(navn) { return String(navn || '').replace(/^Test\s+/, '').split(/\s+/)[0] || String(navn || ''); }
+function medDig(navn) { return (navn || '') + ' (' + t('dig') + ')'; }
 function navnPaa(uid) { const m = tilstand.medlemmer.find((x) => x.id === uid); return m ? m.navn : ''; }
 function minRolle() { const m = tilstand.medlemmer.find((x) => x.id === (mig && mig.uid)); return m ? m.rolle : ''; }
 const erAdmin = () => minRolle() === 'admin';
@@ -539,7 +540,7 @@ function tegnListe() {
     const midt = K.el('span', { 'class': 'gr-midt' });
     midt.append(K.el('b', null, g.navn));
     let linje = '';
-    if (d.sidste) linje = (d.sidste.fra === 'system' ? '' : (d.sidste.fra === mig.uid ? t('dig') : '') + (d.sidste.fra === mig.uid ? ': ' : '')) + (d.sidste.slettet ? t('slettet') : d.sidste.tekst);
+    if (d.sidste) linje = (d.sidste.fra === 'system' ? '' : (d.sidste.fra === mig.uid ? t('du') + ': ' : '')) + (d.sidste.slettet ? t('slettet') : d.sidste.tekst);
     else linje = g.beskrivelse || '';
     midt.append(K.el('span', { 'class': 'gr-linje' }, linje));
     if (d.spil) midt.append(K.el('span', { 'class': 'gr-linje2' }, kortDag(dato(d.spil.start)) + ' ' + kl(dato(d.spil.start)) + ' · ' + d.spil.titel));
@@ -577,6 +578,7 @@ function visNy() {
   K.besked($('nyMsg'), '');
   $('nyNavn').focus();
 }
+$('nyNavn').addEventListener('input', () => { if ($('nyNavn').value.trim()) K.besked($('nyMsg'), ''); });
 let nyId = K.nyId();
 $('vNy').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -796,7 +798,7 @@ function visNytSpil(gid) {
     const sel = $('nsBooker'); const valgt = sel.value || mig.uid;
     sel.innerHTML = '';
     tilstand.medlemmer.slice().sort((a, b) => a.navn.localeCompare(b.navn)).forEach((m) => {
-      const o = K.el('option', { value: m.id }, m.id === mig.uid ? m.navn + ' (' + t('dig').toLowerCase() + ')' : m.navn); sel.append(o);
+      const o = K.el('option', { value: m.id }, m.id === mig.uid ? medDig(m.navn) : m.navn); sel.append(o);
     });
     sel.append(K.el('option', { value: '' }, t('ingen')));
     sel.value = valgt;
@@ -865,7 +867,7 @@ function visSpil(gid, sid) {
 
 function person(t0, merker) {
   const li = K.el('li');
-  li.append(avatar(t0.id, t0.navn), K.el('span', { 'class': 'gr-mnavn' }, t0.id === mig.uid ? t('dig') : t0.navn));
+  li.append(avatar(t0.id, t0.navn), K.el('span', { 'class': 'gr-mnavn' }, t0.id === mig.uid ? medDig(t0.navn) : t0.navn));
   (merker || []).forEach(([tekst, kl2]) => li.append(K.el('span', { 'class': 'gr-badge ' + (kl2 || '') }, tekst)));
   return li;
 }
@@ -914,12 +916,12 @@ function tegnSpil() {
   const um = $('spMaaske'); um.innerHTML = ''; maaske.forEach((x) => um.append(person(x)));
   // Booking
   const bk = $('spBooking'); bk.innerHTML = '';
-  const bookerNavn = s.bookerAf ? (s.bookerAf === mig.uid ? t('dig') : fornavn(navnPaa(s.bookerAf) || (tilstand.tilm.find((x) => x.id === s.bookerAf) || {}).navn)) : '';
+  const bookerNavn = s.bookerAf ? (s.bookerAf === mig.uid ? '' : fornavn(navnPaa(s.bookerAf) || (tilstand.tilm.find((x) => x.id === s.bookerAf) || {}).navn)) : '';
   if (!s.bookerAf) bk.append(K.el('p', { 'class': 'hint', style: 'margin:0' }, t('ingenBane')));
   else {
     const top = K.el('div', { 'class': 'gr-booking' + (s.booket ? ' ok' : '') });
     top.append(K.el('span', { 'class': 'gr-flueben', 'aria-hidden': 'true' }, s.booket ? '✓' : '…'));
-    const tx = K.el('span'); tx.append(K.el('b', null, t(s.booket ? 'erBooket' : 'ikkeBooketH')), K.el('span', { 'class': 'hint', style: 'display:block;margin:2px 0 0' }, t(s.booket ? 'erBooketAf' : 'ikkeBooketAf', { navn: bookerNavn })));
+    const tx = K.el('span'); tx.append(K.el('b', null, t(s.booket ? 'erBooket' : 'ikkeBooketH')), K.el('span', { 'class': 'hint', style: 'display:block;margin:2px 0 0' }, s.bookerAf === mig.uid ? t(s.booket ? 'erBooketDu' : 'ikkeBooketDu') : t(s.booket ? 'erBooketAf' : 'ikkeBooketAf', { navn: bookerNavn })));
     top.append(tx); bk.append(top);
     if (s.bookerAf === mig.uid && !s.aflyst) {
       const b = K.el('button', { type: 'button', 'class': s.booket ? 'ghost small' : 'ok' }, t(s.booket ? 'fortrydBooket' : 'jegHarBooket'));
@@ -956,7 +958,7 @@ function tegnSpil() {
       if (s.mobilepay) bt.append(K.el('p', { 'class': 'hint' }, t('mobilepayNr', { nr: s.mobilepay }) + '. ' + t('mobilepayHint')));
     }
     const chips = K.el('div', { 'class': 'gr-tags', style: 'margin-top:12px' });
-    plads.filter((x) => x.id !== modtager).forEach((x) => chips.append(K.el('span', { 'class': 'gr-tag ' + (x.betalt ? 'ok' : 'vent') }, fornavn(x.id === mig.uid ? t('dig') : x.navn) + ' · ' + t(x.betalt ? 'betaltAf' : 'mangler'))));
+    plads.filter((x) => x.id !== modtager).forEach((x) => chips.append(K.el('span', { 'class': 'gr-tag ' + (x.betalt ? 'ok' : 'vent') }, (x.id === mig.uid ? medDig(fornavn(x.navn)) : fornavn(x.navn)) + ' · ' + t(x.betalt ? 'betaltAf' : 'mangler'))));
     bt.append(chips);
   }
   $('spNote').textContent = s.beskrivelse || '';
@@ -1030,7 +1032,7 @@ function tegnMedlemmer() {
   const orden = { admin: 0, inviter: 1, medlem: 2 };
   tilstand.medlemmer.slice().sort((a, b) => (orden[a.rolle] - orden[b.rolle]) || a.navn.localeCompare(b.navn)).forEach((m) => {
     const li = K.el('li');
-    li.append(avatar(m.id, m.navn), K.el('span', { 'class': 'gr-mnavn' }, m.navn + (m.id === mig.uid ? ' (' + t('dig').toLowerCase() + ')' : '')));
+    li.append(avatar(m.id, m.navn), K.el('span', { 'class': 'gr-mnavn' }, m.id === mig.uid ? medDig(m.navn) : m.navn));
     if (erAdmin() && m.id !== mig.uid) {
       const sel = K.el('select', { 'class': 'gr-rolle', 'aria-label': t('rolleFor', { navn: m.navn }) });
       ROLLER.forEach(([v, n]) => { const o = K.el('option', { value: v }, t(n)); if (v === m.rolle) o.selected = true; sel.append(o); });
