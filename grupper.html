@@ -87,6 +87,7 @@
           <ol id="beskeder" class="gr-chat" aria-live="polite" aria-relevant="additions"></ol>
           <form id="skriv" class="gr-skriv">
             <div id="retter" class="gr-retter hidden"><span data-t="retter">Retter besked</span> <button type="button" class="ghost small" id="retFortryd" data-t="fortryd">Fortryd</button></div>
+            <div id="svarBar" class="gr-svarbar hidden"><div id="svarBarTekst"></div><button type="button" class="gr-svarbar-x" id="svarFortryd" data-t-aria="svarFortryd" aria-label="Fortryd svar">&#215;</button></div>
             <label for="tekst" class="sr" data-t="skrivBesked">Skriv en besked</label>
             <textarea id="tekst" rows="1" maxlength="4000" data-t-ph="skrivBesked" placeholder="Skriv en besked"></textarea>
             <button type="submit" id="send" class="gr-send" data-t-aria="send" aria-label="Send"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button>
@@ -327,8 +328,11 @@ window.TEKSTER = {
     medlemmerN: '{n} medlemmer', medlemmer1: '1 medlem',
     skrivBesked: 'Skriv en besked', send: 'Send', retter: 'Retter besked', idag: 'I dag', igaar: 'I går',
     handlinger: 'Muligheder for beskeden', synesGodtOm: '♥ Synes godt om', fjernHjerte: '♥ Fjern', ret: 'Ret', slet: 'Slet', slettet: 'Beskeden er slettet', rettet: 'rettet',
-    reager: 'Reager med en emoji', reakAntal: '{e}: {n}', kanRettes: 'Kan rettes og slettes i {n} min. endnu', forSentRet: 'Beskeder kan kun rettes og slettes de første 3 minutter.',
-    eTommel: 'Tommel op', eHjerte: 'Hjerte', eGriner: 'Griner', eOverrasket: 'Overrasket', eTrist: 'Trist', eTak: 'Tak', eKlap: 'Klapper', eIld: 'Ild', eDynamit: 'Dynamit', eStaerk: 'Stærk', eTennis: 'Tennisbold', eFest: 'Fest',
+    reager: 'Reager med en emoji', reakAntal: '{e}: {n}', kanRettes: 'Kan rettes og slettes i {n} min. endnu', forSentRet: 'Beskeder kan kun rettes og slettes de første 3 minutter. Derefter står det skrevne.',
+    eTommel: 'Tommel op', eHjerte: 'Hjerte', eGriner: 'Griner', eOverrasket: 'Overrasket', eTrist: 'Trist', eTak: 'Tak', eKlap: 'Klapper', eIld: 'Ild', eDynamit: 'Dynamit', eStaerk: 'Stærk', eTennis: 'Tennisbold', eFest: 'Fest', eNet: 'Net', eOel: 'Øl', eVin: 'Vin', eDrink: 'Drink', eTorden: 'Tordensky', eSol: 'Sol', eSolopgang: 'Solopgang', eNisse: 'Nisse', eFaar: 'Får', eDjaevel: 'Djævel',
+    svar: 'Svar', svarTil: 'Svar til {navn}', svarFortryd: 'Fortryd svar', svarPaaLabel: 'Svar til {navn}: {tekst}. Vis beskeden', svarAntal1: '1 svar', svarAntalN: '{n} svar', svarGammel: 'Beskeden er for gammel til at blive vist her.',
+    sletIgen: 'Tryk igen for at slette', fjernBesked: 'Fjern beskeden', fjernIgen: 'Tryk igen for at fjerne', fjernet: 'Fjernet af en administrator', fjernHint: 'Som gruppeadministrator kan du fjerne en krænkende besked. Alle kan se, at den er fjernet.',
+    hvemReagerede: 'Reaktioner', reakNavne: '{e}: {navne}',
     hjerter: '{n} synes godt om', dig: 'dig', du: 'Du', ingenBeskeder: 'Ingen beskeder endnu. Sig hej.',
     kommende: 'Kommende spil og arrangementer', nytSpil: '+ Nyt spil', ingenSpil: 'Ingen spil planlagt. Opret det næste.',
     duErMed: 'Du er med', duVenter: 'Venteliste nr. {nr}', duMaaske: 'Måske', ikkeSvaret: 'Ikke svaret', aflyst: 'Aflyst', booket: 'booket', ikkeBooket: 'ikke booket',
@@ -443,8 +447,11 @@ window.TEKSTER = {
     medlemmerN: '{n} members', medlemmer1: '1 member',
     skrivBesked: 'Write a message', send: 'Send', retter: 'Editing message', idag: 'Today', igaar: 'Yesterday',
     handlinger: 'Message options', synesGodtOm: '♥ Like', fjernHjerte: '♥ Remove', ret: 'Edit', slet: 'Delete', slettet: 'Message deleted', rettet: 'edited',
-    reager: 'React with an emoji', reakAntal: '{e}: {n}', kanRettes: 'Can be edited and deleted for {n} more min.', forSentRet: 'Messages can only be edited and deleted for the first 3 minutes.',
-    eTommel: 'Thumbs up', eHjerte: 'Heart', eGriner: 'Laughing', eOverrasket: 'Surprised', eTrist: 'Sad', eTak: 'Thanks', eKlap: 'Clapping', eIld: 'Fire', eDynamit: 'Dynamite', eStaerk: 'Strong', eTennis: 'Tennis ball', eFest: 'Party',
+    reager: 'React with an emoji', reakAntal: '{e}: {n}', kanRettes: 'Can be edited and deleted for {n} more min.', forSentRet: 'Messages can only be edited and deleted for the first 3 minutes. After that, what is written stays.',
+    eTommel: 'Thumbs up', eHjerte: 'Heart', eGriner: 'Laughing', eOverrasket: 'Surprised', eTrist: 'Sad', eTak: 'Thanks', eKlap: 'Clapping', eIld: 'Fire', eDynamit: 'Dynamite', eStaerk: 'Strong', eTennis: 'Tennis ball', eFest: 'Party', eNet: 'Net', eOel: 'Beer', eVin: 'Wine', eDrink: 'Cocktail', eTorden: 'Thundercloud', eSol: 'Sun', eSolopgang: 'Sunrise', eNisse: 'Elf', eFaar: 'Sheep', eDjaevel: 'Devil',
+    svar: 'Reply', svarTil: 'Reply to {navn}', svarFortryd: 'Cancel reply', svarPaaLabel: 'Reply to {navn}: {tekst}. Show the message', svarAntal1: '1 reply', svarAntalN: '{n} replies', svarGammel: 'The message is too old to be shown here.',
+    sletIgen: 'Tap again to delete', fjernBesked: 'Remove message', fjernIgen: 'Tap again to remove', fjernet: 'Removed by an admin', fjernHint: 'As a group admin you can remove an offensive message. Everyone can see that it was removed.',
+    hvemReagerede: 'Reactions', reakNavne: '{e}: {navne}',
     hjerter: '{n} likes', dig: 'you', du: 'You', ingenBeskeder: 'No messages yet. Say hello.',
     kommende: 'Upcoming games and events', nytSpil: '+ New game', ingenSpil: 'No games planned. Create the next one.',
     duErMed: 'You are in', duVenter: 'Waiting list no. {nr}', duMaaske: 'Maybe', ikkeSvaret: 'Not answered', aflyst: 'Cancelled', booket: 'booked', ikkeBooket: 'not booked',
@@ -894,6 +901,7 @@ function nulstilGruppeVisning() {
   ['soegMsg', 'medlemMsg', 'forladMsg', 'chatMsg', 'omMsg'].forEach((id) => K.besked($(id), ''));
   $('beskeder').innerHTML = ''; $('chatSpil').innerHTML = ''; $('spilListe').innerHTML = ''; $('medlemmer').innerHTML = '';
   $('tekst').value = ''; tilstand.retter = null; $('retter').classList.add('hidden');
+  tilstand.svarTil = null; tilstand.sletKlar = null; $('svarBar').classList.add('hidden');
   $('gNavn').textContent = ''; $('gUnder').textContent = '';
   foersteChat = true; forladKlar = false; fjernKlar = null;
 }
@@ -952,7 +960,8 @@ function tegnChat() {
     if (!egen) raekke.append(forrigeFra !== b.fra ? avatar(b.fra, navn) : K.el('span', { 'class': 'gr-av tom', 'aria-hidden': 'true' }));
     const boble = K.el('div', { 'class': 'gr-boble' });
     if (!egen) boble.append(K.el('span', { 'class': 'sr' }, fornavn(navn) + ': '));
-    boble.append(K.el('span', { 'class': 'gr-tekst' }, b.slettet ? t('slettet') : b.tekst));
+    if (b.svarPaa && !b.slettet) boble.append(citatKnap(b.svarPaa));
+    boble.append(K.el('span', { 'class': 'gr-tekst' }, b.slettet ? t(b.fjernet ? 'fjernet' : 'slettet') : b.tekst));
     raekke.append(boble);
     if (!b.slettet) {
       const knap = K.el('button', { type: 'button', 'class': 'gr-mere', 'aria-label': t('handlinger'), 'aria-expanded': String(tilstand.aaben === b.id) }, '⋯');
@@ -961,20 +970,29 @@ function tegnChat() {
     }
     li.append(raekke);
     const mine = (b.reaktioner || {})[mig.uid] || '';
-    const optalt = {};
-    Object.values(b.reaktioner || {}).forEach((e) => { optalt[e] = (optalt[e] || 0) + 1; });
+    const optalt = {}, hvem = {};
+    Object.entries(b.reaktioner || {}).forEach(([pid, e]) => { optalt[e] = (optalt[e] || 0) + 1; (hvem[e] = hvem[e] || []).push(pid === mig.uid ? t('du') : fornavn(navnPaa(pid) || '…')); });
     if (!b.slettet && Object.keys(optalt).length) {
       const r = K.el('div', { 'class': 'gr-reak' });
       Object.keys(optalt).sort((x, y) => optalt[y] - optalt[x]).forEach((e) => {
-        const k = K.el('button', { type: 'button', 'class': 'gr-reak-k' + (mine === e ? ' min' : ''), 'aria-pressed': String(mine === e), 'aria-label': t('reakAntal', { e: emojiNavn(e), n: optalt[e] }) }, e + ' ' + optalt[e]);
+        const k = K.el('button', { type: 'button', 'class': 'gr-reak-k' + (mine === e ? ' min' : ''), 'aria-pressed': String(mine === e), 'aria-label': t('reakNavne', { e: emojiNavn(e), navne: hvem[e].join(', ') }), title: hvem[e].join(', ') }, e + ' ' + optalt[e]);
         k.addEventListener('click', () => reager(b, mine === e ? null : e));
         r.append(k);
       });
       li.append(r);
     }
     li.append(K.el('span', { 'class': 'gr-info' }, kl(tid) + (b.rettet ? ' · ' + t('rettet') : '')));
+    const svarene = tilstand.beskeder.filter((x) => x.svarPaa && x.svarPaa.id === b.id && !x.slettet);
+    if (svarene.length && !b.slettet) {
+      const l = K.el('button', { type: 'button', 'class': 'gr-svarlink' }, '↳ ' + t(svarene.length === 1 ? 'svarAntal1' : 'svarAntalN', { n: svarene.length }));
+      l.addEventListener('click', () => visBesked(svarene[svarene.length - 1].id));
+      li.append(l);
+    }
     if (tilstand.aaben === b.id) {
       const h = K.el('div', { 'class': 'gr-handl' });
+      const sv = K.el('button', { type: 'button', 'class': 'ok small' }, '↩ ' + t('svar'));
+      sv.addEventListener('click', () => startSvar(b));
+      h.append(sv);
       const valg = K.el('div', { 'class': 'gr-emojier', role: 'group', 'aria-label': t('reager') });
       EMOJI.forEach(([e, navn]) => {
         const k = K.el('button', { type: 'button', 'class': 'gr-emoji' + (mine === e ? ' min' : ''), 'aria-pressed': String(mine === e), 'aria-label': t(navn) }, e);
@@ -982,25 +1000,35 @@ function tegnChat() {
         valg.append(k);
       });
       h.append(valg);
+      if (Object.keys(hvem).length) h.append(K.el('p', { 'class': 'hint gr-hvem' }, t('hvemReagerede') + ': ' + Object.keys(hvem).map((e) => e + ' ' + hvem[e].join(', ')).join(' · ')));
       const tilbage = egen ? RET_MS - (Date.now() - tid.getTime()) : 0;
       if (egen && tilbage > 0) {
         const r = K.el('button', { type: 'button', 'class': 'ghost small' }, t('ret')); r.addEventListener('click', () => startRet(b)); h.append(r);
+        const klar = tilstand.sletKlar === b.id;
+        const s = K.el('button', { type: 'button', 'class': 'ghost small' + (klar ? ' farlig' : '') }, t(klar ? 'sletIgen' : 'slet'));
+        s.addEventListener('click', () => sletBesked(b, false)); h.append(s);
+        h.append(K.el('span', { 'class': 'hint gr-frist' }, t('kanRettes', { n: Math.max(1, Math.ceil(tilbage / 60000)) })));
+      } else if (egen) h.append(K.el('span', { 'class': 'hint gr-frist' }, t('forSentRet')));
+      else if (erAdmin()) {
+        const klar = tilstand.sletKlar === b.id;
+        const s = K.el('button', { type: 'button', 'class': 'ghost small' + (klar ? ' farlig' : '') }, t(klar ? 'fjernIgen' : 'fjernBesked'));
+        s.addEventListener('click', () => sletBesked(b, true)); h.append(s);
+        h.append(K.el('span', { 'class': 'hint gr-frist' }, t('fjernHint')));
       }
-      if ((egen && tilbage > 0) || erAdmin()) { const s = K.el('button', { type: 'button', 'class': 'ghost small' }, t('slet')); s.addEventListener('click', () => sletBesked(b)); h.append(s); }
-      if (egen && tilbage > 0) h.append(K.el('span', { 'class': 'hint gr-frist' }, t('kanRettes', { n: Math.max(1, Math.ceil(tilbage / 60000)) })));
-      else if (egen) h.append(K.el('span', { 'class': 'hint gr-frist' }, t('forSentRet')));
       li.append(h);
     }
     ol.append(li);
     forrigeFra = b.fra;
   });
+  tegnSvarBar();
   const sidste = tilstand.beskeder[tilstand.beskeder.length - 1];
   if (sidste && dato(sidste.tid)) saetLaest(tilstand.gruppe.id, dato(sidste.tid).getTime());
   if (bund && tilstand.beskeder.length) { window.scrollTo(0, document.documentElement.scrollHeight); foersteChat = false; }
 }
 
 const RET_MS = 3 * 60000;
-const EMOJI = [['👍', 'eTommel'], ['❤️', 'eHjerte'], ['😂', 'eGriner'], ['😮', 'eOverrasket'], ['😢', 'eTrist'], ['🙏', 'eTak'], ['👏', 'eKlap'], ['🔥', 'eIld'], ['🧨', 'eDynamit'], ['💪', 'eStaerk'], ['🎾', 'eTennis'], ['🎉', 'eFest']];
+const EMOJI = [['👍', 'eTommel'], ['❤️', 'eHjerte'], ['😂', 'eGriner'], ['😮', 'eOverrasket'], ['😢', 'eTrist'], ['🙏', 'eTak'], ['👏', 'eKlap'], ['🔥', 'eIld'], ['🧨', 'eDynamit'], ['💪', 'eStaerk'], ['🎾', 'eTennis'], ['🎉', 'eFest'],
+  ['🥅', 'eNet'], ['🍺', 'eOel'], ['🍷', 'eVin'], ['🍹', 'eDrink'], ['⛈️', 'eTorden'], ['☀️', 'eSol'], ['🌅', 'eSolopgang'], ['🎅', 'eNisse'], ['🐑', 'eFaar'], ['😈', 'eDjaevel']];
 function emojiNavn(e) { const f = EMOJI.find((x) => x[0] === e); return f ? t(f[1]) : e; }
 async function reager(b, emoji) {
   const { fs, db } = FB;
@@ -1009,15 +1037,55 @@ async function reager(b, emoji) {
   catch (err) { fejl($('chatMsg'), err); }
 }
 function startRet(b) {
-  tilstand.retter = b.id; tilstand.aaben = null;
+  tilstand.retter = b.id; tilstand.aaben = null; tilstand.svarTil = null; tegnSvarBar();
   $('tekst').value = b.tekst; $('retter').classList.remove('hidden'); tegnChat(); vokse(); $('tekst').focus();
 }
 $('retFortryd').addEventListener('click', () => { tilstand.retter = null; $('tekst').value = ''; $('retter').classList.add('hidden'); vokse(); $('tekst').focus(); });
-async function sletBesked(b) {
+/** Slet kræver to tryk. Egen besked de første 3 minutter. En administrator fjerner en andens besked (markeret "fjernet"). */
+async function sletBesked(b, fjern) {
+  if (tilstand.sletKlar !== b.id) {
+    tilstand.sletKlar = b.id; tegnChat();
+    setTimeout(() => { if (tilstand.sletKlar === b.id) { tilstand.sletKlar = null; if (tilstand.gruppe) tegnChat(); } }, 4000);
+    const k = document.querySelector('[data-id="' + b.id + '"] .gr-handl .farlig'); if (k) k.focus();
+    return;
+  }
   const { fs, db } = FB;
-  tilstand.aaben = null;
-  try { await fs.updateDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'beskeder', b.id), { tekst: '', slettet: fs.serverTimestamp() }); }
+  tilstand.aaben = null; tilstand.sletKlar = null;
+  const felter = { tekst: '', slettet: fs.serverTimestamp() };
+  if (fjern) felter.fjernet = true;
+  try { await fs.updateDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'beskeder', b.id), felter); }
   catch (err) { if (err && err.code === 'permission-denied') K.besked($('chatMsg'), t('forSentRet'), 'err'); else fejl($('chatMsg'), err); }
+}
+// ---------- Svar på en besked (Lars 12. oktober kl. 21.59): som i WhatsApp
+function startSvar(b) {
+  tilstand.svarTil = { id: b.id, fra: b.fra, tekst: String(b.tekst || '').slice(0, 140) };
+  tilstand.aaben = null; tilstand.retter = null; $('retter').classList.add('hidden');
+  tegnChat(); tegnSvarBar(); $('tekst').focus();
+}
+function tegnSvarBar() {
+  const s = tilstand.svarTil;
+  $('svarBar').classList.toggle('hidden', !s);
+  const d = $('svarBarTekst'); d.innerHTML = '';
+  if (s) d.append(K.el('b', null, t('svarTil', { navn: fornavn(navnPaa(s.fra) || '…') })), K.el('span', null, s.tekst));
+}
+$('svarFortryd').addEventListener('click', () => { tilstand.svarTil = null; tegnSvarBar(); $('tekst').focus(); });
+function citatKnap(s) {
+  const org = tilstand.beskeder.find((x) => x.id === s.id);
+  const navn = fornavn(navnPaa(s.fra) || '…');
+  const tekst = org && org.slettet ? t(org.fjernet ? 'fjernet' : 'slettet') : s.tekst;
+  const k = K.el('button', { type: 'button', 'class': 'gr-citat', 'aria-label': t('svarPaaLabel', { navn, tekst }) });
+  k.append(K.el('b', null, navn), K.el('span', null, tekst));
+  k.addEventListener('click', () => visBesked(s.id));
+  return k;
+}
+/** Hop til en besked og marker den et øjeblik. Står den ikke i de sidste 150 beskeder, siges det. */
+function visBesked(id) {
+  const li = document.querySelector('#beskeder [data-id="' + id + '"]');
+  if (!li) { K.besked($('chatMsg'), t('svarGammel')); setTimeout(() => K.besked($('chatMsg'), ''), 4000); return; }
+  li.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  document.querySelectorAll('#beskeder .gr-b.blink').forEach((x) => x.classList.remove('blink'));
+  li.classList.add('blink'); setTimeout(() => li.classList.remove('blink'), 2000);
+  const k = li.querySelector('.gr-mere'); if (k) k.focus({ preventScroll: true });
 }
 function vokse() { const a = $('tekst'); a.style.height = 'auto'; a.style.height = Math.min(a.scrollHeight + 2, 160) + 'px'; }
 $('tekst').addEventListener('input', vokse);
@@ -1037,14 +1105,22 @@ $('skriv').addEventListener('submit', async (e) => {
   const { fs, db } = FB;
   const gid = tilstand.gruppe.id;
   const ret = tilstand.retter;
+  const svarPaa = ret ? null : tilstand.svarTil;
   $('tekst').value = ''; vokse();
   tilstand.retter = null; $('retter').classList.add('hidden');
+  tilstand.svarTil = null; tegnSvarBar();
   K.besked($('chatMsg'), '');
   try {
     if (ret) await fs.updateDoc(fs.doc(db, 'grupper', gid, 'beskeder', ret), { tekst, rettet: fs.serverTimestamp() });
-    else { foersteChat = true; const ny = await fs.addDoc(fs.collection(db, 'grupper', gid, 'beskeder'), { fra: mig.uid, tekst, tid: fs.serverTimestamp() }); varsl(gid, 'chat', ny.id); }
+    else {
+      foersteChat = true;
+      const ny = { fra: mig.uid, tekst, tid: fs.serverTimestamp() };
+      if (svarPaa) ny.svarPaa = svarPaa;
+      const r = await fs.addDoc(fs.collection(db, 'grupper', gid, 'beskeder'), ny); varsl(gid, 'chat', r.id);
+    }
   } catch (err) {
     $('tekst').value = ret ? '' : tekst; vokse();
+    if (svarPaa) { tilstand.svarTil = svarPaa; tegnSvarBar(); }
     if (ret && err && err.code === 'permission-denied') K.besked($('chatMsg'), t('forSentRet'), 'err'); else fejl($('chatMsg'), err);
   }
 });
