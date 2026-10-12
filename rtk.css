@@ -264,3 +264,101 @@ td.n,th.n{text-align:right}
 .moduler li.fra{border:1px dashed #8FA9A6;background:var(--soft);color:var(--mute2)}
 .moduler li span{font-size:13px;color:var(--muted)}
 .oenskeliste{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:15px}
+
+/* grupper (Grupper på Mit RTK, 12. oktober 2026) */
+.gr{max-width:760px}
+.gr-hoved{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.gr-hoved h1,.gr-hoved h2{margin:0}
+.gr-tilbage{display:inline-block;margin:0 0 12px;font-weight:600;text-decoration:none;padding:6px 0;min-height:44px}
+.gr-who{margin-top:24px}
+.gr-filtre{margin:4px 0 14px}
+.gr-liste,.gr-spilliste,.gr-medlemmer,.gr-fund,.gr-chat{list-style:none;margin:0;padding:0}
+.gr-kort,.gr-spil{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--line);border-radius:6px;margin-bottom:10px;text-decoration:none;color:var(--ink);background:#FFFFFF}
+.gr-kort:hover,.gr-spil:hover{border-color:var(--pink)}
+.gr-sport{flex:0 0 52px;height:52px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;letter-spacing:.06em;background:#E6EFEE;color:var(--teal)}
+.gr-sport.s-padel{background:#EEEAF6;color:#4B3A78}
+.gr-sport.s-andet{background:#FBEFE6;color:#7A3E12}
+.gr-midt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.gr-midt b{font-size:18px}
+.gr-linje,.gr-linje2{font-size:14px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gr-linje2{color:var(--frost)}
+.gr-ny{flex:0 0 12px;height:12px;border-radius:99px;background:var(--pink)}
+.gr-naeste a{display:flex;flex-direction:column;gap:4px;padding:18px;border-radius:6px;background:var(--teal);color:#FFFFFF;text-decoration:none;margin:0 0 16px}
+.gr-naeste b{font-size:20px}
+.gr-naeste span{color:var(--sub);font-size:14px}
+.gr-naeste .gr-kick{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.gr-naeste .gr-merke{align-self:flex-start;margin-top:6px;background:#FFFFFF;color:var(--teal);font-weight:700}
+.gr-merke{flex-shrink:0;font-size:13px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.gr-merke:empty{display:none}
+.gr-merke.ja{background:var(--okbg);color:var(--ok)}
+.gr-merke.vent{background:var(--waitbg);color:var(--wait)}
+.gr-kal{flex:0 0 52px;text-align:center;display:flex;flex-direction:column;line-height:1.1}
+.gr-kal span{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--pink)}
+.gr-kal b{font-size:24px}
+.gr-spil.kompakt{margin:0 0 12px}
+.gr-spil.aflyst{opacity:.65}
+.gr-spil.aflyst b{text-decoration:line-through}
+.gr-form label{margin-top:14px}
+.gr-form .valg{margin-top:16px}
+.gr-knapper{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:16px}
+.gr-fortryd{font-weight:600}
+.gr-tre{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 12px}
+.gr-check{display:flex !important;align-items:center;gap:10px;font-size:16px;margin-top:16px}
+.gr-check input{width:22px;height:22px;min-height:0;accent-color:var(--pink)}
+.gr-titel{margin-bottom:12px}
+.gr-titel .hint{margin:4px 0 0;display:block}
+.gr-tabs{position:sticky;top:0;z-index:2;background:#FFFFFF;padding:8px 2px;margin-bottom:8px}
+/* chat */
+.gr-chat{padding:4px 0 8px}
+.gr-dag{text-align:center;font-size:13px;font-weight:600;color:var(--muted);margin:16px 0 8px}
+.gr-sys{text-align:center;font-size:13px;color:var(--muted);margin:8px 0}
+.gr-b{margin:2px 0;display:flex;flex-direction:column;align-items:flex-start}
+.gr-b.egen{align-items:flex-end}
+.gr-afsender{font-size:13px;font-weight:600;color:var(--muted);margin:10px 0 2px 46px}
+.gr-raekke{display:flex;align-items:flex-end;gap:8px;max-width:100%}
+.gr-b.egen .gr-raekke{flex-direction:row-reverse}
+.gr-av{flex:0 0 36px;width:36px;height:36px;border-radius:99px;color:#FFFFFF;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.gr-av.tom{visibility:hidden}
+.gr-boble{max-width:min(78vw,520px);padding:10px 14px;border-radius:18px;background:var(--soft);white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.4}
+.gr-b.egen .gr-boble{background:var(--teal);color:#FFFFFF}
+.gr-b.ventende .gr-boble{opacity:.7}
+.gr-b.slettet .gr-boble{background:transparent;border:1px dashed var(--line2);color:var(--muted);font-style:italic}
+.gr-mere{min-height:36px;min-width:36px;padding:0;border:0;background:transparent;color:var(--muted);font-size:20px;line-height:1;font-weight:700}
+.gr-info{font-size:12px;color:var(--muted);margin:2px 0 0 46px}
+.gr-b.egen .gr-info{margin:2px 44px 0 0}
+.gr-hj{color:var(--pink);font-weight:700}
+.gr-handl{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px 44px}
+.gr-b.egen .gr-handl{margin:6px 44px 4px 0}
+.gr-skriv{position:sticky;bottom:0;z-index:2;display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px;padding:10px 0 calc(10px + env(safe-area-inset-bottom));background:#FFFFFF;border-top:1px solid var(--line)}
+.gr-skriv textarea{flex:1;min-height:48px;max-height:160px;resize:none;border-radius:24px;padding:12px 16px;line-height:1.35}
+.gr-send{flex:0 0 48px;width:48px;height:48px;min-height:48px;padding:0;border-radius:99px;border:0;background:var(--pink);color:#FFFFFF;display:flex;align-items:center;justify-content:center}
+.gr-retter{flex-basis:100%;display:flex;align-items:center;justify-content:space-between;font-size:14px;color:var(--muted)}
+/* spil */
+.gr-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.gr-tag{font-size:13px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--soft);color:var(--muted)}
+.gr-tag.ok{background:var(--okbg);color:var(--ok)}
+.gr-tag.vent{background:var(--waitbg);color:var(--wait)}
+.gr-hvornaar{margin:6px 0 10px;font-size:17px}
+.gr-svar{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.gr-svar button[aria-pressed="true"]{border:2px solid var(--pink);background:#FFF4F8}
+.gr-lille{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
+.gr-medlemmer li,.gr-fund li{display:flex;align-items:center;gap:12px;padding:8px 0;flex-wrap:wrap}
+.gr-mnavn{flex:1;min-width:0;font-weight:600;overflow-wrap:anywhere}
+.gr-badge{font-size:13px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--soft);color:var(--muted)}
+.gr-badge.ok{background:var(--okbg);color:var(--ok)}
+.gr-badge.vent{background:var(--waitbg);color:var(--wait)}
+.gr-badge.admin{background:#E6EFEE;color:var(--teal)}
+.gr-mhandl{display:flex;gap:8px;align-items:center}
+.gr-rolle{width:auto;min-height:40px;padding:6px 10px;font-size:15px}
+.gr-booking{display:flex;gap:12px;align-items:flex-start}
+.gr-flueben{flex:0 0 36px;height:36px;border-radius:99px;display:flex;align-items:center;justify-content:center;background:var(--waitbg);color:var(--wait);font-weight:800}
+.gr-booking.ok .gr-flueben{background:var(--okbg);color:var(--ok)}
+.gr-knap{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 18px;border:2px solid var(--pink);border-radius:6px;font-weight:700;text-decoration:none;color:var(--ink)}
+.gr-om{white-space:pre-wrap;font-size:16px}
+@media (max-width:640px){
+  .gr-tre{grid-template-columns:1fr 1fr}
+  .gr-tre>div:first-child{grid-column:1/-1}
+  .gr-kort,.gr-spil{padding:14px;gap:12px}
+  .gr-hoved h1.lille{font-size:26px}
+  .gr-boble{max-width:calc(100vw - 120px)}
+}

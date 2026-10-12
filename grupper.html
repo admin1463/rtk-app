@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="Mit RTK">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-medlem-180.png">
+<link rel="icon" type="image/png" href="ikon-medlem-180.png">
+<title>Grupper · Mit RTK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="rtk.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" data-t-aria="tilForsiden" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b data-t="sideTitel">Grupper</b><span><span class="klub-d">Mit RTK · </span><span data-t="side">Medlemssiden</span></span></span>
+    </div>
+    <div class="hoejre">
+      <div class="sprog" role="group" aria-label="Sprog / Language">
+        <button type="button" data-sprog="da" lang="da" aria-label="Dansk" aria-pressed="true">DA</button>
+        <button type="button" data-sprog="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold smal">
+
+    <section id="loginDel" class="hidden">
+      <p class="kicker" data-t="kicker">Grupper</p>
+      <h1 class="lille" data-t="h1">Spil med dem, du plejer</h1>
+      <p class="hint" style="font-size:16px;max-width:560px" data-t="introLogin">Log ind med dit mobilnummer for at se dine grupper, chatte og melde dig til spil.</p>
+      <div class="card" id="login" style="max-width:520px;margin-top:16px"></div>
+    </section>
+
+    <section id="indeDel" class="hidden gr">
+      <div id="hentMsg" class="msg" aria-live="polite"></div>
+      <div id="ikkeVoksen" class="card hidden"><b data-t="kunVoksneH">Grupper er for voksne medlemmer</b><p class="hint" data-t="kunVoksneTekst">Indtil videre kan kun voksne medlemmer være med i grupper. Juniorer og forældre kommer senere.</p></div>
+
+      <!-- Mine grupper -->
+      <div id="vListe" class="hidden">
+        <div class="gr-hoved">
+          <h1 class="lille" data-t="mineGrupper">Grupper</h1>
+          <button type="button" id="nyKnap" class="ok" data-t="nyGruppe">+ Ny gruppe</button>
+        </div>
+        <div id="naeste" class="gr-naeste hidden"></div>
+        <div id="filtre" class="chips gr-filtre" role="group" data-t-aria="filtrer" aria-label="Vis grupper"></div>
+        <ul id="liste" class="gr-liste"></ul>
+        <div id="tom" class="card hidden"><b data-t="tomH">Du er ikke med i nogen grupper endnu</b><p class="hint" data-t="tomTekst">Opret en gruppe til dem, du spiller med, eller bed en, du kender, om at tilføje dig.</p></div>
+        <div class="who gr-who"><span id="hvem"></span><button type="button" class="ghost small" id="logud" data-t="kLogUd">Log ud</button></div>
+      </div>
+
+      <!-- Ny gruppe -->
+      <form id="vNy" class="hidden gr-form" novalidate>
+        <a href="#" class="gr-tilbage" data-t="tilbage">&#8592; Grupper</a>
+        <h1 class="lille" data-t="nyGruppeH">Ny gruppe</h1>
+        <label for="nyNavn" data-t="navn">Navn</label>
+        <input id="nyNavn" maxlength="60" autocomplete="off" required>
+        <fieldset class="valg gr-sport" id="nySport"><legend data-t="sport">Sport</legend></fieldset>
+        <label for="nyBeskrivelse" data-t="beskrivelse">Om gruppen</label>
+        <textarea id="nyBeskrivelse" maxlength="1000" rows="3" data-t-ph="beskrivelsePh"></textarea>
+        <fieldset class="valg" id="nySynlighed"><legend data-t="hvemSer">Hvem kan se gruppen?</legend></fieldset>
+        <fieldset class="valg" id="nyInvitation"><legend data-t="hvemInviterer">Hvem må tilføje nye?</legend></fieldset>
+        <div id="nyMsg" class="msg" aria-live="polite"></div>
+        <div class="gr-knapper"><button type="submit" class="ok" data-t="opret">Opret gruppen</button><a href="#" class="gr-fortryd" data-t="fortryd">Fortryd</a></div>
+      </form>
+
+      <!-- En gruppe -->
+      <div id="vGruppe" class="hidden">
+        <a href="#" class="gr-tilbage" data-t="tilbage">&#8592; Grupper</a>
+        <div class="gr-titel"><h1 class="lille" id="gNavn"></h1><span id="gUnder" class="hint"></span></div>
+        <div class="tabs gr-tabs" role="tablist" id="faner"></div>
+
+        <div id="pChat" role="tabpanel" class="hidden">
+          <div id="chatSpil"></div>
+          <div id="chatMsg" class="msg" aria-live="polite"></div>
+          <ol id="beskeder" class="gr-chat" aria-live="polite" aria-relevant="additions"></ol>
+          <form id="skriv" class="gr-skriv">
+            <div id="retter" class="gr-retter hidden"><span data-t="retter">Retter besked</span> <button type="button" class="ghost small" id="retFortryd" data-t="fortryd">Fortryd</button></div>
+            <label for="tekst" class="sr" data-t="skrivBesked">Skriv en besked</label>
+            <textarea id="tekst" rows="1" maxlength="4000" data-t-ph="skrivBesked" placeholder="Skriv en besked"></textarea>
+            <button type="submit" id="send" class="gr-send" data-t-aria="send" aria-label="Send"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg></button>
+          </form>
+        </div>
+
+        <div id="pSpil" role="tabpanel" class="hidden">
+          <div class="gr-hoved"><h2 data-t="kommende">Kommende spil og arrangementer</h2><button type="button" id="nytSpilKnap" class="ok small" data-t="nytSpil">+ Nyt spil</button></div>
+          <ul id="spilListe" class="gr-spilliste"></ul>
+          <p id="ingenSpil" class="hint hidden" data-t="ingenSpil">Ingen spil planlagt. Opret det næste.</p>
+        </div>
+
+        <div id="pMedlemmer" role="tabpanel" class="hidden">
+          <div id="inviterDel" class="card hidden">
+            <label for="soeg" data-t="tilfoej">Tilføj et medlem af klubben</label>
+            <input id="soeg" type="search" autocomplete="off" data-t-ph="soegPh" aria-describedby="soegHint" aria-controls="fund">
+            <p id="soegHint" class="hint" data-t="soegHint">Skriv mindst to bogstaver af navnet.</p>
+            <ul id="fund" class="gr-fund"></ul>
+            <div id="soegMsg" class="msg" aria-live="polite"></div>
+          </div>
+          <ul id="medlemmer" class="gr-medlemmer"></ul>
+          <div id="medlemMsg" class="msg" aria-live="polite"></div>
+          <div class="afsnit"><button type="button" class="ghost" id="forlad" data-t="forlad">Forlad gruppen</button><div id="forladMsg" class="msg" aria-live="polite"></div></div>
+        </div>
+
+        <div id="pOm" role="tabpanel" class="hidden">
+          <p id="omTekst" class="gr-om"></p>
+          <dl class="adresser" id="omFakta"></dl>
+          <form id="omForm" class="hidden gr-form" novalidate>
+            <h2 data-t="retGruppen">Ret gruppen</h2>
+            <label for="omNavn" data-t="navn">Navn</label><input id="omNavn" maxlength="60">
+            <label for="omBeskrivelse" data-t="beskrivelse">Om gruppen</label><textarea id="omBeskrivelse" maxlength="1000" rows="4" data-t-ph="beskrivelsePh"></textarea>
+            <fieldset class="valg" id="omSynlighed"><legend data-t="hvemSer">Hvem kan se gruppen?</legend></fieldset>
+            <fieldset class="valg" id="omInvitation"><legend data-t="hvemInviterer">Hvem må tilføje nye?</legend></fieldset>
+            <div id="omMsg" class="msg" aria-live="polite"></div>
+            <button type="submit" class="ok" data-t="gem">Gem</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Nyt spil -->
+      <form id="vNytSpil" class="hidden gr-form" novalidate>
+        <a href="#" id="nsTilbage" class="gr-tilbage" data-t="tilbageGruppe">&#8592; Tilbage</a>
+        <h1 class="lille" data-t="nytSpilH">Nyt spil</h1>
+        <fieldset class="valg" id="nsSlags"><legend data-t="hvad">Hvad er det?</legend></fieldset>
+        <label for="nsTitel" data-t="titel">Titel</label><input id="nsTitel" maxlength="80" data-t-ph="titelPh">
+        <div class="grid gr-tre">
+          <div><label for="nsDato" data-t="dato">Dato</label><input id="nsDato" type="date" required></div>
+          <div><label for="nsFra" data-t="fra">Fra</label><input id="nsFra" type="time" required value="10:00"></div>
+          <div><label for="nsTil" data-t="til">Til</label><input id="nsTil" type="time" value="11:30"></div>
+        </div>
+        <label for="nsSted" data-t="sted">Sted</label><input id="nsSted" maxlength="80" data-t-ph="stedPh">
+        <div class="grid gr-tre">
+          <div><label for="nsPladser" data-t="pladser">Pladser</label><input id="nsPladser" type="number" inputmode="numeric" min="1" max="500" value="4"></div>
+          <div><label for="nsPris" data-t="prisIAlt">Pris i alt (kr.)</label><input id="nsPris" type="number" inputmode="decimal" min="0" max="100000" step="1" data-t-ph="valgfrit"></div>
+          <div><label for="nsMobilepay" data-t="mobilepay">MobilePay-nummer</label><input id="nsMobilepay" type="tel" inputmode="tel" maxlength="16" data-t-ph="valgfrit"></div>
+        </div>
+        <label for="nsBooker" data-t="booker">Hvem booker banen i ForeningsLet?</label><select id="nsBooker"></select>
+        <label for="nsBeskrivelse" data-t="note">Note</label><textarea id="nsBeskrivelse" maxlength="1000" rows="2" data-t-ph="notePh"></textarea>
+        <label class="gr-check"><input type="checkbox" id="nsMed" checked> <span data-t="jegErMed">Jeg er med</span></label>
+        <div id="nsMsg" class="msg" aria-live="polite"></div>
+        <div class="gr-knapper"><button type="submit" class="ok" data-t="opretSpil">Opret</button></div>
+      </form>
+
+      <!-- Et spil -->
+      <div id="vSpil" class="hidden">
+        <a href="#" id="spTilbage" class="gr-tilbage" data-t="tilbageGruppe">&#8592; Tilbage</a>
+        <div id="spTags" class="gr-tags"></div>
+        <h1 class="lille" id="spTitel"></h1>
+        <p id="spHvornaar" class="gr-hvornaar"></p>
+        <p id="spAflyst" class="advarsel hidden" data-t="aflystTekst">Spillet er aflyst.</p>
+        <button type="button" id="spKalender" class="ghost small" data-t="laegIKalender">Læg i kalender</button>
+        <p class="hint" data-t="kalenderHint">Med påmindelse 1 time før.</p>
+        <div class="gr-svar" role="group" data-t-aria="ditSvar" aria-label="Dit svar" id="spSvar"></div>
+        <div id="spStatus" class="msg" aria-live="polite"></div>
+        <section class="card"><div class="gr-hoved"><h2 data-t="spillere">Spillere</h2><span id="spAntal" class="hint"></span></div>
+          <ul id="spSpillere" class="gr-medlemmer"></ul>
+          <div id="spVenteDel" class="hidden"><h3 class="gr-lille" data-t="venteliste">Venteliste</h3><ol id="spVente" class="gr-medlemmer"></ol></div>
+          <div id="spMaaskeDel" class="hidden"><h3 class="gr-lille" data-t="maaske">Måske</h3><ul id="spMaaske" class="gr-medlemmer"></ul></div>
+        </section>
+        <section class="card" id="spBooking"></section>
+        <section class="card hidden" id="spBetaling"></section>
+        <p id="spNote" class="gr-om"></p>
+        <div id="spAdmin" class="afsnit hidden">
+          <h2 data-t="retSpillet">Ret spillet</h2>
+          <div class="stepper"><button type="button" id="spMinus" data-t-aria="faerre" aria-label="Færre pladser">&#8722;</button><output id="spPladser" aria-live="polite"></output><span data-t="pladserOrd">pladser</span><button type="button" id="spPlus" data-t-aria="flere" aria-label="Flere pladser">+</button></div>
+          <p><button type="button" class="ghost" id="spAflys" data-t="aflys">Aflys spillet</button></p>
+          <div id="spAdminMsg" class="msg" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="wrap partnere">
+    <img class="p-babolat" src="ikoner/babolat.png" alt="Babolat">
+    <span data-t="partnere">Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" data-t-aria="racketlifeLink" aria-label="Racketlife (åbner i ny fane)"><img src="ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span data-t="test">Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="personale/" lang="da">Personale og frivillige</a>
+      <a class="privat" href="privatliv.html" data-t="privatliv">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+window.TEKSTER = {
+  da: {
+    titel: 'Grupper · Mit RTK', side: 'Medlemssiden', tilForsiden: 'Til forsiden',
+    klubLink: 'Roskilde Tennis Klubs hjemmeside (åbner i ny fane)', racketlifeLink: 'Racketlife (åbner i ny fane)',
+    partnere: 'Officielle partnere', test: 'Testversion. Data er opdigtede.', privatliv: 'Privatliv',
+    sideTitel: 'Grupper',
+    kicker: 'Grupper', h1: 'Spil med dem, du plejer',
+    introLogin: 'Log ind med dit mobilnummer for at se dine grupper, chatte og melde dig til spil.',
+    henter: 'Henter …', kunVoksneH: 'Grupper er for voksne medlemmer',
+    kunVoksneTekst: 'Indtil videre kan kun voksne medlemmer være med i grupper. Juniorer og forældre kommer senere.',
+    mineGrupper: 'Grupper', nyGruppe: '+ Ny gruppe', filtrer: 'Vis grupper', alle: 'Alle', tennis: 'Tennis', padel: 'Padel', begge: 'Tennis og padel', andet: 'Andet',
+    tomH: 'Du er ikke med i nogen grupper endnu', tomTekst: 'Opret en gruppe til dem, du spiller med, eller bed en, du kender, om at tilføje dig.',
+    kLoggetInd: 'Logget ind som {navn}', tilbage: '← Grupper', tilbageGruppe: '← Tilbage', nyGruppeH: 'Ny gruppe', navn: 'Navn', sport: 'Sport',
+    beskrivelse: 'Om gruppen', beskrivelsePh: 'Fx: Fast double søndag formiddag. Niveau 3 til 4.',
+    hvemSer: 'Hvem kan se gruppen?', lukket: 'Kun medlemmerne', lukketTekst: 'Gruppen kan ikke findes af andre.',
+    klub: 'Alle i klubben', klubTekst: 'Andre medlemmer kan se gruppen og beskrivelsen.',
+    hvemInviterer: 'Hvem må tilføje nye?', invAlle: 'Alle i gruppen', invAdmin: 'Kun administratorer og dem, der må invitere',
+    opret: 'Opret gruppen', fortryd: 'Fortryd', opretter: 'Opretter …', mangerNavn: 'Giv gruppen et navn',
+    fChat: 'Chat', fSpil: 'Spil', fMedlemmer: 'Medlemmer · {n}', fOm: 'Om',
+    medlemmerN: '{n} medlemmer', medlemmer1: '1 medlem',
+    skrivBesked: 'Skriv en besked', send: 'Send', retter: 'Retter besked', idag: 'I dag', igaar: 'I går',
+    handlinger: 'Muligheder for beskeden', synesGodtOm: '♥ Synes godt om', fjernHjerte: '♥ Fjern', ret: 'Ret', slet: 'Slet', slettet: 'Beskeden er slettet', rettet: 'rettet',
+    hjerter: '{n} synes godt om', dig: 'Dig', ingenBeskeder: 'Ingen beskeder endnu. Sig hej.',
+    kommende: 'Kommende spil og arrangementer', nytSpil: '+ Nyt spil', ingenSpil: 'Ingen spil planlagt. Opret det næste.',
+    duErMed: 'Du er med', duVenter: 'Venteliste nr. {nr}', duMaaske: 'Måske', ikkeSvaret: 'Ikke svaret', aflyst: 'Aflyst', booket: 'booket', ikkeBooket: 'ikke booket',
+    pladserAf: '{a} af {b}', paaVente: '{n} på venteliste',
+    tilfoej: 'Tilføj et medlem af klubben', soegPh: 'Søg på navn', soegHint: 'Skriv mindst to bogstaver af navnet.', tilfoejKnap: 'Tilføj', erMed: 'Er med',
+    tilfoejet: '{navn} er tilføjet', ingenFund: 'Ingen fundet',
+    rAdmin: 'Administrator', rInviter: 'Må invitere', rMedlem: 'Medlem', rolleFor: 'Rolle for {navn}', fjern: 'Fjern', fjernFor: 'Fjern {navn} fra gruppen',
+    tryk: 'Tryk igen for at bekræfte', forlad: 'Forlad gruppen', forladIgen: 'Tryk igen for at forlade gruppen', forladt: 'Du har forladt gruppen.',
+    retGruppen: 'Ret gruppen', gem: 'Gem', gemmer: 'Gemmer …', gemt: 'Gemt', oprettetAf: 'Oprettet af', oprettetDen: 'Oprettet', synlighed: 'Kan ses af', invitation: 'Kan tilføje nye',
+    ingenBeskrivelse: 'Ingen beskrivelse endnu.',
+    nytSpilH: 'Nyt spil', hvad: 'Hvad er det?', spil: 'Spil', arrangement: 'Arrangement', titel: 'Titel', titelPh: 'Fx Double søndag',
+    dato: 'Dato', fra: 'Fra', til: 'Til', sted: 'Sted', stedPh: 'Fx Darupvej, bane 3', pladser: 'Pladser', prisIAlt: 'Pris i alt (kr.)', valgfrit: 'Valgfrit',
+    mobilepay: 'MobilePay-nummer', booker: 'Hvem booker banen i ForeningsLet?', ingen: 'Ingen bane', note: 'Note', notePh: 'Fx: Jeg tager nye bolde med',
+    jegErMed: 'Jeg er med', opretSpil: 'Opret', mangerDato: 'Vælg dato og tidspunkt', titelDefault: 'Spil',
+    aflystTekst: 'Spillet er aflyst.', laegIKalender: 'Læg i kalender', kalenderHint: 'Med påmindelse 1 time før.', ditSvar: 'Dit svar',
+    sJa: 'Jeg er med', sMaaske: 'Måske', sNej: 'Kan ikke',
+    stPlads: 'Du har en plads.', stVente: 'Du er nr. {nr} på ventelisten. Du får plads, hvis nogen melder fra.', stMaaske: 'Du har svaret måske.', stNej: 'Du har meldt fra.', stIngen: 'Du har ikke svaret endnu.',
+    sender: 'Sender …', spillere: 'Spillere', venteliste: 'Venteliste', maaske: 'Måske', ingenSpillere: 'Ingen har meldt sig endnu.',
+    bBooker: 'Booker', bRykket: 'Rykket op', bBetalt: 'Betalt',
+    erBooket: 'Banen er booket', erBooketAf: '{navn} har booket i ForeningsLet.', ikkeBooketH: 'Banen er ikke booket endnu', ikkeBooketAf: '{navn} booker i ForeningsLet.', ingenBane: 'Der skal ikke bookes bane.',
+    jegHarBooket: 'Jeg har booket banen', fortrydBooket: 'Banen er alligevel ikke booket',
+    betaling: 'Betaling', iAlt: '{kr} i alt', duSkylder: 'Du skylder {kr} til {navn}.', duModtager: 'Du lægger ud. De andre betaler {kr} hver.',
+    aabnMobilepay: 'Åbn MobilePay', jegHarBetalt: 'Jeg har betalt', ikkeBetalt: 'Jeg har ikke betalt alligevel', mobilepayHint: 'MobilePay åbner med nummer og beløb udfyldt.',
+    mobilepayNr: 'MobilePay til {nr}', betaltAf: 'Har betalt', mangler: 'Mangler',
+    retSpillet: 'Ret spillet', pladserOrd: 'pladser', faerre: 'Færre pladser', flere: 'Flere pladser', aflys: 'Aflys spillet', aflysIgen: 'Tryk igen for at aflyse', genaabn: 'Genåbn spillet',
+    kr: '{n} kr.', fejlGem: 'Det kunne ikke gemmes. Prøv igen.', fejlHent: 'Grupperne kan ikke hentes lige nu. Prøv igen om lidt.', ingenAdgang: 'Du har ikke adgang til gruppen.',
+    systemOpret: 'oprettede gruppen', uLaest: 'Nye beskeder', naesteSpil: 'Dit næste spil',
+  },
+  en: {
+    titel: 'Groups · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
+    klubLink: 'Roskilde Tennis Klub website (opens in a new tab)', racketlifeLink: 'Racketlife (opens in a new tab)',
+    partnere: 'Official partners', test: 'Test version. All data is fictitious.', privatliv: 'Privacy',
+    sideTitel: 'Groups',
+    kicker: 'Groups', h1: 'Play with the people you usually play with',
+    introLogin: 'Log in with your mobile number to see your groups, chat and sign up for games.',
+    henter: 'Loading …', kunVoksneH: 'Groups are for adult members',
+    kunVoksneTekst: 'For now, only adult members can join groups. Juniors and parents will come later.',
+    mineGrupper: 'Groups', nyGruppe: '+ New group', filtrer: 'Show groups', alle: 'All', tennis: 'Tennis', padel: 'Padel', begge: 'Tennis and padel', andet: 'Other',
+    tomH: 'You are not in any groups yet', tomTekst: 'Create a group for the people you play with, or ask someone you know to add you.',
+    kLoggetInd: 'Logged in as {navn}', tilbage: '← Groups', tilbageGruppe: '← Back', nyGruppeH: 'New group', navn: 'Name', sport: 'Sport',
+    beskrivelse: 'About the group', beskrivelsePh: 'E.g. Regular doubles Sunday morning. Level 3 to 4.',
+    hvemSer: 'Who can see the group?', lukket: 'Only the members', lukketTekst: 'Others cannot find the group.',
+    klub: 'Everyone in the club', klubTekst: 'Other members can see the group and the description.',
+    hvemInviterer: 'Who can add new people?', invAlle: 'Everyone in the group', invAdmin: 'Only admins and those allowed to invite',
+    opret: 'Create the group', fortryd: 'Cancel', opretter: 'Creating …', mangerNavn: 'Give the group a name',
+    fChat: 'Chat', fSpil: 'Games', fMedlemmer: 'Members · {n}', fOm: 'About',
+    medlemmerN: '{n} members', medlemmer1: '1 member',
+    skrivBesked: 'Write a message', send: 'Send', retter: 'Editing message', idag: 'Today', igaar: 'Yesterday',
+    handlinger: 'Message options', synesGodtOm: '♥ Like', fjernHjerte: '♥ Remove', ret: 'Edit', slet: 'Delete', slettet: 'Message deleted', rettet: 'edited',
+    hjerter: '{n} likes', dig: 'You', ingenBeskeder: 'No messages yet. Say hello.',
+    kommende: 'Upcoming games and events', nytSpil: '+ New game', ingenSpil: 'No games planned. Create the next one.',
+    duErMed: 'You are in', duVenter: 'Waiting list no. {nr}', duMaaske: 'Maybe', ikkeSvaret: 'Not answered', aflyst: 'Cancelled', booket: 'booked', ikkeBooket: 'not booked',
+    pladserAf: '{a} of {b}', paaVente: '{n} waiting',
+    tilfoej: 'Add a club member', soegPh: 'Search by name', soegHint: 'Type at least two letters of the name.', tilfoejKnap: 'Add', erMed: 'Member',
+    tilfoejet: '{navn} has been added', ingenFund: 'No one found',
+    rAdmin: 'Admin', rInviter: 'Can invite', rMedlem: 'Member', rolleFor: 'Role for {navn}', fjern: 'Remove', fjernFor: 'Remove {navn} from the group',
+    tryk: 'Tap again to confirm', forlad: 'Leave the group', forladIgen: 'Tap again to leave the group', forladt: 'You have left the group.',
+    retGruppen: 'Edit the group', gem: 'Save', gemmer: 'Saving …', gemt: 'Saved', oprettetAf: 'Created by', oprettetDen: 'Created', synlighed: 'Visible to', invitation: 'Can add new people',
+    ingenBeskrivelse: 'No description yet.',
+    nytSpilH: 'New game', hvad: 'What is it?', spil: 'Game', arrangement: 'Event', titel: 'Title', titelPh: 'E.g. Sunday doubles',
+    dato: 'Date', fra: 'From', til: 'To', sted: 'Place', stedPh: 'E.g. Darupvej, court 3', pladser: 'Places', prisIAlt: 'Total price (DKK)', valgfrit: 'Optional',
+    mobilepay: 'MobilePay number', booker: 'Who books the court in ForeningsLet?', ingen: 'No court', note: 'Note', notePh: 'E.g. I will bring new balls',
+    jegErMed: 'I am in', opretSpil: 'Create', mangerDato: 'Choose date and time', titelDefault: 'Game',
+    aflystTekst: 'The game is cancelled.', laegIKalender: 'Add to calendar', kalenderHint: 'With a reminder 1 hour before.', ditSvar: 'Your answer',
+    sJa: 'I am in', sMaaske: 'Maybe', sNej: 'Can’t make it',
+    stPlads: 'You have a place.', stVente: 'You are no. {nr} on the waiting list. You get a place if someone drops out.', stMaaske: 'You answered maybe.', stNej: 'You have dropped out.', stIngen: 'You have not answered yet.',
+    sender: 'Sending …', spillere: 'Players', venteliste: 'Waiting list', maaske: 'Maybe', ingenSpillere: 'No one has signed up yet.',
+    bBooker: 'Booker', bRykket: 'Moved up', bBetalt: 'Paid',
+    erBooket: 'The court is booked', erBooketAf: '{navn} has booked it in ForeningsLet.', ikkeBooketH: 'The court is not booked yet', ikkeBooketAf: '{navn} books it in ForeningsLet.', ingenBane: 'No court needs booking.',
+    jegHarBooket: 'I have booked the court', fortrydBooket: 'The court is not booked after all',
+    betaling: 'Payment', iAlt: '{kr} in total', duSkylder: 'You owe {kr} to {navn}.', duModtager: 'You pay up front. The others pay {kr} each.',
+    aabnMobilepay: 'Open MobilePay', jegHarBetalt: 'I have paid', ikkeBetalt: 'I have not paid after all', mobilepayHint: 'MobilePay opens with the number and amount filled in.',
+    mobilepayNr: 'MobilePay to {nr}', betaltAf: 'Paid', mangler: 'Missing',
+    retSpillet: 'Edit the game', pladserOrd: 'places', faerre: 'Fewer places', flere: 'More places', aflys: 'Cancel the game', aflysIgen: 'Tap again to cancel', genaabn: 'Reopen the game',
+    kr: 'DKK {n}', fejlGem: 'It could not be saved. Please try again.', fejlHent: 'Groups cannot be loaded right now. Please try again shortly.', ingenAdgang: 'You do not have access to this group.',
+    systemOpret: 'created the group', uLaest: 'New messages', naesteSpil: 'Your next game',
+  }
+};
+</script>
+<script src="konto.js"></script>
+<script src="sprog.js"></script>
+<script src="velkomst.js"></script>
+<script type="module">
+// Grupper på Mit RTK. Login via motoren (login-broen), derefter Firestore direkte i realtid.
+// Medlemskab, roller og pladser går gennem motoren. Chat, spil, booking og betalt skriver siden selv.
+const K = window.RTK_KONTO;
+const $ = (id) => document.getElementById(id);
+const t = K.t;
+const FB_VERSION = '12.19.0';
+const CONFIG = {
+  apiKey: 'AIzaSyDn-RtvKrm2g2D1HY7KLx6XXFXQDZZgcD4', authDomain: 'mitrtk-282fa.firebaseapp.com', projectId: 'mitrtk-282fa',
+  storageBucket: 'mitrtk-282fa.firebasestorage.app', messagingSenderId: '1093255886930', appId: '1:1093255886930:web:0139ea144939078093078b'
+};
+Object.assign(window.MOTOR_EN, {
+  'Grupper er kun for voksne medlemmer indtil videre': 'Groups are for adult members only for now',
+  'Giv gruppen et navn': 'Give the group a name',
+  'Gruppen findes ikke': 'The group does not exist',
+  'Du er ikke med i gruppen': 'You are not in the group',
+  'Personen kan ikke komme med i grupper': 'This person cannot join groups',
+  'Kun administratorer kan invitere i denne gruppe': 'Only admins can invite in this group',
+  'Kun administratorer kan ændre roller': 'Only admins can change roles',
+  'Kun administratorer kan fjerne medlemmer': 'Only admins can remove members',
+  'Gruppen skal have mindst én administrator': 'The group must have at least one admin',
+  'Du er den eneste administrator. Gør en anden til administrator først.': 'You are the only admin. Make someone else an admin first.',
+  'Svar ja, måske eller nej': 'Answer yes, maybe or no',
+  'Spillet er aflyst': 'The game is cancelled',
+  'Spillet er slut': 'The game is over',
+  'Spillet findes ikke': 'The game does not exist',
+  'Grupper kan ikke åbnes lige nu. Prøv igen om lidt.': 'Groups cannot be opened right now. Please try again shortly.',
+  'Grupper kan ikke gemme lige nu. Prøv igen om lidt.': 'Groups cannot save right now. Please try again shortly.',
+  'Du har oprettet mange grupper. Skriv til klubben, hvis du har brug for flere.': 'You have created many groups. Write to the club if you need more.'
+});
+
+let FB = null;      // { app, auth, fs, au, db }
+let mig = null;     // { uid, type }
+let lyt = [];       // aktive realtidslyttere for den viste side
+let listeLyt = null;
+let listeFejl = 0;
+const tilstand = { grupper: [], filter: 'alle', gruppe: null, medlemmer: [], beskeder: [], spil: [], spilEt: null, tilm: [], retter: null, aaben: null };
+
+// ---------- Hjælpere
+const lokal = () => window.RTK_SPROG.lokal();
+const kr = (n) => t('kr', { n: new Intl.NumberFormat(lokal(), { maximumFractionDigits: 2 }).format(n) });
+const dato = (d) => (d && d.toDate ? d.toDate() : d instanceof Date ? d : null);
+const kl = (d) => new Intl.DateTimeFormat(lokal(), { hour: '2-digit', minute: '2-digit' }).format(d).replace(':', '.');
+const dagNavn = (d) => new Intl.DateTimeFormat(lokal(), { weekday: 'long', day: 'numeric', month: 'long' }).format(d);
+const kortDag = (d) => new Intl.DateTimeFormat(lokal(), { weekday: 'short', day: 'numeric', month: 'short' }).format(d);
+function hvornaar(s) {
+  const a = dato(s.start), b = dato(s.slut);
+  if (!a) return '';
+  const tekst = dagNavn(a) + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(a) + (b ? '–' + kl(b) : '');
+  return tekst.charAt(0).toUpperCase() + tekst.slice(1);
+}
+function sammeDag(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+function dagOverskrift(d) {
+  const nu = new Date(); const i = new Date(nu.getTime() - 86400000);
+  if (sammeDag(d, nu)) return t('idag');
+  if (sammeDag(d, i)) return t('igaar');
+  return kortDag(d);
+}
+const FARVER = ['#0B3D3A', '#B5476B', '#3E6B8A', '#2E7D6B', '#8A6D1E', '#6B4E9A', '#A3542B', '#4A5560'];
+function farve(id) { let h = 0; for (const c of String(id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return FARVER[h % FARVER.length]; }
+function initialer(navn) { return String(navn || '?').replace(/^Test\s+/, '').split(/\s+/).filter(Boolean).map((x) => x[0]).join('').slice(0, 2).toUpperCase(); }
+function avatar(id, navn) { const a = K.el('span', { 'class': 'gr-av', 'aria-hidden': 'true', style: 'background:' + farve(id) }, initialer(navn)); return a; }
+function fornavn(navn) { return String(navn || '').replace(/^Test\s+/, '').split(/\s+/)[0] || String(navn || ''); }
+function navnPaa(uid) { const m = tilstand.medlemmer.find((x) => x.id === uid); return m ? m.navn : ''; }
+function minRolle() { const m = tilstand.medlemmer.find((x) => x.id === (mig && mig.uid)); return m ? m.rolle : ''; }
+const erAdmin = () => minRolle() === 'admin';
+function maaInvitere() { const g = tilstand.gruppe; return !!g && (erAdmin() || minRolle() === 'inviter' || g.invitation === 'alle'); }
+function stopLyt() { lyt.forEach((f) => { try { f(); } catch (e) {} }); lyt = []; }
+function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
+function fejl(el, err) { console.warn(err); K.besked(el, err && err.code === 'permission-denied' ? t('ingenAdgang') : (err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem')), 'err'); }
+function laest(gid) { try { return Number(localStorage.getItem('rtk.gr.laest.' + gid) || 0); } catch (e) { return 0; } }
+function saetLaest(gid, ms) { try { if (ms > laest(gid)) localStorage.setItem('rtk.gr.laest.' + gid, String(ms)); } catch (e) {} }
+
+function radioer(fs, navn, valg, valgt, ved) {
+  fs.querySelectorAll('label').forEach((l) => l.remove());
+  valg.forEach(([v, titel, tekst]) => {
+    const l = K.el('label', { 'class': v === valgt ? 'valgt' : '' });
+    const r = K.el('input', { type: 'radio', name: navn, value: v });
+    r.checked = v === valgt;
+    r.addEventListener('change', () => { fs.querySelectorAll('label').forEach((x) => x.classList.toggle('valgt', x.contains(r))); if (ved) ved(v); });
+    const s = K.el('span'); s.append(K.el('b', null, t(titel)));
+    if (tekst) s.append(K.el('span', { 'class': 'smaa' }, t(tekst)));
+    l.append(r, s); fs.append(l);
+  });
+}
+const valgtI = (fs) => (fs.querySelector('input:checked') || {}).value;
+
+// ---------- Firebase og login
+async function hentFirebase() {
+  if (FB) return FB;
+  const base = 'https://www.gstatic.com/firebasejs/' + FB_VERSION + '/';
+  const [app, auth, fs] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
+  const emu = window.RTK_EMULATOR;
+  const a = app.initializeApp(emu && emu.projekt ? Object.assign({}, CONFIG, { projectId: emu.projekt }) : CONFIG);
+  const au = auth.getAuth(a);
+  const db = fs.getFirestore(a);
+  if (window.RTK_EMULATOR) {
+    auth.connectAuthEmulator(au, 'http://127.0.0.1:9099', { disableWarnings: true });
+    fs.connectFirestoreEmulator(db, '127.0.0.1', 8080);
+  }
+  FB = { app, auth, fs, au, db };
+  return FB;
+}
+
+async function logIndFirebase() {
+  await hentFirebase();
+  await FB.au.authStateReady();
+  let u = FB.au.currentUser;
+  let type = '';
+  if (u) {
+    const r = await u.getIdTokenResult();
+    type = r.claims.type || '';
+    const gemt = (() => { try { return localStorage.getItem('rtk.gr.uid'); } catch (e) { return null; } })();
+    if (gemt !== u.uid) u = null;   // en anden har logget ind på Mit RTK siden sidst
+  }
+  if (!u) {
+    const svar = await K.motor('kerne', 'firebase');
+    const c = await FB.auth.signInWithCustomToken(FB.au, svar.token);
+    u = c.user; type = svar.type;
+    try { localStorage.setItem('rtk.gr.uid', u.uid); } catch (e) {}
+  }
+  mig = { uid: u.uid, type };
+  return mig;
+}
+
+function visLogin() {
+  stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; }
+  mig = null;
+  if (FB) FB.auth.signOut(FB.au).catch(() => {});
+  try { localStorage.removeItem('rtk.gr.uid'); } catch (e) {}
+  $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
+  K.loginKort($('login'), { onLogin: start });
+}
+K.vedLogud(visLogin);
+
+async function start() {
+  $('loginDel').classList.add('hidden'); $('indeDel').classList.remove('hidden');
+  K.besked($('hentMsg'), t('henter'));
+  try {
+    await logIndFirebase();
+    K.besked($('hentMsg'), '');
+    if (mig.type !== 'medlem') { $('ikkeVoksen').classList.remove('hidden'); vis(''); return; }
+    K.motor('kerne', 'mig').then((p) => { $('hvem').textContent = t('kLoggetInd', { navn: p.navn }); }).catch(() => {});
+    lytListe();
+    rute();
+  } catch (err) {
+    console.warn(err);
+    if (K.loggetInd()) K.besked($('hentMsg'), err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlHent'), 'err');
+  }
+}
+
+// ---------- Ruter: #  #ny  #g/<id>/<fane>  #g/<id>/spil/<sid>  #g/<id>/nytspil
+window.addEventListener('hashchange', () => { if (mig && mig.type === 'medlem') rute(); });
+function rute() {
+  const h = location.hash.replace(/^#/, '').split('/');
+  stopLyt();
+  tilstand.retter = null; tilstand.aaben = null;
+  if (h[0] === 'ny') return visNy();
+  if (h[0] === 'g' && h[1]) {
+    if (h[2] === 'spil' && h[3]) return visSpil(h[1], h[3]);
+    if (h[2] === 'nytspil') return visNytSpil(h[1]);
+    return visGruppe(h[1], h[2] || 'chat');
+  }
+  visListe();
+}
+
+// ---------- Mine grupper
+function lytListe() {
+  if (listeLyt) return;
+  const { fs, db } = FB;
+  listeLyt = fs.onSnapshot(fs.query(fs.collection(db, 'grupper'), fs.where('medlemsIder', 'array-contains', mig.uid)), (snap) => {
+    if (listeFejl >= 2) K.besked($('hentMsg'), '');
+    listeFejl = 0;
+    tilstand.grupper = snap.docs.map((d) => Object.assign({ id: d.id }, d.data())).filter((g) => !g.arkiveret);
+    if (!$('vListe').classList.contains('hidden')) tegnListe();
+    hentDetaljer();
+  }, (err) => {
+    // Fx når man lige er fjernet fra en gruppe: lyt igen om lidt.
+    console.warn(err); listeLyt = null; listeFejl++;
+    if (listeFejl >= 2) K.besked($('hentMsg'), t('fejlHent'), 'err');
+    setTimeout(() => { if (mig && !listeLyt) lytListe(); }, Math.min(30000, 1500 * Math.pow(2, listeFejl - 1)));
+  });
+}
+function lytListeIgen() { if (listeLyt) { listeLyt(); listeLyt = null; } lytListe(); }
+
+const detaljer = {};
+async function hentDetaljer() {
+  const { fs, db } = FB;
+  const nu = new Date(Date.now() - 3 * 3600000);
+  await Promise.all(tilstand.grupper.map(async (g) => {
+    try {
+      const [b, s] = await Promise.all([
+        fs.getDocs(fs.query(fs.collection(db, 'grupper', g.id, 'beskeder'), fs.orderBy('tid', 'desc'), fs.limit(1))),
+        fs.getDocs(fs.query(fs.collection(db, 'grupper', g.id, 'spil'), fs.where('start', '>=', nu), fs.orderBy('start'), fs.limit(3)))
+      ]);
+      const sidste = b.docs[0] ? b.docs[0].data() : null;
+      const spil = s.docs.map((d) => Object.assign({ id: d.id }, d.data())).filter((x) => !x.aflyst);
+      let minT = null;
+      if (spil[0]) { const m = await fs.getDoc(fs.doc(db, 'grupper', g.id, 'spil', spil[0].id, 'tilmeldinger', mig.uid)); minT = m.exists() ? m.data() : null; }
+      detaljer[g.id] = { sidste, spil: spil[0] || null, minT };
+    } catch (e) { console.warn(e); }
+  }));
+  if (!$('vListe').classList.contains('hidden')) tegnListe();
+}
+
+function visListe() {
+  vis('vListe');
+  if (FB) lytListeIgen();
+  tegnListe();
+  if (FB) hentDetaljer();
+}
+
+function tegnListe() {
+  const filtre = $('filtre'); filtre.innerHTML = '';
+  ['alle', 'tennis', 'padel'].forEach((f) => {
+    const b = K.el('button', { type: 'button', 'aria-pressed': String(tilstand.filter === f) }, t(f));
+    b.addEventListener('click', () => { tilstand.filter = f; tegnListe(); });
+    filtre.append(b);
+  });
+  const ul = $('liste'); ul.innerHTML = '';
+  const valgte = tilstand.grupper.filter((g) => tilstand.filter === 'alle' || g.sport === tilstand.filter || g.sport === 'begge');
+  valgte.sort((a, b) => {
+    const ta = detaljer[a.id] && detaljer[a.id].sidste ? dato(detaljer[a.id].sidste.tid) : dato(a.oprettet);
+    const tb = detaljer[b.id] && detaljer[b.id].sidste ? dato(detaljer[b.id].sidste.tid) : dato(b.oprettet);
+    return (tb ? tb.getTime() : 0) - (ta ? ta.getTime() : 0);
+  });
+  valgte.forEach((g) => {
+    const d = detaljer[g.id] || {};
+    const li = K.el('li');
+    const a = K.el('a', { href: '#g/' + g.id + '/chat', 'class': 'gr-kort' });
+    a.append(K.el('span', { 'class': 'gr-sport s-' + (g.sport || 'tennis'), 'aria-hidden': 'true' }, { tennis: 'TEN', padel: 'PAD', begge: 'T+P', andet: '•' }[g.sport] || 'TEN'));
+    const midt = K.el('span', { 'class': 'gr-midt' });
+    midt.append(K.el('b', null, g.navn));
+    let linje = '';
+    if (d.sidste) linje = (d.sidste.fra === 'system' ? '' : (d.sidste.fra === mig.uid ? t('dig') : '') + (d.sidste.fra === mig.uid ? ': ' : '')) + (d.sidste.slettet ? t('slettet') : d.sidste.tekst);
+    else linje = g.beskrivelse || '';
+    midt.append(K.el('span', { 'class': 'gr-linje' }, linje));
+    if (d.spil) midt.append(K.el('span', { 'class': 'gr-linje2' }, kortDag(dato(d.spil.start)) + ' ' + kl(dato(d.spil.start)) + ' · ' + d.spil.titel));
+    a.append(midt);
+    const ny = d.sidste && dato(d.sidste.tid) && d.sidste.fra !== mig.uid && dato(d.sidste.tid).getTime() > laest(g.id);
+    if (ny) a.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('uLaest') }, ''));
+    li.append(a); ul.append(li);
+  });
+  $('tom').classList.toggle('hidden', tilstand.grupper.length > 0);
+  // Dit næste spil
+  const kommende = tilstand.grupper.map((g) => Object.assign({ g }, detaljer[g.id] || {})).filter((x) => x.spil && x.minT && x.minT.svar === 'ja')
+    .sort((a, b) => dato(a.spil.start) - dato(b.spil.start));
+  const n = $('naeste'); n.innerHTML = '';
+  if (kommende[0]) {
+    const x = kommende[0];
+    const a = K.el('a', { href: '#g/' + x.g.id + '/spil/' + x.spil.id });
+    a.append(K.el('span', { 'class': 'gr-kick' }, t('naesteSpil')), K.el('b', null, x.spil.titel + ' · ' + kortDag(dato(x.spil.start)) + ' ' + kl(dato(x.spil.start))),
+      K.el('span', null, x.g.navn + (x.spil.sted ? ' · ' + x.spil.sted : '')),
+      K.el('span', { 'class': 'gr-merke' }, x.minT.status === 'venteliste' ? t('duVenter', { nr: x.minT.nr }) : t('duErMed')));
+    n.append(a);
+  }
+  n.classList.toggle('hidden', !kommende[0]);
+}
+$('nyKnap').addEventListener('click', () => { location.hash = 'ny'; });
+
+// ---------- Ny gruppe
+const SPORT = [['tennis', 'tennis'], ['padel', 'padel'], ['begge', 'begge'], ['andet', 'andet']];
+const SYNLIG = [['lukket', 'lukket', 'lukketTekst'], ['klub', 'klub', 'klubTekst']];
+const INVIT = [['alle', 'invAlle'], ['admin', 'invAdmin']];
+function visNy() {
+  vis('vNy');
+  radioer($('nySport'), 'sport', SPORT, valgtI($('nySport')) || 'tennis');
+  radioer($('nySynlighed'), 'synlighed', SYNLIG, valgtI($('nySynlighed')) || 'lukket');
+  radioer($('nyInvitation'), 'invitation', INVIT, valgtI($('nyInvitation')) || 'alle');
+  K.besked($('nyMsg'), '');
+  $('nyNavn').focus();
+}
+let nyId = K.nyId();
+$('vNy').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const navn = $('nyNavn').value.trim();
+  if (!navn) { K.besked($('nyMsg'), t('mangerNavn'), 'err'); $('nyNavn').focus(); return; }
+  K.besked($('nyMsg'), t('opretter'));
+  try {
+    const r = await K.motor('grupper', 'opret', { navn, sport: valgtI($('nySport')), beskrivelse: $('nyBeskrivelse').value, synlighed: valgtI($('nySynlighed')), invitation: valgtI($('nyInvitation')) }, nyId);
+    nyId = K.nyId(); $('nyNavn').value = ''; $('nyBeskrivelse').value = '';
+    location.hash = 'g/' + r.id + '/medlemmer';
+  } catch (err) { fejl($('nyMsg'), err); }
+});
+
+// ---------- En gruppe
+const FANER = [['chat', 'fChat', 'pChat'], ['spil', 'fSpil', 'pSpil'], ['medlemmer', 'fMedlemmer', 'pMedlemmer'], ['om', 'fOm', 'pOm']];
+function lytGruppe(gid, efter) {
+  const { fs, db } = FB;
+  lyt.push(fs.onSnapshot(fs.doc(db, 'grupper', gid), (d) => {
+    if (!d.exists() || d.data().arkiveret) { location.hash = ''; return; }
+    tilstand.gruppe = Object.assign({ id: d.id }, d.data());
+    efter();
+  }, (err) => { fejl($('hentMsg'), err); location.hash = ''; }));
+  lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'medlemmer'), (s) => {
+    tilstand.medlemmer = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    efter();
+  }, (err) => fejl($('hentMsg'), err)));
+}
+
+function visGruppe(gid, fane) {
+  vis('vGruppe');
+  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.gruppe = null; tilstand.medlemmer = []; tilstand.beskeder = []; tilstand.spil = []; }
+  tilstand.fane = FANER.some((f) => f[0] === fane) ? fane : 'chat';
+  const tegn = () => tegnGruppe();
+  lytGruppe(gid, tegn);
+  const { fs, db } = FB;
+  lyt.push(fs.onSnapshot(fs.query(fs.collection(db, 'grupper', gid, 'beskeder'), fs.orderBy('tid', 'desc'), fs.limit(150)), (s) => {
+    tilstand.beskeder = s.docs.map((d) => Object.assign({ id: d.id, ventende: d.metadata.hasPendingWrites }, d.data())).reverse();
+    if (tilstand.fane === 'chat') tegnChat();
+  }, (err) => fejl($('chatMsg'), err)));
+  lyt.push(fs.onSnapshot(fs.query(fs.collection(db, 'grupper', gid, 'spil'), fs.where('start', '>=', new Date(Date.now() - 3 * 3600000)), fs.orderBy('start'), fs.limit(30)), (s) => {
+    tilstand.spil = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    if (tilstand.fane === 'spil') tegnSpilListe();
+    if (tilstand.fane === 'chat') tegnChatSpil();
+  }, (err) => fejl($('hentMsg'), err)));
+  tegnGruppe();
+}
+
+function tegnGruppe() {
+  const g = tilstand.gruppe;
+  if (!g) return;
+  $('gNavn').textContent = g.navn;
+  const n = tilstand.medlemmer.length || (g.medlemsIder || []).length;
+  $('gUnder').textContent = (n === 1 ? t('medlemmer1') : t('medlemmerN', { n })) + ' · ' + t(g.sport || 'tennis');
+  const fan = $('faner'); fan.innerHTML = '';
+  FANER.forEach(([id, navn, panel]) => {
+    const b = K.el('button', { type: 'button', role: 'tab', id: 'fane-' + id, 'aria-controls': panel, 'aria-selected': String(tilstand.fane === id), tabindex: tilstand.fane === id ? '0' : '-1' }, t(navn, { n }));
+    b.addEventListener('click', () => { location.hash = 'g/' + g.id + '/' + id; });
+    b.addEventListener('keydown', (e) => {
+      const i = FANER.findIndex((f) => f[0] === id);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const j = (i + (e.key === 'ArrowRight' ? 1 : FANER.length - 1)) % FANER.length; location.hash = 'g/' + g.id + '/' + FANER[j][0]; setTimeout(() => { const f = $('fane-' + FANER[j][0]); if (f) f.focus(); }, 30); }
+    });
+    fan.append(b);
+    $(panel).classList.toggle('hidden', tilstand.fane !== id);
+    $(panel).setAttribute('aria-labelledby', 'fane-' + id);
+  });
+  if (tilstand.fane === 'chat') { tegnChat(); tegnChatSpil(); }
+  if (tilstand.fane === 'spil') tegnSpilListe();
+  if (tilstand.fane === 'medlemmer') tegnMedlemmer();
+  if (tilstand.fane === 'om') tegnOm();
+}
+
+// ---------- Chat
+function tegnChatSpil() {
+  const boks = $('chatSpil'); boks.innerHTML = '';
+  const s = tilstand.spil.find((x) => !x.aflyst);
+  if (!s || !tilstand.gruppe) return;
+  boks.append(spilKort(s, true));
+}
+
+function naerBunden() { return window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 160; }
+let foersteChat = true;
+function tegnChat() {
+  if (!mig || !tilstand.gruppe) return;
+  const ol = $('beskeder');
+  const bund = naerBunden() || foersteChat;
+  ol.innerHTML = '';
+  let forrigeDag = null, forrigeFra = null;
+  if (!tilstand.beskeder.length) ol.append(K.el('li', { 'class': 'gr-sys' }, t('ingenBeskeder')));
+  tilstand.beskeder.forEach((b) => {
+    const tid = dato(b.tid) || new Date();
+    if (!forrigeDag || !sammeDag(forrigeDag, tid)) { ol.append(K.el('li', { 'class': 'gr-dag' }, dagOverskrift(tid))); forrigeDag = tid; forrigeFra = null; }
+    if (b.fra === 'system') { ol.append(K.el('li', { 'class': 'gr-sys' }, b.tekst)); forrigeFra = null; return; }
+    const egen = b.fra === mig.uid;
+    const li = K.el('li', { 'class': 'gr-b' + (egen ? ' egen' : '') + (b.slettet ? ' slettet' : '') + (b.ventende ? ' ventende' : ''), 'data-id': b.id });
+    const navn = navnPaa(b.fra) || '…';
+    if (!egen && forrigeFra !== b.fra) li.append(K.el('span', { 'class': 'gr-afsender' }, fornavn(navn)));
+    const raekke = K.el('div', { 'class': 'gr-raekke' });
+    if (!egen) raekke.append(forrigeFra !== b.fra ? avatar(b.fra, navn) : K.el('span', { 'class': 'gr-av tom', 'aria-hidden': 'true' }));
+    const boble = K.el('div', { 'class': 'gr-boble' });
+    if (!egen) boble.append(K.el('span', { 'class': 'sr' }, fornavn(navn) + ': '));
+    boble.append(K.el('span', { 'class': 'gr-tekst' }, b.slettet ? t('slettet') : b.tekst));
+    raekke.append(boble);
+    if (!b.slettet) {
+      const knap = K.el('button', { type: 'button', 'class': 'gr-mere', 'aria-label': t('handlinger'), 'aria-expanded': String(tilstand.aaben === b.id) }, '⋯');
+      knap.addEventListener('click', () => { tilstand.aaben = tilstand.aaben === b.id ? null : b.id; tegnChat(); const k = document.querySelector('[data-id="' + b.id + '"] .gr-handl button'); if (k) k.focus(); });
+      raekke.append(knap);
+    }
+    li.append(raekke);
+    const hj = Object.keys(b.reaktioner || {}).length;
+    const info = K.el('span', { 'class': 'gr-info' }, kl(tid) + (b.rettet ? ' · ' + t('rettet') : ''));
+    if (hj) info.prepend(K.el('span', { 'class': 'gr-hj', 'aria-label': t('hjerter', { n: hj }) }, '♥ ' + hj + '  '));
+    li.append(info);
+    if (tilstand.aaben === b.id) {
+      const h = K.el('div', { 'class': 'gr-handl' });
+      const har = !!(b.reaktioner && b.reaktioner[mig.uid]);
+      const hjb = K.el('button', { type: 'button', 'class': 'ghost small' }, t(har ? 'fjernHjerte' : 'synesGodtOm'));
+      hjb.addEventListener('click', () => reager(b, !har));
+      h.append(hjb);
+      if (egen) { const r = K.el('button', { type: 'button', 'class': 'ghost small' }, t('ret')); r.addEventListener('click', () => startRet(b)); h.append(r); }
+      if (egen || erAdmin()) { const s = K.el('button', { type: 'button', 'class': 'ghost small' }, t('slet')); s.addEventListener('click', () => sletBesked(b)); h.append(s); }
+      li.append(h);
+    }
+    ol.append(li);
+    forrigeFra = b.fra;
+  });
+  const sidste = tilstand.beskeder[tilstand.beskeder.length - 1];
+  if (sidste && dato(sidste.tid)) saetLaest(tilstand.gruppe.id, dato(sidste.tid).getTime());
+  if (bund && tilstand.beskeder.length) { window.scrollTo(0, document.documentElement.scrollHeight); foersteChat = false; }
+}
+
+async function reager(b, til) {
+  const { fs, db } = FB;
+  tilstand.aaben = null;
+  try { await fs.updateDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'beskeder', b.id), new fs.FieldPath('reaktioner', mig.uid), til ? '♥' : fs.deleteField()); }
+  catch (err) { fejl($('chatMsg'), err); }
+}
+function startRet(b) {
+  tilstand.retter = b.id; tilstand.aaben = null;
+  $('tekst').value = b.tekst; $('retter').classList.remove('hidden'); tegnChat(); vokse(); $('tekst').focus();
+}
+$('retFortryd').addEventListener('click', () => { tilstand.retter = null; $('tekst').value = ''; $('retter').classList.add('hidden'); vokse(); $('tekst').focus(); });
+async function sletBesked(b) {
+  const { fs, db } = FB;
+  tilstand.aaben = null;
+  try { await fs.updateDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'beskeder', b.id), { tekst: '', slettet: fs.serverTimestamp() }); }
+  catch (err) { fejl($('chatMsg'), err); }
+}
+function vokse() { const a = $('tekst'); a.style.height = 'auto'; a.style.height = Math.min(a.scrollHeight + 2, 160) + 'px'; }
+$('tekst').addEventListener('input', vokse);
+$('tekst').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && window.matchMedia('(hover:hover)').matches) { e.preventDefault(); $('skriv').requestSubmit(); }
+});
+$('skriv').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const tekst = $('tekst').value.trim();
+  if (!tekst || !tilstand.gruppe) return;
+  const { fs, db } = FB;
+  const gid = tilstand.gruppe.id;
+  const ret = tilstand.retter;
+  $('tekst').value = ''; vokse();
+  tilstand.retter = null; $('retter').classList.add('hidden');
+  K.besked($('chatMsg'), '');
+  try {
+    if (ret) await fs.updateDoc(fs.doc(db, 'grupper', gid, 'beskeder', ret), { tekst, rettet: fs.serverTimestamp() });
+    else { foersteChat = true; await fs.addDoc(fs.collection(db, 'grupper', gid, 'beskeder'), { fra: mig.uid, tekst, tid: fs.serverTimestamp() }); }
+  } catch (err) { $('tekst').value = tekst; vokse(); fejl($('chatMsg'), err); }
+});
+
+// ---------- Spil
+function minStatusTekst(s, minT) {
+  if (s.aflyst) return t('aflyst');
+  if (!minT || !minT.svar) return t('ikkeSvaret');
+  if (minT.svar === 'ja') return minT.status === 'venteliste' ? t('duVenter', { nr: minT.nr }) : t('duErMed');
+  if (minT.svar === 'maaske') return t('duMaaske');
+  return t('sNej');
+}
+function spilKort(s, kompakt) {
+  const a = K.el('a', { href: '#g/' + tilstand.gruppe.id + '/spil/' + s.id, 'class': 'gr-spil' + (kompakt ? ' kompakt' : '') + (s.aflyst ? ' aflyst' : '') });
+  const d = dato(s.start);
+  const kal = K.el('span', { 'class': 'gr-kal', 'aria-hidden': 'true' });
+  kal.append(K.el('span', null, new Intl.DateTimeFormat(lokal(), { weekday: 'short' }).format(d).replace('.', '')), K.el('b', null, String(d.getDate())));
+  const midt = K.el('span', { 'class': 'gr-midt' });
+  midt.append(K.el('b', null, s.titel + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(d)));
+  const antal = s.antal || { plads: 0, venteliste: 0 };
+  let linje = kortDag(d) + ' · ' + t('pladserAf', { a: antal.plads || 0, b: s.pladser });
+  if (antal.venteliste) linje += ' · ' + t('paaVente', { n: antal.venteliste });
+  if (s.bookerAf) linje += ' · ' + t(s.booket ? 'booket' : 'ikkeBooket');
+  midt.append(K.el('span', { 'class': 'gr-linje' }, linje));
+  if (s.sted && !kompakt) midt.append(K.el('span', { 'class': 'gr-linje2' }, s.sted));
+  a.append(kal, midt);
+  const merke = K.el('span', { 'class': 'gr-merke', 'data-spil': s.id }, s.aflyst ? t('aflyst') : '');
+  a.append(merke);
+  if (!s.aflyst) {
+    const { fs, db } = FB;
+    fs.getDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'spil', s.id, 'tilmeldinger', mig.uid)).then((m) => {
+      const minT = m.exists() ? m.data() : null;
+      merke.textContent = minStatusTekst(s, minT);
+      merke.classList.toggle('ja', !!(minT && minT.svar === 'ja' && minT.status === 'plads'));
+      merke.classList.toggle('vent', !!(minT && minT.status === 'venteliste'));
+    }).catch(() => {});
+  }
+  return a;
+}
+function tegnSpilListe() {
+  const ul = $('spilListe'); ul.innerHTML = '';
+  tilstand.spil.forEach((s) => { const li = K.el('li'); li.append(spilKort(s, false)); ul.append(li); });
+  $('ingenSpil').classList.toggle('hidden', tilstand.spil.length > 0);
+}
+$('nytSpilKnap').addEventListener('click', () => { location.hash = 'g/' + tilstand.gruppe.id + '/nytspil'; });
+
+// ---------- Nyt spil
+function visNytSpil(gid) {
+  vis('vNytSpil');
+  $('nsTilbage').setAttribute('href', '#g/' + gid + '/spil');
+  K.besked($('nsMsg'), '');
+  const efter = () => {
+    const sel = $('nsBooker'); const valgt = sel.value || mig.uid;
+    sel.innerHTML = '';
+    tilstand.medlemmer.slice().sort((a, b) => a.navn.localeCompare(b.navn)).forEach((m) => {
+      const o = K.el('option', { value: m.id }, m.id === mig.uid ? m.navn + ' (' + t('dig').toLowerCase() + ')' : m.navn); sel.append(o);
+    });
+    sel.append(K.el('option', { value: '' }, t('ingen')));
+    sel.value = valgt;
+  };
+  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.medlemmer = []; }
+  lytGruppe(gid, efter);
+  radioer($('nsSlags'), 'slags', [['spil', 'spil'], ['arrangement', 'arrangement']], valgtI($('nsSlags')) || 'spil', (v) => { if (v === 'arrangement' && $('nsPladser').value === '4') $('nsPladser').value = '20'; });
+  if (!$('nsDato').value) { const d = new Date(Date.now() + 86400000); $('nsDato').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  efter();
+  $('nsTitel').focus();
+}
+function tilDato(dag, tid) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dag) || !/^\d{2}:\d{2}$/.test(tid)) return null;
+  const [y, m, d] = dag.split('-').map(Number); const [h, mi] = tid.split(':').map(Number);
+  return new Date(y, m - 1, d, h, mi);
+}
+$('vNytSpil').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const gid = tilstand.gruppe && tilstand.gruppe.id;
+  if (!gid) return;
+  const start = tilDato($('nsDato').value, $('nsFra').value);
+  if (!start) { K.besked($('nsMsg'), t('mangerDato'), 'err'); $('nsDato').focus(); return; }
+  let slut = tilDato($('nsDato').value, $('nsTil').value);
+  if (slut && slut <= start) slut = new Date(slut.getTime() + 86400000);
+  const pladser = Math.max(1, Math.min(500, parseInt($('nsPladser').value, 10) || 4));
+  const pris = Math.max(0, Number(String($('nsPris').value).replace(',', '.')) || 0);
+  const { fs, db } = FB;
+  const data = {
+    slags: valgtI($('nsSlags')) || 'spil', titel: $('nsTitel').value.trim().slice(0, 80) || t('titelDefault'), sport: tilstand.gruppe.sport || 'tennis',
+    start: fs.Timestamp.fromDate(start), pladser, oprettetAf: mig.uid, oprettet: fs.serverTimestamp()
+  };
+  if (slut) data.slut = fs.Timestamp.fromDate(slut);
+  const sted = $('nsSted').value.trim(); if (sted) data.sted = sted.slice(0, 80);
+  if (pris) data.pris = pris;
+  const mp = $('nsMobilepay').value.replace(/[^\d+]/g, ''); if (mp) data.mobilepay = mp.slice(0, 16);
+  if ($('nsBooker').value) { data.bookerAf = $('nsBooker').value; data.booket = false; }
+  const note = $('nsBeskrivelse').value.trim(); if (note) data.beskrivelse = note.slice(0, 1000);
+  K.besked($('nsMsg'), t('gemmer'));
+  try {
+    const ref = fs.doc(fs.collection(db, 'grupper', gid, 'spil'));
+    await fs.setDoc(ref, data);
+    if ($('nsMed').checked) await K.motor('grupper', 'tilmeld', { gid, sid: ref.id, svar: 'ja' }, K.nyId());
+    ['nsTitel', 'nsSted', 'nsPris', 'nsBeskrivelse'].forEach((id) => { $(id).value = ''; });
+    location.hash = 'g/' + gid + '/spil/' + ref.id;
+  } catch (err) { fejl($('nsMsg'), err); }
+});
+
+// ---------- Et spil
+function visSpil(gid, sid) {
+  vis('vSpil');
+  $('spTilbage').setAttribute('href', '#g/' + gid + '/spil');
+  K.besked($('spStatus'), ''); K.besked($('spAdminMsg'), '');
+  tilstand.spilEt = null; tilstand.tilm = [];
+  const { fs, db } = FB;
+  const tegn = () => tegnSpil();
+  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.medlemmer = []; }
+  lytGruppe(gid, tegn);
+  lyt.push(fs.onSnapshot(fs.doc(db, 'grupper', gid, 'spil', sid), (d) => {
+    if (!d.exists()) { location.hash = 'g/' + gid + '/spil'; return; }
+    tilstand.spilEt = Object.assign({ id: d.id }, d.data()); tegn();
+  }, (err) => fejl($('spStatus'), err)));
+  lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'spil', sid, 'tilmeldinger'), (s) => {
+    tilstand.tilm = s.docs.map((d) => Object.assign({ id: d.id }, d.data())); tegn();
+  }, (err) => fejl($('spStatus'), err)));
+}
+
+function person(t0, merker) {
+  const li = K.el('li');
+  li.append(avatar(t0.id, t0.navn), K.el('span', { 'class': 'gr-mnavn' }, t0.id === mig.uid ? t('dig') : t0.navn));
+  (merker || []).forEach(([tekst, kl2]) => li.append(K.el('span', { 'class': 'gr-badge ' + (kl2 || '') }, tekst)));
+  return li;
+}
+
+function tegnSpil() {
+  const s = tilstand.spilEt;
+  if (!s || !tilstand.gruppe) return;
+  const tags = $('spTags'); tags.innerHTML = '';
+  [t(s.sport || 'tennis'), t(s.slags === 'arrangement' ? 'arrangement' : 'spil')].forEach((x) => tags.append(K.el('span', { 'class': 'gr-tag' }, x)));
+  $('spTitel').textContent = s.titel;
+  $('spHvornaar').textContent = hvornaar(s) + (s.sted ? ' · ' + s.sted : '');
+  $('spAflyst').classList.toggle('hidden', !s.aflyst);
+  $('spKalender').classList.toggle('hidden', !!s.aflyst);
+  const minT = tilstand.tilm.find((x) => x.id === mig.uid) || null;
+  // Svarknapper
+  const sv = $('spSvar'); sv.innerHTML = '';
+  if (!s.aflyst) [['ja', 'sJa'], ['maaske', 'sMaaske'], ['nej', 'sNej']].forEach(([v, n]) => {
+    const b = K.el('button', { type: 'button', 'aria-pressed': String(!!(minT && minT.svar === v)), 'class': 'ghost' }, t(n));
+    b.addEventListener('click', () => svar(v));
+    sv.append(b);
+  });
+  if (!s.aflyst && !$('spStatus').classList.contains('err')) {
+    let st = t('stIngen');
+    if (minT && minT.svar === 'ja') st = minT.status === 'venteliste' ? t('stVente', { nr: minT.nr }) : t('stPlads');
+    else if (minT && minT.svar === 'maaske') st = t('stMaaske');
+    else if (minT && minT.svar === 'nej') st = t('stNej');
+    K.besked($('spStatus'), st, minT && minT.status === 'plads' ? 'okm' : '');
+  } else if (s.aflyst) K.besked($('spStatus'), '');
+  // Spillere
+  const plads = tilstand.tilm.filter((x) => x.svar === 'ja' && x.status === 'plads').sort((a, b) => dato(a.tid) - dato(b.tid));
+  const vente = tilstand.tilm.filter((x) => x.svar === 'ja' && x.status === 'venteliste').sort((a, b) => (a.nr || 0) - (b.nr || 0));
+  const maaske = tilstand.tilm.filter((x) => x.svar === 'maaske');
+  $('spAntal').textContent = t('pladserAf', { a: plads.length, b: s.pladser });
+  const ul = $('spSpillere'); ul.innerHTML = '';
+  plads.forEach((x) => {
+    const m = [];
+    if (s.bookerAf === x.id) m.push([t('bBooker')]);
+    if (x.rykketOp) m.push([t('bRykket'), 'ok']);
+    if (s.pris && x.betalt) m.push([t('bBetalt'), 'ok']);
+    ul.append(person(x, m));
+  });
+  if (!plads.length) ul.append(K.el('li', { 'class': 'hint' }, t('ingenSpillere')));
+  $('spVenteDel').classList.toggle('hidden', !vente.length);
+  const ol = $('spVente'); ol.innerHTML = ''; vente.forEach((x) => ol.append(person(x, [[String(x.nr) + '.', 'vent']])));
+  $('spMaaskeDel').classList.toggle('hidden', !maaske.length);
+  const um = $('spMaaske'); um.innerHTML = ''; maaske.forEach((x) => um.append(person(x)));
+  // Booking
+  const bk = $('spBooking'); bk.innerHTML = '';
+  const bookerNavn = s.bookerAf ? (s.bookerAf === mig.uid ? t('dig') : fornavn(navnPaa(s.bookerAf) || (tilstand.tilm.find((x) => x.id === s.bookerAf) || {}).navn)) : '';
+  if (!s.bookerAf) bk.append(K.el('p', { 'class': 'hint', style: 'margin:0' }, t('ingenBane')));
+  else {
+    const top = K.el('div', { 'class': 'gr-booking' + (s.booket ? ' ok' : '') });
+    top.append(K.el('span', { 'class': 'gr-flueben', 'aria-hidden': 'true' }, s.booket ? '✓' : '…'));
+    const tx = K.el('span'); tx.append(K.el('b', null, t(s.booket ? 'erBooket' : 'ikkeBooketH')), K.el('span', { 'class': 'hint', style: 'display:block;margin:2px 0 0' }, t(s.booket ? 'erBooketAf' : 'ikkeBooketAf', { navn: bookerNavn })));
+    top.append(tx); bk.append(top);
+    if (s.bookerAf === mig.uid && !s.aflyst) {
+      const b = K.el('button', { type: 'button', 'class': s.booket ? 'ghost small' : 'ok' }, t(s.booket ? 'fortrydBooket' : 'jegHarBooket'));
+      b.addEventListener('click', () => opdaterSpil(s.booket ? { booket: false } : { booket: true, booketTid: FB.fs.serverTimestamp() }, $('spStatus')));
+      const p = K.el('p', { style: 'margin:12px 0 0' }); p.append(b); bk.append(p);
+    }
+  }
+  // Betaling
+  const bt = $('spBetaling'); bt.innerHTML = '';
+  bt.classList.toggle('hidden', !(s.pris > 0));
+  if (s.pris > 0) {
+    const n = Math.max(1, plads.length || s.pladser);
+    const hver = Math.round(s.pris / n * 100) / 100;
+    const h = K.el('div', { 'class': 'gr-hoved' }); h.append(K.el('h2', null, t('betaling')), K.el('span', { 'class': 'hint' }, t('iAlt', { kr: kr(s.pris) })));
+    bt.append(h);
+    const modtager = s.bookerAf || s.oprettetAf;
+    const modtagerNavn = fornavn(navnPaa(modtager)) || bookerNavn;
+    const jegSpiller = minT && minT.svar === 'ja' && minT.status === 'plads';
+    if (modtager === mig.uid) bt.append(K.el('p', { style: 'margin:0' }, t('duModtager', { kr: kr(hver) })));
+    else if (jegSpiller) {
+      const p = K.el('p', { style: 'margin:0' }); p.textContent = t('duSkylder', { kr: kr(hver), navn: modtagerNavn }); bt.append(p);
+      const knapper = K.el('div', { 'class': 'gr-knapper' });
+      if (s.mobilepay) {
+        const nr = String(s.mobilepay).replace(/^\+?45/, '').replace(/\D/g, '');
+        const a = K.el('a', { 'class': 'gr-knap', href: 'mobilepay://send?phone=' + encodeURIComponent(nr) + '&amount=' + hver.toFixed(2) + '&comment=' + encodeURIComponent(s.titel) + '&lock=1' }, t('aabnMobilepay'));
+        knapper.append(a);
+      }
+      const b = K.el('button', { type: 'button', 'class': minT.betalt ? 'ghost' : 'ok' }, t(minT.betalt ? 'ikkeBetalt' : 'jegHarBetalt'));
+      b.addEventListener('click', async () => {
+        try { await FB.fs.updateDoc(FB.fs.doc(FB.db, 'grupper', tilstand.gruppe.id, 'spil', s.id, 'tilmeldinger', mig.uid), { betalt: !minT.betalt }); }
+        catch (err) { fejl($('spStatus'), err); }
+      });
+      knapper.append(b); bt.append(knapper);
+      if (s.mobilepay) bt.append(K.el('p', { 'class': 'hint' }, t('mobilepayNr', { nr: s.mobilepay }) + '. ' + t('mobilepayHint')));
+    }
+    const chips = K.el('div', { 'class': 'gr-tags', style: 'margin-top:12px' });
+    plads.filter((x) => x.id !== modtager).forEach((x) => chips.append(K.el('span', { 'class': 'gr-tag ' + (x.betalt ? 'ok' : 'vent') }, fornavn(x.id === mig.uid ? t('dig') : x.navn) + ' · ' + t(x.betalt ? 'betaltAf' : 'mangler'))));
+    bt.append(chips);
+  }
+  $('spNote').textContent = s.beskrivelse || '';
+  // Ret spillet
+  const kanRette = s.oprettetAf === mig.uid || erAdmin();
+  $('spAdmin').classList.toggle('hidden', !kanRette);
+  $('spPladser').textContent = String(s.pladser);
+  $('spAflys').textContent = t(s.aflyst ? 'genaabn' : (aflysKlar ? 'aflysIgen' : 'aflys'));
+}
+
+let aflysKlar = false;
+async function svar(v) {
+  const s = tilstand.spilEt;
+  K.besked($('spStatus'), t('sender'));
+  try { await K.motor('grupper', 'tilmeld', { gid: tilstand.gruppe.id, sid: s.id, svar: v }, K.nyId()); K.besked($('spStatus'), ''); tegnSpil(); }
+  catch (err) { fejl($('spStatus'), err); }
+}
+async function opdaterSpil(felter, msg) {
+  try { await FB.fs.updateDoc(FB.fs.doc(FB.db, 'grupper', tilstand.gruppe.id, 'spil', tilstand.spilEt.id), felter); return true; }
+  catch (err) { fejl(msg, err); return false; }
+}
+async function nyePladser(n) {
+  const s = tilstand.spilEt; if (!s) return;
+  n = Math.max(1, Math.min(500, n));
+  if (n === s.pladser) return;
+  K.besked($('spAdminMsg'), t('gemmer'));
+  if (await opdaterSpil({ pladser: n }, $('spAdminMsg'))) {
+    try { await K.motor('grupper', 'fordel', { gid: tilstand.gruppe.id, sid: s.id }, K.nyId()); K.besked($('spAdminMsg'), t('gemt'), 'okm'); }
+    catch (err) { fejl($('spAdminMsg'), err); }
+  }
+}
+$('spMinus').addEventListener('click', () => nyePladser((tilstand.spilEt || {}).pladser - 1));
+$('spPlus').addEventListener('click', () => nyePladser((tilstand.spilEt || {}).pladser + 1));
+$('spAflys').addEventListener('click', async () => {
+  const s = tilstand.spilEt; if (!s) return;
+  if (s.aflyst) { await opdaterSpil({ aflyst: false }, $('spAdminMsg')); return; }
+  if (!aflysKlar) { aflysKlar = true; $('spAflys').textContent = t('aflysIgen'); setTimeout(() => { aflysKlar = false; if (tilstand.spilEt) tegnSpil(); }, 4000); return; }
+  aflysKlar = false;
+  await opdaterSpil({ aflyst: true }, $('spAdminMsg'));
+});
+
+// Kalender: en fil med påmindelse 1 time før.
+function ics(s) {
+  const z = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const esc = (x) => String(x || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1');
+  const a = dato(s.start), b = dato(s.slut) || new Date(a.getTime() + 90 * 60000);
+  const link = location.origin + location.pathname + '#g/' + tilstand.gruppe.id + '/spil/' + s.id;
+  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Roskilde Tennis Klub//Mit RTK//DA', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'BEGIN:VEVENT', 'UID:' + s.id + '@mitrtk.dk', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(a), 'DTEND:' + z(b),
+    'SUMMARY:' + esc(s.titel + ' · ' + tilstand.gruppe.navn), s.sted ? 'LOCATION:' + esc(s.sted) : null,
+    'DESCRIPTION:' + esc((s.beskrivelse ? s.beskrivelse + '\n\n' : '') + link), 'URL:' + link,
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc(s.titel), 'TRIGGER:-PT1H', 'END:VALARM',
+    'END:VEVENT', 'END:VCALENDAR'].filter(Boolean).join('\r\n') + '\r\n';
+}
+$('spKalender').addEventListener('click', () => {
+  const s = tilstand.spilEt; if (!s) return;
+  const url = URL.createObjectURL(new Blob([ics(s)], { type: 'text/calendar;charset=utf-8' }));
+  const a = K.el('a', { href: url, download: (s.titel || 'spil').replace(/[^\wæøåÆØÅ -]/g, '') + '.ics' });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+});
+window.RTK_GRUPPER_ICS = ics;
+
+// ---------- Medlemmer
+const ROLLER = [['admin', 'rAdmin'], ['inviter', 'rInviter'], ['medlem', 'rMedlem']];
+let fjernKlar = null, forladKlar = false;
+function tegnMedlemmer() {
+  const g = tilstand.gruppe;
+  $('inviterDel').classList.toggle('hidden', !maaInvitere());
+  const ul = $('medlemmer'); ul.innerHTML = '';
+  const orden = { admin: 0, inviter: 1, medlem: 2 };
+  tilstand.medlemmer.slice().sort((a, b) => (orden[a.rolle] - orden[b.rolle]) || a.navn.localeCompare(b.navn)).forEach((m) => {
+    const li = K.el('li');
+    li.append(avatar(m.id, m.navn), K.el('span', { 'class': 'gr-mnavn' }, m.navn + (m.id === mig.uid ? ' (' + t('dig').toLowerCase() + ')' : '')));
+    if (erAdmin() && m.id !== mig.uid) {
+      const sel = K.el('select', { 'class': 'gr-rolle', 'aria-label': t('rolleFor', { navn: m.navn }) });
+      ROLLER.forEach(([v, n]) => { const o = K.el('option', { value: v }, t(n)); if (v === m.rolle) o.selected = true; sel.append(o); });
+      sel.addEventListener('change', async () => {
+        K.besked($('medlemMsg'), t('gemmer'));
+        try { await K.motor('grupper', 'rolle', { gid: g.id, pid: m.id, rolle: sel.value }, K.nyId()); K.besked($('medlemMsg'), t('gemt'), 'okm'); }
+        catch (err) { sel.value = m.rolle; fejl($('medlemMsg'), err); }
+      });
+      const fj = K.el('button', { type: 'button', 'class': 'ghost small', 'aria-label': t('fjernFor', { navn: m.navn }) }, fjernKlar === m.id ? t('tryk') : t('fjern'));
+      fj.addEventListener('click', async () => {
+        if (fjernKlar !== m.id) { fjernKlar = m.id; tegnMedlemmer(); setTimeout(() => { if (fjernKlar === m.id) { fjernKlar = null; tegnMedlemmer(); } }, 4000); return; }
+        fjernKlar = null;
+        try { await K.motor('grupper', 'fjern', { gid: g.id, pid: m.id }, K.nyId()); K.besked($('medlemMsg'), ''); }
+        catch (err) { fejl($('medlemMsg'), err); }
+      });
+      const h = K.el('span', { 'class': 'gr-mhandl' }); h.append(sel, fj); li.append(h);
+    } else li.append(K.el('span', { 'class': 'gr-badge' + (m.rolle === 'admin' ? ' admin' : '') }, t(ROLLER.find((r) => r[0] === m.rolle)[1])));
+    ul.append(li);
+  });
+  $('forlad').textContent = t(forladKlar ? 'forladIgen' : 'forlad');
+}
+let soegTimer = null, soegNr = 0;
+$('soeg').addEventListener('input', () => {
+  clearTimeout(soegTimer);
+  const q = $('soeg').value.trim();
+  if (q.length < 2) { $('fund').innerHTML = ''; K.besked($('soegMsg'), ''); return; }
+  soegTimer = setTimeout(async () => {
+    const nr = ++soegNr;
+    try {
+      const r = await K.motor('grupper', 'soeg', { q, gid: tilstand.gruppe.id });
+      if (nr !== soegNr) return;
+      const ul = $('fund'); ul.innerHTML = '';
+      r.forEach((p) => {
+        const li = K.el('li'); li.append(avatar(p.id, p.navn), K.el('span', { 'class': 'gr-mnavn' }, p.navn));
+        if (p.med || tilstand.medlemmer.some((m) => m.id === p.id)) li.append(K.el('span', { 'class': 'gr-badge' }, t('erMed')));
+        else {
+          const b = K.el('button', { type: 'button', 'class': 'ok small', 'aria-label': t('tilfoejKnap') + ' ' + p.navn }, t('tilfoejKnap'));
+          b.addEventListener('click', async () => {
+            b.disabled = true;
+            try { await K.motor('grupper', 'inviter', { gid: tilstand.gruppe.id, pid: p.id }, K.nyId()); K.besked($('soegMsg'), t('tilfoejet', { navn: p.navn }), 'okm'); li.lastChild.replaceWith(K.el('span', { 'class': 'gr-badge' }, t('erMed'))); }
+            catch (err) { b.disabled = false; fejl($('soegMsg'), err); }
+          });
+          li.append(b);
+        }
+        ul.append(li);
+      });
+      K.besked($('soegMsg'), r.length ? '' : t('ingenFund'));
+    } catch (err) { fejl($('soegMsg'), err); }
+  }, 300);
+});
+$('forlad').addEventListener('click', async () => {
+  if (!forladKlar) { forladKlar = true; $('forlad').textContent = t('forladIgen'); setTimeout(() => { forladKlar = false; $('forlad').textContent = t('forlad'); }, 4000); return; }
+  forladKlar = false;
+  K.besked($('forladMsg'), t('sender'));
+  try { const gid = tilstand.gruppe.id; await K.motor('grupper', 'fjern', { gid }, K.nyId()); K.besked($('forladMsg'), ''); stopLyt(); tilstand.grupper = tilstand.grupper.filter((g) => g.id !== gid); delete detaljer[gid]; location.hash = ''; K.besked($('hentMsg'), t('forladt'), 'okm'); }
+  catch (err) { fejl($('forladMsg'), err); $('forlad').textContent = t('forlad'); }
+});
+
+// ---------- Om gruppen
+function tegnOm() {
+  const g = tilstand.gruppe;
+  $('omTekst').textContent = g.beskrivelse || t('ingenBeskrivelse');
+  $('omTekst').classList.toggle('hint', !g.beskrivelse);
+  const dl = $('omFakta'); dl.innerHTML = '';
+  const fakta = [[t('oprettetAf'), navnPaa(g.oprettetAf) || '–'], [t('oprettetDen'), dato(g.oprettet) ? kortDag(dato(g.oprettet)) + ' ' + dato(g.oprettet).getFullYear() : '–'],
+    [t('synlighed'), t(g.synlighed === 'klub' ? 'klub' : 'lukket')], [t('invitation'), t(g.invitation === 'admin' ? 'invAdmin' : 'invAlle')]];
+  fakta.forEach(([a, b]) => dl.append(K.el('dt', null, a), K.el('dd', null, b)));
+  $('omForm').classList.toggle('hidden', !erAdmin());
+  if (erAdmin() && document.activeElement && !$('omForm').contains(document.activeElement)) {
+    $('omNavn').value = g.navn; $('omBeskrivelse').value = g.beskrivelse || '';
+    radioer($('omSynlighed'), 'omSynlighed', SYNLIG, g.synlighed || 'lukket');
+    radioer($('omInvitation'), 'omInvitation', INVIT, g.invitation || 'alle');
+  }
+}
+$('omForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const navn = $('omNavn').value.trim();
+  if (!navn) { K.besked($('omMsg'), t('mangerNavn'), 'err'); return; }
+  K.besked($('omMsg'), t('gemmer'));
+  try {
+    await FB.fs.updateDoc(FB.fs.doc(FB.db, 'grupper', tilstand.gruppe.id), { navn: navn.slice(0, 60), beskrivelse: $('omBeskrivelse').value.trim().slice(0, 1000), synlighed: valgtI($('omSynlighed')), invitation: valgtI($('omInvitation')) });
+    K.besked($('omMsg'), t('gemt'), 'okm');
+  } catch (err) { fejl($('omMsg'), err); }
+});
+
+$('logud').addEventListener('click', () => K.logud());
+document.addEventListener('sprog', () => { if (mig && mig.type === 'medlem') { if (!$('vListe').classList.contains('hidden')) tegnListe(); if (!$('vGruppe').classList.contains('hidden')) tegnGruppe(); if (!$('vSpil').classList.contains('hidden')) tegnSpil(); } });
+
+if (K.loggetInd()) start(); else visLogin();
+</script>
+</body>
+</html>
