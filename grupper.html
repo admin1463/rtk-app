@@ -52,6 +52,7 @@
           <h1 class="lille" data-t="mineGrupper">Grupper</h1>
           <button type="button" id="nyKnap" class="ok" data-t="nyGruppe">+ Ny gruppe</button>
         </div>
+        <nav id="navListe" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
         <div id="naeste" class="gr-naeste hidden"></div>
         <div id="filtre" class="chips gr-filtre" role="group" data-t-aria="filtrer" aria-label="Vis grupper"></div>
         <ul id="liste" class="gr-liste"></ul>
@@ -93,6 +94,11 @@
         </div>
 
         <div id="pSpil" role="tabpanel" class="hidden">
+          <section id="grOpslag" class="sb-gruppe" aria-labelledby="grOpslagH">
+            <div class="gr-hoved"><h2 id="grOpslagH" data-t="sbFane">Spillerbørs</h2><button type="button" id="grSoegKnap" class="ghost small" data-t="sbSoegKnap">+ Søg en spiller</button></div>
+            <div id="grOpslagListe"></div>
+            <p id="grOpslagTom" class="hint" data-t="sbGrTom">Mangler I en spiller til et spil, eller søger I en fast spiller? Læg et opslag på spillerbørsen.</p>
+          </section>
           <div class="gr-hoved"><h2 data-t="kommende">Kommende spil og arrangementer</h2><button type="button" id="nytSpilKnap" class="ok small" data-t="nytSpil">+ Nyt spil</button></div>
           <ul id="spilListe" class="gr-spilliste"></ul>
           <p id="ingenSpil" class="hint hidden" data-t="ingenSpil">Ingen spil planlagt. Opret det næste.</p>
@@ -178,6 +184,7 @@
           <div id="spVenteDel" class="hidden"><h3 class="gr-lille" data-t="venteliste">Venteliste</h3><ol id="spVente" class="gr-medlemmer"></ol></div>
           <div id="spMaaskeDel" class="hidden"><h3 class="gr-lille" data-t="maaske">Måske</h3><ul id="spMaaske" class="gr-medlemmer"></ul></div>
         </section>
+        <div id="spSoegDel" class="hidden sb-spilsoeg"><button type="button" id="spSoeg" class="ghost small" data-t="sbSoegSpil">Søg en spiller på spillerbørsen</button></div>
         <section class="card" id="spBooking"></section>
         <section class="card hidden" id="spBetaling"></section>
         <p id="spNote" class="gr-om"></p>
@@ -188,6 +195,87 @@
           <div id="spAdminMsg" class="msg" aria-live="polite"></div>
         </div>
       </div>
+
+      <!-- Spillerbørsen: tavlen -->
+      <div id="vBoers" class="hidden">
+        <div class="gr-hoved"><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
+        <nav id="navBoers" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
+        <p class="hint sb-intro" data-t="sbIntro">Grupper, der mangler en spiller til et spil eller søger en fast spiller. Meld dig, hvis du har lyst. Kun gruppen ser, at du har meldt dig.</p>
+        <section id="sbMine" class="hidden sb-mine" aria-labelledby="sbMineH"><h2 id="sbMineH" class="gr-lille" data-t="sbDineSvar">Dine svar</h2><div id="sbMineListe"></div></section>
+        <div id="sbFiltre" class="chips gr-filtre" role="group" data-t-aria="sbFiltrer" aria-label="Vis opslag"></div>
+        <div id="sbListe"></div>
+        <p id="sbTom" class="hint hidden" data-t="sbTom">Ingen opslag lige nu. Kig forbi igen, eller slå en alarm til under Beskeder.</p>
+        <div class="sb-hjem" data-t="sbHjem">Opslag fra dine egne grupper står under gruppen. Du laver et opslag fra gruppen eller fra et spil.</div>
+      </div>
+
+      <!-- Spillerbørsen: et opslag set udefra -->
+      <div id="vOpslag" class="hidden">
+        <a href="#boers" class="gr-tilbage" data-t="sbTilbage">&#8592; Spillerbørs</a>
+        <div id="opTags" class="sb-tags"></div>
+        <h1 class="lille" id="opTitel"></h1>
+        <dl class="sb-dl" id="opFakta"></dl>
+        <div class="sb-citat hidden" id="opTekst"></div>
+        <p class="sb-l" id="opGruppe"></p>
+        <div id="opMsg" class="msg" aria-live="polite"></div>
+        <section class="sb-boks" id="opBoks" aria-live="polite"></section>
+        <div class="sb-info" id="opInfo"></div>
+      </div>
+
+      <!-- Spillerbørsen: gruppens opslag -->
+      <div id="vGrOpslag" class="hidden">
+        <a href="#" id="goTilbage" class="gr-tilbage" data-t="tilbageGruppe">&#8592; Tilbage</a>
+        <div id="goTags" class="sb-tags"></div>
+        <h1 class="lille" id="goTitel"></h1>
+        <p class="sb-l" id="goHvornaar"></p>
+        <p id="goStatus" class="gr-status"></p>
+        <div id="goMsg" class="msg" aria-live="polite"></div>
+        <section class="sb-boks"><div class="sb-top"><h2 id="goAntalH"></h2><span class="sb-l" data-t="sbKunGruppen">Kun gruppen ser listen</span></div><div id="goKand"></div></section>
+        <div class="sb-info hidden" id="goInfo"></div>
+        <div class="gr-knapper" id="goKnapper"><button type="button" class="ghost" id="goRet" data-t="sbRet">Ret opslaget</button><button type="button" class="ghost" id="goLuk" data-t="sbLuk">Luk uden at vælge</button></div>
+        <form id="goRetForm" class="hidden gr-form" novalidate>
+          <label for="goRetTitel" data-t="sbOverskrift">Overskrift</label><input id="goRetTitel" maxlength="80">
+          <label for="goRetTekst" data-t="sbMereOm">Mere om det (frivilligt)</label><textarea id="goRetTekst" maxlength="500" rows="3"></textarea>
+          <div id="goRetMsg" class="msg" aria-live="polite"></div>
+          <div class="gr-knapper"><button type="submit" class="ok" data-t="gem">Gem</button><button type="button" class="ghost" id="goRetFortryd" data-t="fortryd">Fortryd</button></div>
+        </form>
+      </div>
+
+      <!-- Spillerbørsen: nyt opslag -->
+      <form id="vNytOpslag" class="hidden gr-form" novalidate>
+        <a href="#" id="noTilbage" class="gr-tilbage" data-t="tilbageGruppe">&#8592; Tilbage</a>
+        <h1 class="lille" data-t="sbSoegH">Søg en spiller</h1>
+        <fieldset class="valg gr-valg2" id="noType"><legend data-t="sbHvadSoeger">Hvad søger I?</legend></fieldset>
+        <div id="noEtDel">
+          <label for="noSpil" data-t="sbHvilketSpil">Hvilket spil</label><select id="noSpil"></select>
+          <p id="noIngenSpil" class="hint hidden" data-t="sbIngenSpil">Ingen kommende spil med ledige pladser. Opret spillet først, eller giv det flere pladser.</p>
+          <p class="hint" data-t="sbFraSpillet">Tid, sted, bane og pris tages fra spillet.</p>
+        </div>
+        <div id="noFastDel" class="hidden">
+          <label for="noTider" data-t="sbTider">Hvornår spiller I?</label><input id="noTider" maxlength="80" data-t-ph="sbTiderPh">
+          <label for="noSted" data-t="sted">Sted</label><input id="noSted" maxlength="80" data-t-ph="stedPh">
+          <label for="noPris" data-t="sbPrisFast">Pris (frivilligt)</label><input id="noPris" maxlength="60" data-t-ph="sbPrisPh">
+          <label class="gr-check"><input type="checkbox" id="noFastBane"> <span data-t="sbFastBaneCheck">Vi har fast bane</span></label>
+        </div>
+        <div class="sb-felt"><span class="l" id="noSportL" data-t="sport">Sport</span><div id="noSport" class="chips" role="group" aria-labelledby="noSportL"></div></div>
+        <div class="sb-felt"><span class="l" id="noSpilformL" data-t="sbSpilform">Spilform</span><div id="noSpilform" class="chips" role="group" aria-labelledby="noSpilformL"></div></div>
+        <div class="sb-felt"><span class="l" id="noKoenL" data-t="sbSoeger">Søger</span><div id="noKoen" class="chips" role="group" aria-labelledby="noKoenL" aria-describedby="noKoenH"></div>
+          <p class="hint" id="noKoenH" data-t="sbKoenHint">Fx "Dame" til en mixdouble eller "Herre" til en herredouble. Står der underordnet, vises intet i opslaget.</p></div>
+        <div class="sb-felt"><span class="l" id="noAntalL" data-t="sbAntal">Antal spillere</span><div id="noAntal" class="chips" role="group" aria-labelledby="noAntalL"></div></div>
+        <div class="sb-felt"><span class="l" data-t="sbNiveauFelt">Niveau (frivilligt)</span>
+          <div class="sb-to"><label class="sr" for="noNivFra" data-t="sbNivFraL">Niveau fra</label><select id="noNivFra"></select><label class="sr" for="noNivTil" data-t="sbNivTilL">Niveau til</label><select id="noNivTil"></select></div>
+          <p class="hint" data-t="sbNiveauHint">Tennis 1 til 7 efter NTRP. Beskrivelserne kommer.</p></div>
+        <div class="sb-felt"><span class="l" id="noAlderL" data-t="sbAlderFelt">Alder (frivilligt, vælg gerne flere)</span><div id="noAlder" class="chips" role="group" aria-labelledby="noAlderL" aria-describedby="noAlderH"></div>
+          <p class="hint" id="noAlderH" data-t="sbAlderHint">Vælger du ingen, er alle aldre velkomne.</p></div>
+        <label for="noTitel" data-t="sbOverskrift">Overskrift</label><input id="noTitel" maxlength="80" data-t-ph="sbOverskriftPh">
+        <label for="noTekst" data-t="sbMereOm">Mere om det (frivilligt)</label><textarea id="noTekst" maxlength="500" rows="3" data-t-ph="sbMereOmPh"></textarea>
+        <div class="sb-felt" id="noFristEt"><span class="l" id="noFristL" data-t="sbSvarSenestOrd">Svar senest</span><div id="noFrist" class="chips" role="group" aria-labelledby="noFristL" aria-describedby="noFristH"></div>
+          <p class="hint" id="noFristH" data-t="sbFristHint">Opslaget lukker selv ved fristen.</p></div>
+        <div class="sb-felt" id="noFristFast"><label for="noFristDato" data-t="sbFristDato">Svar senest (fast plads)</label><input id="noFristDato" type="date"></div>
+        <label class="gr-check"><input type="checkbox" id="noVisNavn" checked aria-describedby="noVisNavnH"> <span data-t="sbVisNavn">Vis gruppens navn i opslaget</span></label>
+        <p class="hint" id="noVisNavnH" data-t="sbVisNavnHint">Slår du det fra, står der "En gruppe", indtil en er valgt.</p>
+        <div id="noMsg" class="msg" aria-live="polite"></div>
+        <div class="gr-knapper"><button type="submit" class="ok" data-t="sbLaegUd">Læg opslaget ud</button></div>
+      </form>
     </section>
   </div>
 
@@ -269,6 +357,58 @@ window.TEKSTER = {
     retSpillet: 'Ret spillet', pladserOrd: 'pladser', faerre: 'Færre pladser', flere: 'Flere pladser', aflys: 'Aflys spillet', aflysIgen: 'Tryk igen for at aflyse', genaabn: 'Genåbn spillet',
     kr: '{n} kr.', fejlGem: 'Det kunne ikke gemmes. Prøv igen.', fejlHent: 'Grupperne kan ikke hentes lige nu. Prøv igen om lidt.', ingenAdgang: 'Du har ikke adgang til gruppen.',
     systemOpret: 'oprettede gruppen', uLaest: 'Nye beskeder', naesteSpil: 'Dit næste spil',
+    sbNav: 'Grupper og spillerbørs', sbMineGrupper: 'Mine grupper', sbFane: 'Spillerbørs', sbAntalOpslag: '{n} åbne opslag',
+    sbIntro: 'Grupper, der mangler en spiller til et spil eller søger en fast spiller. Meld dig, hvis du har lyst. Kun gruppen ser, at du har meldt dig.',
+    sbDineSvar: 'Dine svar', sbFiltrer: 'Vis opslag', sbFiltEt: 'Til ét spil', sbFiltFast: 'Fast plads',
+    sbTom: 'Ingen opslag lige nu. Kig forbi igen, eller slå en alarm til under Beskeder.',
+    sbHjem: 'Opslag fra dine egne grupper står under gruppen. Du laver et opslag fra gruppen eller fra et spil.',
+    sbTilbage: '← Spillerbørs', sbMangler1: 'Mangler 1 til ét spil', sbManglerN: 'Mangler {n} til ét spil', sbFastT: 'Søger fast spiller',
+    sbSvarSenest: 'Svar senest {tid}', sbSvarSenestOrd: 'Svar senest', sbImorgen: 'i morgen', sbTil: 'til',
+    sbEnGruppe: 'En gruppe', sbNavnVises: 'navnet vises, når du er valgt', sbMeldt1: '1 har meldt sig', sbMeldtN: '{n} har meldt sig', sbIngenMeldt: 'Ingen har meldt sig endnu',
+    sbListeMeldt: 'Spillerbørs: {n} har meldt sig',
+    sbSoegerDame: 'Søger dame', sbSoegerHerre: 'Søger herre', sbDouble: 'Double', sbSingle: 'Single', sbMix: 'Mixdouble', sbFastBane: 'Fast bane',
+    sbNiveauPre: 'Niveau {x}', sbFraTil: '{a} til {b}', sbFraN: 'Fra {n}', sbTilN: 'Til {n}', sbFraAlle: 'Fra (alle)', sbTilAlle: 'Til (alle)',
+    sbU35: 'Under 35', sb3555: '35 til 55', sbO55: 'Over 55',
+    sbStMeldt: 'Venter på svar', sbStValgt: 'Du er med', sbStReserve: 'Reserve', sbStTilbudt: 'Pladsen er ledig', sbStIkkeValgt: 'Ikke valgt denne gang', sbStAfbud: 'Meldt fra', sbStLukket: 'Lukket',
+    sbSvarInden: 'Svar inden kl. {kl}',
+    sbFindesIkke: 'Opslaget findes ikke længere.', sbHvornaar: 'Hvornår', sbSpilform: 'Spilform', sbSoeger: 'Søger', sbDame: 'Dame', sbHerre: 'Herre', sbUnderordnet: 'Underordnet',
+    sbNiveauOrd: 'Niveau', sbAlder: 'Alder', sbPris: 'Pris',
+    sbLagtUdAf: 'Lagt ud af {navn}, en gruppe med {n} medlemmer.', sbLagtUdAnonym: 'Lagt ud af en gruppe med {n} medlemmer. Gruppens navn vises, når du er valgt.',
+    sbErLukket: 'Opslaget er lukket', sbMeldDig: 'Meld dig', sbKommentar: 'Kommentar til gruppen (frivillig)', sbKommentarPh: 'Fx: Kan kun om torsdagen',
+    sbKommentarHint: 'Højst 200 tegn. Gruppen ser dit navn og din kommentar, ikke dit telefonnummer.', sbInteresseret: 'Jeg er interesseret',
+    sbHvadSker: 'Hvad sker der så?', sbHvadSkerEt: 'Gruppen vælger blandt dem, der har meldt sig. Bliver det dig, får du pladsen og en besked. Bliver det en anden, får du også besked, så du ikke venter forgæves.',
+    sbHvadSkerFast: 'Gruppen vælger blandt dem, der har meldt sig. Bliver det dig, kommer du med i gruppen og får en besked. Bliver det en anden, får du også besked, så du ikke venter forgæves.',
+    sbDuHarMeldt: 'Du har meldt dig', sbMeldtTid: 'Meldt {tid}.', sbDinKommentar: 'Din kommentar: "{k}"',
+    sbTraekTekst: 'Har du fået andre planer? Så træk dig. Din tilmelding forsvinder med det samme, og gruppen kan ikke længere vælge dig.', sbTraek: 'Træk mig',
+    sbIkkeForgaeves: 'Du venter ikke forgæves.', sbIkkeForgaevesT: 'Opretteren får en påmindelse, hvis ingen er valgt efter 2 timer eller en time før fristen. Når fristen er gået, lukker opslaget af sig selv, og du får besked.',
+    sbVelkommen: 'Velkommen i {navn}', sbFastValgtT: 'Du er valgt som fast spiller og er nu med i gruppen.', sbAabnGruppen: 'Åbn gruppen',
+    sbDuErMed: 'Du er med', sbGruppe: 'Gruppe', sbMedSpillere: 'Spiller med', sbBetal: '{kr} til {navn}',
+    sbKanIkke: 'Kan du alligevel ikke?', sbAfbudBesked: 'Besked til gruppen (frivillig)', sbAfbudBeskedNaer: 'Skriv en kort besked til gruppen, det er under et døgn til',
+    sbAfbudPh: 'Fx: Desværre, jeg er blevet forhindret', sbAfbudPhNaer: 'Fx: Syg, undskyld det sene afbud', sbMeldFra: 'Meld fra', sbMeldFraIgen: 'Tryk igen for at melde fra.',
+    sbLedigH: 'Pladsen er ledig igen', sbLedigT: 'Vil du have den? Svar inden kl. {kl}. Den første, der siger ja, får den.', sbTagPladsen: 'Ja, jeg tager pladsen', sbNejTak: 'Nej tak',
+    sbLedigInfo: 'Du står som reserve, derfor får du tilbuddet. Ingen får pladsen uden selv at sige ja.',
+    sbDuErReserve: 'Du står som reserve', sbReserveT: 'Bliver pladsen ledig, får du en besked og kan selv sige ja. Du kan sige fra når som helst.', sbIkkeReserve: 'Jeg vil ikke stå som reserve',
+    sbIkkeValgt: 'Pladsen er besat denne gang', sbIkkeValgtFast: 'Gruppen har valgt en anden denne gang', sbReserveSpm: 'Vil du stå som reserve, hvis pladsen bliver ledig? Det er helt frivilligt.',
+    sbBlivReserve: 'Ja, gerne som reserve', sbReserveInfo: 'Som reserve får du en besked, hvis pladsen bliver ledig, og så vælger du selv.',
+    sbDuMeldteFra: 'Du har meldt fra', sbKunGruppen: 'Kun gruppen ser listen', sbIngenKommentar: 'ingen kommentar', sbAccepter: 'Accepter', sbAccepterNavn: 'Accepter {navn}',
+    sbNaarAccepter: 'Når du trykker Accepter',
+    sbNaarAccepterEt: 'Spilleren får pladsen på spillet og en besked. Når alle pladser er besat, lukker opslaget, og de andre får automatisk besked og kan selv vælge at stå som reserve. Chatten i gruppen får en linje.',
+    sbNaarAccepterFast: 'Spilleren kommer med i gruppen som medlem og får en besked. Når alle pladser er besat, lukker opslaget, og de andre får besked.',
+    sbPaaTavlen: 'Står på spillerbørsen.', sbPaaTavlenAnonym: 'Står på spillerbørsen som "En gruppe".', sbTilbudTil: 'Pladsen er tilbudt reserverne til kl. {kl}. Den første, der siger ja, får den.',
+    sbGrTilbud: 'Tilbudt reserverne', sbGrBesat: 'Alle pladser er besat', sbGrLukket: 'Lukket', sbGrUdloebet: 'Fristen er gået', sbGrSlut: 'Spillet er overstået',
+    sbRet: 'Ret opslaget', sbLuk: 'Luk uden at vælge', sbLukIgen: 'Tryk igen for at lukke', sbErLukketNu: 'Opslaget er lukket, og dem, der ventede, har fået besked.',
+    sbGrTom: 'Mangler I en spiller til et spil, eller søger I en fast spiller? Læg et opslag på spillerbørsen.', sbSoegKnap: '+ Søg en spiller', sbSoegSpil: 'Søg en spiller på spillerbørsen',
+    sbSoegH: 'Søg en spiller', sbHvadSoeger: 'Hvad søger I?', sbTypeEt: 'Til ét spil', sbTypeEtT: 'Mangler en til et af gruppens spil',
+    sbTypeFast: 'Fast plads', sbTypeFastT: 'En ny i gruppen', sbTypeFastIkke: 'Kun gruppeadministratorer og dem, der må invitere',
+    sbHvilketSpil: 'Hvilket spil', sbIngenSpil: 'Ingen kommende spil med ledige pladser. Opret spillet først, eller giv det flere pladser.', sbFraSpillet: 'Tid, sted, bane og pris tages fra spillet.',
+    sbTider: 'Hvornår spiller I?', sbTiderPh: 'Fx Torsdage kl. 20 til 21', sbPrisFast: 'Pris (frivilligt)', sbPrisPh: 'Fx Ca. 1.000 kr. for vinteren', sbFastBaneCheck: 'Vi har fast bane',
+    sbKoenHint: 'Fx "Dame" til en mixdouble eller "Herre" til en herredouble. Står der underordnet, vises intet i opslaget.',
+    sbAntal: 'Antal spillere', sbEn: '1', sbTo: '2', sbTre: '3', sbNiveauFelt: 'Niveau (frivilligt)', sbNivFraL: 'Niveau fra', sbNivTilL: 'Niveau til', sbNiveauHint: 'Tennis 1 til 7 efter NTRP. Beskrivelserne kommer.',
+    sbAlderFelt: 'Alder (frivilligt, vælg gerne flere)', sbAlderHint: 'Vælger du ingen, er alle aldre velkomne.',
+    sbOverskrift: 'Overskrift', sbOverskriftPh: 'Fx Double i aften, vi er tre', sbMereOm: 'Mere om det (frivilligt)', sbMereOmPh: 'Fx Hyggelig double med lange dueller.',
+    sbFrist1t: '1 time før', sbFrist2t: '2 timer før', sbFristDag: 'Dagen før', sbFristHint: 'Opslaget lukker selv ved fristen.', sbFristDato: 'Svar senest (dato)',
+    sbVisNavn: 'Vis gruppens navn i opslaget', sbVisNavnHint: 'Slår du det fra, står der "En gruppe", indtil en er valgt.',
+    sbLaegUd: 'Læg opslaget ud', sbLaeggerUd: 'Lægger opslaget ud …', sbVaelgSpil: 'Vælg det spil, I mangler en til.', sbManglerTitel: 'Skriv en overskrift',
   },
   en: {
     titel: 'Groups · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
@@ -325,6 +465,58 @@ window.TEKSTER = {
     retSpillet: 'Edit the game', pladserOrd: 'places', faerre: 'Fewer places', flere: 'More places', aflys: 'Cancel the game', aflysIgen: 'Tap again to cancel', genaabn: 'Reopen the game',
     kr: 'DKK {n}', fejlGem: 'It could not be saved. Please try again.', fejlHent: 'Groups cannot be loaded right now. Please try again shortly.', ingenAdgang: 'You do not have access to this group.',
     systemOpret: 'created the group', uLaest: 'New messages', naesteSpil: 'Your next game',
+    sbNav: 'Groups and player exchange', sbMineGrupper: 'My groups', sbFane: 'Player exchange', sbAntalOpslag: '{n} open posts',
+    sbIntro: 'Groups that need a player for a game or are looking for a regular player. Sign up if you like. Only the group sees that you signed up.',
+    sbDineSvar: 'Your answers', sbFiltrer: 'Show posts', sbFiltEt: 'Single game', sbFiltFast: 'Regular place',
+    sbTom: 'No posts right now. Check back later, or turn on an alert under Messages.',
+    sbHjem: 'Posts from your own groups are shown under the group. You create a post from the group or from a game.',
+    sbTilbage: '← Player exchange', sbMangler1: 'Needs 1 for a game', sbManglerN: 'Needs {n} for a game', sbFastT: 'Looking for a regular player',
+    sbSvarSenest: 'Answer by {tid}', sbSvarSenestOrd: 'Answer by', sbImorgen: 'tomorrow', sbTil: 'to',
+    sbEnGruppe: 'A group', sbNavnVises: 'the name is shown when you are chosen', sbMeldt1: '1 has signed up', sbMeldtN: '{n} have signed up', sbIngenMeldt: 'No one has signed up yet',
+    sbListeMeldt: 'Player exchange: {n} signed up',
+    sbSoegerDame: 'Looking for a woman', sbSoegerHerre: 'Looking for a man', sbDouble: 'Doubles', sbSingle: 'Singles', sbMix: 'Mixed doubles', sbFastBane: 'Regular court',
+    sbNiveauPre: 'Level {x}', sbFraTil: '{a} to {b}', sbFraN: 'From {n}', sbTilN: 'To {n}', sbFraAlle: 'From (all)', sbTilAlle: 'To (all)',
+    sbU35: 'Under 35', sb3555: '35 to 55', sbO55: 'Over 55',
+    sbStMeldt: 'Waiting for an answer', sbStValgt: 'You are in', sbStReserve: 'Reserve', sbStTilbudt: 'The place is free', sbStIkkeValgt: 'Not chosen this time', sbStAfbud: 'Dropped out', sbStLukket: 'Closed',
+    sbSvarInden: 'Answer before {kl}',
+    sbFindesIkke: 'The post no longer exists.', sbHvornaar: 'When', sbSpilform: 'Format', sbSoeger: 'Looking for', sbDame: 'Woman', sbHerre: 'Man', sbUnderordnet: 'Either',
+    sbNiveauOrd: 'Level', sbAlder: 'Age', sbPris: 'Price',
+    sbLagtUdAf: 'Posted by {navn}, a group with {n} members.', sbLagtUdAnonym: 'Posted by a group with {n} members. The group name is shown when you are chosen.',
+    sbErLukket: 'The post is closed', sbMeldDig: 'Sign up', sbKommentar: 'Comment to the group (optional)', sbKommentarPh: 'E.g. Only Thursdays',
+    sbKommentarHint: 'At most 200 characters. The group sees your name and comment, not your phone number.', sbInteresseret: 'I am interested',
+    sbHvadSker: 'What happens next?', sbHvadSkerEt: 'The group chooses among those who signed up. If it is you, you get the place and a message. If it is someone else, you get a message too, so you are not left waiting.',
+    sbHvadSkerFast: 'The group chooses among those who signed up. If it is you, you join the group and get a message. If it is someone else, you get a message too, so you are not left waiting.',
+    sbDuHarMeldt: 'You have signed up', sbMeldtTid: 'Signed up {tid}.', sbDinKommentar: 'Your comment: "{k}"',
+    sbTraekTekst: 'Made other plans? Then withdraw. Your sign-up disappears at once, and the group can no longer choose you.', sbTraek: 'Withdraw',
+    sbIkkeForgaeves: 'You are not left waiting.', sbIkkeForgaevesT: 'The poster gets a reminder if no one is chosen after 2 hours or one hour before the deadline. When the deadline passes, the post closes by itself and you get a message.',
+    sbVelkommen: 'Welcome to {navn}', sbFastValgtT: 'You have been chosen as a regular player and are now in the group.', sbAabnGruppen: 'Open the group',
+    sbDuErMed: 'You are in', sbGruppe: 'Group', sbMedSpillere: 'Playing with', sbBetal: '{kr} to {navn}',
+    sbKanIkke: 'Can’t make it after all?', sbAfbudBesked: 'Message to the group (optional)', sbAfbudBeskedNaer: 'Write a short message to the group, it is less than a day away',
+    sbAfbudPh: 'E.g. Sorry, something came up', sbAfbudPhNaer: 'E.g. Ill, sorry for the late notice', sbMeldFra: 'Drop out', sbMeldFraIgen: 'Tap again to drop out.',
+    sbLedigH: 'The place is free again', sbLedigT: 'Do you want it? Answer before {kl}. The first to say yes gets it.', sbTagPladsen: 'Yes, I’ll take the place', sbNejTak: 'No thanks',
+    sbLedigInfo: 'You are a reserve, so you get the offer. No one gets the place without saying yes.',
+    sbDuErReserve: 'You are a reserve', sbReserveT: 'If the place becomes free, you get a message and decide yourself. You can say no at any time.', sbIkkeReserve: 'I don’t want to be a reserve',
+    sbIkkeValgt: 'The place is taken this time', sbIkkeValgtFast: 'The group chose someone else this time', sbReserveSpm: 'Would you like to be a reserve in case the place becomes free? It is entirely voluntary.',
+    sbBlivReserve: 'Yes, as a reserve', sbReserveInfo: 'As a reserve you get a message if the place becomes free, and then you decide.',
+    sbDuMeldteFra: 'You dropped out', sbKunGruppen: 'Only the group sees the list', sbIngenKommentar: 'no comment', sbAccepter: 'Accept', sbAccepterNavn: 'Accept {navn}',
+    sbNaarAccepter: 'When you tap Accept',
+    sbNaarAccepterEt: 'The player gets the place in the game and a message. When all places are taken, the post closes, and the others are told automatically and can choose to be reserves. The group chat gets a line.',
+    sbNaarAccepterFast: 'The player joins the group as a member and gets a message. When all places are taken, the post closes and the others are told.',
+    sbPaaTavlen: 'On the player exchange.', sbPaaTavlenAnonym: 'On the player exchange as "A group".', sbTilbudTil: 'The place is offered to the reserves until {kl}. The first to say yes gets it.',
+    sbGrTilbud: 'Offered to reserves', sbGrBesat: 'All places taken', sbGrLukket: 'Closed', sbGrUdloebet: 'Deadline passed', sbGrSlut: 'The game is over',
+    sbRet: 'Edit the post', sbLuk: 'Close without choosing', sbLukIgen: 'Tap again to close', sbErLukketNu: 'The post is closed, and those waiting have been told.',
+    sbGrTom: 'Need a player for a game, or looking for a regular player? Post it on the player exchange.', sbSoegKnap: '+ Find a player', sbSoegSpil: 'Find a player on the player exchange',
+    sbSoegH: 'Find a player', sbHvadSoeger: 'What are you looking for?', sbTypeEt: 'For one game', sbTypeEtT: 'You need someone for one of the group’s games',
+    sbTypeFast: 'Regular place', sbTypeFastT: 'A new member of the group', sbTypeFastIkke: 'Only group admins and members who can invite',
+    sbHvilketSpil: 'Which game', sbIngenSpil: 'No upcoming games with free places. Create the game first, or give it more places.', sbFraSpillet: 'Time, place, court and price come from the game.',
+    sbTider: 'When do you play?', sbTiderPh: 'E.g. Thursdays 8 to 9 pm', sbPrisFast: 'Price (optional)', sbPrisPh: 'E.g. About DKK 1,000 for the winter', sbFastBaneCheck: 'We have a regular court',
+    sbKoenHint: 'E.g. "Woman" for mixed doubles or "Man" for men’s doubles. If it says either, nothing is shown in the post.',
+    sbAntal: 'Number of players', sbEn: '1', sbTo: '2', sbTre: '3', sbNiveauFelt: 'Level (optional)', sbNivFraL: 'Level from', sbNivTilL: 'Level to', sbNiveauHint: 'Tennis 1 to 7 based on NTRP. Descriptions are coming.',
+    sbAlderFelt: 'Age (optional, choose several if you like)', sbAlderHint: 'If you choose none, all ages are welcome.',
+    sbOverskrift: 'Heading', sbOverskriftPh: 'E.g. Doubles tonight, we are three', sbMereOm: 'More about it (optional)', sbMereOmPh: 'E.g. Friendly doubles with long rallies.',
+    sbFrist1t: '1 hour before', sbFrist2t: '2 hours before', sbFristDag: 'The day before', sbFristHint: 'The post closes by itself at the deadline.', sbFristDato: 'Answer by (date)',
+    sbVisNavn: 'Show the group name in the post', sbVisNavnHint: 'If you turn it off, it says "A group" until someone is chosen.',
+    sbLaegUd: 'Post it', sbLaeggerUd: 'Posting …', sbVaelgSpil: 'Choose the game you need someone for.', sbManglerTitel: 'Write a heading',
   }
 };
 </script>
@@ -400,7 +592,7 @@ function minRolle() { const m = tilstand.medlemmer.find((x) => x.id === (mig && 
 const erAdmin = () => minRolle() === 'admin';
 function maaInvitere() { const g = tilstand.gruppe; return !!g && (erAdmin() || minRolle() === 'inviter' || g.invitation === 'alle'); }
 function stopLyt() { lyt.forEach((f) => { try { f(); } catch (e) {} }); lyt = []; }
-function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
+function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil', 'vBoers', 'vOpslag', 'vGrOpslag', 'vNytOpslag'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
 function fejl(el, err) { console.warn(err); K.besked(el, err && err.code === 'permission-denied' ? t('ingenAdgang') : (err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem')), 'err'); }
 function laest(gid) { try { return Number(localStorage.getItem('rtk.gr.laest.' + gid) || 0); } catch (e) { return 0; } }
 function saetLaest(gid, ms) { try { if (ms > laest(gid)) localStorage.setItem('rtk.gr.laest.' + gid, String(ms)); } catch (e) {} }
@@ -459,6 +651,7 @@ async function logIndFirebase() {
 
 function visLogin() {
   stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; }
+  stopBoers();
   mig = null;
   if (FB) FB.auth.signOut(FB.au).catch(() => {});
   try { localStorage.removeItem('rtk.gr.uid'); } catch (e) {}
@@ -476,6 +669,7 @@ async function start() {
     if (mig.type !== 'medlem') { $('ikkeVoksen').classList.remove('hidden'); vis(''); return; }
     K.motor('kerne', 'mig').then((p) => { $('hvem').textContent = t('kLoggetInd', { navn: p.navn }); }).catch(() => {});
     lytListe();
+    lytBoers();
     rute();
   } catch (err) {
     console.warn(err);
@@ -483,15 +677,18 @@ async function start() {
   }
 }
 
-// ---------- Ruter: #  #ny  #g/<id>/<fane>  #g/<id>/spil/<sid>  #g/<id>/nytspil
+// ---------- Ruter: #  #ny  #g/<id>/<fane>  #g/<id>/spil/<sid>  #g/<id>/nytspil  #boers  #boers/<oid>  #g/<id>/opslag/<oid>  #g/<id>/nytopslag[/<sid>]
 window.addEventListener('hashchange', () => { if (mig && mig.type === 'medlem') rute(); });
 function rute() {
   const h = location.hash.replace(/^#/, '').split('/');
   stopLyt();
   tilstand.retter = null; tilstand.aaben = null;
   if (h[0] === 'ny') return visNy();
+  if (h[0] === 'boers') return h[1] ? visOpslag(h[1]) : visBoers();
   if (h[0] === 'g' && h[1]) {
     if (h[2] === 'spil' && h[3]) return visSpil(h[1], h[3]);
+    if (h[2] === 'opslag' && h[3]) return visGrOpslag(h[1], h[3]);
+    if (h[2] === 'nytopslag') return visNytOpslag(h[1], h[3] || '');
     if (h[2] === 'nytspil') return visNytSpil(h[1]);
     return visGruppe(h[1], h[2] || 'chat');
   }
@@ -523,23 +720,30 @@ async function hentDetaljer() {
   const nu = new Date(Date.now() - 3 * 3600000);
   await Promise.all(tilstand.grupper.map(async (g) => {
     try {
-      const [b, s] = await Promise.all([
+      const [b, s, op] = await Promise.all([
         fs.getDocs(fs.query(fs.collection(db, 'grupper', g.id, 'beskeder'), fs.orderBy('tid', 'desc'), fs.limit(1))),
-        fs.getDocs(fs.query(fs.collection(db, 'grupper', g.id, 'spil'), fs.where('start', '>=', nu), fs.orderBy('start'), fs.limit(3)))
+        fs.getDocs(fs.query(fs.collection(db, 'grupper', g.id, 'spil'), fs.where('start', '>=', nu), fs.orderBy('start'), fs.limit(3))),
+        fs.getDocs(fs.collection(db, 'grupper', g.id, 'opslag')).catch(() => ({ docs: [] }))
       ]);
+      // Spillerbørsen: gruppens egne opslag står ikke på tavlen, og en markering viser, hvor mange der har meldt sig
+      const opslag = op.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+      opslag.forEach((o) => sb.egne.add(o.id));
       const sidste = b.docs[0] ? b.docs[0].data() : null;
       const spil = s.docs.map((d) => Object.assign({ id: d.id }, d.data())).filter((x) => !x.aflyst);
       let minT = null;
       if (!mig) return;
       if (spil[0]) { const m = await fs.getDoc(fs.doc(db, 'grupper', g.id, 'spil', spil[0].id, 'tilmeldinger', mig.uid)); minT = m.exists() ? m.data() : null; }
-      detaljer[g.id] = { sidste, spil: spil[0] || null, minT };
+      detaljer[g.id] = { sidste, spil: spil[0] || null, minT, meldt: opslag.filter((o) => o.status === 'aaben').reduce((n, o) => n + (o.antalMeldt || 0), 0) };
     } catch (e) { console.warn(e); }
   }));
   if (!$('vListe').classList.contains('hidden')) tegnListe();
+  tegnFaner();
+  if (!$('vBoers').classList.contains('hidden')) tegnTavle();
 }
 
 function visListe() {
   vis('vListe');
+  tegnFaner();
   if (FB) lytListeIgen();
   tegnListe();
   if (FB) hentDetaljer();
@@ -572,6 +776,7 @@ function tegnListe() {
     else linje = g.beskrivelse || '';
     midt.append(K.el('span', { 'class': 'gr-linje' }, linje));
     if (d.spil) midt.append(K.el('span', { 'class': 'gr-linje2' }, kortDag(dato(d.spil.start)) + ' ' + kl(dato(d.spil.start)) + ' · ' + d.spil.titel));
+    if (d.meldt) midt.append(K.el('span', { 'class': 'gr-linje2 sb-meldt' }, t('sbListeMeldt', { n: d.meldt })));
     a.append(midt);
     const ny = d.sidste && dato(d.sidste.tid) && d.sidste.fra !== mig.uid && dato(d.sidste.tid).getTime() > laest(g.id);
     if (ny) a.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('uLaest') }, ''));
@@ -654,6 +859,8 @@ function visGruppe(gid, fane) {
     if (tilstand.fane === 'spil') tegnSpilListe();
     if (tilstand.fane === 'chat') tegnChatSpil();
   }, (err) => fejl($('hentMsg'), err)));
+  tilstand.opslag = [];
+  lytGrOpslag(gid);
   tegnGruppe();
 }
 
@@ -686,7 +893,7 @@ function tegnGruppe() {
     $(panel).setAttribute('aria-labelledby', 'fane-' + id);
   });
   if (tilstand.fane === 'chat') { tegnChat(); tegnChatSpil(); }
-  if (tilstand.fane === 'spil') tegnSpilListe();
+  if (tilstand.fane === 'spil') { tegnSpilListe(); tegnGrOpslagListe(); }
   if (tilstand.fane === 'medlemmer') tegnMedlemmer();
   if (tilstand.fane === 'om') tegnOm();
 }
@@ -1051,6 +1258,8 @@ function tegnSpil() {
     $('spSerieTekst').textContent = serieTekst(s) + ' · ' + t('gangAf', { nr: s.serieNr || 1, antal: s.serieAntal || tilstand.serie.length }) + ' · ' + t('kommendeGange', { n: kommende.length });
   }
   $('spStop').classList.toggle('hidden', !s.serie || !!s.aflyst);
+  const ledigt = !s.aflyst && dato(s.start) && dato(s.start).getTime() > Date.now() + 20 * 60000 && ((s.antal && s.antal.plads) || 0) < s.pladser;
+  $('spSoegDel').classList.toggle('hidden', !ledigt);
   $('spStop').textContent = t(stopKlar ? 'stopIgen' : 'stopSerie');
   const tilm = visTilm(s);
   const minT = tilm.find((x) => x.id === mig.uid) || null;
@@ -1420,6 +1629,548 @@ document.addEventListener('sprog', () => { if (mig && mig.type === 'medlem') { i
 // Når man forlader siden, lukkes forbindelsen til Firestore pænt (ellers kan den melde fejl i konsollen midt i et skift).
 window.addEventListener('pagehide', () => { stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (FB) FB.fs.terminate(FB.db).catch(() => {}); });
 if (K.loggetInd()) start(); else visLogin();
+
+// ==================== Spillerbørsen (12. oktober 2026). Bygges ind i grupper.html efter grupper_side.js.
+// Tavlen (boers) læses af alle voksne medlemmer. Ens egen status (boersMig) læses kun af en selv. Gruppens opslag og dem,
+// der har meldt sig, læses kun af gruppen. Alt, der ændrer noget, går gennem motoren (modulet boers).
+Object.assign(window.MOTOR_EN, {
+  'Opslaget findes ikke': 'The post does not exist',
+  'Opslaget er lukket': 'The post is closed',
+  'Kun gruppeadministratorer og dem, der må invitere, kan søge en fast spiller': 'Only group admins and members who can invite can look for a regular player',
+  'Gruppen har allerede 5 åbne opslag': 'The group already has 5 open posts',
+  'Spillet er for tæt på til et opslag': 'The game is too close for a post',
+  'Der er allerede et opslag til spillet': 'There is already a post for this game',
+  'Spillet er fuldt. Giv det flere pladser først.': 'The game is full. Give it more places first.',
+  'Skriv en overskrift': 'Write a heading',
+  'Vælg en dato efter i dag': 'Choose a date after today',
+  'Fristen kan højst være 60 dage frem': 'The deadline can be at most 60 days ahead',
+  'Du er allerede med i gruppen': 'You are already in the group',
+  'Du har allerede svaret på opslaget': 'You have already answered this post',
+  'Du er valgt. Meld fra i stedet.': 'You have been chosen. Drop out instead.',
+  'Personen har trukket sig': 'The person has withdrawn',
+  'Kun den, der har lagt opslaget ud, og gruppeadministratorer kan det': 'Only the person who posted it and group admins can do that',
+  'Reserver bruges kun til ét spil': 'Reserves are only used for a single game',
+  'Du kan ikke stå som reserve på opslaget': 'You cannot be a reserve on this post',
+  'Pladsen er ikke tilbudt dig': 'The place has not been offered to you',
+  'Pladsen er taget af en anden': 'Someone else has taken the place',
+  'Tiden til at svare er gået': 'The time to answer has run out',
+  'Du er ikke valgt til spillet': 'You have not been chosen for this game',
+  'Spillet er begyndt': 'The game has started',
+  'Personen er allerede med': 'The person is already in',
+  'Forlad gruppen i stedet': 'Leave the group instead'
+});
+
+const SB_AABNE = ['aaben', 'tilbud'];
+// var, ikke const/let: visLogin kan kalde stopBoers, før denne del af scriptet er nået (når man ikke er logget ind)
+var sb = { tavle: [], mine: {}, egne: new Set(), filter: 'alle', o: null, mig: null, intern: null, meldinger: [], venter: null, kandVenter: null, lukKlar: false };
+var sbLyt = null, sbMigLyt = null;
+
+function stopBoers() {
+  if (!sb) return;
+  if (sbLyt) { try { sbLyt(); } catch (e) {} sbLyt = null; }
+  if (sbMigLyt) { try { sbMigLyt(); } catch (e) {} sbMigLyt = null; }
+  sb.tavle = []; sb.mine = {}; sb.egne = new Set();
+}
+
+/** Tavlen og ens egne svar i realtid, så længe man er logget ind. Tallet på fanen kommer herfra. */
+function lytBoers() {
+  if (!FB || !mig || mig.type !== 'medlem') return;
+  const { fs, db } = FB;
+  if (!sbLyt) sbLyt = fs.onSnapshot(fs.query(fs.collection(db, 'boers'), fs.where('status', '==', 'aaben')), (s) => {
+    sb.tavle = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    tegnFaner(); if (!$('vBoers').classList.contains('hidden')) tegnTavle();
+  }, (err) => { console.warn(err); sbLyt = null; });
+  if (!sbMigLyt) sbMigLyt = fs.onSnapshot(fs.collection(db, 'boersMig', mig.uid, 'opslag'), (s) => {
+    sb.mine = {}; s.docs.forEach((d) => { sb.mine[d.id] = Object.assign({ id: d.id }, d.data()); });
+    tegnFaner(); if (!$('vBoers').classList.contains('hidden')) tegnTavle();
+  }, (err) => { console.warn(err); sbMigLyt = null; });
+}
+
+// ---------- Tekster
+function sbHvornaar(o) {
+  if (o.type === 'fast') return [o.tider, o.fastBane ? t('sbFastBane') : ''].filter(Boolean).join(' · ');
+  const a = dato(o.start), b = dato(o.slut);
+  if (!a) return '';
+  const s = kortDag(a) + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(a) + (b ? ' ' + t('sbTil') + ' ' + kl(b) : '');
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function sbSted(o) { return [o.sted, o.bane ? t('baneNr', { nr: o.bane }).toLowerCase() : ''].filter(Boolean).join(', '); }
+function sbFrist(o) {
+  const d = dato(o.frist); if (!d) return '';
+  const nu = new Date(); const imorgen = new Date(nu.getTime() + 86400000);
+  const klk = (lokal() === 'da-DK' ? 'kl. ' : '') + kl(d);
+  if (o.type === 'fast') return new Intl.DateTimeFormat(lokal(), { weekday: 'long', day: 'numeric', month: 'long' }).format(d);
+  if (sammeDag(d, nu)) return t('idag').toLowerCase() + ' ' + klk;
+  if (sammeDag(d, imorgen)) return t('sbImorgen') + ' ' + klk;
+  return kortDag(d) + ' ' + klk;
+}
+function sbTypeTekst(o) { return o.type === 'fast' ? t('sbFastT') : t(o.antal > 1 ? 'sbManglerN' : 'sbMangler1', { n: o.antal || 1 }); }
+function sbNiveauKort(o) {
+  if (!o.niveauFra && !o.niveauTil) return '';
+  if (o.niveauFra && o.niveauTil) return o.niveauFra === o.niveauTil ? String(o.niveauFra) : t('sbFraTil', { a: o.niveauFra, b: o.niveauTil });
+  return o.niveauFra ? t('sbFraN', { n: o.niveauFra }).toLowerCase() : t('sbTilN', { n: o.niveauTil }).toLowerCase();
+}
+function sbNiveau(o) { const k = sbNiveauKort(o); return k ? t('sbNiveauPre', { x: k }) : ''; }
+const SB_ALDER = [['u35', 'sbU35'], ['35-55', 'sb3555'], ['o55', 'sbO55']];
+const SB_FORM = [['double', 'sbDouble'], ['single', 'sbSingle'], ['mix', 'sbMix']];
+function sbTags(o, medType) {
+  const tags = K.el('div', { 'class': 'sb-tags' });
+  if (medType) tags.append(K.el('span', { 'class': 'sb-type ' + (o.type === 'fast' ? 'fast' : 'et') }, sbTypeTekst(o)));
+  if (o.koen) tags.append(K.el('span', { 'class': 'sb-tag staerk' }, t(o.koen === 'dame' ? 'sbSoegerDame' : 'sbSoegerHerre')));
+  tags.append(K.el('span', { 'class': 'sb-tag' }, t(o.sport || 'tennis')));
+  const f = SB_FORM.find((x) => x[0] === o.spilform); if (f) tags.append(K.el('span', { 'class': 'sb-tag' }, t(f[1])));
+  if (o.fastBane) tags.append(K.el('span', { 'class': 'sb-tag' }, t('sbFastBane')));
+  const n = sbNiveau(o); if (n) tags.append(K.el('span', { 'class': 'sb-tag' }, n));
+  (o.alder || []).forEach((a) => { const x = SB_ALDER.find((y) => y[0] === a); if (x) tags.append(K.el('span', { 'class': 'sb-tag' }, t(x[1]))); });
+  return tags;
+}
+const SB_STATUS = { meldt: ['sbStMeldt', 'vent'], valgt: ['sbStValgt', 'ok'], reserve: ['sbStReserve', ''], tilbudt: ['sbStTilbudt', 'vent'], ikkeValgt: ['sbStIkkeValgt', ''], afbud: ['sbStAfbud', ''], lukket: ['sbStLukket', ''] };
+function sbStatusChip(status) {
+  const s = SB_STATUS[status]; if (!s) return null;
+  return K.el('span', { 'class': 'sb-ok ' + s[1] }, t(s[0]));
+}
+
+// ---------- Fanerne Mine grupper og Spillerbørs
+function sbSynlige() {
+  const nu = Date.now();
+  return sb.tavle.filter((o) => !sb.egne.has(o.id) && dato(o.frist) && dato(o.frist).getTime() > nu);
+}
+function tegnFaner() {
+  const n = sbSynlige().length;
+  [['navListe', 'grupper'], ['navBoers', 'boers']].forEach(([id, valgt]) => {
+    const nav = $(id); if (!nav) return;
+    nav.innerHTML = '';
+    const a1 = K.el('a', { href: '#', 'class': valgt === 'grupper' ? 'valgt' : '', 'aria-current': valgt === 'grupper' ? 'page' : 'false' }, t('sbMineGrupper'));
+    const a2 = K.el('a', { href: '#boers', 'class': valgt === 'boers' ? 'valgt' : '', 'aria-current': valgt === 'boers' ? 'page' : 'false' }, t('sbFane'));
+    if (n) a2.append(K.el('span', { 'class': 'tal', 'aria-label': t('sbAntalOpslag', { n }) }, String(n)));
+    const tilbud = Object.values(sb.mine).some((x) => x.status === 'tilbudt');
+    if (tilbud) a2.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('sbStTilbudt') }, ''));
+    nav.append(a1, a2);
+  });
+}
+
+// ---------- Tavlen
+function visBoers() {
+  vis('vBoers');
+  lytBoers();
+  tegnFaner(); tegnTavle();
+  if (FB) hentDetaljer();
+}
+const SB_FILTRE = [['alle', 'alle'], ['tennis', 'tennis'], ['padel', 'padel'], ['et', 'sbFiltEt'], ['fast', 'sbFiltFast']];
+function tegnTavle() {
+  if (!mig) return;
+  const filtre = $('sbFiltre'); filtre.innerHTML = '';
+  SB_FILTRE.forEach(([f, n]) => {
+    const b = K.el('button', { type: 'button', 'aria-pressed': String(sb.filter === f) }, t(n));
+    b.addEventListener('click', () => { sb.filter = f; tegnTavle(); });
+    filtre.append(b);
+  });
+  // Dine svar: det, man venter på, og det, der kræver et svar
+  const nu = Date.now();
+  const mine = Object.values(sb.mine).filter((x) => {
+    const slut = dato(x.start) || dato(x.frist);
+    if (x.status === 'lukket' || x.status === 'afbud') return false;
+    if (x.status === 'ikkeValgt') return slut && slut.getTime() > nu;
+    return !slut || slut.getTime() > nu - 3 * 3600000;
+  }).sort((a, b) => (a.status === 'tilbudt' ? -1 : 0) - (b.status === 'tilbudt' ? -1 : 0) || (dato(a.start) || dato(a.frist)) - (dato(b.start) || dato(b.frist)));
+  const ml = $('sbMineListe'); ml.innerHTML = '';
+  mine.forEach((x) => {
+    const a = K.el('a', { href: '#boers/' + x.id, 'class': 'sb-kort mit' + (x.status === 'tilbudt' ? ' haster' : '') });
+    const top = K.el('div', { 'class': 'sb-top' }); top.append(K.el('b', null, x.titel), sbStatusChip(x.status) || '');
+    a.append(top, K.el('div', { 'class': 'sb-l' }, [sbHvornaar(x), x.gruppeNavn].filter(Boolean).join(' · ')));
+    if (x.status === 'tilbudt' && dato(x.tilbudFrist)) a.append(K.el('div', { 'class': 'sb-l staerk' }, t('sbSvarInden', { kl: kl(dato(x.tilbudFrist)) })));
+    ml.append(a);
+  });
+  $('sbMine').classList.toggle('hidden', !mine.length);
+  // Opslagene
+  const ud = $('sbListe'); ud.innerHTML = '';
+  const vist = sbSynlige().filter((o) => sb.filter === 'alle' || o.sport === sb.filter || o.type === sb.filter)
+    .sort((a, b) => dato(a.frist) - dato(b.frist));
+  vist.forEach((o) => ud.append(sbKort(o)));
+  $('sbTom').classList.toggle('hidden', vist.length > 0);
+}
+function sbKort(o) {
+  const a = K.el('a', { href: '#boers/' + o.id, 'class': 'sb-kort' });
+  const top = K.el('div', { 'class': 'sb-top' });
+  top.append(K.el('span', { 'class': 'sb-type ' + (o.type === 'fast' ? 'fast' : 'et') }, sbTypeTekst(o)), K.el('span', { 'class': 'sb-l' }, t('sbSvarSenest', { tid: sbFrist(o) })));
+  a.append(top, K.el('h3', null, o.titel));
+  const linje = [sbHvornaar(o), sbSted(o)].filter(Boolean).join(' · ');
+  if (linje) a.append(K.el('div', { 'class': 'sb-l' }, linje));
+  const tags = sbTags(o, false); if (tags.childNodes.length) a.append(tags);
+  const fod = K.el('div', { 'class': 'sb-fod' });
+  const v = K.el('span'); v.append(K.el('b', null, o.gruppeNavn || t('sbEnGruppe')), ' · ' + (o.gruppeNavn ? (o.gruppeStr === 1 ? t('medlemmer1') : t('medlemmerN', { n: o.gruppeStr })) : t('sbNavnVises')));
+  fod.append(v);
+  const min = sb.mine[o.id];
+  if (min && SB_STATUS[min.status]) fod.append(sbStatusChip(min.status));
+  else fod.append(K.el('span', null, o.antalMeldt ? t(o.antalMeldt === 1 ? 'sbMeldt1' : 'sbMeldtN', { n: o.antalMeldt }) : t('sbIngenMeldt')));
+  a.append(fod);
+  return a;
+}
+
+// ---------- Et opslag set udefra (man er ikke i gruppen)
+function visOpslag(oid) {
+  vis('vOpslag');
+  lytBoers();
+  sb.o = null; sb.mig = null; sb.venter = null;
+  K.besked($('opMsg'), '');
+  $('opTitel').textContent = ''; $('opFakta').innerHTML = ''; $('opBoks').innerHTML = ''; $('opInfo').innerHTML = ''; $('opTags').innerHTML = '';
+  const { fs, db } = FB;
+  lyt.push(fs.onSnapshot(fs.doc(db, 'boers', oid), (d) => {
+    sb.o = d.exists() ? Object.assign({ id: d.id }, d.data()) : null;
+    if (!sb.o) { K.besked($('opMsg'), t('sbFindesIkke'), 'err'); return; }
+    tegnOpslag();
+  }, (err) => fejl($('opMsg'), err)));
+  lyt.push(fs.onSnapshot(fs.doc(db, 'boersMig', mig.uid, 'opslag', oid), (d) => {
+    sb.mig = d.exists() ? Object.assign({ id: d.id }, d.data()) : null;
+    if (sb.venter && sb.venter.bekraeft(sb.mig)) sb.venter = null;
+    tegnOpslag();
+  }, (err) => fejl($('opMsg'), err)));
+}
+function opRaekke(dl, navn, vaerdi) { if (!vaerdi) return; dl.append(K.el('dt', null, t(navn)), K.el('dd', null, vaerdi)); }
+function tegnOpslag() {
+  if (!mig) return;
+  const o = sb.o; if (!o) return;
+  const minS = sb.venter ? sb.venter.status : (sb.mig ? sb.mig.status : '');
+  const kopi = sb.mig || {};
+  const tg = $('opTags'); tg.replaceWith(Object.assign(sbTags(o, true), { id: 'opTags' }));
+  $('opTitel').textContent = o.titel;
+  const dl = $('opFakta'); dl.innerHTML = '';
+  opRaekke(dl, 'sbHvornaar', sbHvornaar(o));
+  opRaekke(dl, 'sted', sbSted(Object.assign({}, o, minS === 'valgt' ? { sted: kopi.sted || o.sted, bane: kopi.bane || o.bane } : {})));
+  const f = SB_FORM.find((x) => x[0] === o.spilform); opRaekke(dl, 'sbSpilform', f ? t(f[1]) : '');
+  opRaekke(dl, 'sbSoeger', o.koen ? t(o.koen === 'dame' ? 'sbDame' : 'sbHerre') : '');
+  opRaekke(dl, 'sbNiveauOrd', sbNiveauKort(o));
+  opRaekke(dl, 'sbAlder', (o.alder || []).map((a) => t((SB_ALDER.find((x) => x[0] === a) || [])[1] || '')).join(', '));
+  opRaekke(dl, 'sbPris', o.prisTekst);
+  if (SB_AABNE.indexOf(o.status) >= 0) opRaekke(dl, 'sbSvarSenestOrd', sbFrist(o));
+  const tx = $('opTekst'); tx.textContent = o.tekst || ''; tx.classList.toggle('hidden', !o.tekst);
+  const navn = (minS === 'valgt' && kopi.gruppeNavn) || o.gruppeNavn;
+  $('opGruppe').textContent = navn ? t('sbLagtUdAf', { navn, n: o.gruppeStr }) : t('sbLagtUdAnonym', { n: o.gruppeStr });
+  const boks = $('opBoks'); boks.innerHTML = ''; boks.className = 'sb-boks';
+  const info = $('opInfo'); info.innerHTML = ''; info.classList.remove('hidden');
+  const knap = (tekst, kl2, fn) => { const b = K.el('button', { type: 'button', 'class': kl2 }, t(tekst)); b.addEventListener('click', fn); return b; };
+  const knapper = (...b) => { const d = K.el('div', { 'class': 'gr-knapper' }); b.forEach((x) => d.append(x)); return d; };
+  const aaben = o.status === 'aaben' && dato(o.frist) && dato(o.frist).getTime() > Date.now();
+  if (!minS) {
+    if (!aaben) { boks.append(K.el('h2', null, t('sbErLukket'))); info.classList.add('hidden'); return; }
+    boks.append(K.el('h2', null, t('sbMeldDig')));
+    const lab = K.el('label', { 'for': 'opKommentar' }, t('sbKommentar'));
+    const ta = K.el('textarea', { id: 'opKommentar', rows: '3', maxlength: '200', 'aria-describedby': 'opKommentarHint', placeholder: t('sbKommentarPh') });
+    ta.value = sb.kladde || ''; ta.addEventListener('input', () => { sb.kladde = ta.value; });
+    boks.append(lab, ta, K.el('p', { 'class': 'hint', id: 'opKommentarHint' }, t('sbKommentarHint')));
+    boks.append(knapper(knap('sbInteresseret', 'ok', () => sbHandling('meld', { kommentar: ta.value.trim() }, 'meldt'))));
+    info.append(K.el('b', null, t('sbHvadSker')), ' ' + t(o.type === 'fast' ? 'sbHvadSkerFast' : 'sbHvadSkerEt'));
+    return;
+  }
+  if (minS === 'meldt') {
+    boks.classList.add('mit');
+    const top = K.el('div', { 'class': 'sb-top' }); top.append(K.el('h2', null, t('sbDuHarMeldt')), sbStatusChip('meldt')); boks.append(top);
+    if (dato(kopi.tid)) boks.append(K.el('p', { 'class': 'sb-l' }, t('sbMeldtTid', { tid: dagOverskrift(dato(kopi.tid)).toLowerCase() + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(dato(kopi.tid)) }) + (kopi.kommentar ? ' ' + t('sbDinKommentar', { k: kopi.kommentar }) : '')));
+    boks.append(K.el('p', { 'class': 'sb-l' }, t('sbTraekTekst')));
+    boks.append(knapper(knap('sbTraek', 'ghost', () => sbHandling('traek', {}, ''))));
+    info.append(K.el('b', null, t('sbIkkeForgaeves')), ' ' + t('sbIkkeForgaevesT'));
+    return;
+  }
+  if (minS === 'valgt') {
+    boks.classList.add('ok');
+    if (o.type === 'fast') {
+      boks.append(K.el('h2', null, t('sbVelkommen', { navn: kopi.gruppeNavn || '' })), K.el('p', null, t('sbFastValgtT')));
+      if (kopi.gid) boks.append(knapper(K.el('a', { href: '#g/' + kopi.gid + '/chat', 'class': 'gr-knap' }, t('sbAabnGruppen'))));
+      info.classList.add('hidden'); return;
+    }
+    boks.append(K.el('h2', null, t('sbDuErMed')));
+    if (!sb.mig || !sb.mig.spillere) { boks.append(K.el('p', { 'class': 'sb-l' }, t('sender'))); info.classList.add('hidden'); return; }
+    const dl2 = K.el('dl', { 'class': 'sb-dl' });
+    opRaekke(dl2, 'sbGruppe', kopi.gruppeNavn);
+    opRaekke(dl2, 'sbMedSpillere', (kopi.spillere || []).join(', '));
+    if (kopi.prisPr) opRaekke(dl2, 'betaling', t('sbBetal', { kr: kr(kopi.prisPr), navn: kopi.modtager || '' }) + (kopi.mobilepay ? ' · ' + t('mobilepayNr', { nr: kopi.mobilepay }) : ''));
+    boks.append(dl2);
+    const kal = knap('laegIKalender', 'ghost small', () => hentIcs(sbIcs(o, kopi), o.titel || 'spil', kal));
+    boks.append(knapper(kal));
+    // Meld fra: under et døgn før beder siden om en kort besked til gruppen
+    const naer = dato(o.start) && dato(o.start).getTime() - Date.now() < 24 * 3600000;
+    const del = K.el('div', { 'class': 'afsnit' });
+    del.append(K.el('h3', { 'class': 'gr-lille' }, t('sbKanIkke')));
+    const ta = K.el('textarea', { id: 'opAfbud', rows: '2', maxlength: '200', placeholder: t(naer ? 'sbAfbudPhNaer' : 'sbAfbudPh') });
+    del.append(K.el('label', { 'for': 'opAfbud' }, t(naer ? 'sbAfbudBeskedNaer' : 'sbAfbudBesked')), ta);
+    del.append(knapper(knap('sbMeldFra', 'ghost', () => {
+      if (!sb.afbudKlar) { sb.afbudKlar = true; K.besked($('opMsg'), t('sbMeldFraIgen')); setTimeout(() => { sb.afbudKlar = false; }, 5000); return; }
+      sb.afbudKlar = false; sbHandling('afbud', { besked: ta.value.trim() }, 'afbud');
+    })));
+    boks.append(del);
+    info.classList.add('hidden');
+    return;
+  }
+  if (minS === 'tilbudt') {
+    boks.classList.add('haster');
+    boks.append(K.el('h2', null, t('sbLedigH')));
+    boks.append(K.el('p', null, t('sbLedigT', { kl: dato(kopi.tilbudFrist) ? kl(dato(kopi.tilbudFrist)) : '' })));
+    boks.append(knapper(knap('sbTagPladsen', 'ok', () => sbHandling('tag', {}, 'valgt')), knap('sbNejTak', 'ghost', () => sbHandling('reserve', { ja: false }, 'ikkeValgt'))));
+    info.append(t('sbLedigInfo'));
+    return;
+  }
+  if (minS === 'reserve') {
+    boks.append(K.el('h2', null, t('sbDuErReserve')), K.el('p', null, t('sbReserveT')));
+    boks.append(knapper(knap('sbIkkeReserve', 'ghost', () => sbHandling('reserve', { ja: false }, 'ikkeValgt'))));
+    info.classList.add('hidden');
+    return;
+  }
+  if (minS === 'ikkeValgt') {
+    boks.append(K.el('h2', null, t(o.type === 'fast' ? 'sbIkkeValgtFast' : 'sbIkkeValgt')));
+    if (o.type === 'et' && ['slut', 'aflyst', 'lukket', 'udloebet'].indexOf(o.status) < 0) {
+      boks.append(K.el('p', null, t('sbReserveSpm')));
+      boks.append(knapper(knap('sbBlivReserve', 'ok', () => sbHandling('reserve', { ja: true }, 'reserve')), knap('sbTraek', 'ghost', () => sbHandling('traek', {}, ''))));
+      info.append(t('sbReserveInfo'));
+    } else info.classList.add('hidden');
+    return;
+  }
+  boks.append(K.el('h2', null, t(minS === 'afbud' ? 'sbDuMeldteFra' : 'sbErLukket')));
+  info.classList.add('hidden');
+}
+function sbIcs(o, kopi) {
+  const z = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const esc = (x) => String(x || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1');
+  const a = dato(o.start), b = dato(o.slut) || new Date(a.getTime() + 90 * 60000);
+  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Roskilde Tennis Klub//Mit RTK//DA', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'BEGIN:VEVENT', 'UID:boers-' + o.id + '@mitrtk.dk', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(a), 'DTEND:' + z(b),
+    'SUMMARY:' + esc(o.titel + (kopi.gruppeNavn ? ' · ' + kopi.gruppeNavn : '')), 'LOCATION:' + esc(sbSted({ sted: kopi.sted || o.sted, bane: kopi.bane || o.bane })),
+    'URL:' + location.origin + location.pathname + '#boers/' + o.id,
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc(o.titel), 'TRIGGER:-PT1H', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+}
+/**
+ * Et tryk viser det nye med det samme og gemmer bagefter (Lars 12. oktober kl. 15.28). Det viste holdes, til databasen
+ * melder det samme tilbage (højst 5 sekunder). Kan det ikke gemmes, hopper visningen tilbage med en besked.
+ */
+async function sbHandling(handling, data, ny) {
+  const o = sb.o; if (!o || sb.travl) return;
+  sb.travl = true;
+  const v = { status: ny, bekraeft: (m) => (ny ? m && m.status === ny : !m) };
+  sb.venter = v; K.besked($('opMsg'), ''); tegnOpslag();
+  try {
+    await K.motor('boers', handling, Object.assign({ oid: o.id }, data), K.nyId());
+    if (handling === 'meld') sb.kladde = '';
+    if (sb.venter === v && v.bekraeft(sb.mig)) sb.venter = null;
+    setTimeout(() => { if (sb.venter === v) { sb.venter = null; tegnOpslag(); } }, 5000);
+  } catch (err) {
+    if (sb.venter === v) sb.venter = null;
+    tegnOpslag(); fejl($('opMsg'), err);
+  } finally { sb.travl = false; }
+  tegnOpslag();
+}
+
+// ---------- Gruppens egne opslag (fanen Spil) og opslaget set fra gruppen
+function lytGrOpslag(gid) {
+  const { fs, db } = FB;
+  lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'opslag'), (s) => {
+    tilstand.opslag = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    tegnGrOpslagListe();
+  }, (err) => console.warn(err)));
+}
+function grOpslagKort(o) {
+  const a = K.el('a', { href: '#g/' + tilstand.gruppe.id + '/opslag/' + o.id, 'class': 'sb-kort' });
+  const top = K.el('div', { 'class': 'sb-top' });
+  top.append(K.el('span', { 'class': 'sb-type ' + (o.type === 'fast' ? 'fast' : 'et') }, sbTypeTekst({ type: o.type, antal: o.mangler })), K.el('span', { 'class': 'sb-l' }, sbGrStatus(o)));
+  a.append(top, K.el('h3', null, o.titel), K.el('div', { 'class': 'sb-l' }, [sbHvornaar(o), sbSted(o)].filter(Boolean).join(' · ')));
+  return a;
+}
+function sbGrStatus(o) {
+  if (o.status === 'aaben') return o.antalMeldt ? t(o.antalMeldt === 1 ? 'sbMeldt1' : 'sbMeldtN', { n: o.antalMeldt }) : t('sbIngenMeldt');
+  return t({ tilbud: 'sbGrTilbud', besat: 'sbGrBesat', lukket: 'sbGrLukket', udloebet: 'sbGrUdloebet', aflyst: 'aflyst', slut: 'sbGrSlut' }[o.status] || 'sbGrLukket');
+}
+function tegnGrOpslagListe() {
+  const boks = $('grOpslag'); if (!boks || !tilstand.gruppe) return;
+  const nu = Date.now();
+  const vis2 = (tilstand.opslag || []).filter((o) => SB_AABNE.indexOf(o.status) >= 0 || (o.status === 'besat' && (!dato(o.start) || dato(o.start).getTime() > nu)))
+    .sort((a, b) => dato(a.frist) - dato(b.frist));
+  const ul = $('grOpslagListe'); ul.innerHTML = '';
+  vis2.forEach((o) => ul.append(grOpslagKort(o)));
+  $('grOpslagTom').classList.toggle('hidden', vis2.length > 0);
+}
+$('grSoegKnap').addEventListener('click', () => { location.hash = 'g/' + tilstand.gruppe.id + '/nytopslag'; });
+$('spSoeg').addEventListener('click', () => { if (tilstand.spilEt) location.hash = 'g/' + tilstand.gruppe.id + '/nytopslag/' + tilstand.spilEt.id; });
+
+function visGrOpslag(gid, oid) {
+  vis('vGrOpslag');
+  $('goTilbage').setAttribute('href', '#g/' + gid + '/spil');
+  sb.intern = null; sb.meldinger = []; sb.kandVenter = null; sb.lukKlar = false;
+  K.besked($('goMsg'), ''); $('goRetForm').classList.add('hidden');
+  ['goTitel', 'goHvornaar', 'goStatus', 'goAntalH'].forEach((id) => { $(id).textContent = ''; });
+  $('goKand').innerHTML = ''; $('goInfo').innerHTML = '';
+  const { fs, db } = FB;
+  const tegn = () => tegnGrOpslag();
+  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) tilstand.medlemmer = [];
+  lytGruppe(gid, tegn);
+  lyt.push(fs.onSnapshot(fs.doc(db, 'grupper', gid, 'opslag', oid), (d) => {
+    sb.intern = d.exists() ? Object.assign({ id: d.id }, d.data()) : null;
+    if (!sb.intern) { location.hash = 'g/' + gid + '/spil'; return; }
+    tegn();
+  }, (err) => fejl($('goMsg'), err)));
+  lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'opslag', oid, 'meldinger'), (s) => {
+    sb.meldinger = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    if (sb.kandVenter) { const m = sb.meldinger.find((x) => x.id === sb.kandVenter.pid); if (m && m.status === 'valgt') sb.kandVenter = null; }
+    tegn();
+  }, (err) => fejl($('goMsg'), err)));
+}
+const SB_ORDEN = { tilbudt: 0, meldt: 1, reserve: 2, ikkeValgt: 3, valgt: 4, afbud: 5, lukket: 6 };
+function tegnGrOpslag() {
+  if (!mig || !tilstand.gruppe) return;
+  const o = sb.intern; if (!o) return;
+  const kanStyre = o.oprettetAf === mig.uid || erAdmin();
+  $('goTags').replaceWith(Object.assign(sbTags({ type: o.type, antal: o.mangler, koen: o.koen, sport: o.sport, spilform: o.spilform, fastBane: o.fastBane, niveauFra: o.niveauFra, niveauTil: o.niveauTil, alder: o.alder }, true), { id: 'goTags' }));
+  $('goTitel').textContent = o.titel;
+  $('goHvornaar').textContent = [sbHvornaar(o), sbSted(o), SB_AABNE.indexOf(o.status) >= 0 ? t('sbSvarSenest', { tid: sbFrist(o) }) : ''].filter(Boolean).join(' · ');
+  const st = $('goStatus'); st.className = 'gr-status';
+  st.textContent = o.status === 'aaben' ? (o.visNavn ? t('sbPaaTavlen') : t('sbPaaTavlenAnonym')) : o.status === 'tilbud' ? t('sbTilbudTil', { kl: dato(o.tilbudFrist) ? kl(dato(o.tilbudFrist)) : '' }) : sbGrStatus(o);
+  const liste = sb.meldinger.map((m) => (sb.kandVenter && sb.kandVenter.pid === m.id ? Object.assign({}, m, { status: 'valgt', venter: true }) : m))
+    .filter((m) => m.status !== 'lukket' || o.status === 'lukket' || o.status === 'udloebet')
+    .sort((a, b) => (SB_ORDEN[a.status] || 9) - (SB_ORDEN[b.status] || 9) || (dato(a.tid) || 0) - (dato(b.tid) || 0));
+  const meldte = sb.meldinger.filter((m) => m.status === 'meldt').length;
+  $('goAntalH').textContent = sb.meldinger.length ? t(meldte === 1 ? 'sbMeldt1' : 'sbMeldtN', { n: meldte }) : t('sbIngenMeldt');
+  const kand = $('goKand'); kand.innerHTML = '';
+  const kanVaelge = kanStyre && SB_AABNE.indexOf(o.status) >= 0 && o.mangler > 0 && !sb.kandVenter;
+  liste.forEach((m) => {
+    const r = K.el('div', { 'class': 'sb-kand' });
+    r.append(avatar(m.id, m.navn));
+    const midt = K.el('div', { style: 'flex:1' });
+    const top = K.el('div', { 'class': 'sb-top' }); top.append(K.el('span', { 'class': 'navn' }, m.navn), m.status !== 'meldt' ? (sbStatusChip(m.status) || '') : '');
+    midt.append(top);
+    if (m.kommentar) midt.append(K.el('div', { 'class': 'boble' }, m.kommentar));
+    if (m.status === 'afbud' && m.afbudBesked) midt.append(K.el('div', { 'class': 'boble' }, m.afbudBesked));
+    const tid = dato(m.tid);
+    midt.append(K.el('div', { 'class': 'tid' }, (tid ? dagOverskrift(tid) + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(tid) : '') + (m.kommentar ? '' : ' · ' + t('sbIngenKommentar'))));
+    if (kanVaelge && ['meldt', 'reserve', 'tilbudt', 'ikkeValgt'].indexOf(m.status) >= 0) {
+      const b = K.el('button', { type: 'button', 'class': 'ok', 'aria-label': t('sbAccepterNavn', { navn: m.navn }) }, t('sbAccepter'));
+      b.addEventListener('click', () => sbVaelg(m));
+      const d = K.el('div', { 'class': 'knap2' }); d.append(b); midt.append(d);
+    }
+    if (m.venter) midt.append(K.el('div', { 'class': 'tid' }, t('gemmer')));
+    r.append(midt); kand.append(r);
+  });
+  const info = $('goInfo'); info.innerHTML = '';
+  if (kanStyre && o.status === 'aaben') info.append(K.el('b', null, t('sbNaarAccepter')), K.el('br'), t(o.type === 'fast' ? 'sbNaarAccepterFast' : 'sbNaarAccepterEt'));
+  info.classList.toggle('hidden', !info.childNodes.length);
+  $('goKnapper').classList.toggle('hidden', !kanStyre || SB_AABNE.indexOf(o.status) < 0);
+  $('goRet').classList.toggle('hidden', o.status !== 'aaben');
+  $('goLuk').textContent = t(sb.lukKlar ? 'sbLukIgen' : 'sbLuk');
+}
+async function sbVaelg(m) {
+  const o = sb.intern; if (!o || sb.kandVenter) return;
+  sb.kandVenter = { pid: m.id }; K.besked($('goMsg'), ''); tegnGrOpslag();
+  try {
+    await K.motor('boers', 'vaelg', { oid: o.id, pid: m.id }, K.nyId());
+    setTimeout(() => { if (sb.kandVenter && sb.kandVenter.pid === m.id) { sb.kandVenter = null; tegnGrOpslag(); } }, 5000);
+  } catch (err) { sb.kandVenter = null; tegnGrOpslag(); fejl($('goMsg'), err); }
+}
+$('goLuk').addEventListener('click', async () => {
+  const o = sb.intern; if (!o) return;
+  if (!sb.lukKlar) { sb.lukKlar = true; tegnGrOpslag(); setTimeout(() => { sb.lukKlar = false; if (sb.intern) tegnGrOpslag(); }, 4000); return; }
+  sb.lukKlar = false; K.besked($('goMsg'), t('gemmer'));
+  try { await K.motor('boers', 'luk', { oid: o.id }, K.nyId()); K.besked($('goMsg'), t('sbErLukketNu'), 'okm'); }
+  catch (err) { fejl($('goMsg'), err); }
+});
+$('goRet').addEventListener('click', () => {
+  const o = sb.intern; if (!o) return;
+  $('goRetTitel').value = o.titel || ''; $('goRetTekst').value = o.tekst || '';
+  $('goRetForm').classList.remove('hidden'); $('goRetTitel').focus();
+});
+$('goRetFortryd').addEventListener('click', () => { $('goRetForm').classList.add('hidden'); });
+$('goRetForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const o = sb.intern; if (!o) return;
+  K.besked($('goRetMsg'), t('gemmer'));
+  try {
+    await K.motor('boers', 'ret', { oid: o.id, titel: $('goRetTitel').value, tekst: $('goRetTekst').value }, K.nyId());
+    K.besked($('goRetMsg'), ''); $('goRetForm').classList.add('hidden');
+  } catch (err) { fejl($('goRetMsg'), err); }
+});
+
+// ---------- Nyt opslag
+const nyO = { type: 'et', sport: 'tennis', spilform: 'double', koen: '', antal: 1, alder: [], frist: '2t', spil: [], autoTitel: '' };
+function chipGruppe(id, valg, valgt, ved, multi) {
+  const g = $(id); g.innerHTML = '';
+  valg.forEach(([v, n]) => {
+    const on = multi ? valgt.indexOf(v) >= 0 : v === valgt;
+    const b = K.el('button', { type: 'button', 'aria-pressed': String(on) }, t(n));
+    b.addEventListener('click', () => ved(v));
+    g.append(b);
+  });
+}
+function visNytOpslag(gid, sid) {
+  vis('vNytOpslag');
+  $('noTilbage').setAttribute('href', sid ? '#g/' + gid + '/spil/' + sid : '#g/' + gid + '/spil');
+  K.besked($('noMsg'), '');
+  nyO.sid = sid || ''; nyO.id = K.nyId();
+  const { fs, db } = FB;
+  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) tilstand.medlemmer = [];
+  lytGruppe(gid, () => { if (tilstand.gruppe) { if (!nyO.sportSat) nyO.sport = tilstand.gruppe.sport === 'padel' ? 'padel' : 'tennis'; } tegnNytOpslag(); });
+  lyt.push(fs.onSnapshot(fs.query(fs.collection(db, 'grupper', gid, 'spil'), fs.where('start', '>=', new Date(Date.now() + 20 * 60000)), fs.orderBy('start'), fs.limit(60)), (s) => {
+    nyO.spil = s.docs.map((d) => Object.assign({ id: d.id }, d.data())).filter((x) => !x.aflyst && ((x.antal && x.antal.plads) || 0) < x.pladser);
+    if (!nyO.sid && nyO.spil[0]) nyO.sid = nyO.spil[0].id;
+    tegnNytOpslag();
+  }, (err) => fejl($('noMsg'), err)));
+  if (!$('noFristDato').value) { const d = new Date(Date.now() + 14 * 86400000); $('noFristDato').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  tegnNytOpslag();
+}
+function tegnNytOpslag() {
+  if (!mig) return;
+  const maaFast = erAdmin() || minRolle() === 'inviter';
+  if (!maaFast && nyO.type === 'fast') nyO.type = 'et';
+  radioer($('noType'), 'notype', [['et', 'sbTypeEt', 'sbTypeEtT'], ['fast', 'sbTypeFast', maaFast ? 'sbTypeFastT' : 'sbTypeFastIkke']], nyO.type, (v) => { nyO.type = v; tegnNytOpslag(); });
+  const fastLabel = [...$('noType').querySelectorAll('input')].find((x) => x.value === 'fast');
+  if (fastLabel) { fastLabel.disabled = !maaFast; fastLabel.closest('label').classList.toggle('slaaet-fra', !maaFast); }
+  $('noEtDel').classList.toggle('hidden', nyO.type !== 'et');
+  $('noFastDel').classList.toggle('hidden', nyO.type !== 'fast');
+  $('noFristEt').classList.toggle('hidden', nyO.type !== 'et');
+  $('noFristFast').classList.toggle('hidden', nyO.type !== 'fast');
+  const sel = $('noSpil'); const foer = sel.value || nyO.sid;
+  sel.innerHTML = '';
+  nyO.spil.forEach((s) => {
+    const a = dato(s.start);
+    sel.append(K.el('option', { value: s.id }, kortDag(a) + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(a) + ' · ' + s.titel + (s.sted ? ' · ' + s.sted : '') + ' (' + t('pladserAf', { a: (s.antal && s.antal.plads) || 0, b: s.pladser }) + ')'));
+  });
+  if (foer && nyO.spil.some((s) => s.id === foer)) sel.value = foer;
+  nyO.sid = sel.value;
+  $('noIngenSpil').classList.toggle('hidden', nyO.spil.length > 0 || nyO.type !== 'et');
+  sel.classList.toggle('hidden', !nyO.spil.length);
+  const s = nyO.spil.find((x) => x.id === nyO.sid);
+  if (nyO.type === 'et' && s && (!$('noTitel').value || $('noTitel').value === nyO.autoTitel)) { nyO.autoTitel = s.titel; $('noTitel').value = s.titel; }
+  if (nyO.type === 'fast' && $('noTitel').value === nyO.autoTitel) { $('noTitel').value = ''; nyO.autoTitel = ''; }
+  const ledige = nyO.type === 'et' && s ? Math.max(1, Math.min(3, s.pladser - ((s.antal && s.antal.plads) || 0))) : 3;
+  if (nyO.antal > ledige) nyO.antal = ledige;
+  chipGruppe('noSport', [['tennis', 'tennis'], ['padel', 'padel']], nyO.sport, (v) => { nyO.sport = v; nyO.sportSat = true; tegnNytOpslag(); });
+  chipGruppe('noSpilform', SB_FORM, nyO.spilform, (v) => { nyO.spilform = v; tegnNytOpslag(); });
+  chipGruppe('noKoen', [['', 'sbUnderordnet'], ['herre', 'sbHerre'], ['dame', 'sbDame']], nyO.koen, (v) => { nyO.koen = v; tegnNytOpslag(); });
+  chipGruppe('noAntal', [[1, 'sbEn'], [2, 'sbTo'], [3, 'sbTre']].filter((x) => x[0] <= ledige), nyO.antal, (v) => { nyO.antal = v; tegnNytOpslag(); });
+  chipGruppe('noAlder', SB_ALDER, nyO.alder, (v) => { nyO.alder = nyO.alder.indexOf(v) >= 0 ? nyO.alder.filter((x) => x !== v) : nyO.alder.concat([v]); tegnNytOpslag(); }, true);
+  chipGruppe('noFrist', [['1t', 'sbFrist1t'], ['2t', 'sbFrist2t'], ['dag', 'sbFristDag']], nyO.frist, (v) => { nyO.frist = v; tegnNytOpslag(); });
+  ['noNivFra', 'noNivTil'].forEach((id) => {
+    const e = $(id); if (e.options.length) return;
+    e.append(K.el('option', { value: '' }, t(id === 'noNivFra' ? 'sbFraAlle' : 'sbTilAlle')));
+    for (let i = 1; i <= 7; i++) e.append(K.el('option', { value: String(i) }, t(id === 'noNivFra' ? 'sbFraN' : 'sbTilN', { n: i })));
+  });
+}
+$('noSpil').addEventListener('change', () => { nyO.sid = $('noSpil').value; tegnNytOpslag(); });
+$('vNytOpslag').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const gid = tilstand.gruppe && tilstand.gruppe.id; if (!gid || sb.opretter) return;
+  if (nyO.type === 'et' && !nyO.sid) { K.besked($('noMsg'), t('sbVaelgSpil'), 'err'); return; }
+  if (!$('noTitel').value.trim()) { K.besked($('noMsg'), t('sbManglerTitel'), 'err'); $('noTitel').focus(); return; }
+  const data = {
+    gid, type: nyO.type, sport: nyO.sport, spilform: nyO.spilform, koen: nyO.koen, antal: nyO.antal, alder: nyO.alder,
+    niveauFra: $('noNivFra').value, niveauTil: $('noNivTil').value, titel: $('noTitel').value.trim(), tekst: $('noTekst').value.trim(),
+    visNavn: $('noVisNavn').checked
+  };
+  if (nyO.type === 'et') { data.sid = nyO.sid; data.frist = nyO.frist; }
+  else { data.tider = $('noTider').value.trim(); data.sted = $('noSted').value.trim(); data.pris = $('noPris').value.trim(); data.fastBane = $('noFastBane').checked; data.fristDato = $('noFristDato').value; }
+  sb.opretter = true; K.besked($('noMsg'), t('sbLaeggerUd'));
+  try {
+    const r = await K.motor('boers', 'opret', data, nyO.id);
+    ['noTitel', 'noTekst', 'noTider', 'noSted', 'noPris'].forEach((id) => { $(id).value = ''; });
+    nyO.autoTitel = ''; nyO.id = K.nyId();
+    location.hash = 'g/' + gid + '/opslag/' + r.id;
+  } catch (err) { fejl($('noMsg'), err); }
+  finally { sb.opretter = false; }
+});
 </script>
 </body>
 </html>

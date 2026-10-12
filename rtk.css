@@ -389,3 +389,62 @@ td.n,th.n{text-align:right}
 .push-trin li{counter-increment:t;display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--soft)}
 .push-trin li:first-child{border-top:0}
 .push-trin li::before{content:counter(t);flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--frost);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+
+/* Spillerbørsen (12. oktober 2026). Udseendet fra de godkendte mockups (kilder/mockup/spillerboers_mockup.py). */
+.sb-faner{display:flex;border-bottom:1px solid var(--line);margin:4px 0 16px}
+.sb-faner a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px;padding:8px 6px;font-weight:600;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent}
+.sb-faner a.valgt{color:var(--ink);border-bottom-color:var(--pink)}
+.sb-faner .tal{display:inline-block;min-width:20px;padding:1px 6px;border-radius:99px;background:var(--pink);color:#fff;font-size:12px;text-align:center}
+.sb-faner .gr-ny{flex:0 0 10px;width:10px;height:10px}
+.sb-intro{margin:0 0 12px}
+.sb-mine{margin:0 0 18px}
+.sb-kort{display:block;border:1px solid var(--line);border-radius:6px;background:#fff;padding:14px 16px;margin-top:10px;color:inherit;text-decoration:none}
+.sb-kort:hover{border-color:var(--pink)}
+.sb-kort.mit{border-color:var(--frost)}
+.sb-kort.haster{border:2px solid var(--wait);background:var(--waitbg)}
+.sb-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.sb-kort h3{margin:6px 0 2px;font-size:17px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:700}
+.sb-l{font-size:14px;color:var(--muted);margin-top:3px}
+.sb-l.staerk{color:var(--wait);font-weight:700}
+.sb-type{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.sb-type.et{background:#FDE7F0;color:#9A003D}
+.sb-type.fast{background:#E4EEF8;color:#0F2537}
+.sb-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sb-tag{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;border:1px solid var(--line2);color:var(--muted)}
+.sb-tag.staerk{border-color:var(--frost);color:var(--frost);font-weight:700}
+.sb-fod{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:13px;color:var(--muted);border-top:1px solid var(--soft);padding-top:8px}
+.sb-fod b{color:var(--ink)}
+.sb-ok{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.sb-ok.ok{background:var(--okbg);color:var(--ok)}
+.sb-ok.vent{background:var(--waitbg);color:var(--wait)}
+.sb-dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:14px 0;font-size:15px}
+.sb-dl dt{color:var(--muted)}
+.sb-dl dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.sb-citat{background:var(--soft);border-left:3px solid var(--ice);padding:10px 12px;border-radius:4px;margin:10px 0;font-size:15px;white-space:pre-line}
+.sb-boks{border:1px solid var(--line);border-radius:6px;padding:16px;margin-top:16px;background:#fff}
+.sb-boks:empty{display:none}
+.sb-boks.mit{border-color:var(--frost)}
+.sb-boks.ok{border:2px solid var(--ok)}
+.sb-boks.haster{border:2px solid var(--wait);background:var(--waitbg)}
+.sb-boks h2{font-size:18px;margin:0 0 6px;border:0;padding:0}
+.sb-boks label{margin-top:10px}
+.sb-boks textarea{width:100%}
+.sb-kand{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--soft)}
+.sb-kand:first-child{border-top:0}
+.sb-kand .navn{font-weight:700}
+.sb-kand .boble{margin-top:6px;background:var(--soft);padding:8px 10px;border-radius:10px 10px 10px 2px;font-size:14px;overflow-wrap:anywhere}
+.sb-kand .tid{font-size:12px;color:var(--muted);margin-top:4px}
+.sb-kand .knap2{display:flex;gap:8px;margin-top:10px}
+.sb-kand .knap2 button{min-height:44px;padding:6px 16px}
+.sb-felt{margin-top:16px}
+.sb-felt .l{display:block;font-weight:600;margin-bottom:8px}
+.sb-felt .hint{margin:6px 0 0}
+.sb-to{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sb-info{background:#E4EEF8;border-radius:6px;padding:12px 14px;font-size:14px;margin-top:14px;line-height:1.45}
+.sb-hjem{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px dashed var(--line2);border-radius:6px;margin-top:16px;font-size:14px;color:var(--muted)}
+.sb-gruppe{margin:0 0 20px}
+.sb-gruppe .hint{margin:0}
+.sb-spilsoeg{margin:12px 0 0}
+.sb-meldt{color:var(--wait) !important;font-weight:600}
+.gr-status{margin:8px 0 0;font-size:14px;font-weight:600;color:var(--teal)}
+.sb-tags + h1{margin-top:10px}
