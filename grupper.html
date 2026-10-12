@@ -653,6 +653,7 @@ function visLogin() {
   stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; }
   stopBoers();
   mig = null;
+  for (const k in mineSvar) delete mineSvar[k];
   if (FB) FB.auth.signOut(FB.au).catch(() => {});
   try { localStorage.removeItem('rtk.gr.uid'); } catch (e) {}
   $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
@@ -803,11 +804,14 @@ $('nyKnap').addEventListener('click', () => { location.hash = 'ny'; });
 const SPORT = [['tennis', 'tennis'], ['padel', 'padel'], ['begge', 'begge'], ['andet', 'andet']];
 const SYNLIG = [['lukket', 'lukket', 'lukketTekst'], ['klub', 'klub', 'klubTekst']];
 const INVIT = [['alle', 'invAlle'], ['admin', 'invAdmin']];
-function visNy() {
-  vis('vNy');
+function tegnNy() {
   radioer($('nySport'), 'sport', SPORT, valgtI($('nySport')) || 'tennis');
   radioer($('nySynlighed'), 'synlighed', SYNLIG, valgtI($('nySynlighed')) || 'lukket');
   radioer($('nyInvitation'), 'invitation', INVIT, valgtI($('nyInvitation')) || 'alle');
+}
+function visNy() {
+  vis('vNy');
+  tegnNy();
   K.besked($('nyMsg'), '');
   $('nyNavn').focus();
 }
@@ -1026,6 +1030,7 @@ $('skriv').addEventListener('submit', async (e) => {
 });
 
 // ---------- Spil
+const mineSvar = {};
 function minStatusTekst(s, minT) {
   if (s.aflyst) return t('aflyst');
   if (!minT || !minT.svar) return t('ikkeSvaret');
@@ -1051,11 +1056,18 @@ function spilKort(s, kompakt) {
   a.append(merke);
   if (!s.aflyst) {
     const { fs, db } = FB;
-    if (mig) fs.getDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'spil', s.id, 'tilmeldinger', mig.uid)).then((m) => {
-      const minT = m.exists() ? m.data() : null;
+    // Det sidst kendte svar vises med det samme, så mærket ikke blinker, når listen tegnes igen. Det hentes altid frisk bagefter.
+    const noegle = tilstand.gruppe.id + '/' + s.id;
+    const saetMerke = (minT) => {
       merke.textContent = minStatusTekst(s, minT);
       merke.classList.toggle('ja', !!(minT && minT.svar === 'ja' && minT.status === 'plads'));
       merke.classList.toggle('vent', !!(minT && minT.status === 'venteliste'));
+    };
+    if (noegle in mineSvar) saetMerke(mineSvar[noegle]);
+    if (mig) fs.getDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'spil', s.id, 'tilmeldinger', mig.uid)).then((m) => {
+      const minT = m.exists() ? m.data() : null;
+      mineSvar[noegle] = minT;
+      saetMerke(minT);
     }).catch(() => {});
   }
   return a;
@@ -1098,7 +1110,21 @@ function visNytSpil(gid) {
   vis('vNytSpil');
   $('nsTilbage').setAttribute('href', '#g/' + gid + '/spil');
   K.besked($('nsMsg'), '');
-  const efter = () => {
+  const efter = nsBookere;
+  nsTegnRadioer = () => {
+    radioer($('nsSlags'), 'slags', [['spil', 'spil'], ['arrangement', 'arrangement']], valgtI($('nsSlags')) || 'spil', (v) => { if (v === 'arrangement' && $('nsPladser').value === '4') $('nsPladser').value = '20'; });
+    radioer($('nsHvor'), 'hvor', HVOR, valgtI($('nsHvor')) || 'uge', visGange);
+  };
+  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.medlemmer = []; }
+  lytGruppe(gid, efter);
+  nsTegnRadioer();
+  if (!$('nsDato').value) { const d = new Date(Date.now() + 86400000); $('nsDato').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  $('nsGentagDel').classList.toggle('hidden', !$('nsGentag').checked);
+  efter();
+  $('nsTitel').focus();
+}
+let nsTegnRadioer = () => {};
+function nsBookere() {
     const sel = $('nsBooker'); const valgt = sel.value || mig.uid;
     sel.innerHTML = '';
     tilstand.medlemmer.slice().sort((a, b) => a.navn.localeCompare(b.navn)).forEach((m) => {
@@ -1106,15 +1132,6 @@ function visNytSpil(gid) {
     });
     sel.append(K.el('option', { value: '' }, t('ingen')));
     sel.value = valgt;
-  };
-  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.medlemmer = []; }
-  lytGruppe(gid, efter);
-  radioer($('nsSlags'), 'slags', [['spil', 'spil'], ['arrangement', 'arrangement']], valgtI($('nsSlags')) || 'spil', (v) => { if (v === 'arrangement' && $('nsPladser').value === '4') $('nsPladser').value = '20'; });
-  if (!$('nsDato').value) { const d = new Date(Date.now() + 86400000); $('nsDato').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
-  radioer($('nsHvor'), 'hvor', HVOR, valgtI($('nsHvor')) || 'uge', visGange);
-  $('nsGentagDel').classList.toggle('hidden', !$('nsGentag').checked);
-  efter();
-  $('nsTitel').focus();
 }
 const HVOR = [['uge', 'gUge'], ['14', 'g14'], ['dag', 'gDag']];
 function gange() {
@@ -1447,6 +1464,7 @@ function visTilm(s) {
 async function svar(v) {
   const s = tilstand.spilEt; if (!s) return;
   svarVenter = { sid: s.id, gid: tilstand.gruppe.id, v };
+  delete mineSvar[tilstand.gruppe.id + '/' + s.id];
   if ($('spStatus').classList.contains('err')) K.besked($('spStatus'), '');
   tegnSpil();
   if (svarGemmer) return;
@@ -1624,7 +1642,16 @@ $('omForm').addEventListener('submit', async (e) => {
 });
 
 $('logud').addEventListener('click', () => K.logud());
-document.addEventListener('sprog', () => { if (mig && mig.type === 'medlem') { if (!$('vListe').classList.contains('hidden')) tegnListe(); if (!$('vGruppe').classList.contains('hidden')) tegnGruppe(); if (!$('vSpil').classList.contains('hidden')) tegnSpil(); } });
+document.addEventListener('sprog', () => {
+  if (!mig || mig.type !== 'medlem') return;
+  const aaben = (id) => !$(id).classList.contains('hidden');
+  if (aaben('vListe')) tegnListe();
+  if (aaben('vGruppe')) tegnGruppe();
+  if (aaben('vSpil')) tegnSpil();
+  if (aaben('vNy')) tegnNy();
+  if (aaben('vNytSpil')) { nsTegnRadioer(); nsBookere(); visGange(); }
+  if (typeof sbSprog === 'function') sbSprog(aaben);
+});
 
 // Når man forlader siden, lukkes forbindelsen til Firestore pænt (ellers kan den melde fejl i konsollen midt i et skift).
 window.addEventListener('pagehide', () => { stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (FB) FB.fs.terminate(FB.db).catch(() => {}); });
@@ -2152,9 +2179,11 @@ function tegnNytOpslag() {
   chipGruppe('noAlder', SB_ALDER, nyO.alder, (v) => { nyO.alder = nyO.alder.indexOf(v) >= 0 ? nyO.alder.filter((x) => x !== v) : nyO.alder.concat([v]); tegnNytOpslag(); }, true);
   chipGruppe('noFrist', [['1t', 'sbFrist1t'], ['2t', 'sbFrist2t'], ['dag', 'sbFristDag']], nyO.frist, (v) => { nyO.frist = v; tegnNytOpslag(); });
   ['noNivFra', 'noNivTil'].forEach((id) => {
-    const e = $(id); if (e.options.length) return;
+    const e = $(id); if (e.options.length && e.dataset.sprog === (window.RTK_SPROG ? RTK_SPROG.sprog : 'da')) return;
+    const v = e.value; e.innerHTML = ''; e.dataset.sprog = (window.RTK_SPROG ? RTK_SPROG.sprog : 'da');
     e.append(K.el('option', { value: '' }, t(id === 'noNivFra' ? 'sbFraAlle' : 'sbTilAlle')));
     for (let i = 1; i <= 7; i++) e.append(K.el('option', { value: String(i) }, t(id === 'noNivFra' ? 'sbFraN' : 'sbTilN', { n: i })));
+    e.value = v;
   });
 }
 $('noSpil').addEventListener('change', () => { nyO.sid = $('noSpil').value; tegnNytOpslag(); });
@@ -2180,6 +2209,16 @@ $('vNytOpslag').addEventListener('submit', async (e) => {
   } catch (err) { fejl($('noMsg'), err); }
   finally { sb.opretter = false; }
 });
+
+// ---------- Skift af sprog: tegn spillerbørsens dele igen
+function sbSprog(aaben) {
+  tegnFaner();
+  if (aaben('vBoers')) tegnTavle();
+  if (aaben('vOpslag')) tegnOpslag();
+  if (aaben('vGrOpslag')) tegnGrOpslag();
+  if (aaben('vNytOpslag')) tegnNytOpslag();
+  if (aaben('vGruppe')) tegnGrOpslagListe();
+}
 </script>
 </body>
 </html>
