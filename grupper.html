@@ -390,7 +390,7 @@ window.TEKSTER = {
     sbDuErReserve: 'Du står som reserve', sbReserveT: 'Bliver pladsen ledig, får du en besked og kan selv sige ja. Du kan sige fra når som helst.', sbIkkeReserve: 'Jeg vil ikke stå som reserve',
     sbIkkeValgt: 'Pladsen er besat denne gang', sbIkkeValgtFast: 'Gruppen har valgt en anden denne gang', sbReserveSpm: 'Vil du stå som reserve, hvis pladsen bliver ledig? Det er helt frivilligt.',
     sbBlivReserve: 'Ja, gerne som reserve', sbReserveInfo: 'Som reserve får du en besked, hvis pladsen bliver ledig, og så vælger du selv.',
-    sbDuMeldteFra: 'Du har meldt fra', sbKunGruppen: 'Kun gruppen ser listen', sbIngenKommentar: 'ingen kommentar', sbAccepter: 'Accepter', sbAccepterNavn: 'Accepter {navn}',
+    sbDuMeldteFra: 'Du har meldt fra', sbSpilAflyst: 'Spillet er aflyst', sbMeldIgen: 'Meld mig igen', sbKunGruppen: 'Kun gruppen ser listen', sbIngenKommentar: 'ingen kommentar', sbAccepter: 'Accepter', sbAccepterNavn: 'Accepter {navn}',
     sbNaarAccepter: 'Når du trykker Accepter',
     sbNaarAccepterEt: 'Spilleren får pladsen på spillet og en besked. Når alle pladser er besat, lukker opslaget, og de andre får automatisk besked og kan selv vælge at stå som reserve. Chatten i gruppen får en linje.',
     sbNaarAccepterFast: 'Spilleren kommer med i gruppen som medlem og får en besked. Når alle pladser er besat, lukker opslaget, og de andre får besked.',
@@ -498,7 +498,7 @@ window.TEKSTER = {
     sbDuErReserve: 'You are a reserve', sbReserveT: 'If the place becomes free, you get a message and decide yourself. You can say no at any time.', sbIkkeReserve: 'I don’t want to be a reserve',
     sbIkkeValgt: 'The place is taken this time', sbIkkeValgtFast: 'The group chose someone else this time', sbReserveSpm: 'Would you like to be a reserve in case the place becomes free? It is entirely voluntary.',
     sbBlivReserve: 'Yes, as a reserve', sbReserveInfo: 'As a reserve you get a message if the place becomes free, and then you decide.',
-    sbDuMeldteFra: 'You dropped out', sbKunGruppen: 'Only the group sees the list', sbIngenKommentar: 'no comment', sbAccepter: 'Accept', sbAccepterNavn: 'Accept {navn}',
+    sbDuMeldteFra: 'You dropped out', sbSpilAflyst: 'The game is cancelled', sbMeldIgen: 'Sign up again', sbKunGruppen: 'Only the group sees the list', sbIngenKommentar: 'no comment', sbAccepter: 'Accept', sbAccepterNavn: 'Accept {navn}',
     sbNaarAccepter: 'When you tap Accept',
     sbNaarAccepterEt: 'The player gets the place in the game and a message. When all places are taken, the post closes, and the others are told automatically and can choose to be reserves. The group chat gets a line.',
     sbNaarAccepterFast: 'The player joins the group as a member and gets a message. When all places are taken, the post closes and the others are told.',
@@ -1835,7 +1835,7 @@ function tegnOpslag() {
   const tg = $('opTags'); tg.replaceWith(Object.assign(sbTags(o, true), { id: 'opTags' }));
   $('opTitel').textContent = o.titel;
   const dl = $('opFakta'); dl.innerHTML = '';
-  opRaekke(dl, 'sbHvornaar', sbHvornaar(o));
+  opRaekke(dl, 'sbHvornaar', sbHvornaar(Object.assign({}, o, kopi.start ? { start: kopi.start, slut: kopi.slut } : {})));
   opRaekke(dl, 'sted', sbSted(Object.assign({}, o, minS === 'valgt' ? { sted: kopi.sted || o.sted, bane: kopi.bane || o.bane } : {})));
   const f = SB_FORM.find((x) => x[0] === o.spilform); opRaekke(dl, 'sbSpilform', f ? t(f[1]) : '');
   opRaekke(dl, 'sbSoeger', o.koen ? t(o.koen === 'dame' ? 'sbDame' : 'sbHerre') : '');
@@ -1870,6 +1870,10 @@ function tegnOpslag() {
     boks.append(knapper(knap('sbTraek', 'ghost', () => sbHandling('traek', {}, ''))));
     info.append(K.el('b', null, t('sbIkkeForgaeves')), ' ' + t('sbIkkeForgaevesT'));
     return;
+  }
+  if (minS === 'valgt' && (o.status === 'aflyst' || o.status === 'slut')) {
+    boks.append(K.el('h2', null, t(o.status === 'aflyst' ? 'sbSpilAflyst' : 'sbGrSlut')));
+    info.classList.add('hidden'); return;
   }
   if (minS === 'valgt') {
     boks.classList.add('ok');
@@ -1911,7 +1915,9 @@ function tegnOpslag() {
   }
   if (minS === 'reserve') {
     boks.append(K.el('h2', null, t('sbDuErReserve')), K.el('p', null, t('sbReserveT')));
-    boks.append(knapper(knap('sbIkkeReserve', 'ghost', () => sbHandling('reserve', { ja: false }, 'ikkeValgt'))));
+    // Står opslaget åbent igen, kan en reserve melde sig på ny, så opretteren kan vælge en
+    if (aaben) boks.append(knapper(knap('sbMeldIgen', 'ok', () => sbHandling('meld', {}, 'meldt')), knap('sbIkkeReserve', 'ghost', () => sbHandling('reserve', { ja: false }, 'ikkeValgt'))));
+    else boks.append(knapper(knap('sbIkkeReserve', 'ghost', () => sbHandling('reserve', { ja: false }, 'ikkeValgt'))));
     info.classList.add('hidden');
     return;
   }
@@ -1930,7 +1936,7 @@ function tegnOpslag() {
 function sbIcs(o, kopi) {
   const z = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const esc = (x) => String(x || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1');
-  const a = dato(o.start), b = dato(o.slut) || new Date(a.getTime() + 90 * 60000);
+  const a = dato(kopi.start || o.start), b = dato(kopi.start ? kopi.slut : o.slut) || new Date(a.getTime() + 90 * 60000);
   return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Roskilde Tennis Klub//Mit RTK//DA', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
     'BEGIN:VEVENT', 'UID:boers-' + o.id + '@mitrtk.dk', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(a), 'DTEND:' + z(b),
     'SUMMARY:' + esc(o.titel + (kopi.gruppeNavn ? ' · ' + kopi.gruppeNavn : '')), 'LOCATION:' + esc(sbSted({ sted: kopi.sted || o.sted, bane: kopi.bane || o.bane })),
@@ -1963,6 +1969,7 @@ function lytGrOpslag(gid) {
   const { fs, db } = FB;
   lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'opslag'), (s) => {
     tilstand.opslag = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    tilstand.opslag.forEach((o) => sb.egne.add(o.id));
     tegnGrOpslagListe();
   }, (err) => console.warn(err)));
 }
@@ -2038,7 +2045,8 @@ function tegnGrOpslag() {
     if (m.status === 'afbud' && m.afbudBesked) midt.append(K.el('div', { 'class': 'boble' }, m.afbudBesked));
     const tid = dato(m.tid);
     midt.append(K.el('div', { 'class': 'tid' }, (tid ? dagOverskrift(tid) + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(tid) : '') + (m.kommentar ? '' : ' · ' + t('sbIngenKommentar'))));
-    if (kanVaelge && ['meldt', 'reserve', 'tilbudt', 'ikkeValgt'].indexOf(m.status) >= 0) {
+    // Kun dem, der har meldt sig og venter. Reserver siger selv ja til en ledig plads.
+    if (kanVaelge && m.status === 'meldt') {
       const b = K.el('button', { type: 'button', 'class': 'ok', 'aria-label': t('sbAccepterNavn', { navn: m.navn }) }, t('sbAccepter'));
       b.addEventListener('click', () => sbVaelg(m));
       const d = K.el('div', { 'class': 'knap2' }); d.append(b); midt.append(d);
@@ -2165,6 +2173,7 @@ $('vNytOpslag').addEventListener('submit', async (e) => {
   sb.opretter = true; K.besked($('noMsg'), t('sbLaeggerUd'));
   try {
     const r = await K.motor('boers', 'opret', data, nyO.id);
+    sb.egne.add(r.id); tegnFaner();
     ['noTitel', 'noTekst', 'noTider', 'noSted', 'noPris'].forEach((id) => { $(id).value = ''; });
     nyO.autoTitel = ''; nyO.id = K.nyId();
     location.hash = 'g/' + gid + '/opslag/' + r.id;
