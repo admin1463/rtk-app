@@ -374,7 +374,27 @@ async function gemValg(aendring, msg) {
   try { data = await K.motor('beskeder', 'gemValg', ny, K.nyId()); vis(); K.besked(msg, t('gemt'), 'okm'); }
   catch (err) { vis(); K.besked(msg, K.fejlTekst(err.message), 'err'); }
 }
-$('vippe').addEventListener('click', () => gemValg({ nyheder: !data.nyheder }, $('nyhMsg')));
+// Kontakten skifter med det samme og gemmer bagefter (Lars 12. oktober kl. 11.44). Det sidste tryk vinder.
+let nyhVenter = null;
+$('vippe').addEventListener('click', async () => {
+  const v = $('vippe');
+  const til = v.getAttribute('aria-checked') !== 'true';
+  v.setAttribute('aria-checked', String(til));
+  const igang = nyhVenter !== null;
+  nyhVenter = til;
+  if (igang) return;
+  const msg = $('nyhMsg');
+  K.besked(msg, t('gemmer'));
+  let oensket = til;
+  try {
+    for (;;) {
+      data = await K.motor('beskeder', 'gemValg', { kanal: data.kanal, nyheder: oensket, nyhederKanal: data.nyhederKanal }, K.nyId());
+      if (nyhVenter === oensket) break;
+      oensket = nyhVenter;
+    }
+    nyhVenter = null; vis(); K.besked(msg, t('gemt'), 'okm');
+  } catch (err) { nyhVenter = null; vis(); K.besked(msg, K.fejlTekst(err.message), 'err'); }
+});
 $('logud').addEventListener('click', () => K.logud());
 
 let skrivId = K.nyId();

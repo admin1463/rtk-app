@@ -234,7 +234,7 @@ function vippeRaekke(b, modul, navn, tekst, klasse) {
   tx.append(K.el('b', { id: id }, navn), K.el('span', { 'class': 'smaa' }, tekst + ' ' + statusTekst(st)));
   const v = K.el('button', { type: 'button', role: 'switch', 'class': 'vippe' + (st.laast ? ' laast' : ''), 'aria-checked': String(!!st.til), 'aria-labelledby': id });
   if (st.laast) v.disabled = true;
-  v.addEventListener('click', () => gemSamtykke(b, modul, st.til ? 'Nej' : 'Ja'));
+  v.addEventListener('click', () => vipSamtykke(b, modul, v));
   r.append(tx, v);
   return r;
 }
@@ -265,6 +265,34 @@ function oenskeKort(b, o) {
   nej.addEventListener('click', () => gemSamtykke(b, o.modul, 'Nej', o.id));
   k.append(ja, nej); s.append(k);
   return s;
+}
+// Kontakten skifter med det samme og gemmer bagefter (Lars 12. oktober kl. 11.44). Trykker man igen, mens der
+// gemmes, gemmes det sidste valg bagefter. Fejler det, tegnes siden ud fra det gemte, så kontakten hopper tilbage.
+const venter = {};
+function vipSamtykke(b, modul, v) {
+  const til = v.getAttribute('aria-checked') !== 'true';
+  v.setAttribute('aria-checked', String(til));
+  const k = b.id + '.' + modul;
+  const igang = k in venter;
+  venter[k] = til;
+  if (!igang) gemVippe(b, modul, k);
+}
+async function gemVippe(b, modul, k) {
+  const sm = () => document.getElementById('smsg-' + b.id);
+  // Siden tegnes forfra efter gem. Havde kontakten fokus (tastatur eller skærmlæser), får den nye kontakt det.
+  const fokus = () => { const n = document.querySelector('section[aria-labelledby="h-' + b.id + '"] [data-modul="' + modul + '"] .vippe'); if (n && (document.activeElement === document.body || !document.activeElement)) n.focus({ preventScroll: true }); };
+  K.besked(sm(), t('gemmer'));
+  let til = venter[k];
+  try {
+    for (;;) {
+      data = await K.motor('beskeder', 'gemSamtykke', { barnId: b.id, modul, valg: til ? 'Ja' : 'Nej', oenske: '' }, K.nyId());
+      if (venter[k] === til) break;
+      til = venter[k];
+    }
+    delete venter[k]; delete svar[b.id];
+    if (!Object.keys(venter).length) { vis(); fokus(); }
+    K.besked(sm(), t('gemt'), 'okm');
+  } catch (err) { delete venter[k]; vis(); fokus(); K.besked(sm(), K.fejlTekst(err.message), 'err'); }
 }
 async function gemSamtykke(b, modul, valg, oenske) {
   const sm = () => document.getElementById('smsg-' + b.id);
