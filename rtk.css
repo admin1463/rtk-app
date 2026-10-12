@@ -230,10 +230,11 @@ td.n,th.n{text-align:right}
 .valg .smaa{display:block;font-size:14px;color:var(--muted);line-height:1.4}
 .valg .snart{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute2)}
 .linje{display:flex;gap:16px;align-items:flex-start;justify-content:space-between}
-.vippe{position:relative;flex-shrink:0;width:60px;height:36px;min-height:0;padding:0;border-radius:999px;border:2px solid var(--frost);background:#FFFFFF}
-.vippe::after{content:'';position:absolute;top:4px;left:4px;width:24px;height:24px;border-radius:999px;background:var(--frost);transition:left .15s}
-.vippe[aria-checked="true"]{background:var(--pink);border-color:var(--pink)}
-.vippe[aria-checked="true"]::after{left:28px;background:#FFFFFF}
+.vippe{position:relative;flex-shrink:0;width:60px;height:36px;min-height:0;padding:0;border-radius:999px;border:2px solid var(--teal);background:#FFFFFF}
+.vippe::after{content:'';position:absolute;top:4px;left:4px;width:24px;height:24px;box-sizing:border-box;border-radius:999px;border:2px solid var(--teal);background:#FFFFFF;transition:left .15s}
+/* Slået til: grøn bane og hvid knop med grønt omrids. Slået fra: hvid. Lars 12. oktober kl. 15.42 (rød virkede farlig, lyseblå passede ikke). */
+.vippe[aria-checked="true"]{background:var(--teal);border-color:var(--teal)}
+.vippe[aria-checked="true"]::after{left:28px}
 .advarsel{padding:12px 14px;border:1px solid var(--wait);background:var(--waitbg);color:var(--wait);border-radius:6px;font-size:15px;line-height:1.45;margin:12px 0 0}
 .eksempel{max-width:360px;padding:12px 14px;border-radius:16px 16px 16px 4px;background:#EEF2F4;font-size:14px;line-height:1.45}
 .adresser{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;margin:12px 0 0;font-size:16px}
@@ -254,7 +255,7 @@ td.n,th.n{text-align:right}
 .samtykke .underoverskrift{margin:0}
 .samtykke .altid{flex-shrink:0;font-size:13px;color:var(--muted);padding-top:8px}
 .vippe.laast,.vippe:disabled{background:var(--soft);border:2px dashed #8FA9A6;cursor:not-allowed}
-.vippe.laast::after,.vippe:disabled::after{background:#8FA9A6}
+.vippe.laast::after,.vippe:disabled::after{background:#8FA9A6;border-color:#8FA9A6}
 .oenske{padding:16px;border:2px solid var(--pink);border-radius:6px;display:flex;flex-direction:column;gap:10px;margin:0 0 14px}
 .oenske .knapper{display:flex;gap:10px}
 .oenske .knapper button{flex:1 1 0}

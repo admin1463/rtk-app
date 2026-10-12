@@ -1024,7 +1024,7 @@ function visSpil(gid, sid) {
   }, (err) => fejl($('spStatus'), err)));
   tilstand.serie = []; tilstand.serieId = null;
   lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'spil', sid, 'tilmeldinger'), (s) => {
-    tilstand.tilm = s.docs.map((d) => Object.assign({ id: d.id }, d.data())); tegn();
+    tilstand.tilm = s.docs.map((d) => Object.assign({ id: d.id }, d.data())); svarBekraeftet(); tegn();
   }, (err) => fejl($('spStatus'), err)));
 }
 
@@ -1052,8 +1052,10 @@ function tegnSpil() {
   }
   $('spStop').classList.toggle('hidden', !s.serie || !!s.aflyst);
   $('spStop').textContent = t(stopKlar ? 'stopIgen' : 'stopSerie');
-  const minT = tilstand.tilm.find((x) => x.id === mig.uid) || null;
-  // Svarknapper
+  const tilm = visTilm(s);
+  const minT = tilm.find((x) => x.id === mig.uid) || null;
+  const venter = svarVenter && svarVenter.sid === s.id;
+  // Svarknapper. De skifter med det samme, når man trykker, og gemmer bagefter.
   const sv = $('spSvar'); sv.innerHTML = '';
   if (!s.aflyst) [['ja', 'sJa'], ['maaske', 'sMaaske'], ['nej', 'sNej']].forEach(([v, n]) => {
     const b = K.el('button', { type: 'button', 'aria-pressed': String(!!(minT && minT.svar === v)), 'class': 'ghost' }, t(n));
@@ -1062,15 +1064,16 @@ function tegnSpil() {
   });
   if (!s.aflyst && !$('spStatus').classList.contains('err')) {
     let st = t('stIngen');
-    if (minT && minT.svar === 'ja') st = minT.status === 'venteliste' ? t('stVente', { nr: minT.nr }) : t('stPlads');
+    if (venter && svarVenter.v === 'ja') st = t('sender');
+    else if (minT && minT.svar === 'ja') st = minT.status === 'venteliste' ? t('stVente', { nr: minT.nr }) : t('stPlads');
     else if (minT && minT.svar === 'maaske') st = t('stMaaske');
     else if (minT && minT.svar === 'nej') st = t('stNej');
     K.besked($('spStatus'), st, minT && minT.status === 'plads' ? 'okm' : '');
   } else if (s.aflyst) K.besked($('spStatus'), '');
   // Spillere
-  const plads = tilstand.tilm.filter((x) => x.svar === 'ja' && x.status === 'plads').sort((a, b) => dato(a.tid) - dato(b.tid));
-  const vente = tilstand.tilm.filter((x) => x.svar === 'ja' && x.status === 'venteliste').sort((a, b) => (a.nr || 0) - (b.nr || 0));
-  const maaske = tilstand.tilm.filter((x) => x.svar === 'maaske');
+  const plads = tilm.filter((x) => x.svar === 'ja' && x.status === 'plads').sort((a, b) => dato(a.tid) - dato(b.tid));
+  const vente = tilm.filter((x) => x.svar === 'ja' && x.status === 'venteliste').sort((a, b) => (a.nr || 0) - (b.nr || 0));
+  const maaske = tilm.filter((x) => x.svar === 'maaske');
   $('spAntal').textContent = t('pladserAf', { a: plads.length, b: s.pladser });
   const ul = $('spSpillere'); ul.innerHTML = '';
   plads.forEach((x) => {
@@ -1214,11 +1217,45 @@ $('spStop').addEventListener('click', async () => {
     K.besked($('spAdminMsg'), t('serieStoppet', { n: rest.length }), 'okm');
   } catch (err) { fejl($('spAdminMsg'), err); }
 });
+// Svar på et spil: knappen skifter med det samme, og svaret gemmes bagefter. Trykker man igen, mens der gemmes,
+// gælder det sidste tryk. Kan det ikke gemmes, hopper knapperne tilbage til det gemte svar med en besked.
+let svarVenter = null, svarGemmer = false;
+function svarBekraeftet() {
+  if (!svarVenter || !svarVenter.gemt) return false;
+  const m = tilstand.tilm.find((x) => x.id === mig.uid);
+  if (!(m && m.svar === svarVenter.v) && !(svarVenter.v === 'nej' && !m)) return false;
+  svarVenter = null; return true;
+}
+function visTilm(s) {
+  if (!svarVenter || svarVenter.sid !== s.id) return tilstand.tilm;
+  const v = svarVenter.v, gl = tilstand.tilm.find((x) => x.id === mig.uid);
+  const andre = tilstand.tilm.filter((x) => x.id !== mig.uid);
+  if (v === 'ja' && gl && gl.svar === 'ja') return tilstand.tilm;
+  const ny = Object.assign({ id: mig.uid, navn: navnPaa(mig.uid) || (gl && gl.navn) || '' }, gl || {}, { svar: v });
+  if (v === 'ja') ny.status = 'venter'; // ikke vist i listerne, før motoren har svaret
+  return andre.concat([ny]);
+}
 async function svar(v) {
-  const s = tilstand.spilEt;
-  K.besked($('spStatus'), t('sender'));
-  try { await K.motor('grupper', 'tilmeld', { gid: tilstand.gruppe.id, sid: s.id, svar: v }, K.nyId()); K.besked($('spStatus'), ''); tegnSpil(); }
-  catch (err) { fejl($('spStatus'), err); }
+  const s = tilstand.spilEt; if (!s) return;
+  svarVenter = { sid: s.id, gid: tilstand.gruppe.id, v };
+  if ($('spStatus').classList.contains('err')) K.besked($('spStatus'), '');
+  tegnSpil();
+  if (svarGemmer) return;
+  svarGemmer = true;
+  try {
+    while (svarVenter) {
+      const nu = svarVenter;
+      await K.motor('grupper', 'tilmeld', { gid: nu.gid, sid: nu.sid, svar: nu.v }, K.nyId());
+      if (svarVenter === nu) { nu.gemt = true; break; }
+    }
+    // Hold det viste svar, til databasen har meldt det samme tilbage (højst 5 sekunder), så knappen ikke blinker.
+    const gemt = svarVenter;
+    if (gemt) { if (svarBekraeftet()) tegnSpil(); else setTimeout(() => { if (svarVenter === gemt) { svarVenter = null; if (tilstand.spilEt) tegnSpil(); } }, 5000); }
+  } catch (err) {
+    svarVenter = null;
+    if (tilstand.spilEt) tegnSpil();
+    fejl($('spStatus'), err);
+  } finally { svarGemmer = false; }
 }
 async function opdaterSpil(felter, msg) {
   try { await FB.fs.updateDoc(FB.fs.doc(FB.db, 'grupper', tilstand.gruppe.id, 'spil', tilstand.spilEt.id), felter); return true; }
