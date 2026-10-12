@@ -1371,6 +1371,8 @@ $('omForm').addEventListener('submit', async (e) => {
 $('logud').addEventListener('click', () => K.logud());
 document.addEventListener('sprog', () => { if (mig && mig.type === 'medlem') { if (!$('vListe').classList.contains('hidden')) tegnListe(); if (!$('vGruppe').classList.contains('hidden')) tegnGruppe(); if (!$('vSpil').classList.contains('hidden')) tegnSpil(); } });
 
+// Når man forlader siden, lukkes forbindelsen til Firestore pænt (ellers kan den melde fejl i konsollen midt i et skift).
+window.addEventListener('pagehide', () => { stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (FB) FB.fs.terminate(FB.db).catch(() => {}); });
 if (K.loggetInd()) start(); else visLogin();
 </script>
 </body>
