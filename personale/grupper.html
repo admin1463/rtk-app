@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Grupper i klubben · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css">
+<style>
+.gk-note{padding:12px 14px;font-size:14px;background:var(--soft);color:var(--muted);border:1px solid var(--line);border-radius:6px;margin:0 0 16px}
+.gk-stats{grid-template-columns:repeat(4,1fr)}
+@media (max-width:620px){.gk-stats{grid-template-columns:1fr 1fr}}
+.gk-sog{display:flex;flex-direction:column;gap:10px;margin:6px 0 14px}
+.gk-gruppe{border:1px solid var(--line);border-radius:6px;background:#FFFFFF;margin-top:10px}
+.gk-gruppe summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.gk-gruppe summary::-webkit-details-marker{display:none}
+.gk-gruppe summary:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
+.gk-gruppe[open] summary{border-bottom:1px solid var(--line)}
+.gk-hoved{flex-grow:1;min-width:0}
+.gk-hoved b{display:block;font-size:17px;overflow-wrap:anywhere}
+.gk-info{font-size:14px;color:var(--muted);margin-top:4px}
+.gk-pil{flex-shrink:0;margin-top:4px;transition:transform .15s}
+.gk-gruppe[open] .gk-pil{transform:rotate(180deg)}
+.gk-maerker{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.gk-m{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;border:1px solid var(--line2);color:var(--muted);background:#FFFFFF}
+.gk-m.lukket{border-color:var(--frost);color:var(--frost)}
+.gk-krop{padding:12px 16px 16px}
+.gk-krop p{margin:0 0 10px;white-space:pre-line;overflow-wrap:anywhere}
+.gk-med{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--soft)}
+.gk-med:first-of-type{border-top:0}
+.gk-av{width:32px;height:32px;border-radius:50%;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.gk-rolle{margin-left:auto;font-size:13px;color:var(--muted);text-align:right}
+.gk-tom{padding:14px 0;color:var(--muted)}
+.gk-tal{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin:4px 0 12px;font-size:14px}
+.gk-tal div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--soft);padding:4px 0}
+.gk-tal span{color:var(--muted)}
+@media (max-width:420px){.gk-tal{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Grupper i klubben</b><span>Personale og frivillige</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold smal">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+  <div id="omraade" class="hidden">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div id="hentMsg" class="msg" aria-live="polite">Henter …</div>
+    <div id="ikkeAdmin" class="card hidden"><b>Kun for klubbens administratorer</b><p class="hint">Siden viser alle grupper på Mit RTK med navn, beskrivelse og medlemmer.</p></div>
+    <div id="indhold" class="hidden">
+      <p class="gk-note" id="note">Du ser gruppernes navn, beskrivelse og medlemmer, også i lukkede grupper, og hvor ofte de spiller. Chat og betalinger kan ikke ses her, og heller ikke hvem der er tilmeldt et spil, hvor det er, eller hvad det koster. Det er besluttet af hensyn til medlemmernes privatliv.</p>
+      <div class="stats gk-stats">
+        <div class="stat"><b id="nGrupper"></b><span>Grupper</span></div>
+        <div class="stat"><b id="nLukkede"></b><span>Lukkede</span></div>
+        <div class="stat"><b id="nAabne"></b><span>Åbne for klubben</span></div>
+        <div class="stat"><b id="nMedlemmer"></b><span>Medlemmer i en gruppe</span></div>
+      </div>
+
+      <section class="afsnit" style="margin-top:8px">
+        <h2>Spil i grupperne</h2>
+        <div class="stats gk-stats" style="margin-top:12px">
+          <div class="stat"><b id="sSpil30"></b><span>Spil de sidste 30 dage</span></div>
+          <div class="stat"><b id="sAktive"></b><span>Grupper, der har spillet</span></div>
+          <div class="stat"><b id="sPladser"></b><span>Pladser brugt (30 dage)</span></div>
+          <div class="stat"><b id="sKommende"></b><span>Kommende spil</span></div>
+        </div>
+        <div id="ugeGraf"></div>
+        <p class="hint">Spil, der har fundet sted, uden aflyste spil og arrangementer. Pladser brugt er antal på plads, ikke hvem.</p>
+        <p style="margin:12px 0 0"><button type="button" class="ghost small" id="csv">Hent tallene som regneark (CSV)</button></p>
+      </section>
+
+      <section class="afsnit">
+        <h2>Alle grupper</h2>
+        <div class="gk-sog">
+          <input id="soeg" type="search" aria-label="Søg i navne på grupper og medlemmer" placeholder="Søg i navne på grupper og medlemmer" autocomplete="off">
+          <div class="chips" role="group" aria-label="Vis" id="filtre">
+            <button type="button" data-f="alle" aria-pressed="true">Alle</button>
+            <button type="button" data-f="lukket" aria-pressed="false">Lukkede</button>
+            <button type="button" data-f="klub" aria-pressed="false">Åbne</button>
+          </div>
+          <div class="chips" role="group" aria-label="Sortér" id="sortering">
+            <button type="button" data-s="navn" aria-pressed="true">Sortér efter navn</button>
+            <button type="button" data-s="aktiv" aria-pressed="false">Mest aktive</button>
+          </div>
+        </div>
+        <div id="liste"></div>
+      </section>
+
+      <section class="afsnit hidden" id="arkivAfsnit">
+        <h2>Arkiverede grupper</h2>
+        <p class="hint" style="margin-top:0">En gruppe arkiveres, når den sidste forlader den.</p>
+        <div id="arkiv"></div>
+      </section>
+
+      <section class="afsnit">
+        <p class="hint" style="margin-top:0">Opdateret <span id="tid"></span>. <button type="button" class="ghost small" id="opdater">Opdater</button></p>
+      </section>
+    </div>
+  </div>
+  </div>
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+const MOTOR = {
+  test: 'https://script.google.com/macros/s/AKfycbz_-LFD4pLRRxJjBI1kosmF3e0rKs8xPzZmgm4JLzl9oK6CQiMQrz-qPjxpvscDpn0r/exec',
+  produktion: ''
+};
+const MILJOE = new URLSearchParams(location.search).get('miljoe') === 'produktion' && MOTOR.produktion ? 'produktion' : 'test';
+const URL_MOTOR = MOTOR[MILJOE];
+
+// Grupper i klubben: kun for klubbens administratorer. Besluttet af Lars 12. oktober kl. 11.45:
+// navn, beskrivelse og medlemmer, også i lukkede grupper, men aldrig chat og spil. Motoren sender kun det.
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let token = hent('rtk.token') || '';
+let person = null, data = null, filter = 'alle', sortering = 'navn';
+
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+
+async function motor(modul, handling, d) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: d || {}, token, id: '' }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  const svar = await res.json();
+  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  return svar.data;
+}
+function logUd(udloebet) {
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null);
+  location.replace(udloebet ? './?til=grupper.html&igen=1' : './');
+}
+$('logud').addEventListener('click', () => logUd(false));
+
+const SPORT = { tennis: 'Tennis', padel: 'Padel', begge: 'Tennis og padel', andet: 'Andet' };
+const ROLLE = { admin: 'Gruppeadministrator', inviter: 'Må invitere', medlem: '' };
+const dato = (iso) => { if (!iso) return ''; const [a, m, d] = iso.split('-').map(Number); return new Date(a, m - 1, d).toLocaleDateString('da-DK', { day: 'numeric', month: 'short', year: 'numeric' }); };
+const PIL = '<svg class="gk-pil" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+
+const kortDato = (iso) => { if (!iso) return ''; const [a, m, d] = iso.split('-').map(Number); return new Date(a, m - 1, d).toLocaleDateString('da-DK', { day: 'numeric', month: 'short' }); };
+const spilTekst = (n) => n + (n === 1 ? ' spil' : ' spil');
+
+function ugeGraf(sp) {
+  const B = 360, H = 110, top = 16, bund = 92, n = sp.uger.length, w = B / n;
+  const maks = Math.max(4, ...sp.uger);
+  const y = (v) => bund - (v / maks) * (bund - top);
+  const [a, m, d] = sp.ugeStart.split('-').map(Number);
+  let s = '<svg viewBox="0 0 ' + B + ' ' + H + '" width="100%" role="img" aria-label="Spil pr. uge de sidste ' + n + ' uger: ' + sp.uger.join(', ') + '">';
+  s += '<line x1="0" y1="' + bund + '" x2="' + B + '" y2="' + bund + '" stroke="#B8C0C8"/>';
+  sp.uger.forEach((v, i) => {
+    const fra = new Date(a, m - 1, d + i * 7);
+    const tekst = 'Uge fra ' + fra.toLocaleDateString('da-DK', { day: 'numeric', month: 'short' }) + ': ' + v + ' spil';
+    const x = i * w + 3, bw = w - 6, sidst = i === n - 1;
+    if (v) s += '<rect x="' + x + '" y="' + y(v) + '" width="' + bw + '" height="' + (bund - y(v)) + '" fill="' + (sidst ? '#E6005C' : '#0F2537') + '"><title>' + tekst + '</title></rect>';
+    if (v) s += '<text x="' + (x + bw / 2) + '" y="' + (y(v) - 4) + '" text-anchor="middle" font-size="11" fill="#3A4652">' + v + '</text>';
+    if (sidst) s += '<text x="' + B + '" y="' + (H - 4) + '" text-anchor="end" font-size="10" fill="#3A4652">denne uge</text>';
+    else if (i % 3 === 0) s += '<text x="' + (i ? x + bw / 2 : 0) + '" y="' + (H - 4) + '" text-anchor="' + (i ? 'middle' : 'start') + '" font-size="10" fill="#3A4652">' + fra.toLocaleDateString('da-DK', { day: 'numeric', month: 'short' }) + '</text>';
+  });
+  return '<h3 style="margin-top:4px">Spil pr. uge, sidste ' + n + ' uger</h3>' + s + '</svg>';
+}
+
+function kort(g) {
+  const n = g.medlemmer.length, t = g.spil;
+  const aktiv = g.arkiveret ? '' : (t.spil30 ? ' · ' + spilTekst(t.spil30) + ' de sidste 30 dage' : (t.seneste ? ' · seneste spil ' + kortDato(t.seneste) : ' · ingen spil endnu'));
+  const info = n + (n === 1 ? ' medlem' : ' medlemmer') + (g.arkiveret ? ' · arkiveret ' + dato(g.arkiveret) : aktiv);
+  const tal = [['Spil, 30 dage', t.spil30], ['Spil, 90 dage', t.spil90], ['Spil i alt', t.spilIAlt], ['Pladser brugt, 30 dage', t.spillere30],
+    ['Kommende spil', t.kommende + (t.fast ? ' (fast spilletid)' : '')], ['Aflyste', t.aflyste], ['Arrangementer', t.arrangementer],
+    ['Seneste spil', t.seneste ? dato(t.seneste) : '–'], ['Næste spil', t.naeste ? dato(t.naeste) : '–'], ['Oprettet', dato(g.oprettet)]]
+    .map((r) => '<div><span>' + r[0] + '</span><b>' + esc(r[1]) + '</b></div>').join('');
+  const maerker = '<span class="gk-m">' + esc(SPORT[g.sport] || g.sport) + '</span>' +
+    (g.synlighed === 'lukket' ? '<span class="gk-m lukket">Lukket</span>' : '<span class="gk-m">Åben for klubben</span>');
+  const med = n ? g.medlemmer.map((m) => '<div class="gk-med"><span class="gk-av" aria-hidden="true">' + esc(m.initialer || m.navn.charAt(0)) + '</span><span>' + esc(m.navn) + '</span><span class="gk-rolle">' + esc(ROLLE[m.rolle] || '') + '</span></div>').join('') : '<div class="gk-tom">Ingen medlemmer.</div>';
+  return '<details class="gk-gruppe" data-id="' + esc(g.id) + '"><summary><span class="gk-hoved"><b>' + esc(g.navn) + '</b><span class="gk-info">' + info + '</span><span class="gk-maerker">' + maerker + '</span></span>' + PIL + '</summary>' +
+    '<div class="gk-krop">' + (g.beskrivelse ? '<p>' + esc(g.beskrivelse) + '</p>' : '<p class="hint" style="margin:0 0 10px">Ingen beskrivelse.</p>') +
+    '<p class="hint" style="margin:0 0 8px">Nye tilføjes af ' + (g.invitation === 'admin' ? 'gruppeadministratorer og dem, der må invitere' : 'alle i gruppen') + '.</p>' +
+    '<h3 style="margin-top:14px">Spil</h3><div class="gk-tal">' + tal + '</div>' +
+    '<h3 style="margin-top:14px">Medlemmer</h3>' + med + '</div></details>';
+}
+
+function visListe() {
+  const q = $('soeg').value.trim().toLowerCase();
+  const passer = (g) => (filter === 'alle' || g.synlighed === filter) &&
+    (!q || g.navn.toLowerCase().includes(q) || g.medlemmer.some((m) => m.navn.toLowerCase().includes(q)));
+  const aabne = new Set([...document.querySelectorAll('.gk-gruppe[open]')].map((d) => d.dataset.id));
+  const aktive = data.grupper.filter((g) => !g.arkiveret && passer(g));
+  if (sortering === 'aktiv') aktive.sort((a, b) => b.spil.spil30 - a.spil.spil30 || b.spil.spil90 - a.spil.spil90 || b.spil.spilIAlt - a.spil.spilIAlt || a.navn.localeCompare(b.navn, 'da'));
+  $('liste').innerHTML = aktive.length ? aktive.map(kort).join('') : '<p class="gk-tom">' + (data.antal.grupper ? 'Ingen grupper passer til søgningen.' : 'Der er ingen grupper endnu.') + '</p>';
+  const ark = data.grupper.filter((g) => g.arkiveret && passer(g));
+  $('arkivAfsnit').classList.toggle('hidden', !ark.length);
+  $('arkiv').innerHTML = ark.map(kort).join('');
+  document.querySelectorAll('.gk-gruppe').forEach((d) => { if (aabne.has(d.dataset.id)) d.open = true; });
+}
+$('soeg').addEventListener('input', visListe);
+document.querySelectorAll('#filtre button').forEach((b) => b.addEventListener('click', () => {
+  filter = b.dataset.f;
+  document.querySelectorAll('#filtre button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  visListe();
+}));
+document.querySelectorAll('#sortering button').forEach((b) => b.addEventListener('click', () => {
+  sortering = b.dataset.s;
+  document.querySelectorAll('#sortering button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  visListe();
+}));
+
+// Tallene som regneark: én række pr. gruppe, ingen navne på medlemmer.
+$('csv').addEventListener('click', () => {
+  const felt = (v) => { const t = String(v == null ? '' : v); return /[";\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+  const hoved = ['Gruppe', 'Sport', 'Hvem kan se', 'Medlemmer', 'Spil 30 dage', 'Spil 90 dage', 'Spil i alt', 'Pladser brugt 30 dage', 'Kommende spil', 'Fast spilletid', 'Aflyste', 'Arrangementer', 'Seneste spil', 'Næste spil', 'Oprettet', 'Arkiveret'];
+  const raekker = data.grupper.map((g) => [g.navn, SPORT[g.sport] || g.sport, g.synlighed === 'lukket' ? 'Lukket' : 'Åben for klubben', g.medlemmer.length,
+    g.spil.spil30, g.spil.spil90, g.spil.spilIAlt, g.spil.spillere30, g.spil.kommende, g.spil.fast ? 'Ja' : 'Nej', g.spil.aflyste, g.spil.arrangementer,
+    g.spil.seneste, g.spil.naeste, g.oprettet, g.arkiveret]);
+  const tekst = '\ufeff' + [hoved].concat(raekker).map((r) => r.map(felt).join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([tekst], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'RTK grupper ' + data.tid.slice(0, 10) + '.csv';
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+
+function vis(d) {
+  data = d;
+  $('nGrupper').textContent = d.antal.grupper;
+  $('nLukkede').textContent = d.antal.lukkede;
+  $('nAabne').textContent = d.antal.aabne;
+  $('nMedlemmer').textContent = d.antal.medlemmer;
+  $('sSpil30').textContent = d.spil.spil30;
+  $('sAktive').textContent = d.spil.aktive30 + ' af ' + d.antal.grupper;
+  $('sPladser').textContent = d.spil.spillere30;
+  $('sKommende').textContent = d.spil.kommende;
+  $('ugeGraf').innerHTML = ugeGraf(d.spil);
+  $('tid').textContent = d.tid;
+  visListe();
+}
+
+async function hentData() {
+  besked($('hentMsg'), 'Henter …');
+  try { vis(await motor('grupper', 'oversigt')); besked($('hentMsg'), ''); $('indhold').classList.remove('hidden'); }
+  catch (err) { besked($('hentMsg'), err.message, 'err'); }
+}
+$('opdater').addEventListener('click', hentData);
+
+function start() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn;
+  if ((person.roller || []).indexOf('admin') < 0) { besked($('hentMsg'), ''); $('ikkeAdmin').classList.remove('hidden'); return; }
+  hentData();
+}
+
+if (!token) location.replace('./?til=grupper.html');
+else motor('kerne', 'mig').then((p) => { person = p; start(); }).catch(() => {});
+</script>
+<script src="../velkomst.js"></script>
+</body>
+</html>
