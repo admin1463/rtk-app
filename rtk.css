@@ -365,3 +365,21 @@ td.n,th.n{text-align:right}
   .gr-hoved h1.lille{font-size:26px}
   .gr-boble{max-width:calc(100vw - 120px)}
 }
+.gr-valg3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 12px}
+.gr-valg3 legend{grid-column:1/-1}
+.gr-valg3 label{margin:0}
+.gr-gentag{padding:4px 0 4px 16px;border-left:3px solid var(--line)}
+.gr-serielinje{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:-4px 0 12px;padding:0 4px;font-size:14px;color:var(--frost)}
+.gr-serie{margin-top:12px}
+.gr-to{display:grid;grid-template-columns:2fr 1fr;gap:0 12px}
+.gr-bookform label{margin-top:12px}
+.gr-banen{margin:10px 0 0;font-size:18px;font-weight:700}
+.gr-reak{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 0 44px}
+.gr-b.egen .gr-reak{margin:4px 44px 0 0;justify-content:flex-end}
+.gr-reak-k{min-height:32px;padding:2px 10px;border:1px solid var(--line2);border-radius:99px;font-size:14px;font-weight:600;background:#FFFFFF}
+.gr-reak-k.min{border:2px solid var(--pink);background:#FFF4F8}
+.gr-emojier{display:flex;flex-wrap:wrap;gap:4px;flex-basis:100%}
+.gr-emoji{min-width:44px;min-height:44px;padding:0;border:1px solid var(--line);border-radius:99px;font-size:22px;line-height:1;background:#FFFFFF}
+.gr-emoji.min{border:2px solid var(--pink);background:#FFF4F8}
+.gr-frist{flex-basis:100%;margin:0}
+.gr-handl{align-items:center}

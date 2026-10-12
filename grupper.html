@@ -137,6 +137,12 @@
           <div><label for="nsFra" data-t="fra">Fra</label><input id="nsFra" type="time" required value="10:00"></div>
           <div><label for="nsTil" data-t="til">Til</label><input id="nsTil" type="time" value="11:30"></div>
         </div>
+        <label class="gr-check"><input type="checkbox" id="nsGentag" aria-controls="nsGentagDel"> <span data-t="gentag">Gentag (fast spilletid)</span></label>
+        <div id="nsGentagDel" class="hidden gr-gentag">
+          <fieldset class="valg gr-valg3" id="nsHvor"><legend data-t="hvorOfte">Hvor ofte?</legend></fieldset>
+          <label for="nsSlutDato" data-t="tilOgMed">Til og med</label><input id="nsSlutDato" type="date" aria-describedby="nsGange">
+          <p id="nsGange" class="hint" aria-live="polite"></p>
+        </div>
         <label for="nsSted" data-t="sted">Sted</label><input id="nsSted" maxlength="80" data-t-ph="stedPh">
         <div class="grid gr-tre">
           <div><label for="nsPladser" data-t="pladser">Pladser</label><input id="nsPladser" type="number" inputmode="numeric" min="1" max="500" value="4"></div>
@@ -157,6 +163,12 @@
         <h1 class="lille" id="spTitel"></h1>
         <p id="spHvornaar" class="gr-hvornaar"></p>
         <p id="spAflyst" class="advarsel hidden" data-t="aflystTekst">Spillet er aflyst.</p>
+        <section id="spSerie" class="card gr-serie hidden" aria-labelledby="spSerieH">
+          <h2 id="spSerieH" class="gr-lille" style="border:0;padding:0;margin:0 0 4px" data-t="fastSpilletid">Fast spilletid</h2>
+          <p id="spSerieTekst" style="margin:0"></p>
+          <div class="gr-knapper"><button type="button" class="ghost small" id="spSerieJa" data-t="medAlle">Meld mig til alle de næste</button><button type="button" class="ghost small" id="spSerieNej" data-t="fraAlle">Meld mig fra alle de næste</button><button type="button" class="ghost small" id="spSerieKal" data-t="alleKalender">Læg alle i kalender</button></div>
+          <div id="spSerieMsg" class="msg" aria-live="polite"></div>
+        </section>
         <button type="button" id="spKalender" class="ghost small" data-t="laegIKalender">Læg i kalender</button>
         <p class="hint" data-t="kalenderHint">Med påmindelse 1 time før.</p>
         <div class="gr-svar" role="group" data-t-aria="ditSvar" aria-label="Dit svar" id="spSvar"></div>
@@ -172,7 +184,7 @@
         <div id="spAdmin" class="afsnit hidden">
           <h2 data-t="retSpillet">Ret spillet</h2>
           <div class="stepper"><button type="button" id="spMinus" data-t-aria="faerre" aria-label="Færre pladser">&#8722;</button><output id="spPladser" aria-live="polite"></output><span data-t="pladserOrd">pladser</span><button type="button" id="spPlus" data-t-aria="flere" aria-label="Flere pladser">+</button></div>
-          <p><button type="button" class="ghost" id="spAflys" data-t="aflys">Aflys spillet</button></p>
+          <p><button type="button" class="ghost" id="spAflys" data-t="aflys">Aflys spillet</button> <button type="button" class="ghost hidden" id="spStop" data-t="stopSerie">Stop serien fra denne gang</button></p>
           <div id="spAdminMsg" class="msg" aria-live="polite"></div>
         </div>
       </div>
@@ -223,6 +235,8 @@ window.TEKSTER = {
     medlemmerN: '{n} medlemmer', medlemmer1: '1 medlem',
     skrivBesked: 'Skriv en besked', send: 'Send', retter: 'Retter besked', idag: 'I dag', igaar: 'I går',
     handlinger: 'Muligheder for beskeden', synesGodtOm: '♥ Synes godt om', fjernHjerte: '♥ Fjern', ret: 'Ret', slet: 'Slet', slettet: 'Beskeden er slettet', rettet: 'rettet',
+    reager: 'Reager med en emoji', reakAntal: '{e}: {n}', kanRettes: 'Kan rettes og slettes i {n} min. endnu', forSentRet: 'Beskeder kan kun rettes og slettes de første 3 minutter.',
+    eTommel: 'Tommel op', eHjerte: 'Hjerte', eGriner: 'Griner', eOverrasket: 'Overrasket', eTrist: 'Trist', eTak: 'Tak', eKlap: 'Klapper', eIld: 'Ild', eDynamit: 'Dynamit', eStaerk: 'Stærk', eTennis: 'Tennisbold', eFest: 'Fest',
     hjerter: '{n} synes godt om', dig: 'dig', du: 'Du', ingenBeskeder: 'Ingen beskeder endnu. Sig hej.',
     kommende: 'Kommende spil og arrangementer', nytSpil: '+ Nyt spil', ingenSpil: 'Ingen spil planlagt. Opret det næste.',
     duErMed: 'Du er med', duVenter: 'Venteliste nr. {nr}', duMaaske: 'Måske', ikkeSvaret: 'Ikke svaret', aflyst: 'Aflyst', booket: 'booket', ikkeBooket: 'ikke booket',
@@ -236,6 +250,11 @@ window.TEKSTER = {
     nytSpilH: 'Nyt spil', hvad: 'Hvad er det?', spil: 'Spil', arrangement: 'Arrangement', titelFelt: 'Titel', titelPh: 'Fx Double søndag',
     dato: 'Dato', fra: 'Fra', til: 'Til', sted: 'Sted', stedPh: 'Fx Darupvej, bane 3', pladser: 'Pladser', prisIAlt: 'Pris i alt (kr.)', valgfrit: 'Valgfrit',
     mobilepay: 'MobilePay-nummer', booker: 'Hvem booker banen i ForeningsLet?', ingen: 'Ingen bane', note: 'Note', notePh: 'Fx: Jeg tager nye bolde med',
+    kalLaegges: 'Lægges i kalender …', kalKlar: '✓ Åbn filen for at gemme den', gentag: 'Gentag (fast spilletid)', hvorOfte: 'Hvor ofte?', gUge: 'Hver uge', g14: 'Hver 14. dag', gDag: 'Hver dag', tilOgMed: 'Til og med',
+    gangeTekst: '{n} gange fra {fra} til {til}. Hver gang får sin egen tilmelding.', forMange: 'Højst 52 gange. Vælg en tidligere slutdato.', mangerSlut: 'Vælg en slutdato efter den første gang.',
+    fastSpilletid: 'Fast spilletid', hverUge: 'Hver {dag}', hver14: 'Hver anden {dag}', hverDag: 'Hver dag', gangAf: 'gang {nr} af {antal}', tilDen: 'til {dato}', kommendeGange: '{n} gange tilbage',
+    medAlle: 'Meld mig til alle de næste', fraAlle: 'Meld mig fra alle de næste', alleKalender: 'Læg alle i kalender', serieMeldt: 'Du er meldt til {n} gange.', serieFra: 'Du er meldt fra {n} gange.',
+    stopSerie: 'Stop serien fra denne gang', stopIgen: 'Tryk igen for at stoppe serien', serieStoppet: 'Serien er stoppet fra denne gang ({n} gange aflyst).', visAlle: 'Vis alle {n} gange', visNaeste: 'Vis kun den næste',
     jegErMed: 'Jeg er med', opretSpil: 'Opret', mangerDato: 'Vælg dato og tidspunkt', titelDefault: 'Spil',
     aflystTekst: 'Spillet er aflyst.', laegIKalender: 'Læg i kalender', kalenderHint: 'Med påmindelse 1 time før.', ditSvar: 'Dit svar',
     sJa: 'Jeg er med', sMaaske: 'Måske', sNej: 'Kan ikke',
@@ -243,7 +262,7 @@ window.TEKSTER = {
     sender: 'Sender …', spillere: 'Spillere', venteliste: 'Venteliste', maaske: 'Måske', ingenSpillere: 'Ingen har meldt sig endnu.',
     bBooker: 'Booker', bRykket: 'Rykket op', bBetalt: 'Betalt',
     erBooket: 'Banen er booket', erBooketAf: '{navn} har booket i ForeningsLet.', ikkeBooketH: 'Banen er ikke booket endnu', ikkeBooketAf: '{navn} booker i ForeningsLet.', erBooketDu: 'Du har booket i ForeningsLet.', ikkeBooketDu: 'Du booker banen i ForeningsLet.', ingenBane: 'Der skal ikke bookes bane.',
-    jegHarBooket: 'Jeg har booket banen', fortrydBooket: 'Banen er alligevel ikke booket',
+    jegHarBooket: 'Jeg har booket banen', anlaeg: 'Anlæg', anlaegPh: 'Fx Dronning Sofies Vej', bane: 'Bane', banePh: 'Fx 1', gemBooking: 'Gem booking', bookHint: 'Skriv anlæg og bane, så de andre ved, hvor I spiller.', mangerBane: 'Skriv banens nummer', baneNr: 'Bane {nr}', retBane: 'Ret bane', fortrydBooket: 'Banen er alligevel ikke booket',
     betaling: 'Betaling', iAlt: '{kr} i alt', duSkylder: 'Du skylder {kr} til {navn}.', duModtager: 'Du lægger ud. De andre betaler {kr} hver.',
     aabnMobilepay: 'Åbn MobilePay', jegHarBetalt: 'Jeg har betalt', ikkeBetalt: 'Jeg har ikke betalt alligevel', mobilepayHint: 'MobilePay åbner med nummer og beløb udfyldt.',
     mobilepayNr: 'MobilePay til {nr}', betaltAf: 'Har betalt', mangler: 'Mangler',
@@ -272,6 +291,8 @@ window.TEKSTER = {
     medlemmerN: '{n} members', medlemmer1: '1 member',
     skrivBesked: 'Write a message', send: 'Send', retter: 'Editing message', idag: 'Today', igaar: 'Yesterday',
     handlinger: 'Message options', synesGodtOm: '♥ Like', fjernHjerte: '♥ Remove', ret: 'Edit', slet: 'Delete', slettet: 'Message deleted', rettet: 'edited',
+    reager: 'React with an emoji', reakAntal: '{e}: {n}', kanRettes: 'Can be edited and deleted for {n} more min.', forSentRet: 'Messages can only be edited and deleted for the first 3 minutes.',
+    eTommel: 'Thumbs up', eHjerte: 'Heart', eGriner: 'Laughing', eOverrasket: 'Surprised', eTrist: 'Sad', eTak: 'Thanks', eKlap: 'Clapping', eIld: 'Fire', eDynamit: 'Dynamite', eStaerk: 'Strong', eTennis: 'Tennis ball', eFest: 'Party',
     hjerter: '{n} likes', dig: 'you', du: 'You', ingenBeskeder: 'No messages yet. Say hello.',
     kommende: 'Upcoming games and events', nytSpil: '+ New game', ingenSpil: 'No games planned. Create the next one.',
     duErMed: 'You are in', duVenter: 'Waiting list no. {nr}', duMaaske: 'Maybe', ikkeSvaret: 'Not answered', aflyst: 'Cancelled', booket: 'booked', ikkeBooket: 'not booked',
@@ -285,6 +306,11 @@ window.TEKSTER = {
     nytSpilH: 'New game', hvad: 'What is it?', spil: 'Game', arrangement: 'Event', titelFelt: 'Title', titelPh: 'E.g. Sunday doubles',
     dato: 'Date', fra: 'From', til: 'To', sted: 'Place', stedPh: 'E.g. Darupvej, court 3', pladser: 'Places', prisIAlt: 'Total price (DKK)', valgfrit: 'Optional',
     mobilepay: 'MobilePay number', booker: 'Who books the court in ForeningsLet?', ingen: 'No court', note: 'Note', notePh: 'E.g. I will bring new balls',
+    kalLaegges: 'Adding to calendar …', kalKlar: '✓ Open the file to save it', gentag: 'Repeat (regular court time)', hvorOfte: 'How often?', gUge: 'Every week', g14: 'Every other week', gDag: 'Every day', tilOgMed: 'Until',
+    gangeTekst: '{n} times from {fra} to {til}. Each time has its own sign-up.', forMange: 'At most 52 times. Choose an earlier end date.', mangerSlut: 'Choose an end date after the first time.',
+    fastSpilletid: 'Regular court time', hverUge: 'Every {dag}', hver14: 'Every other {dag}', hverDag: 'Every day', gangAf: 'time {nr} of {antal}', tilDen: 'until {dato}', kommendeGange: '{n} times left',
+    medAlle: 'Sign me up for all the next ones', fraAlle: 'Take me off all the next ones', alleKalender: 'Add all to calendar', serieMeldt: 'You are signed up for {n} times.', serieFra: 'You are off {n} times.',
+    stopSerie: 'Stop the series from this time', stopIgen: 'Tap again to stop the series', serieStoppet: 'The series is stopped from this time ({n} times cancelled).', visAlle: 'Show all {n} times', visNaeste: 'Show only the next one',
     jegErMed: 'I am in', opretSpil: 'Create', mangerDato: 'Choose date and time', titelDefault: 'Game',
     aflystTekst: 'The game is cancelled.', laegIKalender: 'Add to calendar', kalenderHint: 'With a reminder 1 hour before.', ditSvar: 'Your answer',
     sJa: 'I am in', sMaaske: 'Maybe', sNej: 'Can’t make it',
@@ -292,7 +318,7 @@ window.TEKSTER = {
     sender: 'Sending …', spillere: 'Players', venteliste: 'Waiting list', maaske: 'Maybe', ingenSpillere: 'No one has signed up yet.',
     bBooker: 'Booker', bRykket: 'Moved up', bBetalt: 'Paid',
     erBooket: 'The court is booked', erBooketAf: '{navn} has booked it in ForeningsLet.', ikkeBooketH: 'The court is not booked yet', ikkeBooketAf: '{navn} books it in ForeningsLet.', erBooketDu: 'You have booked it in ForeningsLet.', ikkeBooketDu: 'You book the court in ForeningsLet.', ingenBane: 'No court needs booking.',
-    jegHarBooket: 'I have booked the court', fortrydBooket: 'The court is not booked after all',
+    jegHarBooket: 'I have booked the court', anlaeg: 'Venue', anlaegPh: 'E.g. Dronning Sofies Vej', bane: 'Court', banePh: 'E.g. 1', gemBooking: 'Save booking', bookHint: 'Write the venue and court so the others know where you play.', mangerBane: 'Write the court number', baneNr: 'Court {nr}', retBane: 'Change court', fortrydBooket: 'The court is not booked after all',
     betaling: 'Payment', iAlt: '{kr} in total', duSkylder: 'You owe {kr} to {navn}.', duModtager: 'You pay up front. The others pay {kr} each.',
     aabnMobilepay: 'Open MobilePay', jegHarBetalt: 'I have paid', ikkeBetalt: 'I have not paid after all', mobilepayHint: 'MobilePay opens with the number and amount filled in.',
     mobilepayNr: 'MobilePay to {nr}', betaltAf: 'Paid', mangler: 'Missing',
@@ -504,6 +530,7 @@ async function hentDetaljer() {
       const sidste = b.docs[0] ? b.docs[0].data() : null;
       const spil = s.docs.map((d) => Object.assign({ id: d.id }, d.data())).filter((x) => !x.aflyst);
       let minT = null;
+      if (!mig) return;
       if (spil[0]) { const m = await fs.getDoc(fs.doc(db, 'grupper', g.id, 'spil', spil[0].id, 'tilmeldinger', mig.uid)); minT = m.exists() ? m.data() : null; }
       detaljer[g.id] = { sidste, spil: spil[0] || null, minT };
     } catch (e) { console.warn(e); }
@@ -519,6 +546,7 @@ function visListe() {
 }
 
 function tegnListe() {
+  if (!mig) return; // logget ud imens
   const filtre = $('filtre'); filtre.innerHTML = '';
   ['alle', 'tennis', 'padel'].forEach((f) => {
     const b = K.el('button', { type: 'button', 'aria-pressed': String(tilstand.filter === f) }, t(f));
@@ -609,7 +637,10 @@ function lytGruppe(gid, efter) {
 
 function visGruppe(gid, fane) {
   vis('vGruppe');
-  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.gruppe = null; tilstand.medlemmer = []; tilstand.beskeder = []; tilstand.spil = []; }
+  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) {
+    tilstand.gruppe = null; tilstand.medlemmer = []; tilstand.beskeder = []; tilstand.spil = [];
+    nulstilGruppeVisning();
+  }
   tilstand.fane = FANER.some((f) => f[0] === fane) ? fane : 'chat';
   const tegn = () => tegnGruppe();
   lytGruppe(gid, tegn);
@@ -618,7 +649,7 @@ function visGruppe(gid, fane) {
     tilstand.beskeder = s.docs.map((d) => Object.assign({ id: d.id, ventende: d.metadata.hasPendingWrites }, d.data())).reverse();
     if (tilstand.fane === 'chat') tegnChat();
   }, (err) => fejl($('chatMsg'), err)));
-  lyt.push(fs.onSnapshot(fs.query(fs.collection(db, 'grupper', gid, 'spil'), fs.where('start', '>=', new Date(Date.now() - 3 * 3600000)), fs.orderBy('start'), fs.limit(30)), (s) => {
+  lyt.push(fs.onSnapshot(fs.query(fs.collection(db, 'grupper', gid, 'spil'), fs.where('start', '>=', new Date(Date.now() - 3 * 3600000)), fs.orderBy('start'), fs.limit(120)), (s) => {
     tilstand.spil = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
     if (tilstand.fane === 'spil') tegnSpilListe();
     if (tilstand.fane === 'chat') tegnChatSpil();
@@ -626,7 +657,17 @@ function visGruppe(gid, fane) {
   tegnGruppe();
 }
 
+// Ved skift til en anden gruppe må intet fra den forrige blive stående (søgning, beskeder, kladde).
+function nulstilGruppeVisning() {
+  $('soeg').value = ''; $('fund').innerHTML = '';
+  ['soegMsg', 'medlemMsg', 'forladMsg', 'chatMsg', 'omMsg'].forEach((id) => K.besked($(id), ''));
+  $('beskeder').innerHTML = ''; $('chatSpil').innerHTML = ''; $('spilListe').innerHTML = ''; $('medlemmer').innerHTML = '';
+  $('tekst').value = ''; tilstand.retter = null; $('retter').classList.add('hidden');
+  $('gNavn').textContent = ''; $('gUnder').textContent = '';
+  foersteChat = true; forladKlar = false; fjernKlar = null;
+}
 function tegnGruppe() {
+  if (!mig) return; // logget ud imens
   const g = tilstand.gruppe;
   if (!g) return;
   $('gNavn').textContent = g.navn;
@@ -652,6 +693,7 @@ function tegnGruppe() {
 
 // ---------- Chat
 function tegnChatSpil() {
+  if (!mig) return; // logget ud imens
   const boks = $('chatSpil'); boks.innerHTML = '';
   const s = tilstand.spil.find((x) => !x.aflyst);
   if (!s || !tilstand.gruppe) return;
@@ -687,18 +729,35 @@ function tegnChat() {
       raekke.append(knap);
     }
     li.append(raekke);
-    const hj = Object.keys(b.reaktioner || {}).length;
-    const info = K.el('span', { 'class': 'gr-info' }, kl(tid) + (b.rettet ? ' · ' + t('rettet') : ''));
-    if (hj) info.prepend(K.el('span', { 'class': 'gr-hj', 'aria-label': t('hjerter', { n: hj }) }, '♥ ' + hj + '  '));
-    li.append(info);
+    const mine = (b.reaktioner || {})[mig.uid] || '';
+    const optalt = {};
+    Object.values(b.reaktioner || {}).forEach((e) => { optalt[e] = (optalt[e] || 0) + 1; });
+    if (!b.slettet && Object.keys(optalt).length) {
+      const r = K.el('div', { 'class': 'gr-reak' });
+      Object.keys(optalt).sort((x, y) => optalt[y] - optalt[x]).forEach((e) => {
+        const k = K.el('button', { type: 'button', 'class': 'gr-reak-k' + (mine === e ? ' min' : ''), 'aria-pressed': String(mine === e), 'aria-label': t('reakAntal', { e: emojiNavn(e), n: optalt[e] }) }, e + ' ' + optalt[e]);
+        k.addEventListener('click', () => reager(b, mine === e ? null : e));
+        r.append(k);
+      });
+      li.append(r);
+    }
+    li.append(K.el('span', { 'class': 'gr-info' }, kl(tid) + (b.rettet ? ' · ' + t('rettet') : '')));
     if (tilstand.aaben === b.id) {
       const h = K.el('div', { 'class': 'gr-handl' });
-      const har = !!(b.reaktioner && b.reaktioner[mig.uid]);
-      const hjb = K.el('button', { type: 'button', 'class': 'ghost small' }, t(har ? 'fjernHjerte' : 'synesGodtOm'));
-      hjb.addEventListener('click', () => reager(b, !har));
-      h.append(hjb);
-      if (egen) { const r = K.el('button', { type: 'button', 'class': 'ghost small' }, t('ret')); r.addEventListener('click', () => startRet(b)); h.append(r); }
-      if (egen || erAdmin()) { const s = K.el('button', { type: 'button', 'class': 'ghost small' }, t('slet')); s.addEventListener('click', () => sletBesked(b)); h.append(s); }
+      const valg = K.el('div', { 'class': 'gr-emojier', role: 'group', 'aria-label': t('reager') });
+      EMOJI.forEach(([e, navn]) => {
+        const k = K.el('button', { type: 'button', 'class': 'gr-emoji' + (mine === e ? ' min' : ''), 'aria-pressed': String(mine === e), 'aria-label': t(navn) }, e);
+        k.addEventListener('click', () => reager(b, mine === e ? null : e));
+        valg.append(k);
+      });
+      h.append(valg);
+      const tilbage = egen ? RET_MS - (Date.now() - tid.getTime()) : 0;
+      if (egen && tilbage > 0) {
+        const r = K.el('button', { type: 'button', 'class': 'ghost small' }, t('ret')); r.addEventListener('click', () => startRet(b)); h.append(r);
+      }
+      if ((egen && tilbage > 0) || erAdmin()) { const s = K.el('button', { type: 'button', 'class': 'ghost small' }, t('slet')); s.addEventListener('click', () => sletBesked(b)); h.append(s); }
+      if (egen && tilbage > 0) h.append(K.el('span', { 'class': 'hint gr-frist' }, t('kanRettes', { n: Math.max(1, Math.ceil(tilbage / 60000)) })));
+      else if (egen) h.append(K.el('span', { 'class': 'hint gr-frist' }, t('forSentRet')));
       li.append(h);
     }
     ol.append(li);
@@ -709,10 +768,13 @@ function tegnChat() {
   if (bund && tilstand.beskeder.length) { window.scrollTo(0, document.documentElement.scrollHeight); foersteChat = false; }
 }
 
-async function reager(b, til) {
+const RET_MS = 3 * 60000;
+const EMOJI = [['👍', 'eTommel'], ['❤️', 'eHjerte'], ['😂', 'eGriner'], ['😮', 'eOverrasket'], ['😢', 'eTrist'], ['🙏', 'eTak'], ['👏', 'eKlap'], ['🔥', 'eIld'], ['🧨', 'eDynamit'], ['💪', 'eStaerk'], ['🎾', 'eTennis'], ['🎉', 'eFest']];
+function emojiNavn(e) { const f = EMOJI.find((x) => x[0] === e); return f ? t(f[1]) : e; }
+async function reager(b, emoji) {
   const { fs, db } = FB;
   tilstand.aaben = null;
-  try { await fs.updateDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'beskeder', b.id), new fs.FieldPath('reaktioner', mig.uid), til ? '♥' : fs.deleteField()); }
+  try { await fs.updateDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'beskeder', b.id), new fs.FieldPath('reaktioner', mig.uid), emoji || fs.deleteField()); }
   catch (err) { fejl($('chatMsg'), err); }
 }
 function startRet(b) {
@@ -724,7 +786,7 @@ async function sletBesked(b) {
   const { fs, db } = FB;
   tilstand.aaben = null;
   try { await fs.updateDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'beskeder', b.id), { tekst: '', slettet: fs.serverTimestamp() }); }
-  catch (err) { fejl($('chatMsg'), err); }
+  catch (err) { if (err && err.code === 'permission-denied') K.besked($('chatMsg'), t('forSentRet'), 'err'); else fejl($('chatMsg'), err); }
 }
 function vokse() { const a = $('tekst'); a.style.height = 'auto'; a.style.height = Math.min(a.scrollHeight + 2, 160) + 'px'; }
 $('tekst').addEventListener('input', vokse);
@@ -744,7 +806,10 @@ $('skriv').addEventListener('submit', async (e) => {
   try {
     if (ret) await fs.updateDoc(fs.doc(db, 'grupper', gid, 'beskeder', ret), { tekst, rettet: fs.serverTimestamp() });
     else { foersteChat = true; await fs.addDoc(fs.collection(db, 'grupper', gid, 'beskeder'), { fra: mig.uid, tekst, tid: fs.serverTimestamp() }); }
-  } catch (err) { $('tekst').value = tekst; vokse(); fejl($('chatMsg'), err); }
+  } catch (err) {
+    $('tekst').value = ret ? '' : tekst; vokse();
+    if (ret && err && err.code === 'permission-denied') K.besked($('chatMsg'), t('forSentRet'), 'err'); else fejl($('chatMsg'), err);
+  }
 });
 
 // ---------- Spil
@@ -765,7 +830,7 @@ function spilKort(s, kompakt) {
   const antal = s.antal || { plads: 0, venteliste: 0 };
   let linje = kortDag(d) + ' · ' + t('pladserAf', { a: antal.plads || 0, b: s.pladser });
   if (antal.venteliste) linje += ' · ' + t('paaVente', { n: antal.venteliste });
-  if (s.bookerAf) linje += ' · ' + t(s.booket ? 'booket' : 'ikkeBooket');
+  if (s.bookerAf) linje += ' · ' + (s.booket && s.bane ? t('baneNr', { nr: s.bane }).toLowerCase() : t(s.booket ? 'booket' : 'ikkeBooket'));
   midt.append(K.el('span', { 'class': 'gr-linje' }, linje));
   if (s.sted && !kompakt) midt.append(K.el('span', { 'class': 'gr-linje2' }, s.sted));
   a.append(kal, midt);
@@ -773,7 +838,7 @@ function spilKort(s, kompakt) {
   a.append(merke);
   if (!s.aflyst) {
     const { fs, db } = FB;
-    fs.getDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'spil', s.id, 'tilmeldinger', mig.uid)).then((m) => {
+    if (mig) fs.getDoc(fs.doc(db, 'grupper', tilstand.gruppe.id, 'spil', s.id, 'tilmeldinger', mig.uid)).then((m) => {
       const minT = m.exists() ? m.data() : null;
       merke.textContent = minStatusTekst(s, minT);
       merke.classList.toggle('ja', !!(minT && minT.svar === 'ja' && minT.status === 'plads'));
@@ -782,9 +847,35 @@ function spilKort(s, kompakt) {
   }
   return a;
 }
+const udfoldet = {};
+function serieTekst(s) {
+  const d = dato(s.start);
+  const dag = new Intl.DateTimeFormat(lokal(), { weekday: 'long' }).format(d);
+  const hvor = s.gentag === 'dag' ? t('hverDag') : t(s.gentag === '14' ? 'hver14' : 'hverUge', { dag });
+  return hvor + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(d) + (s.serieSlut ? ', ' + t('tilDen', { dato: kortDag(dato(s.serieSlut)) }) : '');
+}
 function tegnSpilListe() {
+  if (!mig) return; // logget ud imens
   const ul = $('spilListe'); ul.innerHTML = '';
-  tilstand.spil.forEach((s) => { const li = K.el('li'); li.append(spilKort(s, false)); ul.append(li); });
+  const set = {};
+  tilstand.spil.forEach((s) => {
+    if (s.serie) {
+      const alle = tilstand.spil.filter((x) => x.serie === s.serie && !x.aflyst);
+      if (set[s.serie] && !udfoldet[s.serie]) return;
+      const foerste = !set[s.serie];
+      set[s.serie] = true;
+      const li = K.el('li'); li.append(spilKort(s, false));
+      if (foerste && alle.length > 1) {
+        const r = K.el('div', { 'class': 'gr-serielinje' });
+        r.append(K.el('span', null, t('fastSpilletid') + ': ' + serieTekst(s) + ' · ' + t('kommendeGange', { n: alle.length })));
+        const b = K.el('button', { type: 'button', 'class': 'ghost small', 'aria-expanded': String(!!udfoldet[s.serie]) }, t(udfoldet[s.serie] ? 'visNaeste' : 'visAlle', { n: alle.length }));
+        b.addEventListener('click', () => { udfoldet[s.serie] = !udfoldet[s.serie]; tegnSpilListe(); });
+        r.append(b); li.append(r);
+      }
+      ul.append(li); return;
+    }
+    const li = K.el('li'); li.append(spilKort(s, false)); ul.append(li);
+  });
   $('ingenSpil').classList.toggle('hidden', tilstand.spil.length > 0);
 }
 $('nytSpilKnap').addEventListener('click', () => { location.hash = 'g/' + tilstand.gruppe.id + '/nytspil'; });
@@ -807,9 +898,41 @@ function visNytSpil(gid) {
   lytGruppe(gid, efter);
   radioer($('nsSlags'), 'slags', [['spil', 'spil'], ['arrangement', 'arrangement']], valgtI($('nsSlags')) || 'spil', (v) => { if (v === 'arrangement' && $('nsPladser').value === '4') $('nsPladser').value = '20'; });
   if (!$('nsDato').value) { const d = new Date(Date.now() + 86400000); $('nsDato').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  radioer($('nsHvor'), 'hvor', HVOR, valgtI($('nsHvor')) || 'uge', visGange);
+  $('nsGentagDel').classList.toggle('hidden', !$('nsGentag').checked);
   efter();
   $('nsTitel').focus();
 }
+const HVOR = [['uge', 'gUge'], ['14', 'g14'], ['dag', 'gDag']];
+function gange() {
+  const start = tilDato($('nsDato').value, $('nsFra').value);
+  const slut = tilDato($('nsSlutDato').value, '23:59');
+  if (!start || !slut || slut < start) return null;
+  const skridt = { uge: 7, '14': 14, dag: 1 }[valgtI($('nsHvor')) || 'uge'];
+  const ud = [];
+  for (let i = 0; ud.length <= 52; i++) {
+    const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i * skridt, start.getHours(), start.getMinutes());
+    if (d > slut) break;
+    ud.push(d);
+  }
+  return ud;
+}
+function visGange() {
+  if (!$('nsGentag').checked) return;
+  const g = gange();
+  if (!g || g.length < 2) { $('nsGange').textContent = $('nsSlutDato').value ? t('mangerSlut') : ''; return; }
+  $('nsGange').textContent = g.length > 52 ? t('forMange') : t('gangeTekst', { n: g.length, fra: kortDag(g[0]), til: kortDag(g[g.length - 1]).replace(/\.$/, '') });
+}
+$('nsGentag').addEventListener('change', () => {
+  $('nsGentagDel').classList.toggle('hidden', !$('nsGentag').checked);
+  if ($('nsGentag').checked && !$('nsSlutDato').value) {
+    const d = tilDato($('nsDato').value, '12:00') || new Date();
+    const s = new Date(d.getFullYear(), d.getMonth() + 3, d.getDate());
+    $('nsSlutDato').value = s.getFullYear() + '-' + String(s.getMonth() + 1).padStart(2, '0') + '-' + String(s.getDate()).padStart(2, '0');
+  }
+  visGange();
+});
+['nsDato', 'nsFra', 'nsSlutDato'].forEach((id) => $(id).addEventListener('input', visGange));
 function tilDato(dag, tid) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dag) || !/^\d{2}:\d{2}$/.test(tid)) return null;
   const [y, m, d] = dag.split('-').map(Number); const [h, mi] = tid.split(':').map(Number);
@@ -836,11 +959,34 @@ $('vNytSpil').addEventListener('submit', async (e) => {
   const mp = $('nsMobilepay').value.replace(/[^\d+]/g, ''); if (mp) data.mobilepay = mp.slice(0, 16);
   if ($('nsBooker').value) { data.bookerAf = $('nsBooker').value; data.booket = false; }
   const note = $('nsBeskrivelse').value.trim(); if (note) data.beskrivelse = note.slice(0, 1000);
+  let datoer = null;
+  if ($('nsGentag').checked) {
+    datoer = gange();
+    if (!datoer || datoer.length < 2) { K.besked($('nsMsg'), t('mangerSlut'), 'err'); $('nsSlutDato').focus(); return; }
+    if (datoer.length > 52) { K.besked($('nsMsg'), t('forMange'), 'err'); $('nsSlutDato').focus(); return; }
+  }
   K.besked($('nsMsg'), t('gemmer'));
   try {
-    const ref = fs.doc(fs.collection(db, 'grupper', gid, 'spil'));
-    await fs.setDoc(ref, data);
-    if ($('nsMed').checked) await K.motor('grupper', 'tilmeld', { gid, sid: ref.id, svar: 'ja' }, K.nyId());
+    let ref;
+    if (datoer) {
+      const serie = fs.doc(fs.collection(db, 'grupper', gid, 'spil')).id;
+      const varighed = slut ? slut.getTime() - start.getTime() : 0;
+      const b = fs.writeBatch(db);
+      datoer.forEach((d, i) => {
+        const r = fs.doc(fs.collection(db, 'grupper', gid, 'spil'));
+        if (i === 0) ref = r;
+        const en = Object.assign({}, data, { start: fs.Timestamp.fromDate(d), serie, gentag: valgtI($('nsHvor')) || 'uge', serieNr: i + 1, serieAntal: datoer.length, serieSlut: fs.Timestamp.fromDate(datoer[datoer.length - 1]) });
+        if (varighed) en.slut = fs.Timestamp.fromDate(new Date(d.getTime() + varighed)); else delete en.slut;
+        b.set(r, en);
+      });
+      await b.commit();
+      if ($('nsMed').checked) await K.motor('grupper', 'tilmeldSerie', { gid, serie, svar: 'ja' }, K.nyId());
+      $('nsGentag').checked = false; $('nsGentagDel').classList.add('hidden'); $('nsSlutDato').value = ''; $('nsGange').textContent = '';
+    } else {
+      ref = fs.doc(fs.collection(db, 'grupper', gid, 'spil'));
+      await fs.setDoc(ref, data);
+      if ($('nsMed').checked) await K.motor('grupper', 'tilmeld', { gid, sid: ref.id, svar: 'ja' }, K.nyId());
+    }
     ['nsTitel', 'nsSted', 'nsPris', 'nsBeskrivelse'].forEach((id) => { $(id).value = ''; });
     location.hash = 'g/' + gid + '/spil/' + ref.id;
   } catch (err) { fejl($('nsMsg'), err); }
@@ -851,15 +997,24 @@ function visSpil(gid, sid) {
   vis('vSpil');
   $('spTilbage').setAttribute('href', '#g/' + gid + '/spil');
   K.besked($('spStatus'), ''); K.besked($('spAdminMsg'), '');
-  tilstand.spilEt = null; tilstand.tilm = [];
+  tilstand.spilEt = null; tilstand.tilm = []; bookForm = false;
+  ['spKalender', 'spSerieKal'].forEach((id) => { $(id).disabled = false; $(id).textContent = t(id === 'spKalender' ? 'laegIKalender' : 'alleKalender'); });
   const { fs, db } = FB;
   const tegn = () => tegnSpil();
   if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.medlemmer = []; }
   lytGruppe(gid, tegn);
   lyt.push(fs.onSnapshot(fs.doc(db, 'grupper', gid, 'spil', sid), (d) => {
     if (!d.exists()) { location.hash = 'g/' + gid + '/spil'; return; }
-    tilstand.spilEt = Object.assign({ id: d.id }, d.data()); tegn();
+    tilstand.spilEt = Object.assign({ id: d.id }, d.data());
+    if (tilstand.spilEt.serie && tilstand.serieId !== tilstand.spilEt.serie) {
+      tilstand.serieId = tilstand.spilEt.serie;
+      lyt.push(fs.onSnapshot(fs.query(fs.collection(db, 'grupper', gid, 'spil'), fs.where('serie', '==', tilstand.serieId)), (q) => {
+        tilstand.serie = q.docs.map((x) => Object.assign({ id: x.id }, x.data())).sort((a, b) => dato(a.start) - dato(b.start)); tegn();
+      }, (err) => fejl($('spSerieMsg'), err)));
+    }
+    tegn();
   }, (err) => fejl($('spStatus'), err)));
+  tilstand.serie = []; tilstand.serieId = null;
   lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'spil', sid, 'tilmeldinger'), (s) => {
     tilstand.tilm = s.docs.map((d) => Object.assign({ id: d.id }, d.data())); tegn();
   }, (err) => fejl($('spStatus'), err)));
@@ -873,6 +1028,7 @@ function person(t0, merker) {
 }
 
 function tegnSpil() {
+  if (!mig) return; // logget ud imens
   const s = tilstand.spilEt;
   if (!s || !tilstand.gruppe) return;
   const tags = $('spTags'); tags.innerHTML = '';
@@ -881,6 +1037,13 @@ function tegnSpil() {
   $('spHvornaar').textContent = hvornaar(s) + (s.sted ? ' · ' + s.sted : '');
   $('spAflyst').classList.toggle('hidden', !s.aflyst);
   $('spKalender').classList.toggle('hidden', !!s.aflyst);
+  $('spSerie').classList.toggle('hidden', !s.serie);
+  if (s.serie) {
+    const kommende = (tilstand.serie || []).filter((x) => !x.aflyst && dato(x.start) >= new Date(Date.now() - 3 * 3600000));
+    $('spSerieTekst').textContent = serieTekst(s) + ' · ' + t('gangAf', { nr: s.serieNr || 1, antal: s.serieAntal || tilstand.serie.length }) + ' · ' + t('kommendeGange', { n: kommende.length });
+  }
+  $('spStop').classList.toggle('hidden', !s.serie || !!s.aflyst);
+  $('spStop').textContent = t(stopKlar ? 'stopIgen' : 'stopSerie');
   const minT = tilstand.tilm.find((x) => x.id === mig.uid) || null;
   // Svarknapper
   const sv = $('spSvar'); sv.innerHTML = '';
@@ -915,7 +1078,9 @@ function tegnSpil() {
   $('spMaaskeDel').classList.toggle('hidden', !maaske.length);
   const um = $('spMaaske'); um.innerHTML = ''; maaske.forEach((x) => um.append(person(x)));
   // Booking
-  const bk = $('spBooking'); bk.innerHTML = '';
+  const bk = $('spBooking');
+  const igang = bk.querySelector('#bkBane') ? { sted: bk.querySelector('#bkSted').value, bane: bk.querySelector('#bkBane').value, fokus: document.activeElement && document.activeElement.id } : null;
+  bk.innerHTML = '';
   const bookerNavn = s.bookerAf ? (s.bookerAf === mig.uid ? '' : fornavn(navnPaa(s.bookerAf) || (tilstand.tilm.find((x) => x.id === s.bookerAf) || {}).navn)) : '';
   if (!s.bookerAf) bk.append(K.el('p', { 'class': 'hint', style: 'margin:0' }, t('ingenBane')));
   else {
@@ -923,10 +1088,50 @@ function tegnSpil() {
     top.append(K.el('span', { 'class': 'gr-flueben', 'aria-hidden': 'true' }, s.booket ? '✓' : '…'));
     const tx = K.el('span'); tx.append(K.el('b', null, t(s.booket ? 'erBooket' : 'ikkeBooketH')), K.el('span', { 'class': 'hint', style: 'display:block;margin:2px 0 0' }, s.bookerAf === mig.uid ? t(s.booket ? 'erBooketDu' : 'ikkeBooketDu') : t(s.booket ? 'erBooketAf' : 'ikkeBooketAf', { navn: bookerNavn })));
     top.append(tx); bk.append(top);
+    if (s.booket && (s.bane || s.sted)) bk.append(K.el('p', { 'class': 'gr-banen', id: 'spBane' }, baneTekst(s)));
     if (s.bookerAf === mig.uid && !s.aflyst) {
-      const b = K.el('button', { type: 'button', 'class': s.booket ? 'ghost small' : 'ok' }, t(s.booket ? 'fortrydBooket' : 'jegHarBooket'));
-      b.addEventListener('click', () => opdaterSpil(s.booket ? { booket: false } : { booket: true, booketTid: FB.fs.serverTimestamp() }, $('spStatus')));
-      const p = K.el('p', { style: 'margin:12px 0 0' }); p.append(b); bk.append(p);
+      if (bookForm) {
+        const f = K.el('form', { 'class': 'gr-bookform', novalidate: '' });
+        const grid = K.el('div', { 'class': 'grid gr-to' });
+        const d1 = K.el('div'); d1.append(K.el('label', { 'for': 'bkSted' }, t('anlaeg')), K.el('input', { id: 'bkSted', maxlength: '80', autocomplete: 'off', placeholder: t('anlaegPh') }));
+        const d2 = K.el('div'); d2.append(K.el('label', { 'for': 'bkBane' }, t('bane')), K.el('input', { id: 'bkBane', maxlength: '20', autocomplete: 'off', placeholder: t('banePh') }));
+        grid.append(d1, d2);
+        const msg = K.el('div', { 'class': 'msg', id: 'bkMsg', 'aria-live': 'polite' });
+        const knapper = K.el('div', { 'class': 'gr-knapper' });
+        const gem = K.el('button', { type: 'submit', 'class': 'ok' }, t('gemBooking'));
+        const fort = K.el('button', { type: 'button', 'class': 'ghost' }, t('fortryd'));
+        fort.addEventListener('click', () => { bookForm = false; tegnSpil(); });
+        knapper.append(gem, fort);
+        f.append(K.el('p', { 'class': 'hint', style: 'margin:12px 0 0' }, t('bookHint')), grid, msg, knapper);
+        f.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const bane = f.querySelector('#bkBane').value.trim(), sted = f.querySelector('#bkSted').value.trim();
+          if (!bane) { K.besked(msg, t('mangerBane'), 'err'); f.querySelector('#bkBane').focus(); return; }
+          gem.disabled = true; K.besked(msg, t('gemmer'));
+          const felter = { booket: true, booketTid: FB.fs.serverTimestamp(), bane: bane.slice(0, 20) };
+          if (sted) felter.sted = sted.slice(0, 80);
+          if (await opdaterSpil(felter, msg)) { bookForm = false; tegnSpil(); } else gem.disabled = false;
+        });
+        bk.append(f);
+        f.querySelector('#bkSted').value = igang ? igang.sted : (s.sted || '');
+        f.querySelector('#bkBane').value = igang ? igang.bane : (s.bane || '');
+        if (igang) { if (igang.fokus === 'bkSted' || igang.fokus === 'bkBane') f.querySelector('#' + igang.fokus).focus(); }
+        else setTimeout(() => f.querySelector(s.sted ? '#bkBane' : '#bkSted').focus(), 30);
+      } else {
+        const r = K.el('div', { 'class': 'gr-knapper' });
+        if (!s.booket) {
+          const b = K.el('button', { type: 'button', 'class': 'ok' }, t('jegHarBooket'));
+          b.addEventListener('click', () => { bookForm = true; tegnSpil(); });
+          r.append(b);
+        } else {
+          const ret2 = K.el('button', { type: 'button', 'class': 'ghost small' }, t('retBane'));
+          ret2.addEventListener('click', () => { bookForm = true; tegnSpil(); });
+          const fortryd = K.el('button', { type: 'button', 'class': 'ghost small' }, t('fortrydBooket'));
+          fortryd.addEventListener('click', () => opdaterSpil({ booket: false, bane: FB.fs.deleteField(), booketTid: FB.fs.deleteField() }, $('spStatus')));
+          r.append(ret2, fortryd);
+        }
+        bk.append(r);
+      }
     }
   }
   // Betaling
@@ -969,7 +1174,37 @@ function tegnSpil() {
   $('spAflys').textContent = t(s.aflyst ? 'genaabn' : (aflysKlar ? 'aflysIgen' : 'aflys'));
 }
 
-let aflysKlar = false;
+let aflysKlar = false, stopKlar = false, bookForm = false;
+function baneTekst(s) { const b = s.bane ? t('baneNr', { nr: s.bane }) : ''; return s.sted ? s.sted + (b ? ', ' + b.toLowerCase() : '') : b; }
+async function serieSvar(v) {
+  const s = tilstand.spilEt; if (!s || !s.serie) return;
+  K.besked($('spSerieMsg'), t('sender'));
+  try {
+    const r = await K.motor('grupper', 'tilmeldSerie', { gid: tilstand.gruppe.id, serie: s.serie, svar: v, fra: dato(s.start).toISOString() }, K.nyId());
+    K.besked($('spSerieMsg'), t(v === 'ja' ? 'serieMeldt' : 'serieFra', { n: r.antal }), 'okm');
+  } catch (err) { fejl($('spSerieMsg'), err); }
+}
+$('spSerieJa').addEventListener('click', () => serieSvar('ja'));
+$('spSerieNej').addEventListener('click', () => serieSvar('nej'));
+$('spSerieKal').addEventListener('click', () => {
+  const kommende = tilstand.serie.filter((x) => !x.aflyst && dato(x.start) >= new Date(Date.now() - 3 * 3600000));
+  if (!kommende.length) return;
+  hentIcs(ics(kommende), (tilstand.spilEt.titel || 'spil') + ' (alle)', $('spSerieKal'));
+});
+$('spStop').addEventListener('click', async () => {
+  const s = tilstand.spilEt; if (!s || !s.serie) return;
+  if (!stopKlar) { stopKlar = true; $('spStop').textContent = t('stopIgen'); setTimeout(() => { stopKlar = false; if (tilstand.spilEt) tegnSpil(); }, 4000); return; }
+  stopKlar = false;
+  const fra = dato(s.start);
+  const rest = tilstand.serie.filter((x) => !x.aflyst && dato(x.start) >= fra);
+  K.besked($('spAdminMsg'), t('gemmer'));
+  try {
+    const b = FB.fs.writeBatch(FB.db);
+    rest.forEach((x) => b.update(FB.fs.doc(FB.db, 'grupper', tilstand.gruppe.id, 'spil', x.id), { aflyst: true }));
+    await b.commit();
+    K.besked($('spAdminMsg'), t('serieStoppet', { n: rest.length }), 'okm');
+  } catch (err) { fejl($('spAdminMsg'), err); }
+});
 async function svar(v) {
   const s = tilstand.spilEt;
   K.besked($('spStatus'), t('sender'));
@@ -1001,24 +1236,37 @@ $('spAflys').addEventListener('click', async () => {
 });
 
 // Kalender: en fil med påmindelse 1 time før.
-function ics(s) {
+function ics(liste) {
   const z = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const esc = (x) => String(x || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1');
-  const a = dato(s.start), b = dato(s.slut) || new Date(a.getTime() + 90 * 60000);
-  const link = location.origin + location.pathname + '#g/' + tilstand.gruppe.id + '/spil/' + s.id;
-  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Roskilde Tennis Klub//Mit RTK//DA', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
-    'BEGIN:VEVENT', 'UID:' + s.id + '@mitrtk.dk', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(a), 'DTEND:' + z(b),
-    'SUMMARY:' + esc(s.titel + ' · ' + tilstand.gruppe.navn), s.sted ? 'LOCATION:' + esc(s.sted) : null,
-    'DESCRIPTION:' + esc((s.beskrivelse ? s.beskrivelse + '\n\n' : '') + link), 'URL:' + link,
-    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc(s.titel), 'TRIGGER:-PT1H', 'END:VALARM',
-    'END:VEVENT', 'END:VCALENDAR'].filter(Boolean).join('\r\n') + '\r\n';
+  const ud = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Roskilde Tennis Klub//Mit RTK//DA', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+  (Array.isArray(liste) ? liste : [liste]).forEach((s) => {
+    const a = dato(s.start), b = dato(s.slut) || new Date(a.getTime() + 90 * 60000);
+    const link = location.origin + location.pathname + '#g/' + tilstand.gruppe.id + '/spil/' + s.id;
+    ud.push('BEGIN:VEVENT', 'UID:' + s.id + '@mitrtk.dk', 'DTSTAMP:' + z(new Date()), 'DTSTART:' + z(a), 'DTEND:' + z(b),
+      'SUMMARY:' + esc(s.titel + ' · ' + tilstand.gruppe.navn));
+    if (s.sted || s.bane) ud.push('LOCATION:' + esc(baneTekst(s)));
+    ud.push('DESCRIPTION:' + esc((s.beskrivelse ? s.beskrivelse + '\n\n' : '') + link), 'URL:' + link,
+      'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc(s.titel), 'TRIGGER:-PT1H', 'END:VALARM', 'END:VEVENT');
+  });
+  ud.push('END:VCALENDAR');
+  return ud.join('\r\n') + '\r\n';
+}
+function hentIcs(tekst, navn, knap) {
+  if (knap) {
+    const tekst0 = knap.textContent;
+    knap.disabled = true; knap.textContent = t('kalLaegges');
+    setTimeout(() => { knap.textContent = t('kalKlar'); knap.disabled = false; }, 600);
+    setTimeout(() => { if (knap.textContent === t('kalKlar')) knap.textContent = tekst0; }, 5000);
+  }
+  const url = URL.createObjectURL(new Blob([tekst], { type: 'text/calendar;charset=utf-8' }));
+  const a = K.el('a', { href: url, download: String(navn || 'spil').replace(/[^\wæøåÆØÅ ()-]/g, '') + '.ics' });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
 }
 $('spKalender').addEventListener('click', () => {
   const s = tilstand.spilEt; if (!s) return;
-  const url = URL.createObjectURL(new Blob([ics(s)], { type: 'text/calendar;charset=utf-8' }));
-  const a = K.el('a', { href: url, download: (s.titel || 'spil').replace(/[^\wæøåÆØÅ -]/g, '') + '.ics' });
-  document.body.append(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  hentIcs(ics(s), s.titel || 'spil', $('spKalender'));
 });
 window.RTK_GRUPPER_ICS = ics;
 
@@ -1026,6 +1274,7 @@ window.RTK_GRUPPER_ICS = ics;
 const ROLLER = [['admin', 'rAdmin'], ['inviter', 'rInviter'], ['medlem', 'rMedlem']];
 let fjernKlar = null, forladKlar = false;
 function tegnMedlemmer() {
+  if (!mig) return; // logget ud imens
   const g = tilstand.gruppe;
   $('inviterDel').classList.toggle('hidden', !maaInvitere());
   const ul = $('medlemmer'); ul.innerHTML = '';
@@ -1093,6 +1342,7 @@ $('forlad').addEventListener('click', async () => {
 
 // ---------- Om gruppen
 function tegnOm() {
+  if (!mig) return; // logget ud imens
   const g = tilstand.gruppe;
   $('omTekst').textContent = g.beskrivelse || t('ingenBeskrivelse');
   $('omTekst').classList.toggle('hint', !g.beskrivelse);
