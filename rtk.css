@@ -383,3 +383,8 @@ td.n,th.n{text-align:right}
 .gr-emoji.min{border:2px solid var(--pink);background:#FFF4F8}
 .gr-frist{flex-basis:100%;margin:0}
 .gr-handl{align-items:center}
+/* Notifikationer: trin på iPhone (12. oktober 2026) */
+.push-trin{counter-reset:t;list-style:none;padding:0;margin:12px 0 0}
+.push-trin li{counter-increment:t;display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--soft)}
+.push-trin li:first-child{border-top:0}
+.push-trin li::before{content:counter(t);flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--frost);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}

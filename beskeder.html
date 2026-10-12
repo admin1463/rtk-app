@@ -55,6 +55,29 @@
 
       <div id="voksen" class="hidden">
         <h1 class="lille" data-t="h1">Sådan vil du have beskeder</h1>
+        <section class="afsnit" id="pushDel">
+          <h2 data-t="pushH">Notifikationer på denne telefon</h2>
+          <p class="hint" style="margin-top:4px" data-t="pushTekst">Få besked med det samme, fx når der er en ledig plads, eller når et spil er aflyst. Gratis for klubben.</p>
+          <div id="pushIos" class="hidden">
+            <div class="advarsel" role="note" data-t="pushIosH">På iPhone skal Mit RTK først ligge på hjemmeskærmen.</div>
+            <ol class="push-trin">
+              <li data-t="pushIos1">Tryk på Del-knappen (firkanten med pilen op) nederst i Safari.</li>
+              <li data-t="pushIos2">Vælg Føj til hjemmeskærm, og tryk Tilføj.</li>
+              <li data-t="pushIos3">Åbn Mit RTK fra hjemmeskærmen, log ind, og kom tilbage hertil.</li>
+              <li data-t="pushIos4">Tryk Slå notifikationer til, og svar Tillad.</li>
+            </ol>
+            <p class="hint" data-t="pushIosKrav">Kræver iOS 16.4 eller nyere.</p>
+          </div>
+          <p id="pushKanIkke" class="hint hidden" data-t="pushKanIkke">Denne browser kan ikke få notifikationer. Prøv Chrome, Edge, Firefox eller Safari.</p>
+          <div id="pushNej" class="advarsel hidden" role="note" data-t="pushNej">Du har sagt nej til notifikationer fra Mit RTK på denne enhed. Slå det til under webstedets indstillinger i browseren eller i telefonens indstillinger, og genindlæs siden.</div>
+          <div id="pushFra" class="hidden" style="margin-top:12px"><button type="button" id="pushTilKnap" class="ok" data-t="pushSlaaTil">Slå notifikationer til</button></div>
+          <div id="pushTil" class="hidden">
+            <div class="tak" style="margin:12px 0 0"><b data-t="pushSlaaetTil">Slået til</b> <span id="pushHvor"></span></div>
+            <div class="knapper" style="margin-top:12px"><button type="button" class="ghost small" id="pushProeve" data-t="pushProeve">Send en prøve</button><button type="button" class="ghost small" id="pushFraKnap" data-t="pushSlaaFra">Slå fra på denne enhed</button></div>
+          </div>
+          <p id="pushAndre" class="hint hidden"></p>
+          <div id="pushMsg" class="msg" aria-live="polite"></div>
+        </section>
         <section class="afsnit">
           <h2 id="omDetH" data-t="omDet">Om det, du er med i</h2>
           <p class="hint" data-t="omDetTekst">Fx at din ketsjer er klar, eller at en kamp er aflyst. De kan ikke slås fra, men du vælger, hvordan de kommer.</p>
@@ -201,7 +224,18 @@ window.TEKSTER = {
     beskedTilForaeldre: 'Besked til dine forældre (frivillig)', oenskePh: 'Må jeg komme i U12-gruppen? Alle fra holdet er der.',
     sendForaeldre: 'Send til dine forældre', fortryd: 'Fortryd', oenskeHint: 'De får en mail med et link til Mine børn. Du kan sende ét ønske om dagen pr. ting.',
     vaelgEn: 'Vælg, hvad du vil bede om', sendtKl: 'Sendt til dine forældre kl. {kl}.', ventSvar: '{modul}: venter på svar.',
-    oVenter: '{modul} · venter på svar', oJa: '{modul} · {af} sagde ja', oNej: '{modul} · {af} sagde nej tak'
+    oVenter: '{modul} · venter på svar', oJa: '{modul} · {af} sagde ja', oNej: '{modul} · {af} sagde nej tak',
+    pushH: 'Notifikationer på denne telefon', pushTekst: 'Få besked med det samme, fx når der er en ledig plads, eller når et spil er aflyst. Gratis for klubben.',
+    pushIosH: 'På iPhone skal Mit RTK først ligge på hjemmeskærmen.', pushIos1: 'Tryk på Del-knappen (firkanten med pilen op) nederst i Safari.',
+    pushIos2: 'Vælg Føj til hjemmeskærm, og tryk Tilføj.', pushIos3: 'Åbn Mit RTK fra hjemmeskærmen, log ind, og kom tilbage hertil.',
+    pushIos4: 'Tryk Slå notifikationer til, og svar Tillad.', pushIosKrav: 'Kræver iOS 16.4 eller nyere.',
+    pushKanIkke: 'Denne browser kan ikke få notifikationer. Prøv Chrome, Edge, Firefox eller Safari.',
+    pushNej: 'Du har sagt nej til notifikationer fra Mit RTK på denne enhed. Slå det til under webstedets indstillinger i browseren eller i telefonens indstillinger, og genindlæs siden.',
+    pushSlaaTil: 'Slå notifikationer til', pushSlaaetTil: 'Slået til', pushHvor: '{enhed}, siden {tid}', pushProeve: 'Send en prøve', pushSlaaFra: 'Slå fra på denne enhed',
+    pushSlaar: 'Slår notifikationer til …', pushOk: 'Notifikationer er slået til. Tryk Send en prøve for at se, hvordan de ser ud.',
+    pushAfvist: 'Notifikationer er ikke slået til. Du skal svare Tillad, når telefonen spørger.', pushFejl: 'Det lykkedes ikke at slå notifikationer til. Prøv igen om lidt.',
+    pushSender: 'Sender …', pushSendt: 'Prøven er sendt. Den kommer om et øjeblik.', pushFraOk: 'Notifikationer er slået fra på denne enhed.',
+    pushAndre: 'Slået til på {n} andre enheder: {liste}.', pushAnden: 'Slået til på en anden enhed: {liste}.'
   },
   en: {
     titel: 'Messages · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
@@ -235,7 +269,18 @@ window.TEKSTER = {
     beskedTilForaeldre: 'Message to your parents (optional)', oenskePh: 'Can I join the U12 group? Everyone from the team is there.',
     sendForaeldre: 'Send to your parents', fortryd: 'Cancel', oenskeHint: 'They get an email with a link to My children. You can send one request a day for each thing.',
     vaelgEn: 'Choose what you want to ask for', sendtKl: 'Sent to your parents at {kl}.', ventSvar: '{modul}: waiting for an answer.',
-    oVenter: '{modul} · waiting for an answer', oJa: '{modul} · {af} said yes', oNej: '{modul} · {af} said no thanks'
+    oVenter: '{modul} · waiting for an answer', oJa: '{modul} · {af} said yes', oNej: '{modul} · {af} said no thanks',
+    pushH: 'Notifications on this phone', pushTekst: 'Get told straight away, e.g. when a spot opens up or a game is cancelled. Free for the club.',
+    pushIosH: 'On iPhone, My RTK must first be on your home screen.', pushIos1: 'Tap the Share button (the square with the arrow) at the bottom of Safari.',
+    pushIos2: 'Choose Add to Home Screen, and tap Add.', pushIos3: 'Open My RTK from the home screen, log in and come back here.',
+    pushIos4: 'Tap Turn on notifications, and answer Allow.', pushIosKrav: 'Requires iOS 16.4 or later.',
+    pushKanIkke: 'This browser cannot receive notifications. Try Chrome, Edge, Firefox or Safari.',
+    pushNej: 'You have said no to notifications from My RTK on this device. Turn them on in the site settings of your browser or in your phone settings, and reload the page.',
+    pushSlaaTil: 'Turn on notifications', pushSlaaetTil: 'Turned on', pushHvor: '{enhed}, since {tid}', pushProeve: 'Send a test', pushSlaaFra: 'Turn off on this device',
+    pushSlaar: 'Turning on notifications …', pushOk: 'Notifications are on. Tap Send a test to see what they look like.',
+    pushAfvist: 'Notifications are not on. You need to answer Allow when your phone asks.', pushFejl: 'Notifications could not be turned on. Please try again in a moment.',
+    pushSender: 'Sending …', pushSendt: 'The test has been sent. It will arrive in a moment.', pushFraOk: 'Notifications are turned off on this device.',
+    pushAndre: 'Turned on on {n} other devices: {liste}.', pushAnden: 'Turned on on one other device: {liste}.'
   }
 };
 </script>
@@ -249,7 +294,7 @@ const t = K.t;
 let data = null;
 
 function visLogin() {
-  data = null;
+  data = null; pushData = null;
   $('skrivTak').classList.add('hidden'); $('skrivForm').classList.remove('hidden'); $('skrivMail').value = '';
   sendtBesked = null; $('oenskeForm').classList.add('hidden');
   $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
@@ -280,6 +325,99 @@ function kanalKort() {
   });
 }
 
+// ---------- Notifikationer (push). Besluttet af Lars 12. oktober kl. 12.47: push er den primære kanal.
+const PUSH = {
+  vapid: 'BHqx6aBwsxJg2-BMVlnkDteTMUWU268HoU_9xBRyOCR9JVKPqy3AojTskwDeTSisoCv7yYfdjsTu_y2aSxed_DM',
+  fb: 'https://www.gstatic.com/firebasejs/12.19.0/',
+  cfg: { apiKey: 'AIzaSyDn-RtvKrm2g2D1HY7KLx6XXFXQDZZgcD4', authDomain: 'mitrtk-282fa.firebaseapp.com', projectId: 'mitrtk-282fa',
+    storageBucket: 'mitrtk-282fa.firebasestorage.app', messagingSenderId: '1093255886930', appId: '1:1093255886930:web:0139ea144939078093078b' }
+};
+const pushHent = () => { try { return localStorage.getItem('rtk.push.id') || ''; } catch (e) { return ''; } };
+const pushGem = (v) => { try { v ? localStorage.setItem('rtk.push.id', v) : localStorage.removeItem('rtk.push.id'); } catch (e) {} };
+function pushMiljoe() {
+  const ua = navigator.userAgent;
+  const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const hjem = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  const kan = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  return { ios, hjem, kan };
+}
+function enhedsnavn() {
+  const ua = navigator.userAgent;
+  const hvad = /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ? 'iPad'
+    : /Android/.test(ua) ? 'Android' : /Mac/.test(ua) ? 'Mac' : /Windows/.test(ua) ? 'Windows' : 'Computer';
+  const br = /Edg\//.test(ua) ? 'Edge' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : '';
+  return hvad === 'iPhone' || hvad === 'iPad' ? hvad : hvad + (br ? ', ' + br : '');
+}
+let pushData = null;
+async function pushFirebase() {
+  const [a, m] = await Promise.all([import(PUSH.fb + 'firebase-app.js'), import(PUSH.fb + 'firebase-messaging.js')]);
+  const app = a.getApps().find((x) => x.name === 'push') || a.initializeApp(PUSH.cfg, 'push');
+  return { m, messaging: m.getMessaging(app) };
+}
+function visPush() {
+  const env = pushMiljoe();
+  ['pushIos', 'pushKanIkke', 'pushNej', 'pushFra', 'pushTil', 'pushAndre'].forEach((id) => $(id).classList.add('hidden'));
+  if (env.ios && !env.hjem) { $('pushIos').classList.remove('hidden'); return; }
+  if (!env.kan) { $('pushKanIkke').classList.remove('hidden'); return; }
+  if (Notification.permission === 'denied') { $('pushNej').classList.remove('hidden'); return; }
+  const enheder = (pushData && pushData.enheder) || [];
+  const id = pushHent();
+  const denne = Notification.permission === 'granted' && enheder.find((e) => e.id === id);
+  if (denne) {
+    $('pushHvor').textContent = t('pushHvor', { enhed: denne.enhed, tid: visTid(denne.oprettet) });
+    $('pushTil').classList.remove('hidden');
+  } else $('pushFra').classList.remove('hidden');
+  const andre = enheder.filter((e) => !denne || e.id !== denne.id);
+  if (andre.length) {
+    $('pushAndre').textContent = t(andre.length === 1 ? 'pushAnden' : 'pushAndre', { n: andre.length, liste: andre.map((e) => e.enhed).join(', ') });
+    $('pushAndre').classList.remove('hidden');
+  }
+}
+function visTid(s) {
+  const m = /^(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d)/.exec(String(s || ''));
+  if (!m) return '';
+  const d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+  return d.toLocaleDateString(document.documentElement.lang === 'en' ? 'en-GB' : 'da-DK', { day: 'numeric', month: 'short' }) + ' ' + m[4] + '.' + m[5];
+}
+async function hentPush() {
+  try { pushData = await K.motor('push', 'status'); } catch (err) { pushData = null; }
+  visPush();
+}
+$('pushTilKnap').addEventListener('click', async () => {
+  const knap = $('pushTilKnap'); knap.disabled = true;
+  K.besked($('pushMsg'), t('pushSlaar'));
+  try {
+    const svar = await Notification.requestPermission();
+    if (svar !== 'granted') { K.besked($('pushMsg'), t('pushAfvist'), 'err'); visPush(); return; }
+    const reg = await navigator.serviceWorker.register('firebase-messaging-sw.js');
+    await navigator.serviceWorker.ready;
+    const fb = await pushFirebase();
+    const token = await fb.m.getToken(fb.messaging, { vapidKey: PUSH.vapid, serviceWorkerRegistration: reg });
+    if (!token) throw new Error('ingen nøgle');
+    const r = await K.motor('push', 'registrer', { token, enhed: enhedsnavn() }, K.nyId());
+    pushGem(r.id);
+    pushData = Object.assign({}, pushData || {}, { enheder: r.enheder });
+    visPush();
+    K.besked($('pushMsg'), t('pushOk'), 'okm');
+  } catch (err) {
+    console.warn('push', err);
+    K.besked($('pushMsg'), /Log ind|forbindelse/.test(err.message) ? K.fejlTekst(err.message) : t('pushFejl'), 'err');
+  } finally { knap.disabled = false; }
+});
+$('pushProeve').addEventListener('click', async () => {
+  K.besked($('pushMsg'), t('pushSender'));
+  try { await K.motor('push', 'proeve', {}, K.nyId()); K.besked($('pushMsg'), t('pushSendt'), 'okm'); }
+  catch (err) { K.besked($('pushMsg'), K.fejlTekst(err.message), 'err'); }
+});
+$('pushFraKnap').addEventListener('click', async () => {
+  try { const fb = await pushFirebase(); await fb.m.deleteToken(fb.messaging); } catch (err) { console.warn('push', err); }
+  try {
+    const r = await K.motor('push', 'afmeld', { id: pushHent() }, K.nyId());
+    pushGem(''); pushData = Object.assign({}, pushData || {}, { enheder: r.enheder });
+    visPush(); K.besked($('pushMsg'), t('pushFraOk'), 'okm');
+  } catch (err) { K.besked($('pushMsg'), K.fejlTekst(err.message), 'err'); }
+});
+
 function vis() {
   if (!data) return;
   $('hvem').textContent = t('kLoggetInd', { navn: data.navn });
@@ -302,6 +440,7 @@ function vis() {
     return;
   }
   kanalKort();
+  if (!pushData) hentPush(); else visPush();
   $('vippe').setAttribute('aria-checked', String(!!data.nyheder));
   $('nyhStatus').textContent = t(data.nyheder ? 'nyhTil' : 'nyhFra');
 }

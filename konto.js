@@ -166,7 +166,9 @@
   }
 
   function logud() {
-    if (hent('rtk.token')) motor('kerne', 'logud').catch(function () {});
+    // Telefonens notifikationer slås fra i samme kald, så en delt telefon ikke får den forriges beskeder
+    if (hent('rtk.token')) motor('kerne', 'logud', hent('rtk.push.id') ? { pushId: hent('rtk.push.id') } : {}).catch(function () {});
+    gem('rtk.push.id', null);
     gem('rtk.token', null);
     if (paaLogud) paaLogud();
   }
