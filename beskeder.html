@@ -258,7 +258,7 @@ window.TEKSTER = {
     vChat: 'Nye beskeder i chatten', vChatT: 'Højst én besked hvert kvarter pr. gruppe.', vChatGrupper: 'Pr. gruppe:',
     vAfbud: 'Afbud på spil, jeg har lagt ud', vAfbudT: 'Når en med en plads melder fra, så du kan finde en ny.',
     vMailAfbud: 'Også på mail', vMailAfbudT: 'Afbud er det eneste fra grupperne, der kan komme på mail.',
-    valgBoers: 'Spillerbørsen', vBoersMeldt: 'Svar i spillerbørsen', vBoersMeldtT: 'Når nogen melder sig til jeres opslag, når du bliver valgt, og når en plads bliver ledig for dig som reserve.',
+    valgBoers: 'Spillerbørsen', vBoersSpoerg: 'Spørgsmål og svar om opslag', vBoersSpoergT: 'Når nogen spørger om jeres opslag, og når en gruppe svarer på dit spørgsmål.', vBoersMeldt: 'Svar i spillerbørsen', vBoersMeldtT: 'Når nogen melder sig til jeres opslag, når du bliver valgt, og når en plads bliver ledig for dig som reserve.',
     vBoersAlarm: 'Nye opslag (alarm)', vBoersAlarmT: 'Når en gruppe søger en spiller, der passer til dig. Højst tre om dagen.',
     vAlarmFilter: 'Kun opslag med det valgte. Vælger du ingen, får du alle.', aSport: 'Sport', aSpilform: 'Spilform', aTennis: 'Tennis', aPadel: 'Padel', aDouble: 'Double', aSingle: 'Single', aMix: 'Mixdouble',
     vMailUge: 'Ugentlig oversigt på mail', vMailUgeT: 'Mandag morgen en mail med det, der står åbent på spillerbørsen. Kun når der er noget.',
@@ -319,7 +319,7 @@ window.TEKSTER = {
     vChat: 'New chat messages', vChatT: 'At most one notification every 15 minutes per group.', vChatGrupper: 'Per group:',
     vAfbud: 'Drop-outs from games I posted', vAfbudT: 'When someone with a spot drops out, so you can find someone new.',
     vMailAfbud: 'Also by email', vMailAfbudT: 'Drop-outs are the only thing from groups that can come by email.',
-    valgBoers: 'Player exchange', vBoersMeldt: 'Answers on the player exchange', vBoersMeldtT: 'When someone signs up for your post, when you are chosen, and when a place becomes free for you as a reserve.',
+    valgBoers: 'Player exchange', vBoersSpoerg: 'Questions and replies about posts', vBoersSpoergT: 'When someone asks about your post, and when a group replies to your question.', vBoersMeldt: 'Answers on the player exchange', vBoersMeldtT: 'When someone signs up for your post, when you are chosen, and when a place becomes free for you as a reserve.',
     vBoersAlarm: 'New posts (alert)', vBoersAlarmT: 'When a group is looking for a player who matches you. At most three a day.',
     vAlarmFilter: 'Only posts with what you choose. If you choose none, you get all.', aSport: 'Sport', aSpilform: 'Format', aTennis: 'Tennis', aPadel: 'Padel', aDouble: 'Doubles', aSingle: 'Singles', aMix: 'Mixed doubles',
     vMailUge: 'Weekly summary by email', vMailUgeT: 'Monday morning an email with what is open on the player exchange. Only when there is something.',
@@ -487,6 +487,7 @@ function visValg() {
   // Spillerbørsen: svar, frivillig alarm med filter (højst tre om dagen) og frivillig ugentlig mail
   const sb = $('valgBoers'); sb.innerHTML = '';
   sb.append(vipRaekke('boersMeldt', 'vBoersMeldt', 'vBoersMeldtT', v.boersMeldt !== false, (ny) => gemPushValg({ boersMeldt: ny })));
+  sb.append(vipRaekke('boersSpoerg', 'vBoersSpoerg', 'vBoersSpoergT', v.boersSpoerg !== false, (ny) => gemPushValg({ boersSpoerg: ny })));
   sb.append(vipRaekke('boersAlarm', 'vBoersAlarm', 'vBoersAlarmT', v.boersAlarm === true, (ny) => gemPushValg({ boersAlarm: ny })));
   if (v.boersAlarm === true) {
     const a = Object.assign({ sport: [], spilform: [] }, v.alarm || {});

@@ -200,7 +200,7 @@
       <div id="vBoers" class="hidden">
         <div class="gr-hoved"><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
         <nav id="navBoers" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
-        <p class="hint sb-intro" data-t="sbIntro">Grupper, der mangler en spiller til et spil eller søger en fast spiller. Meld dig, hvis du har lyst. Kun gruppen ser, at du har meldt dig.</p>
+        <p class="hint sb-intro" data-t="sbIntro">Grupper, der mangler en spiller til et spil eller søger en fast spiller. Tilmeld dig, hvis du har lyst. Kun gruppen ser, at du har tilmeldt dig.</p>
         <section id="sbMine" class="hidden sb-mine" aria-labelledby="sbMineH"><h2 id="sbMineH" class="gr-lille" data-t="sbDineSvar">Dine svar</h2><div id="sbMineListe"></div></section>
         <div id="sbFiltre" class="chips gr-filtre" role="group" data-t-aria="sbFiltrer" aria-label="Vis opslag"></div>
         <div id="sbListe"></div>
@@ -219,6 +219,8 @@
         <div id="opMsg" class="msg" aria-live="polite"></div>
         <section class="sb-boks" id="opBoks" aria-live="polite"></section>
         <div class="sb-info" id="opInfo"></div>
+        <section class="sb-boks hidden" id="opSpm"></section>
+        <p class="sr-kun" id="spNyt" aria-live="polite"></p>
       </div>
 
       <!-- Spillerbørsen: gruppens opslag -->
@@ -229,6 +231,8 @@
         <p class="sb-l" id="goHvornaar"></p>
         <p id="goStatus" class="gr-status"></p>
         <div id="goMsg" class="msg" aria-live="polite"></div>
+        <section class="sb-boks hidden" id="goSpm"></section>
+        <p class="sr-kun" id="goSpmNyt" aria-live="polite"></p>
         <section class="sb-boks"><div class="sb-top"><h2 id="goAntalH"></h2><span class="sb-l" data-t="sbKunGruppen">Kun gruppen ser listen</span></div><div id="goKand"></div></section>
         <div class="sb-info hidden" id="goInfo"></div>
         <div class="gr-knapper" id="goKnapper"><button type="button" class="ghost" id="goRet" data-t="sbRet">Ret opslaget</button><button type="button" class="ghost" id="goLuk" data-t="sbLuk">Luk uden at vælge</button></div>
@@ -358,7 +362,15 @@ window.TEKSTER = {
     kr: '{n} kr.', fejlGem: 'Det kunne ikke gemmes. Prøv igen.', fejlHent: 'Grupperne kan ikke hentes lige nu. Prøv igen om lidt.', ingenAdgang: 'Du har ikke adgang til gruppen.',
     systemOpret: 'oprettede gruppen', uLaest: 'Nye beskeder', naesteSpil: 'Dit næste spil',
     sbNav: 'Grupper og spillerbørs', sbMineGrupper: 'Mine grupper', sbFane: 'Spillerbørs', sbAntalOpslag: '{n} åbne opslag',
-    sbIntro: 'Grupper, der mangler en spiller til et spil eller søger en fast spiller. Meld dig, hvis du har lyst. Kun gruppen ser, at du har meldt dig.',
+    spSpoergNavn: 'Spørg {navn}', spSpoergGruppen: 'Spørg gruppen', spVilVide: 'Vil du vide mere først?',
+    spVilVideT: 'Spørg om tid, sted eller gruppen, før du tilmelder dig. Kun du og gruppen kan se det.',
+    spDineH: 'Dine spørgsmål til gruppen', spDineT: 'Kun du og gruppen kan se det. Du er ikke tilmeldt, før du trykker Tilmeld.', spDineTMeldt: 'Kun du og gruppen kan se det.',
+    spPh: 'Skriv dit spørgsmål', spSvarPh: 'Skriv et svar', spSvarNavn: 'Svar {navn}', spSend: 'Send', spDig: 'Dig',
+    spH: 'Spørgsmål', spKunGruppen: 'Kun gruppen ser dem', spUbesvaret1: '1 ubesvaret', spUbesvaretN: '{n} ubesvarede',
+    spBeskeder: '{n} beskeder', spBesvaretAf: 'besvaret af {navn}', spVis: 'Vis samtalen', spSkjul: 'Skjul samtalen',
+    spNytSvar: 'Nyt svar', spDuHarSpurgt: 'Du har spurgt', spLukket: 'Opslaget er lukket, så du kan ikke skrive mere.',
+    spVenter1: '1 spørgsmål venter på svar', spVenterN: '{n} spørgsmål venter på svar', spMaks: 'Højst 500 tegn.', spNytFra: 'Ny besked fra {navn}: {tekst}',
+    sbIntro: 'Grupper, der mangler en spiller til et spil eller søger en fast spiller. Tilmeld dig, hvis du har lyst. Kun gruppen ser, at du har tilmeldt dig.',
     sbDineSvar: 'Dine svar', sbFiltrer: 'Vis opslag', sbFiltEt: 'Til ét spil', sbFiltFast: 'Fast plads',
     sbTom: 'Ingen opslag lige nu. Kig forbi igen, eller slå en alarm til under Beskeder.',
     sbHjem: 'Opslag fra dine egne grupper står under gruppen. Du laver et opslag fra gruppen eller fra et spil.',
@@ -374,11 +386,11 @@ window.TEKSTER = {
     sbFindesIkke: 'Opslaget findes ikke længere.', sbHvornaar: 'Hvornår', sbSpilform: 'Spilform', sbSoeger: 'Søger', sbDame: 'Dame', sbHerre: 'Herre', sbUnderordnet: 'Underordnet',
     sbNiveauOrd: 'Niveau', sbAlder: 'Alder', sbPris: 'Pris',
     sbLagtUdAf: 'Lagt ud af {navn}, en gruppe med {n} medlemmer.', sbLagtUdAnonym: 'Lagt ud af en gruppe med {n} medlemmer. Gruppens navn vises, når du er valgt.',
-    sbErLukket: 'Opslaget er lukket', sbMeldDig: 'Meld dig', sbKommentar: 'Kommentar til gruppen (frivillig)', sbKommentarPh: 'Fx: Kan kun om torsdagen',
-    sbKommentarHint: 'Højst 200 tegn. Gruppen ser dit navn og din kommentar, ikke dit telefonnummer.', sbInteresseret: 'Jeg er interesseret',
+    sbErLukket: 'Opslaget er lukket', sbMeldDig: 'Tilmeld dig', sbKommentar: 'Kommentar til gruppen (frivillig)', sbKommentarPh: 'Fx: Kan kun om torsdagen',
+    sbKommentarHint: 'Højst 200 tegn. Gruppen ser dit navn og din kommentar, ikke dit telefonnummer.', sbInteresseret: 'Tilmeld',
     sbHvadSker: 'Hvad sker der så?', sbHvadSkerEt: 'Gruppen vælger blandt dem, der har meldt sig. Bliver det dig, får du pladsen og en besked. Bliver det en anden, får du også besked, så du ikke venter forgæves.',
     sbHvadSkerFast: 'Gruppen vælger blandt dem, der har meldt sig. Bliver det dig, kommer du med i gruppen og får en besked. Bliver det en anden, får du også besked, så du ikke venter forgæves.',
-    sbDuHarMeldt: 'Du har meldt dig', sbMeldtTid: 'Meldt {tid}.', sbDinKommentar: 'Din kommentar: "{k}"',
+    sbDuHarMeldt: 'Du er tilmeldt', sbMeldtTid: 'Meldt {tid}.', sbDinKommentar: 'Din kommentar: "{k}"',
     sbTraekTekst: 'Har du fået andre planer? Så træk dig. Din tilmelding forsvinder med det samme, og gruppen kan ikke længere vælge dig.', sbTraek: 'Træk mig',
     sbIkkeForgaeves: 'Du venter ikke forgæves.', sbIkkeForgaevesT: 'Opretteren får en påmindelse, hvis ingen er valgt efter 2 timer eller en time før fristen. Når fristen er gået, lukker opslaget af sig selv, og du får besked.',
     sbVelkommen: 'Velkommen i {navn}', sbFastValgtT: 'Du er valgt som fast spiller og er nu med i gruppen.', sbAabnGruppen: 'Åbn gruppen',
@@ -390,7 +402,7 @@ window.TEKSTER = {
     sbDuErReserve: 'Du står som reserve', sbReserveT: 'Bliver pladsen ledig, får du en besked og kan selv sige ja. Du kan sige fra når som helst.', sbIkkeReserve: 'Jeg vil ikke stå som reserve',
     sbIkkeValgt: 'Pladsen er besat denne gang', sbIkkeValgtFast: 'Gruppen har valgt en anden denne gang', sbReserveSpm: 'Vil du stå som reserve, hvis pladsen bliver ledig? Det er helt frivilligt.',
     sbBlivReserve: 'Ja, gerne som reserve', sbReserveInfo: 'Som reserve får du en besked, hvis pladsen bliver ledig, og så vælger du selv.',
-    sbDuMeldteFra: 'Du har meldt fra', sbSpilAflyst: 'Spillet er aflyst', sbMeldIgen: 'Meld mig igen', sbKunGruppen: 'Kun gruppen ser listen', sbIngenKommentar: 'ingen kommentar', sbAccepter: 'Accepter', sbAccepterNavn: 'Accepter {navn}',
+    sbDuMeldteFra: 'Du har meldt fra', sbSpilAflyst: 'Spillet er aflyst', sbMeldIgen: 'Tilmeld igen', sbKunGruppen: 'Kun gruppen ser listen', sbIngenKommentar: 'ingen kommentar', sbAccepter: 'Accepter', sbAccepterNavn: 'Accepter {navn}',
     sbNaarAccepter: 'Når du trykker Accepter',
     sbNaarAccepterEt: 'Spilleren får pladsen på spillet og en besked. Når alle pladser er besat, lukker opslaget, og de andre får automatisk besked og kan selv vælge at stå som reserve. Chatten i gruppen får en linje.',
     sbNaarAccepterFast: 'Spilleren kommer med i gruppen som medlem og får en besked. Når alle pladser er besat, lukker opslaget, og de andre får besked.',
@@ -466,6 +478,14 @@ window.TEKSTER = {
     kr: 'DKK {n}', fejlGem: 'It could not be saved. Please try again.', fejlHent: 'Groups cannot be loaded right now. Please try again shortly.', ingenAdgang: 'You do not have access to this group.',
     systemOpret: 'created the group', uLaest: 'New messages', naesteSpil: 'Your next game',
     sbNav: 'Groups and player exchange', sbMineGrupper: 'My groups', sbFane: 'Player exchange', sbAntalOpslag: '{n} open posts',
+    spSpoergNavn: 'Ask {navn}', spSpoergGruppen: 'Ask the group', spVilVide: 'Want to know more first?',
+    spVilVideT: 'Ask about the time, the place or the group before you sign up. Only you and the group can see it.',
+    spDineH: 'Your questions to the group', spDineT: 'Only you and the group can see it. You are not signed up until you press Sign up.', spDineTMeldt: 'Only you and the group can see it.',
+    spPh: 'Write your question', spSvarPh: 'Write a reply', spSvarNavn: 'Reply to {navn}', spSend: 'Send', spDig: 'You',
+    spH: 'Questions', spKunGruppen: 'Only the group sees them', spUbesvaret1: '1 unanswered', spUbesvaretN: '{n} unanswered',
+    spBeskeder: '{n} messages', spBesvaretAf: 'answered by {navn}', spVis: 'Show the conversation', spSkjul: 'Hide the conversation',
+    spNytSvar: 'New reply', spDuHarSpurgt: 'You asked', spLukket: 'The post is closed, so you cannot write more.',
+    spVenter1: '1 question waiting for a reply', spVenterN: '{n} questions waiting for a reply', spMaks: 'At most 500 characters.', spNytFra: 'New message from {navn}: {tekst}',
     sbIntro: 'Groups that need a player for a game or are looking for a regular player. Sign up if you like. Only the group sees that you signed up.',
     sbDineSvar: 'Your answers', sbFiltrer: 'Show posts', sbFiltEt: 'Single game', sbFiltFast: 'Regular place',
     sbTom: 'No posts right now. Check back later, or turn on an alert under Messages.',
@@ -483,7 +503,7 @@ window.TEKSTER = {
     sbNiveauOrd: 'Level', sbAlder: 'Age', sbPris: 'Price',
     sbLagtUdAf: 'Posted by {navn}, a group with {n} members.', sbLagtUdAnonym: 'Posted by a group with {n} members. The group name is shown when you are chosen.',
     sbErLukket: 'The post is closed', sbMeldDig: 'Sign up', sbKommentar: 'Comment to the group (optional)', sbKommentarPh: 'E.g. Only Thursdays',
-    sbKommentarHint: 'At most 200 characters. The group sees your name and comment, not your phone number.', sbInteresseret: 'I am interested',
+    sbKommentarHint: 'At most 200 characters. The group sees your name and comment, not your phone number.', sbInteresseret: 'Sign up',
     sbHvadSker: 'What happens next?', sbHvadSkerEt: 'The group chooses among those who signed up. If it is you, you get the place and a message. If it is someone else, you get a message too, so you are not left waiting.',
     sbHvadSkerFast: 'The group chooses among those who signed up. If it is you, you join the group and get a message. If it is someone else, you get a message too, so you are not left waiting.',
     sbDuHarMeldt: 'You have signed up', sbMeldtTid: 'Signed up {tid}.', sbDinKommentar: 'Your comment: "{k}"',
@@ -1684,19 +1704,27 @@ Object.assign(window.MOTOR_EN, {
   'Du er ikke valgt til spillet': 'You have not been chosen for this game',
   'Spillet er begyndt': 'The game has started',
   'Personen er allerede med': 'The person is already in',
-  'Forlad gruppen i stedet': 'Leave the group instead'
+  'Forlad gruppen i stedet': 'Leave the group instead',
+  'Skriv dit spørgsmål': 'Write your question',
+  'Skriv dit svar': 'Write your reply',
+  'Du er med i gruppen. Skriv i gruppens chat.': 'You are in the group. Write in the group chat.',
+  'Samtalen er blevet for lang. Tilmeld dig, eller vent på gruppen.': 'The conversation has become too long. Sign up, or wait for the group.',
+  'Vent på et svar, før du skriver mere': 'Wait for a reply before you write more',
+  'Spørgsmålet findes ikke længere': 'The question no longer exists',
+  'Samtalen er blevet for lang': 'The conversation has become too long'
 });
 
 const SB_AABNE = ['aaben', 'tilbud'];
 // var, ikke const/let: visLogin kan kalde stopBoers, før denne del af scriptet er nået (når man ikke er logget ind)
-var sb = { tavle: [], mine: {}, egne: new Set(), filter: 'alle', o: null, mig: null, intern: null, meldinger: [], venter: null, kandVenter: null, lukKlar: false };
-var sbLyt = null, sbMigLyt = null;
+var sb = { tavle: [], mine: {}, spm: {}, spmKladde: {}, grKladde: {}, egne: new Set(), filter: 'alle', o: null, mig: null, intern: null, meldinger: [], venter: null, kandVenter: null, lukKlar: false };
+var sbLyt = null, sbMigLyt = null, sbSpmLyt = null;
 
 function stopBoers() {
   if (!sb) return;
   if (sbLyt) { try { sbLyt(); } catch (e) {} sbLyt = null; }
   if (sbMigLyt) { try { sbMigLyt(); } catch (e) {} sbMigLyt = null; }
-  sb.tavle = []; sb.mine = {}; sb.egne = new Set();
+  if (sbSpmLyt) { try { sbSpmLyt(); } catch (e) {} sbSpmLyt = null; }
+  sb.tavle = []; sb.mine = {}; sb.spm = {}; sb.spmKladde = {}; sb.grKladde = {}; sb.spmSet = null; sb.egne = new Set();
 }
 
 /** Tavlen og ens egne svar i realtid, så længe man er logget ind. Tallet på fanen kommer herfra. */
@@ -1711,6 +1739,10 @@ function lytBoers() {
     sb.mine = {}; s.docs.forEach((d) => { sb.mine[d.id] = Object.assign({ id: d.id }, d.data()); });
     tegnFaner(); if (!$('vBoers').classList.contains('hidden')) tegnTavle();
   }, (err) => { console.warn(err); sbMigLyt = null; });
+  if (!sbSpmLyt) sbSpmLyt = fs.onSnapshot(fs.collection(db, 'boersSpoerg', mig.uid, 'opslag'), (s) => {
+    sb.spm = {}; s.docs.forEach((d) => { sb.spm[d.id] = Object.assign({ id: d.id }, d.data()); });
+    tegnFaner(); if (!$('vBoers').classList.contains('hidden')) tegnTavle();
+  }, (err) => { console.warn(err); sbSpmLyt = null; });
 }
 
 // ---------- Tekster
@@ -1772,6 +1804,7 @@ function tegnFaner() {
     if (n) a2.append(K.el('span', { 'class': 'tal', 'aria-label': t('sbAntalOpslag', { n }) }, String(n)));
     const tilbud = Object.values(sb.mine).some((x) => x.status === 'tilbudt');
     if (tilbud) a2.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('sbStTilbudt') }, ''));
+    else if (Object.values(sb.spm).some(spUlaest)) a2.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('spNytSvar') }, ''));
     nav.append(a1, a2);
   });
 }
@@ -1800,10 +1833,14 @@ function tegnTavle() {
     if (x.status === 'ikkeValgt') return slut && slut.getTime() > nu;
     return !slut || slut.getTime() > nu - 3 * 3600000;
   }).sort((a, b) => (a.status === 'tilbudt' ? -1 : 0) - (b.status === 'tilbudt' ? -1 : 0) || (dato(a.start) || dato(a.frist)) - (dato(b.start) || dato(b.frist)));
+  // Samtaler med gruppen om opslag, der ikke står på tavlen længere (fx lukket), men hvor der er et nyt svar
+  const paaTavlen = new Set(sbSynlige().map((o) => o.id));
+  Object.values(sb.spm).forEach((x) => { if (!sb.mine[x.id] && !paaTavlen.has(x.id) && spUlaest(x)) mine.push(Object.assign({ spm: true }, x)); });
   const ml = $('sbMineListe'); ml.innerHTML = '';
   mine.forEach((x) => {
     const a = K.el('a', { href: '#boers/' + x.id, 'class': 'sb-kort mit' + (x.status === 'tilbudt' ? ' haster' : '') });
-    const top = K.el('div', { 'class': 'sb-top' }); top.append(K.el('b', null, x.titel), sbStatusChip(x.status) || '');
+    const chip = spUlaest(sb.spm[x.id]) ? K.el('span', { 'class': 'sb-ok ok' }, t('spNytSvar')) : sbStatusChip(x.status);
+    const top = K.el('div', { 'class': 'sb-top' }); top.append(K.el('b', null, x.titel), chip || '');
     a.append(top, K.el('div', { 'class': 'sb-l' }, [sbHvornaar(x), x.gruppeNavn].filter(Boolean).join(' · ')));
     if (x.status === 'tilbudt' && dato(x.tilbudFrist)) a.append(K.el('div', { 'class': 'sb-l staerk' }, t('sbSvarInden', { kl: kl(dato(x.tilbudFrist)) })));
     ml.append(a);
@@ -1828,7 +1865,10 @@ function sbKort(o) {
   const v = K.el('span'); v.append(K.el('b', null, o.gruppeNavn || t('sbEnGruppe')), ' · ' + (o.gruppeNavn ? (o.gruppeStr === 1 ? t('medlemmer1') : t('medlemmerN', { n: o.gruppeStr })) : t('sbNavnVises')));
   fod.append(v);
   const min = sb.mine[o.id];
-  if (min && SB_STATUS[min.status]) fod.append(sbStatusChip(min.status));
+  const spm = sb.spm[o.id];
+  if (spUlaest(spm)) fod.append(K.el('span', { 'class': 'sb-ok ok' }, t('spNytSvar')));
+  else if (min && SB_STATUS[min.status]) fod.append(sbStatusChip(min.status));
+  else if (spm) fod.append(K.el('span', null, t('spDuHarSpurgt')));
   else fod.append(K.el('span', null, o.antalMeldt ? t(o.antalMeldt === 1 ? 'sbMeldt1' : 'sbMeldtN', { n: o.antalMeldt }) : t('sbIngenMeldt')));
   a.append(fod);
   return a;
@@ -1838,7 +1878,8 @@ function sbKort(o) {
 function visOpslag(oid) {
   vis('vOpslag');
   lytBoers();
-  sb.o = null; sb.mig = null; sb.venter = null;
+  sb.o = null; sb.mig = null; sb.venter = null; sb.traad = null; sb.spmAaben = false; sb.spmVenter = null;
+  $('opSpm').innerHTML = ''; $('opSpm').classList.add('hidden');
   K.besked($('opMsg'), '');
   $('opTitel').textContent = ''; $('opFakta').innerHTML = ''; $('opBoks').innerHTML = ''; $('opInfo').innerHTML = ''; $('opTags').innerHTML = '';
   const { fs, db } = FB;
@@ -1852,11 +1893,18 @@ function visOpslag(oid) {
     if (sb.venter && sb.venter.bekraeft(sb.mig)) sb.venter = null;
     tegnOpslag();
   }, (err) => fejl($('opMsg'), err)));
+  lyt.push(fs.onSnapshot(fs.doc(db, 'boersSpoerg', mig.uid, 'opslag', oid), (d) => {
+    sb.traad = d.exists() ? Object.assign({ id: d.id }, d.data()) : null;
+    if (sb.spmVenter && sb.traad && spFremme(sb.traad.beskeder, sb.spmVenter, (b) => !b.gruppe)) sb.spmVenter = null;
+    spMeldNyt('spNyt', sb.traad, (b) => b.gruppe, oid);
+    tegnSpm();
+  }, (err) => console.warn(err)));
 }
 function opRaekke(dl, navn, vaerdi) { if (!vaerdi) return; dl.append(K.el('dt', null, t(navn)), K.el('dd', null, vaerdi)); }
 function tegnOpslag() {
   if (!mig) return;
   const o = sb.o; if (!o) return;
+  tegnSpm();
   const minS = sb.venter ? sb.venter.status : (sb.mig ? sb.mig.status : '');
   const kopi = sb.mig || {};
   const tg = $('opTags'); tg.replaceWith(Object.assign(sbTags(o, true), { id: 'opTags' }));
@@ -2005,6 +2053,7 @@ function grOpslagKort(o) {
   const top = K.el('div', { 'class': 'sb-top' });
   top.append(K.el('span', { 'class': 'sb-type ' + (o.type === 'fast' ? 'fast' : 'et') }, sbTypeTekst({ type: o.type, antal: o.mangler })), K.el('span', { 'class': 'sb-l' }, sbGrStatus(o)));
   a.append(top, K.el('h3', null, o.titel), K.el('div', { 'class': 'sb-l' }, [sbHvornaar(o), sbSted(o)].filter(Boolean).join(' · ')));
+  if (o.ubesvaret > 0) a.append(K.el('div', { 'class': 'sb-l staerk' }, t(o.ubesvaret === 1 ? 'spVenter1' : 'spVenterN', { n: o.ubesvaret })));
   return a;
 }
 function sbGrStatus(o) {
@@ -2027,6 +2076,8 @@ function visGrOpslag(gid, oid) {
   vis('vGrOpslag');
   $('goTilbage').setAttribute('href', '#g/' + gid + '/spil');
   sb.intern = null; sb.meldinger = []; sb.kandVenter = null; sb.lukKlar = false;
+  sb.grSpm = []; sb.grSpmVenter = {}; sb.grSpmAabne = new Set(); sb.grSet = null;
+  $('goSpm').innerHTML = ''; $('goSpm').classList.add('hidden');
   K.besked($('goMsg'), ''); $('goRetForm').classList.add('hidden');
   ['goTitel', 'goHvornaar', 'goStatus', 'goAntalH'].forEach((id) => { $(id).textContent = ''; });
   $('goKand').innerHTML = ''; $('goInfo').innerHTML = '';
@@ -2044,6 +2095,15 @@ function visGrOpslag(gid, oid) {
     if (sb.kandVenter) { const m = sb.meldinger.find((x) => x.id === sb.kandVenter.pid); if (m && m.status === 'valgt') sb.kandVenter = null; }
     tegn();
   }, (err) => fejl($('goMsg'), err)));
+  lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'opslag', oid, 'spoergsmaal'), (s) => {
+    sb.grSpm = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    Object.keys(sb.grSpmVenter).forEach((pid) => { const x = sb.grSpm.find((y) => y.id === pid); if (x && spFremme(x.beskeder, sb.grSpmVenter[pid], (b) => b.gruppe)) delete sb.grSpmVenter[pid]; });
+    // Skærmlæser: læs et nyt spørgsmål op (ikke ved den første indlæsning)
+    const nye = sb.grSpm.filter((x) => x.sidstGruppe === false).map((x) => x.id + '/' + (x.beskeder || []).length);
+    if (sb.grSet) { const ny = sb.grSpm.find((x) => x.sidstGruppe === false && sb.grSet.indexOf(x.id + '/' + (x.beskeder || []).length) < 0); if (ny) { const b = ny.beskeder[ny.beskeder.length - 1]; $('goSpmNyt').textContent = t('spNytFra', { navn: b.navn, tekst: b.tekst }); } }
+    sb.grSet = nye;
+    tegnGrSpm();
+  }, (err) => console.warn(err)));
 }
 const SB_ORDEN = { tilbudt: 0, meldt: 1, reserve: 2, ikkeValgt: 3, valgt: 4, afbud: 5, lukket: 6 };
 function tegnGrOpslag() {
@@ -2218,6 +2278,155 @@ function sbSprog(aaben) {
   if (aaben('vGrOpslag')) tegnGrOpslag();
   if (aaben('vNytOpslag')) tegnNytOpslag();
   if (aaben('vGruppe')) tegnGrOpslagListe();
+  if (aaben('vOpslag')) tegnSpm();
+  if (aaben('vGrOpslag')) tegnGrSpm();
+}
+
+// ---------- Spørgsmål til opslaget (Lars 12. oktober kl. 20.12, mockup godkendt 20.36). Den, der spørger, ser sin samtale
+// under boersSpoerg. Gruppen ser alle samtaler under opslaget. Alt skrives af motoren (spoerg og svarSpoerg).
+function spSetNoegle(oid) { return 'rtk.sp.set.' + oid; }
+function spSetTid(oid) { try { return Number(localStorage.getItem(spSetNoegle(oid))) || 0; } catch (e) { return 0; } }
+function spSaetSet(x) { const d = dato(x && x.sidst); if (!d) return; try { localStorage.setItem(spSetNoegle(x.id), String(d.getTime())); } catch (e) {} }
+/** Et svar fra gruppen, som man ikke har set endnu (huskes kun i denne browser). */
+function spUlaest(x) { const d = x && x.sidstGruppe && dato(x.sidst); return !!d && d.getTime() > spSetTid(x.id); }
+/** Læs et nyt svar op for den, der spurgte (ikke ved den første indlæsning). */
+function spMeldNyt(id, x, fraAnden, oid) {
+  const n = x ? (x.beskeder || []).length : 0;
+  if (sb.spmSet && sb.spmSet.oid === oid && n > sb.spmSet.n) { const b = x.beskeder[n - 1]; if (fraAnden(b)) $(id).textContent = t('spNytFra', { navn: b.navn, tekst: b.tekst }); }
+  sb.spmSet = { oid, n };
+}
+function spTid(d) { return d ? dagOverskrift(d).toLowerCase() + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(d) : ''; }
+/** Boblerne. minSide: true for den, der spurgte (gruppens svar til venstre), false for gruppen (spørgsmålene til venstre). */
+function spBobler(beskeder, minSide, venter) {
+  const ud = K.el('div', { 'class': 'sp-traad' });
+  beskeder.concat(venter ? [venter] : []).forEach((b) => {
+    const egen = minSide ? !b.gruppe : !!b.gruppe;
+    const r = K.el('div', { 'class': 'sp-b' + (egen ? ' mig' : '') + (b.venter ? ' venter' : '') });
+    if (!egen && minSide) r.append(avatar(b.navn, b.navn));
+    const d = K.el('div');
+    const hvem = minSide && !b.gruppe ? t('spDig') : b.navn;
+    d.append(K.el('p', { 'class': 'sp-hvem' }, b.venter ? t('sender') : hvem + ' · ' + spTid(dato(b.tid))), K.el('div', { 'class': 'boble' }, b.tekst));
+    r.append(d); ud.append(r);
+  });
+  return ud;
+}
+/** Tekstfelt og Send. Kladden og markøren overlever, når listen tegnes igen. */
+function spSkriv(id, ph, kladde, gem, send) {
+  const f = K.el('form', { 'class': 'sp-skriv' });
+  const ta = K.el('textarea', { id, rows: '2', maxlength: '500', placeholder: ph, 'aria-label': ph });
+  ta.value = kladde || '';
+  ta.addEventListener('input', () => gem(ta.value));
+  const b = K.el('button', { type: 'submit', 'class': 'ok' }, t('spSend'));
+  f.addEventListener('submit', (e) => { e.preventDefault(); const v = ta.value.trim(); if (v) send(v, ta); });
+  f.append(ta, b);
+  return f;
+}
+function spBevarFokus(fn) {
+  const a = document.activeElement; const id = a && a.id; const pos = a && typeof a.selectionStart === 'number' ? a.selectionStart : null;
+  fn();
+  if (id) { const n = document.getElementById(id); if (n && n !== a) { n.focus(); if (pos !== null && n.setSelectionRange) n.setSelectionRange(pos, pos); } }
+}
+
+function tegnSpm() {
+  const sec = $('opSpm'); const o = sb.o;
+  if (!mig || !o || $('vOpslag').classList.contains('hidden')) return;
+  const minS = sb.mig ? sb.mig.status : '';
+  const tr = sb.traad;
+  const aaben = SB_AABNE.indexOf(o.status) >= 0 && dato(o.frist) && dato(o.frist).getTime() > Date.now();
+  // Valgt som fast spiller: man er i gruppen og skriver i chatten
+  if ((!tr && !aaben) || (minS === 'valgt' && o.type === 'fast') || sb.egne.has(o.id)) { sec.classList.add('hidden'); sec.innerHTML = ''; return; }
+  spBevarFokus(() => {
+    sec.classList.remove('hidden'); sec.innerHTML = ''; sec.className = 'sb-boks' + (tr ? ' mit' : '');
+    const spoergTekst = o.kontakt ? t('spSpoergNavn', { navn: o.kontakt }) : t('spSpoergGruppen');
+    if (!tr && !sb.spmAaben) {
+      sec.append(K.el('h2', null, t('spVilVide')), K.el('p', { 'class': 'hint', style: 'margin:0' }, t('spVilVideT')));
+      const b = K.el('button', { type: 'button', 'class': 'ghost', id: 'opSpoergKnap' }, spoergTekst);
+      b.addEventListener('click', () => { sb.spmAaben = true; tegnSpm(); const ta = $('opSpmTekst'); if (ta) ta.focus(); });
+      const d = K.el('div', { 'class': 'gr-knapper' }); d.append(b); sec.append(d);
+      return;
+    }
+    sec.append(K.el('h2', null, tr ? t('spDineH') : spoergTekst));
+    sec.append(K.el('p', { 'class': 'hint', style: 'margin:0' }, t(minS ? 'spDineTMeldt' : 'spDineT')));
+    if (tr || sb.spmVenter) sec.append(spBobler((tr && tr.beskeder) || [], true, sb.spmVenter));
+    if (tr) spSaetSet(tr);
+    if (!aaben) { sec.append(K.el('p', { 'class': 'sb-l' }, t('spLukket'))); return; }
+    sec.append(spSkriv('opSpmTekst', t(tr ? 'spSvarPh' : 'spPh'), sb.spmKladde[o.id], (v) => { sb.spmKladde[o.id] = v; }, (v) => spSend(v)));
+    sec.append(K.el('p', { 'class': 'hint', style: 'margin:6px 0 0' }, t('spMaks')));
+  });
+}
+/** Er den ventende besked kommet i samtalen? Den sidste egne besked skal have samme tekst. */
+function spFremme(beskeder, v, egen) {
+  if (!v || (beskeder || []).length < v.n) return false;
+  const sidste = beskeder.slice().reverse().find(egen);
+  return !!sidste && sidste.tekst === v.tekst.slice(0, 500);
+}
+async function spSend(tekst) {
+  const o = sb.o; if (!o || sb.spmVenter) return;
+  const v = { tekst, venter: true, n: ((sb.traad && sb.traad.beskeder) || []).length + 1 };
+  sb.spmVenter = v; sb.spmKladde[o.id] = ''; K.besked($('opMsg'), ''); tegnSpm();
+  try {
+    await K.motor('boers', 'spoerg', { oid: o.id, tekst }, K.nyId());
+    if (sb.spmVenter === v && sb.traad && spFremme(sb.traad.beskeder, v, (b) => !b.gruppe)) { sb.spmVenter = null; tegnSpm(); }
+    setTimeout(() => { if (sb.spmVenter === v) { sb.spmVenter = null; tegnSpm(); } }, 5000);
+  } catch (err) {
+    if (sb.spmVenter === v) sb.spmVenter = null;
+    // Kun tilbage i feltet, hvis man stadig står på opslaget og ikke har skrevet noget nyt imens
+    if (!sb.spmKladde[o.id]) sb.spmKladde[o.id] = tekst;
+    if (sb.o && sb.o.id === o.id) { tegnSpm(); fejl($('opMsg'), err); }
+  }
+}
+
+function tegnGrSpm() {
+  const sec = $('goSpm');
+  if (!mig || !sb.intern || $('vGrOpslag').classList.contains('hidden')) return;
+  const liste = (sb.grSpm || []).slice().sort((a, b) => (a.sidstGruppe === false ? 0 : 1) - (b.sidstGruppe === false ? 0 : 1) || (dato(b.sidst) || 0) - (dato(a.sidst) || 0));
+  if (!liste.length) { sec.classList.add('hidden'); sec.innerHTML = ''; return; }
+  spBevarFokus(() => {
+    sec.classList.remove('hidden'); sec.innerHTML = '';
+    const ub = liste.filter((x) => x.sidstGruppe === false && !sb.grSpmVenter[x.id]).length;
+    const top = K.el('div', { 'class': 'sb-top' });
+    const h = K.el('h2', null, t('spH'));
+    if (ub) h.append(' ', K.el('span', { 'class': 'sp-mark' }, t(ub === 1 ? 'spUbesvaret1' : 'spUbesvaretN', { n: ub })));
+    top.append(h, K.el('span', { 'class': 'sb-l' }, t('spKunGruppen')));
+    sec.append(top);
+    liste.forEach((x) => {
+      const r = K.el('div', { 'class': 'sb-kand' });
+      r.append(avatar(x.id, x.navn));
+      const midt = K.el('div', { style: 'flex:1;min-width:0' });
+      midt.append(K.el('div', { 'class': 'navn' }, x.navn));
+      const b = x.beskeder || [];
+      const ubesvaret = x.sidstGruppe === false && !sb.grSpmVenter[x.id];
+      const aaben = ubesvaret || sb.grSpmAabne.has(x.id) || !!sb.grSpmVenter[x.id];
+      if (!ubesvaret) {
+        const sidstSvar = b.slice().reverse().find((y) => y.gruppe);
+        midt.append(K.el('div', { 'class': 'tid' }, [dato(x.sidst) ? dagOverskrift(dato(x.sidst)) : '', t('spBeskeder', { n: b.length }), sidstSvar ? t('spBesvaretAf', { navn: sidstSvar.navn }) : ''].filter(Boolean).join(' · ')));
+        const k = K.el('button', { type: 'button', id: 'goSpmVis-' + x.id, 'class': 'ghost small', 'aria-expanded': String(aaben), style: 'margin-top:6px' }, t(aaben ? 'spSkjul' : 'spVis'));
+        k.addEventListener('click', () => { if (sb.grSpmAabne.has(x.id)) sb.grSpmAabne.delete(x.id); else sb.grSpmAabne.add(x.id); tegnGrSpm(); });
+        midt.append(k);
+      }
+      if (aaben) {
+        midt.append(spBobler(b, false, sb.grSpmVenter[x.id] ? Object.assign({ gruppe: true }, sb.grSpmVenter[x.id]) : null));
+        midt.append(spSkriv('goSpmTekst-' + x.id, t('spSvarNavn', { navn: (b.find((y) => !y.gruppe) || {}).navn || initialer(x.navn) }), sb.grKladde[sb.intern.id + '/' + x.id], (v) => { sb.grKladde[sb.intern.id + '/' + x.id] = v; }, (v) => spSvar(x, v)));
+      }
+      r.append(midt); sec.append(r);
+    });
+  });
+}
+async function spSvar(x, tekst) {
+  const o = sb.intern; if (!o || sb.grSpmVenter[x.id]) return;
+  const v = { tekst, venter: true, n: (x.beskeder || []).length + 1 };
+  const k = o.id + '/' + x.id;
+  sb.grSpmVenter[x.id] = v; sb.grKladde[k] = ''; sb.grSpmAabne.add(x.id); K.besked($('goMsg'), ''); tegnGrSpm();
+  try {
+    await K.motor('boers', 'svarSpoerg', { oid: o.id, pid: x.id, tekst }, K.nyId());
+    const nu = (sb.grSpm || []).find((y) => y.id === x.id);
+    if (sb.grSpmVenter[x.id] === v && nu && spFremme(nu.beskeder, v, (b) => b.gruppe)) { delete sb.grSpmVenter[x.id]; tegnGrSpm(); }
+    setTimeout(() => { if (sb.grSpmVenter[x.id] === v) { delete sb.grSpmVenter[x.id]; tegnGrSpm(); } }, 5000);
+  } catch (err) {
+    if (sb.grSpmVenter[x.id] === v) delete sb.grSpmVenter[x.id];
+    if (!sb.grKladde[k]) sb.grKladde[k] = tekst;
+    if (sb.intern && sb.intern.id === o.id) { tegnGrSpm(); fejl($('goMsg'), err); }
+  }
 }
 </script>
 </body>
