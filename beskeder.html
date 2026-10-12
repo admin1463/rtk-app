@@ -61,7 +61,7 @@
           <div id="pushIos" class="hidden">
             <div class="advarsel" role="note" data-t="pushIosH">På iPhone skal Mit RTK først ligge på hjemmeskærmen.</div>
             <ol class="push-trin">
-              <li data-t="pushIos1">Tryk på Del-knappen (firkanten med pilen op) nederst i Safari.</li>
+              <li id="pushIos1" data-t="pushIos1">Tryk på Del-knappen (firkanten med pilen op) nederst i Safari.</li>
               <li data-t="pushIos2">Vælg Føj til hjemmeskærm, og tryk Tilføj.</li>
               <li data-t="pushIos3">Åbn Mit RTK fra hjemmeskærmen, log ind, og kom tilbage hertil.</li>
               <li data-t="pushIos4">Tryk Slå notifikationer til, og svar Tillad.</li>
@@ -77,6 +77,18 @@
           </div>
           <p id="pushAndre" class="hint hidden"></p>
           <div id="pushMsg" class="msg" aria-live="polite"></div>
+        </section>
+        <section class="afsnit hidden" id="valgDel">
+          <h2 data-t="valgH">Hvad vil du have besked om?</h2>
+          <p class="hint" style="margin-top:4px" data-t="valgTekst">Alt står også på siden med en markering, så du ikke går glip af noget, selvom du slår en besked fra.</p>
+          <h3 data-t="valgGrupper">Mine grupper</h3>
+          <div id="valgGrupper"></div>
+          <h3 data-t="valgPaamindH">Påmindelse før et spil</h3>
+          <p class="hint" style="margin-top:0" data-t="valgPaamindTekst">Kun når du har en plads. Vælg højst to, eller ingen.</p>
+          <div class="chips" id="paamindChips" role="group" data-t-aria="valgPaamindH" aria-label="Påmindelse før et spil"></div>
+          <h3 data-t="valgRo">Ro</h3>
+          <div id="valgRo"></div>
+          <div id="valgMsg" class="msg" aria-live="polite"></div>
         </section>
         <section class="afsnit">
           <h2 id="omDetH" data-t="omDet">Om det, du er med i</h2>
@@ -202,7 +214,7 @@ window.TEKSTER = {
     erForaelder: 'Er du forælder?', tilBoernKort: 'Gå til Mine børn', tilBoern: 'Gå til Mine børn',
     kunForaelderH: 'Du er logget ind som forælder', kunForaelderTekst: 'Her bestemmer du over beskederne om dine børn.',
     omDet: 'Om det, du er med i', omDetTekst: 'Fx at din ketsjer er klar, eller at en kamp er aflyst. De kan ikke slås fra, men du vælger, hvordan de kommer.',
-    kPush: 'Notifikation', kPushTekst: 'Med det samme på telefonen. Gratis for klubben.', snart: 'Kommer snart. Indtil da får du sms.',
+    kPush: 'Notifikation', kPushTekst: 'Med det samme på telefonen. Kræver, at notifikationer er slået til øverst. Ellers får du sms.', snart: 'Kommer snart. Indtil da får du sms.',
     kSms: 'Sms', kSmsTekst: 'Til dit mobilnummer.', kMailNavn: 'Mail', kMailTekst: 'Til din mail.',
     nyheder: 'Nyt fra pro shoppen og partnerne', nyhederTekst: 'Tilbud, nye varer og nyt fra Babolat og Racketlife. Aldrig som sms.',
     nyhTil: 'Til. Du kan slå det fra igen når som helst.', nyhFra: 'Fra. Slå til, hvis du vil have nyt fra pro shoppen.',
@@ -235,7 +247,19 @@ window.TEKSTER = {
     pushSlaar: 'Slår notifikationer til …', pushOk: 'Notifikationer er slået til. Tryk Send en prøve for at se, hvordan de ser ud.',
     pushAfvist: 'Notifikationer er ikke slået til. Du skal svare Tillad, når telefonen spørger.', pushFejl: 'Det lykkedes ikke at slå notifikationer til. Prøv igen om lidt.',
     pushSender: 'Sender …', pushSendt: 'Prøven er sendt. Den kommer om et øjeblik.', pushFraOk: 'Notifikationer er slået fra på denne enhed.',
-    pushAndre: 'Slået til på {n} andre enheder: {liste}.', pushAnden: 'Slået til på en anden enhed: {liste}.'
+    pushAndre: 'Slået til på {n} andre enheder: {liste}.', pushAnden: 'Slået til på en anden enhed: {liste}.',
+    valgH: 'Hvad vil du have besked om?', valgTekst: 'Alt står også på siden med en markering, så du ikke går glip af noget, selvom du slår en besked fra.',
+    valgGrupper: 'Mine grupper', valgPaamindH: 'Påmindelse før et spil', valgPaamindTekst: 'Kun når du har en plads. Vælg højst to, eller ingen.', valgRo: 'Ro',
+    vLedig: 'Ledig plads og rykket op', vLedigT: 'Når du rykker op fra ventelisten og får en plads.',
+    vAflyst: 'Aflyste spil', vAflystT: 'Når et spil, du har sagt ja eller måske til, bliver aflyst.',
+    vNyeSpil: 'Nye spil', vNyeSpilT: 'Når nogen lægger et spil eller arrangement ud i en af dine grupper.',
+    vChat: 'Nye beskeder i chatten', vChatT: 'Højst én besked hvert kvarter pr. gruppe.', vChatGrupper: 'Pr. gruppe:',
+    vAfbud: 'Afbud på spil, jeg har lagt ud', vAfbudT: 'Når en med en plads melder fra, så du kan finde en ny.',
+    vMailAfbud: 'Også på mail', vMailAfbudT: 'Afbud er det eneste fra grupperne, der kan komme på mail.',
+    vStille: 'Stille om natten', vStilleT: 'Ingen notifikationer kl. 22 til 7. De venter til om morgenen. Driftsbeskeder kommer altid.',
+    p12t: '12 timer før', pMorgen: 'Om morgenen', p2t: '2 timer før', p1t: '1 time før', pMorgenT: 'Kl. 8 samme dag. Er spillet før kl. 10, aftenen før kl. 20.',
+    hoejstTo: 'Du kan højst vælge to påmindelser.',
+    pushIos1Chrome: 'Tryk på Del-ikonet (firkanten med pilen op) i Chrome.'
   },
   en: {
     titel: 'Messages · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
@@ -247,7 +271,7 @@ window.TEKSTER = {
     erForaelder: 'Are you a parent?', tilBoernKort: 'Go to My children', tilBoern: 'Go to My children',
     kunForaelderH: 'You are logged in as a parent', kunForaelderTekst: 'This is where you decide about messages concerning your children.',
     omDet: 'About things you take part in', omDetTekst: 'For example that your racket is ready or that a match is cancelled. They cannot be turned off, but you choose how they reach you.',
-    kPush: 'Notification', kPushTekst: 'Straight to your phone. Free for the club.', snart: 'Coming soon. Until then you get a text message.',
+    kPush: 'Notification', kPushTekst: 'Straight to your phone. Notifications must be turned on at the top. Otherwise you get a text message.', snart: 'Coming soon. Until then you get a text message.',
     kSms: 'Text message', kSmsTekst: 'To your mobile number.', kMailNavn: 'Email', kMailTekst: 'To your email address.',
     nyheder: 'News from the pro shop and partners', nyhederTekst: 'Offers, new products and news from Babolat and Racketlife. Never by text message.',
     nyhTil: 'On. You can turn it off again at any time.', nyhFra: 'Off. Turn it on if you want news from the pro shop.',
@@ -280,7 +304,19 @@ window.TEKSTER = {
     pushSlaar: 'Turning on notifications …', pushOk: 'Notifications are on. Tap Send a test to see what they look like.',
     pushAfvist: 'Notifications are not on. You need to answer Allow when your phone asks.', pushFejl: 'Notifications could not be turned on. Please try again in a moment.',
     pushSender: 'Sending …', pushSendt: 'The test has been sent. It will arrive in a moment.', pushFraOk: 'Notifications are turned off on this device.',
-    pushAndre: 'Turned on on {n} other devices: {liste}.', pushAnden: 'Turned on on one other device: {liste}.'
+    pushAndre: 'Turned on on {n} other devices: {liste}.', pushAnden: 'Turned on on one other device: {liste}.',
+    valgH: 'What would you like to be told about?', valgTekst: 'Everything is also marked on the page, so you will not miss anything if you turn a message off.',
+    valgGrupper: 'My groups', valgPaamindH: 'Reminder before a game', valgPaamindTekst: 'Only when you have a spot. Choose up to two, or none.', valgRo: 'Quiet',
+    vLedig: 'Free spot and moved up', vLedigT: 'When you move up from the waiting list and get a spot.',
+    vAflyst: 'Cancelled games', vAflystT: 'When a game you said yes or maybe to is cancelled.',
+    vNyeSpil: 'New games', vNyeSpilT: 'When someone posts a game or event in one of your groups.',
+    vChat: 'New chat messages', vChatT: 'At most one notification every 15 minutes per group.', vChatGrupper: 'Per group:',
+    vAfbud: 'Drop-outs from games I posted', vAfbudT: 'When someone with a spot drops out, so you can find someone new.',
+    vMailAfbud: 'Also by email', vMailAfbudT: 'Drop-outs are the only thing from groups that can come by email.',
+    vStille: 'Quiet at night', vStilleT: 'No notifications from 10 pm to 7 am. They wait until morning. Club notices always come.',
+    p12t: '12 hours before', pMorgen: 'In the morning', p2t: '2 hours before', p1t: '1 hour before', pMorgenT: '8 am the same day. If the game is before 10 am, 8 pm the evening before.',
+    hoejstTo: 'You can choose up to two reminders.',
+    pushIos1Chrome: 'Tap the Share icon (the square with the arrow) in Chrome.'
   }
 };
 </script>
@@ -312,7 +348,7 @@ async function hent() {
 function kanalKort() {
   const fs = $('kanaler');
   fs.innerHTML = '';
-  [['push', 'kPush', 'kPushTekst', true], ['sms', 'kSms', 'kSmsTekst', false], ['mail', 'kMailNavn', 'kMailTekst', false]].forEach(([id, navn, tekst, snart]) => {
+  [['push', 'kPush', 'kPushTekst', false], ['sms', 'kSms', 'kSmsTekst', false], ['mail', 'kMailNavn', 'kMailTekst', false]].forEach(([id, navn, tekst, snart]) => {
     const valgt = data.kanal === id;
     const l = K.el('label', { 'class': (valgt ? 'valgt' : '') + (snart ? ' slaaet-fra' : '') });
     const r = K.el('input', { type: 'radio', name: 'kanal', value: id });
@@ -357,7 +393,11 @@ async function pushFirebase() {
 function visPush() {
   const env = pushMiljoe();
   ['pushIos', 'pushKanIkke', 'pushNej', 'pushFra', 'pushTil', 'pushAndre'].forEach((id) => $(id).classList.add('hidden'));
-  if (env.ios && !env.hjem) { $('pushIos').classList.remove('hidden'); return; }
+  if (env.ios && !env.hjem) {
+    const n = /CriOS/.test(navigator.userAgent) ? 'pushIos1Chrome' : 'pushIos1';
+    $('pushIos1').setAttribute('data-t', n); $('pushIos1').textContent = t(n);
+    $('pushIos').classList.remove('hidden'); visValg(); return;
+  }
   if (!env.kan) { $('pushKanIkke').classList.remove('hidden'); return; }
   if (Notification.permission === 'denied') { $('pushNej').classList.remove('hidden'); return; }
   const enheder = (pushData && pushData.enheder) || [];
@@ -367,6 +407,7 @@ function visPush() {
     $('pushHvor').textContent = t('pushHvor', { enhed: denne.enhed, tid: visTid(denne.oprettet) });
     $('pushTil').classList.remove('hidden');
   } else $('pushFra').classList.remove('hidden');
+  visValg();
   const andre = enheder.filter((e) => !denne || e.id !== denne.id);
   if (andre.length) {
     $('pushAndre').textContent = t(andre.length === 1 ? 'pushAnden' : 'pushAndre', { n: andre.length, liste: andre.map((e) => e.enhed).join(', ') });
@@ -378,6 +419,83 @@ function visTid(s) {
   if (!m) return '';
   const d = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
   return d.toLocaleDateString(document.documentElement.lang === 'en' ? 'en-GB' : 'da-DK', { day: 'numeric', month: 'short' }) + ' ' + m[4] + '.' + m[5];
+}
+// ---------- Hvad vil du have besked om? (push trin 2). Kontakterne skifter med det samme og gemmer bagefter.
+const VALG_GRUPPER = [['ledig', 'vLedig', 'vLedigT'], ['aflyst', 'vAflyst', 'vAflystT'], ['nyeSpil', 'vNyeSpil', 'vNyeSpilT'], ['chat', 'vChat', 'vChatT'], ['afbud', 'vAfbud', 'vAfbudT']];
+const PAAMIND = [['morgen', 'pMorgen'], ['12t', 'p12t'], ['2t', 'p2t'], ['1t', 'p1t']];
+let valgVenter = null, valgGemmer = false;
+function vipRaekke(noegle, navn, tekst, til, paa) {
+  const r = K.el('div', { 'class': 'linje', style: 'padding:10px 0;border-top:1px solid var(--soft)' });
+  const tx = K.el('div');
+  const id = 'v-' + noegle;
+  tx.append(K.el('b', { id: id, style: 'display:block' }, t(navn)), K.el('span', { 'class': 'smaa', style: 'display:block;font-size:14px;color:var(--muted)' }, t(tekst)));
+  const v = K.el('button', { type: 'button', role: 'switch', 'class': 'vippe', 'aria-checked': String(!!til), 'aria-labelledby': id, 'data-valg': noegle });
+  v.addEventListener('click', () => { const ny = v.getAttribute('aria-checked') !== 'true'; v.setAttribute('aria-checked', String(ny)); paa(ny); });
+  r.append(tx, v);
+  return r;
+}
+function visValg() {
+  const harPush = !!(pushData && (pushData.enheder || []).length);
+  $('valgDel').classList.toggle('hidden', !harPush);
+  if (!harPush || valgGemmer) return;
+  const v = pushData.valg || {};
+  const g = $('valgGrupper'); g.innerHTML = '';
+  VALG_GRUPPER.forEach(([k, n, tx]) => {
+    g.append(vipRaekke(k, n, tx, v[k] !== false, (ny) => gemPushValg({ [k]: ny })));
+    if (k === 'chat' && v.chat !== false && (pushData.grupper || []).length) {
+      const pr = K.el('div', { style: 'margin:0 0 6px;padding:8px 12px;background:var(--soft);border-radius:6px' });
+      pr.append(K.el('span', { 'class': 'smaa', style: 'font-size:14px;color:var(--muted)' }, t('vChatGrupper')));
+      pushData.grupper.forEach((gr) => {
+        const fra = (v.chatFra || []).indexOf(gr.id) >= 0;
+        pr.append(vipRaekke('chat-' + gr.id, '', '', !fra, (ny) => {
+          const liste = (pushData.valg.chatFra || []).filter((x) => x !== gr.id);
+          if (!ny) liste.push(gr.id);
+          gemPushValg({ chatFra: liste });
+        }));
+        const rk = pr.lastChild; rk.querySelector('b').textContent = gr.navn; rk.querySelector('.smaa').remove();
+      });
+      g.append(pr);
+    }
+    if (k === 'afbud' && v.afbud !== false) {
+      const m = vipRaekke('mailAfbud', 'vMailAfbud', 'vMailAfbudT', v.mailAfbud !== false, (ny) => gemPushValg({ mailAfbud: ny }));
+      m.style.paddingLeft = '16px'; g.append(m);
+    }
+  });
+  const c = $('paamindChips'); c.innerHTML = '';
+  const valgte = v.paamind || ['morgen'];
+  PAAMIND.forEach(([k, n]) => {
+    const b = K.el('button', { type: 'button', 'aria-pressed': String(valgte.indexOf(k) >= 0), 'data-p': k, title: k === 'morgen' ? t('pMorgenT') : '' }, t(n));
+    b.addEventListener('click', () => {
+      const nu = [...c.querySelectorAll('button[aria-pressed="true"]')].map((x) => x.dataset.p);
+      const til = b.getAttribute('aria-pressed') !== 'true';
+      if (til && nu.length >= 2) { K.besked($('valgMsg'), t('hoejstTo'), 'err'); return; }
+      b.setAttribute('aria-pressed', String(til));
+      gemPushValg({ paamind: [...c.querySelectorAll('button[aria-pressed="true"]')].map((x) => x.dataset.p) });
+    });
+    c.append(b);
+  });
+  const ro = $('valgRo'); ro.innerHTML = '';
+  ro.append(vipRaekke('stille', 'vStille', 'vStilleT', v.stille !== false, (ny) => gemPushValg({ stille: ny })));
+}
+/** Gem ét eller flere valg. Kommer der flere tryk, mens der gemmes, samles de og gemmes bagefter. */
+async function gemPushValg(aendring) {
+  pushData.valg = Object.assign({}, pushData.valg, aendring);
+  valgVenter = Object.assign({}, valgVenter || {}, aendring);
+  if (valgGemmer) return;
+  valgGemmer = true;
+  K.besked($('valgMsg'), t('gemmer'));
+  try {
+    while (valgVenter) {
+      const send = valgVenter; valgVenter = null;
+      const r = await K.motor('push', 'gemValg', { valg: send }, K.nyId());
+      if (!valgVenter) pushData.valg = r.valg;
+    }
+    valgGemmer = false; visValg(); K.besked($('valgMsg'), t('gemt'), 'okm');
+  } catch (err) {
+    valgGemmer = false; valgVenter = null;
+    try { pushData = await K.motor('push', 'status'); } catch (e) {}
+    visValg(); K.besked($('valgMsg'), K.fejlTekst(err.message), 'err');
+  }
 }
 async function hentPush() {
   try { pushData = await K.motor('push', 'status'); } catch (err) { pushData = null; }
@@ -398,6 +516,7 @@ $('pushTilKnap').addEventListener('click', async () => {
     pushGem(r.id);
     pushData = Object.assign({}, pushData || {}, { enheder: r.enheder });
     visPush();
+    hentPush();
     K.besked($('pushMsg'), t('pushOk'), 'okm');
   } catch (err) {
     console.warn('push', err);

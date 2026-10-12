@@ -793,6 +793,12 @@ $('tekst').addEventListener('input', vokse);
 $('tekst').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && window.matchMedia('(hover:hover)').matches) { e.preventDefault(); $('skriv').requestSubmit(); }
 });
+// Notifikationer (push trin 2): når siden har gemt et nyt spil, en aflysning eller en chatbesked, beder den motoren
+// om at give de andre besked. Motoren tjekker selv i databasen, at det er sket. Siden venter ikke på svaret.
+function varsl(gid, hvad, id, ekstra) {
+  K.motor('grupper', 'varsl', Object.assign({ gid, hvad, id }, ekstra || {}), K.nyId()).catch((err) => console.warn('varsl', err));
+}
+
 $('skriv').addEventListener('submit', async (e) => {
   e.preventDefault();
   const tekst = $('tekst').value.trim();
@@ -805,7 +811,7 @@ $('skriv').addEventListener('submit', async (e) => {
   K.besked($('chatMsg'), '');
   try {
     if (ret) await fs.updateDoc(fs.doc(db, 'grupper', gid, 'beskeder', ret), { tekst, rettet: fs.serverTimestamp() });
-    else { foersteChat = true; await fs.addDoc(fs.collection(db, 'grupper', gid, 'beskeder'), { fra: mig.uid, tekst, tid: fs.serverTimestamp() }); }
+    else { foersteChat = true; const ny = await fs.addDoc(fs.collection(db, 'grupper', gid, 'beskeder'), { fra: mig.uid, tekst, tid: fs.serverTimestamp() }); varsl(gid, 'chat', ny.id); }
   } catch (err) {
     $('tekst').value = ret ? '' : tekst; vokse();
     if (ret && err && err.code === 'permission-denied') K.besked($('chatMsg'), t('forSentRet'), 'err'); else fejl($('chatMsg'), err);
@@ -980,11 +986,13 @@ $('vNytSpil').addEventListener('submit', async (e) => {
         b.set(r, en);
       });
       await b.commit();
+      varsl(gid, 'spil', ref.id);
       if ($('nsMed').checked) await K.motor('grupper', 'tilmeldSerie', { gid, serie, svar: 'ja' }, K.nyId());
       $('nsGentag').checked = false; $('nsGentagDel').classList.add('hidden'); $('nsSlutDato').value = ''; $('nsGange').textContent = '';
     } else {
       ref = fs.doc(fs.collection(db, 'grupper', gid, 'spil'));
       await fs.setDoc(ref, data);
+      varsl(gid, 'spil', ref.id);
       if ($('nsMed').checked) await K.motor('grupper', 'tilmeld', { gid, sid: ref.id, svar: 'ja' }, K.nyId());
     }
     ['nsTitel', 'nsSted', 'nsPris', 'nsBeskrivelse'].forEach((id) => { $(id).value = ''; });
@@ -1202,6 +1210,7 @@ $('spStop').addEventListener('click', async () => {
     const b = FB.fs.writeBatch(FB.db);
     rest.forEach((x) => b.update(FB.fs.doc(FB.db, 'grupper', tilstand.gruppe.id, 'spil', x.id), { aflyst: true }));
     await b.commit();
+    if (rest.length) { const foerste = rest.slice().sort((a, b) => dato(a.start) - dato(b.start))[0]; varsl(tilstand.gruppe.id, 'aflyst', foerste.id, { antal: rest.length }); }
     K.besked($('spAdminMsg'), t('serieStoppet', { n: rest.length }), 'okm');
   } catch (err) { fejl($('spAdminMsg'), err); }
 });
@@ -1232,7 +1241,7 @@ $('spAflys').addEventListener('click', async () => {
   if (s.aflyst) { await opdaterSpil({ aflyst: false }, $('spAdminMsg')); return; }
   if (!aflysKlar) { aflysKlar = true; $('spAflys').textContent = t('aflysIgen'); setTimeout(() => { aflysKlar = false; if (tilstand.spilEt) tegnSpil(); }, 4000); return; }
   aflysKlar = false;
-  await opdaterSpil({ aflyst: true }, $('spAdminMsg'));
+  if (await opdaterSpil({ aflyst: true }, $('spAdminMsg'))) varsl(tilstand.gruppe.id, 'aflyst', s.id);
 });
 
 // Kalender: en fil med påmindelse 1 time før.
