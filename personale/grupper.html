@@ -104,7 +104,7 @@
 
       <section class="afsnit hidden" id="arkivAfsnit">
         <h2>Arkiverede grupper</h2>
-        <p class="hint" style="margin-top:0">En gruppe arkiveres, når den sidste forlader den.</p>
+        <p class="hint" style="margin-top:0">En gruppe arkiveres, når den sidste forlader den, eller når en gruppeadministrator sletter den. Fold gruppen ud for at genskabe den.</p>
         <div id="arkiv"></div>
       </section>
 
@@ -200,7 +200,9 @@ function ugeGraf(sp) {
 function kort(g) {
   const n = g.medlemmer.length, t = g.spil;
   const aktiv = g.arkiveret ? '' : (t.spil30 ? ' · ' + spilTekst(t.spil30) + ' de sidste 30 dage' : (t.seneste ? ' · seneste spil ' + kortDato(t.seneste) : ' · ingen spil endnu'));
-  const info = n + (n === 1 ? ' medlem' : ' medlemmer') + (g.arkiveret ? ' · arkiveret ' + dato(g.arkiveret) : aktiv);
+  const info = g.arkiveret
+    ? (g.slettet ? 'Slettet af ' + esc(g.slettet.navn) + ' ' + esc(tidTekst(g.slettet.tid)) : 'Arkiveret ' + dato(g.arkiveret) + ' (det sidste medlem gik)') + (g.foer && g.foer.length ? ' · ' + g.foer.length + (g.foer.length === 1 ? ' medlem' : ' medlemmer') + ' før' : '')
+    : n + (n === 1 ? ' medlem' : ' medlemmer') + aktiv;
   const tal = [['Spil, 30 dage', t.spil30], ['Spil, 90 dage', t.spil90], ['Spil i alt', t.spilIAlt], ['Pladser brugt, 30 dage', t.spillere30],
     ['Kommende spil', t.kommende + (t.fast ? ' (fast spilletid)' : '')], ['Aflyste', t.aflyste], ['Arrangementer', t.arrangementer],
     ['Seneste spil', t.seneste ? dato(t.seneste) : '–'], ['Næste spil', t.naeste ? dato(t.naeste) : '–'], ['Oprettet', dato(g.oprettet)]]
@@ -212,7 +214,23 @@ function kort(g) {
     '<div class="gk-krop">' + (g.beskrivelse ? '<p>' + esc(g.beskrivelse) + '</p>' : '<p class="hint" style="margin:0 0 10px">Ingen beskrivelse.</p>') +
     '<p class="hint" style="margin:0 0 8px">Nye tilføjes af ' + (g.invitation === 'admin' ? 'gruppeadministratorer og dem, der må invitere' : 'alle i gruppen') + '.</p>' +
     '<h3 style="margin-top:14px">Spil</h3><div class="gk-tal">' + tal + '</div>' +
-    '<h3 style="margin-top:14px">Medlemmer</h3>' + med + '</div></details>';
+    (g.arkiveret ? genskabDel(g) : '<h3 style="margin-top:14px">Medlemmer</h3>' + med) + '</div></details>';
+}
+// Slettede og arkiverede grupper kan genskabes med medlemmerne fra før (Lars 13. oktober kl. 06.52)
+/** 2026-10-13 07:15 bliver til 13. okt. 2026 kl. 07.15 */
+function tidTekst(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/.exec(String(s || ''));
+  if (!m) return String(s || '');
+  return new Date(+m[1], m[2] - 1, +m[3]).toLocaleDateString('da-DK', { day: 'numeric', month: 'short', year: 'numeric' }) + ' kl. ' + m[4] + '.' + m[5];
+}
+function genskabDel(g) {
+  const foer = g.foer || [];
+  if (!foer.length) return '<p class="hint" style="margin-top:14px">Gruppen kan ikke genskabes automatisk, fordi den blev arkiveret, før medlemmerne blev gemt.</p>';
+  const med = foer.map((m) => '<div class="gk-med"><span class="gk-av" aria-hidden="true">' + esc(m.initialer || m.navn.charAt(0)) + '</span><span>' + esc(m.navn) + '</span><span class="gk-rolle">' + esc([ROLLE[m.rolle] || '', m.fjernet ? 'fjernet ' + tidTekst(m.fjernet) : ''].filter(Boolean).join(' · ')) + '</span></div>').join('');
+  return '<h3 style="margin-top:14px">Medlemmer før</h3>' + med +
+    '<div class="knapper" style="margin-top:12px"><button type="button" class="ok" data-genskab="' + esc(g.id) + '">Genskab gruppen</button></div>' +
+    '<p class="hint" style="margin:8px 0 0">Gruppen åbner igen med medlemmerne og rollerne fra før. Også dem, en gruppeadministrator fjernede det sidste døgn før, kommer med. Alle får besked, og chatten får linjen "Gruppen er genskabt af klubben".</p>' +
+    '<div class="msg" aria-live="polite" data-genskab-msg="' + esc(g.id) + '"></div>';
 }
 
 function visListe() {
@@ -276,6 +294,18 @@ async function hentData() {
   catch (err) { besked($('hentMsg'), err.message, 'err'); }
 }
 $('opdater').addEventListener('click', hentData);
+// Genskab: to tryk
+let genskabKlar = null;
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest && e.target.closest('button[data-genskab]');
+  if (!b) return;
+  const gid = b.dataset.genskab;
+  const msg = document.querySelector('[data-genskab-msg="' + gid + '"]');
+  if (genskabKlar !== gid) { genskabKlar = gid; b.textContent = 'Tryk igen for at genskabe'; setTimeout(() => { if (genskabKlar === gid) { genskabKlar = null; b.textContent = 'Genskab gruppen'; } }, 5000); return; }
+  genskabKlar = null; b.disabled = true; besked(msg, 'Genskaber …');
+  try { const r = await motor('grupper', 'genskab', { gid }); besked(msg, 'Gruppen er genskabt med ' + r.medlemmer + ' medlemmer. De har fået besked.' + (r.udeladt && r.udeladt.length ? ' Kom ikke med, fordi de ikke længere kan være med i grupper: ' + r.udeladt.join(', ') + '.' : '') + ' Dem, der blev fjernet, har mistet deres plads på kommende spil og må tilmelde sig igen.', 'okm'); setTimeout(hentData, 1500); }
+  catch (err) { b.disabled = false; b.textContent = 'Genskab gruppen'; besked(msg, err.message, 'err'); }
+});
 
 function start() {
   $('omraade').classList.remove('hidden');
