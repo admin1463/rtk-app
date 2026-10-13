@@ -48,8 +48,9 @@
 
       <!-- Mine grupper -->
       <div id="vListe" class="hidden">
-        <div class="gr-top"><img src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><span class="gr-top-kick" data-t="grTopKick">Spil, chat og spillerbørs</span><h1 class="lille" data-t="mineGrupper">Grupper</h1><button type="button" id="nyKnap" class="ok" data-t="nyGruppe">+ Ny gruppe</button></div>
+        <div class="gr-top"><img src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><span class="gr-top-kick" data-t="grTopKick">Spil, chat og spillerbørs</span><h1 class="lille" data-t="mineGrupper">Grupper</h1><a href="#profil" class="gr-mig" data-t-aria="minProfilAria" aria-label="Min profil"><span class="gr-mig-b" aria-hidden="true"></span><span data-t="minProfil">Min profil</span></a></div>
         <nav id="navListe" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
+        <div class="gr-hoved gr-liste-hoved"><h2 data-t="sbMineGrupper">Mine grupper</h2><button type="button" id="nyKnap" class="ok small" data-t="nyGruppe">+ Ny gruppe</button></div>
         <div id="naeste" class="gr-naeste hidden"></div>
         <div id="filtre" class="chips gr-filtre" role="group" data-t-aria="filtrer" aria-label="Vis grupper"></div>
         <div id="slettede" aria-live="polite"></div>
@@ -210,10 +211,10 @@
 
       <!-- Spillerbørsen: tavlen -->
       <div id="vBoers" class="hidden">
-        <div class="gr-top"><img src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><span class="gr-top-kick" data-t="grTopKick">Spil, chat og spillerbørs</span><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
+        <div class="gr-top"><img src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><span class="gr-top-kick" data-t="grTopKick">Spil, chat og spillerbørs</span><h1 class="lille" data-t="mineGrupper">Grupper</h1><a href="#profil" class="gr-mig" data-t-aria="minProfilAria" aria-label="Min profil"><span class="gr-mig-b" aria-hidden="true"></span><span data-t="minProfil">Min profil</span></a></div>
         <nav id="navBoers" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
         <p class="hint sb-intro" data-t="sbIntro">Grupper, der mangler en spiller til et spil eller søger en fast spiller. Tilmeld dig, hvis du har lyst. Kun gruppen ser, at du har tilmeldt dig.</p>
-        <div class="gr-knapper sb-egne"><a href="#soeger" class="gr-knap ok" id="sbSoegerKnap" data-t="egSoegerKnap">+ Jeg søger en gruppe eller makker</a><a href="#profil" class="gr-knap ghost" id="sbProfilKnap" data-t="prMitKort">Mit profilkort</a></div>
+        <div class="gr-knapper sb-egne"><a href="#soeger" class="gr-knap ok" id="sbSoegerKnap" data-t="egSoegerKnap">+ Jeg søger en gruppe eller makker</a></div>
         <div id="sbMsg" class="msg" aria-live="polite"></div>
         <section id="sbMine" class="hidden sb-mine" aria-labelledby="sbMineH"><h2 id="sbMineH" class="gr-lille" data-t="sbDineSvar">Dine svar</h2><div id="sbMineListe"></div></section>
         <div id="sbFiltre" class="chips gr-filtre" role="group" data-t-aria="sbFiltrer" aria-label="Vis opslag"></div>
@@ -225,7 +226,7 @@
 
       <!-- Åbne grupper: Find en gruppe -->
       <div id="vFind" class="hidden">
-        <div class="gr-top"><img src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><span class="gr-top-kick" data-t="grTopKick">Spil, chat og spillerbørs</span><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
+        <div class="gr-top"><img src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><span class="gr-top-kick" data-t="grTopKick">Spil, chat og spillerbørs</span><h1 class="lille" data-t="mineGrupper">Grupper</h1><a href="#profil" class="gr-mig" data-t-aria="minProfilAria" aria-label="Min profil"><span class="gr-mig-b" aria-hidden="true"></span><span data-t="minProfil">Min profil</span></a></div>
         <nav id="navFind" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
         <p class="hint sb-intro" data-t="abIntro">Grupper, som alle i klubben kan se. Bed om at komme med, eller skriv til gruppeadministratorerne.</p>
         <div id="findMsg" class="msg" aria-live="polite"></div>
@@ -361,7 +362,7 @@
 
       <!-- Mit profilkort -->
       <div id="vProfil" class="hidden">
-        <a href="#boers" class="gr-tilbage" data-t="sbTilbage">&#8592; Spillerbørs</a>
+        <a href="#" class="gr-tilbage" id="prTilbage" data-t="tilbage">&#8592; Grupper</a>
         <h1 class="lille" data-t="prMitKort">Mit profilkort</h1>
         <div id="prTom" class="gr-tom hidden"><img src="billeder/tom-profil.jpg" alt="" width="1200" height="450" loading="lazy"><div class="gr-tom-t"><b data-t="prTomH">Lav dit profilkort</b><p data-t="prTomT">Et billede, lidt om dig og dit niveau, så andre ved, hvem de spiller med.</p></div></div>
         <p class="hint" data-t="prIntro">Frivilligt. Andre voksne medlemmer ser kortet på dine opslag og i dine grupper. Navnet kommer fra klubbens medlemsliste.</p>
@@ -589,7 +590,7 @@ window.TEKSTER = {
     egSamtaler: 'Dem, der har skrevet til dig',
     egInvTil: 'Invitation til {navn}', egInvSkrev: '{navn} skriver: "{tekst}"', egInvFra: 'Fra {navn}.', egInvJa: 'Ja tak, jeg er med', egInvNej: 'Nej tak',
     egInvJaH: 'Du er med i gruppen', egInvNejH: 'Du har sagt nej tak.', egInvUdloeber: 'Gælder til {dato}', egInvJaMsg: 'Du er med i {navn}.', egInvNejMsg: 'Du har sagt nej tak til {navn}.',
-    prMitKort: 'Mit profilkort', prRet: 'Ret mit profilkort', prIntro: 'Frivilligt. Andre voksne medlemmer ser kortet på dine opslag og i dine grupper. Navnet kommer fra klubbens medlemsliste.',
+    prMitKort: 'Mit profilkort', prRet: 'Ret mit profilkort', prIntro: 'Frivilligt. Kortet bruges overalt i Mit RTK: i dine grupper, på spillerbørsen og i Find en gruppe. Andre voksne medlemmer kan se det. Navnet kommer fra klubbens medlemsliste.', minProfil: 'Min profil', minProfilAria: 'Min profil',
     prBilleder: 'Billeder', prBillederT: 'Et profilbillede og op til tre andre, fx fra banen eller med din familie. Tryk på et billede for at se det stort.',
     prSamtykke: 'Læg kun billeder op af andre, hvis de har sagt ja. Billeder af børn kun af dine egne.',
     prProfilbillede: 'Profilbillede', prEkstraN: 'Billede {n}', prFjern: 'Fjern', prFjernNavn: 'Fjern {navn}', prFjernet: 'Billedet er fjernet.',
@@ -769,7 +770,7 @@ window.TEKSTER = {
     egSamtaler: 'People who have written to you',
     egInvTil: 'Invitation to {navn}', egInvSkrev: '{navn} writes: "{tekst}"', egInvFra: 'From {navn}.', egInvJa: 'Yes please, I am in', egInvNej: 'No thanks',
     egInvJaH: 'You are in the group', egInvNejH: 'You said no thanks.', egInvUdloeber: 'Valid until {dato}', egInvJaMsg: 'You are in {navn}.', egInvNejMsg: 'You said no thanks to {navn}.',
-    prMitKort: 'My profile card', prRet: 'Edit my profile card', prIntro: 'Optional. Other adult members see the card on your posts and in your groups. The name comes from the club’s member list.',
+    prMitKort: 'My profile card', prRet: 'Edit my profile card', prIntro: 'Optional. The card is used throughout Mit RTK: in your groups, on the player exchange and in Find a group. Other adult members can see it. The name comes from the club’s member list.', minProfil: 'My profile', minProfilAria: 'My profile',
     prBilleder: 'Photos', prBillederT: 'A profile photo and up to three more, e.g. from the court or with your family. Tap a photo to see it full size.',
     prSamtykke: 'Only upload photos of other people if they have said yes. Photos of children only of your own.',
     prProfilbillede: 'Profile photo', prEkstraN: 'Photo {n}', prFjern: 'Remove', prFjernNavn: 'Remove {navn}', prFjernet: 'The photo has been removed.',
@@ -882,8 +883,18 @@ function radioer(fs, navn, valg, valgt, ved) {
 const valgtI = (fs) => (fs.querySelector('input:checked') || {}).value;
 
 // ---------- Firebase og login
+// Tidsmåling: grupper.html?tid=1 viser, hvor lang tid hvert trin tager efter, at siden er åbnet (ms)
+var TID = /[?&]tid=1/.test(location.search) ? [] : null;
+function tidMaal(navn) {
+  if (!TID) return;
+  TID.push(navn + ': ' + Math.round(performance.now()) + ' ms');
+  let b = document.getElementById('tidBoks');
+  if (!b) { b = document.createElement('pre'); b.id = 'tidBoks'; b.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:3000;background:#0B3D3A;color:#fff;font-size:12px;padding:8px 10px;border-radius:6px;margin:0;max-width:90vw;white-space:pre-wrap'; document.body.append(b); }
+  b.textContent = TID.join('\n');
+}
 async function hentFirebase() {
   if (FB) return FB;
+  tidMaal('henter Firebase');
   const base = 'https://www.gstatic.com/firebasejs/' + FB_VERSION + '/';
   const [app, auth, fs] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
   const emu = window.RTK_EMULATOR;
@@ -895,12 +906,14 @@ async function hentFirebase() {
     fs.connectFirestoreEmulator(db, '127.0.0.1', 8080);
   }
   FB = { app, auth, fs, au, db };
+  tidMaal('Firebase hentet');
   return FB;
 }
 
 async function logIndFirebase() {
   await hentFirebase();
   await FB.au.authStateReady();
+  tidMaal('login fundet');
   let u = FB.au.currentUser;
   let type = '';
   if (u) {
@@ -923,6 +936,7 @@ function visLogin() {
   stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } tilstand.slettede = []; sletGids.clear();
   stopBoers(); stopAaben();
   mig = null;
+  if (typeof rydMig === 'function') rydMig();
   for (const k in mineSvar) delete mineSvar[k];
   if (FB) FB.auth.signOut(FB.au).catch(() => {});
   try { localStorage.removeItem('rtk.gr.uid'); } catch (e) {}
@@ -937,8 +951,11 @@ async function start() {
   try {
     await logIndFirebase();
     K.besked($('hentMsg'), '');
-    if (mig.type !== 'medlem') { $('ikkeVoksen').classList.remove('hidden'); vis(''); return; }
-    K.motor('kerne', 'mig').then((p) => { $('hvem').textContent = t('kLoggetInd', { navn: p.navn }); }).catch(() => {});
+    tidMaal('login klar');
+    $('ikkeVoksen').classList.toggle('hidden', mig.type === 'medlem');
+    if (mig.type !== 'medlem') { vis(''); return; }
+    const uid0 = mig.uid;
+    K.motor('kerne', 'mig').then((p) => { $('hvem').textContent = t('kLoggetInd', { navn: p.navn }); if (typeof egMigNavn === 'function') egMigNavn(p.navn, uid0); }).catch(() => {});
     lytListe();
     lytBoers();
     lytAabenMine();
@@ -956,6 +973,8 @@ function rute() {
   stopLyt();
   if (typeof prLuk === 'function') prLuk();
   tilstand.retter = null; tilstand.aaben = null;
+  // Min profil i toppen, og fanen, som Mit profilkort fører tilbage til (egne_side.js)
+  if (typeof tegnMig === 'function') { if ((h[0] === '' || h[0] === 'boers' || h[0] === 'find') && !h[1]) prFra = h[0] ? '#' + h[0] : '#'; tegnMig(); }
   if (h[0] === 'ny') return visNy();
   if (h[0] === 'boers') return h[1] ? visOpslag(h[1]) : visBoers();
   if (h[0] === 'find') return h[1] ? visFindG(h[1]) : visFind();
@@ -988,6 +1007,7 @@ function lytListe() {
     if (!snap.metadata.fromCache) snap.docs.forEach((d) => { if (!d.data().arkiveret) sletGids.delete(d.id); });
     tilstand.grupper = snap.docs.map((d) => Object.assign({ id: d.id }, d.data())).filter((g) => !g.arkiveret && !sletGids.has(g.id));
     if (!$('vListe').classList.contains('hidden')) tegnListe();
+    tidMaal('grupper vist (' + tilstand.grupper.length + ')');
     hentDetaljer();
   }, (err) => {
     // Fx når man lige er fjernet fra en gruppe: lyt igen om lidt.
@@ -1022,6 +1042,7 @@ async function hentDetaljer() {
     } catch (e) { console.warn(e); }
   }));
   if (!$('vListe').classList.contains('hidden')) tegnListe();
+  tidMaal('næste spil og beskeder hentet');
   tegnFaner();
   if (!$('vBoers').classList.contains('hidden')) tegnTavle();
 }
@@ -3256,6 +3277,30 @@ Object.assign(window.MOTOR_EN, {
 var eg = { inv: {}, sam: {}, prof: {}, profVent: {}, o: null, venter: {}, invVenter: {}, kladde: {}, skrivAaben: false, invAaben: false, invGid: '', invStatus: {}, lukKlar: false, sletKlar: false, travl: false, ny: null };
 var egInvLyt = null, egSamLyt = null, egProfLyt = null;
 
+// ---------- Min profil i toppen af Grupper: profilbilledet eller initialer med et plus. Et tryk åbner Mit profilkort
+var prFra = '#', egMig = { uid: '', navn: '' };
+function egMigNavn(navn, uid) { if (!mig || (uid && uid !== mig.uid)) return; egMig = { uid: mig.uid, navn: navn || '' }; tegnMig(); }
+function rydMig() { egMig = { uid: '', navn: '' }; document.querySelectorAll('.gr-mig-b').forEach((b) => { b.classList.remove('foto'); b.classList.add('tom'); b.style.backgroundImage = ''; b.textContent = ''; }); }
+function tegnMig() {
+  if (!mig || !FB) return;
+  if (egMig.uid !== mig.uid) egMig = { uid: mig.uid, navn: '' };
+  const navn = egMig.navn || eg.mitNavn || '';
+  const ini = navn ? initialer(navn) : '';
+  const uid = mig.uid;
+  const tegn = (mini) => document.querySelectorAll('.gr-mig-b').forEach((b) => {
+    b.classList.toggle('foto', !!mini); b.classList.toggle('tom', !mini);
+    b.style.backgroundImage = mini ? 'url("' + mini + '")' : '';
+    b.textContent = mini ? '' : ini;
+  });
+  if (!eg.mini) eg.mini = {};
+  let c = eg.mini[mig.uid];
+  if (!c || Date.now() - c.tid > 300000) {
+    const { fs, db } = FB;
+    c = eg.mini[mig.uid] = { tid: Date.now(), p: fs.getDoc(fs.doc(db, 'profilMini', mig.uid)).then((d) => (d.exists() ? d.data().mini : '')).catch(() => '') };
+  }
+  c.p.then((mini) => { if (mig && mig.uid === uid) tegn(mini); });
+}
+
 function stopEgne() {
   if (!eg) return;
   [egInvLyt, egSamLyt, egProfLyt].forEach((f) => { if (f) { try { f(); } catch (e) {} } });
@@ -3850,6 +3895,9 @@ async function egLuk() {
 const PR_LILLE = { side: 320, tegn: 30000 }, PR_STOR = { side: 1280, tegn: 400000 }, PR_MINI = { side: 96, tegn: 8000 };
 function visProfil() {
   vis('vProfil');
+  $('prTilbage').setAttribute('href', prFra || '#');
+  $('prTilbage').setAttribute('data-t', prFra === '#boers' ? 'sbTilbage' : prFra === '#find' ? 'abTilbage' : 'tilbage');
+  $('prTilbage').textContent = t($('prTilbage').getAttribute('data-t'));
   lytEgne();
   eg.sletKlar = false;
   K.besked($('prMsg'), '');
@@ -3943,7 +3991,7 @@ async function prNyt(i, fil) {
     if (i === 0) {
       const mini = await prSkaler(fil, PR_MINI);
       await fs.setDoc(fs.doc(db, 'profilMini', mig.uid), { mini, opdateret: fs.serverTimestamp() });
-      if (eg.mini) delete eg.mini[mig.uid];
+      if (eg.mini) delete eg.mini[mig.uid]; tegnMig();
     }
     K.besked($('prMsg'), t('gemt'), 'okm');
   } catch (err) {
@@ -3961,7 +4009,7 @@ async function prFjern(i) {
     const { fs, db } = FB;
     // Den store udgave først: billedet skal være væk for andre, selv om resten skulle fejle
     await fs.deleteDoc(fs.doc(db, 'profilBilleder', mig.uid + '_' + i));
-    if (i === 0) { await fs.deleteDoc(fs.doc(db, 'profilMini', mig.uid)); if (eg.mini) delete eg.mini[mig.uid]; }
+    if (i === 0) { await fs.deleteDoc(fs.doc(db, 'profilMini', mig.uid)); if (eg.mini) delete eg.mini[mig.uid]; tegnMig(); }
     await prGem(eg.prVenter);
     K.besked($('prMsg'), t('prFjernet'), 'okm');
   } catch (err) { fejl($('prMsg'), err); }
@@ -3994,7 +4042,7 @@ $('prSlet').addEventListener('click', async () => {
   try {
     const { fs, db } = FB;
     await Promise.all([0, 1, 2, 3].map((i) => fs.deleteDoc(fs.doc(db, 'profilBilleder', mig.uid + '_' + i))).concat([fs.deleteDoc(fs.doc(db, 'profilMini', mig.uid))]));
-    if (eg.mini) delete eg.mini[mig.uid];
+    if (eg.mini) delete eg.mini[mig.uid]; tegnMig();
     await fs.deleteDoc(fs.doc(db, 'profiler', mig.uid));
     $('prTekst').value = ''; eg.prTekstRet = false;
     K.besked($('prMsg'), t('prSlettet'), 'okm');
