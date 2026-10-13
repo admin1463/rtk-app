@@ -899,7 +899,9 @@ async function hentFirebase() {
   const [app, auth, fs] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
   const emu = window.RTK_EMULATOR;
   const a = app.initializeApp(emu && emu.projekt ? Object.assign({}, CONFIG, { projectId: emu.projekt }) : CONFIG);
-  const au = auth.getAuth(a);
+  // Uden pop-up og omdirigering: getAuth() henter en skjult side fra firebaseapp.com og venter på den (målt 1,5 s på iPhone 13. oktober).
+  // Vi logger kun ind med en billet fra motoren. Samme lagring som før, så et husket login virker stadig.
+  const au = auth.initializeAuth(a, { persistence: [auth.indexedDBLocalPersistence, auth.browserLocalPersistence, auth.browserSessionPersistence] });
   const db = fs.getFirestore(a);
   if (window.RTK_EMULATOR) {
     auth.connectAuthEmulator(au, 'http://127.0.0.1:9099', { disableWarnings: true });
