@@ -4108,6 +4108,7 @@ function gbSaet(el, b) {
  */
 function gbVaelger(boks, valgt, ved, idPre) {
   if (boks.dataset.besk === '1') return;
+  boks.classList.add('gb-indre'); boks.gbVed = ved;
   const fokus = document.activeElement && boks.contains(document.activeElement) ? (document.activeElement.getAttribute('data-g') ? '[data-g="' + document.activeElement.getAttribute('data-g') + '"]' : (document.activeElement.id ? '#' + document.activeElement.id : '')) : '';
   boks.innerHTML = '';
   const nu = K.el('div', { 'class': 'gb-nu' });
@@ -4129,7 +4130,16 @@ function gbVaelger(boks, valgt, ved, idPre) {
   const knapper = K.el('div', { 'class': 'gb-knapper' });
   const fil = K.el('input', { type: 'file', accept: 'image/*', id: idPre + 'Fil', 'class': 'sr' });
   const op = K.el('label', { 'for': idPre + 'Fil', 'class': 'gr-knap ok gb-op' }, t('gbUpload'));
-  fil.addEventListener('change', () => { const f = fil.files && fil.files[0]; fil.value = ''; if (f) { boks.dataset.besk = '1'; gbBeskaer(f, boks, ved, idPre); } });
+  fil.addEventListener('change', () => {
+    const f = fil.files && fil.files[0]; fil.value = '';
+    if (!f) return;
+    // Mens kameraet er åbent, ligger siden i baggrunden. Når man kommer tilbage, melder databasen ind, og vælgeren tegnes om.
+    // Så hører dette felt til en vælger, der ikke vises mere. Brug den, der vises nu (Lars 13. oktober kl. 22.18: foto fra kameraet skete der intet med).
+    const levende = boks.isConnected ? boks : gbLevende(idPre);
+    if (!levende) return;
+    levende.dataset.besk = '1';
+    gbBeskaer(f, levende, levende.gbVed || ved, idPre);
+  });
   knapper.append(fil, op);
   if (valgt) {
     const fj = K.el('button', { type: 'button', 'class': 'ghost', id: idPre + 'Fjern' }, t('gbFjern'));
@@ -4138,6 +4148,12 @@ function gbVaelger(boks, valgt, ved, idPre) {
   }
   boks.append(knapper, K.el('p', { 'class': 'gb-note' }, t('gbNote')));
   if (fokus) { const f = boks.querySelector(fokus) || boks.querySelector('.gb-op'); if (f) f.focus(); }
+}
+/** Den vælger, der vises nu for 'om' eller 'ny' (eller null, hvis den er skjult). */
+function gbLevende(idPre) {
+  const y = $(idPre === 'om' ? 'omBillede' : 'nyBillede');
+  if (!y || y.classList.contains('hidden')) return null;
+  return y.querySelector('.gb-indre');
 }
 /** Hvilket element i boksen har fokus (så det kan få det igen, når boksen er tegnet om). */
 function gbFokus(boks) {
