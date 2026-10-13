@@ -478,3 +478,13 @@ td.n,th.n{text-align:right}
 .gr-svarbar-x{flex:0 0 44px;min-width:44px;min-height:44px;padding:0;border:0;background:transparent;font-size:22px;color:var(--muted)}
 .gr-hvem{flex-basis:100%;margin:2px 0}
 .gr-handl .farlig{border-color:var(--bad);color:var(--bad);background:var(--badbg)}
+/* Slet en gruppe og advarsler (13. oktober 2026) */
+.gr-fare{border:2px solid var(--bad);background:var(--badbg);border-radius:8px;padding:14px 16px;margin-top:12px;font-size:15px;line-height:1.45}
+.gr-fare h3{margin:0 0 8px;color:var(--bad);font-size:17px;text-transform:none;letter-spacing:0}
+.gr-fare ul{margin:6px 0 10px;padding-left:20px}
+.gr-fare li{margin:4px 0}
+.gr-fare b{color:var(--ink)}
+.gr-fare h3 + ul b{color:inherit}
+.gr-farlig{border:1px solid var(--bad);color:var(--bad);background:#FFFFFF}
+.gr-farlig.fyldt{border:2px solid var(--bad);color:#FFFFFF;background:var(--bad)}
+.gr-slettet{margin:0 0 12px}

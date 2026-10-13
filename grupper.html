@@ -55,6 +55,7 @@
         <nav id="navListe" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
         <div id="naeste" class="gr-naeste hidden"></div>
         <div id="filtre" class="chips gr-filtre" role="group" data-t-aria="filtrer" aria-label="Vis grupper"></div>
+        <div id="slettede" aria-live="polite"></div>
         <ul id="liste" class="gr-liste"></ul>
         <div id="tom" class="card hidden"><b data-t="tomH">Du er ikke med i nogen grupper endnu</b><p class="hint" data-t="tomTekst">Opret en gruppe til dem, du spiller med, eller bed en, du kender, om at tilføje dig.</p></div>
         <div class="who gr-who"><span id="hvem"></span><button type="button" class="ghost small" id="logud" data-t="kLogUd">Log ud</button></div>
@@ -114,6 +115,7 @@
             <div id="soegMsg" class="msg" aria-live="polite"></div>
           </div>
           <ul id="medlemmer" class="gr-medlemmer"></ul>
+          <div id="fjernAdv" class="gr-fare hidden" role="alert"></div>
           <div id="medlemMsg" class="msg" aria-live="polite"></div>
           <div class="afsnit"><button type="button" class="ghost" id="forlad" data-t="forlad">Forlad gruppen</button><div id="forladMsg" class="msg" aria-live="polite"></div></div>
         </div>
@@ -130,6 +132,13 @@
             <div id="omMsg" class="msg" aria-live="polite"></div>
             <button type="submit" class="ok" data-t="gem">Gem</button>
           </form>
+          <section id="sletDel" class="afsnit hidden">
+            <h2 data-t="sletH">Slet gruppen</h2>
+            <p class="hint" data-t="sletHint">Kun gruppeadministratorer kan slette gruppen.</p>
+            <button type="button" class="gr-farlig" id="sletKnap" data-t="sletH">Slet gruppen</button>
+            <div id="sletAdv" class="gr-fare hidden" role="alert"></div>
+            <div id="sletMsg" class="msg" aria-live="polite"></div>
+          </section>
         </div>
       </div>
 
@@ -365,6 +374,12 @@ window.TEKSTER = {
     retSpillet: 'Ret spillet', pladserOrd: 'pladser', faerre: 'Færre pladser', flere: 'Flere pladser', aflys: 'Aflys spillet', aflysIgen: 'Tryk igen for at aflyse', genaabn: 'Genåbn spillet',
     kr: '{n} kr.', fejlGem: 'Det kunne ikke gemmes. Prøv igen.', fejlHent: 'Grupperne kan ikke hentes lige nu. Prøv igen om lidt.', ingenAdgang: 'Du har ikke adgang til gruppen.',
     systemOpret: 'oprettede gruppen', uLaest: 'Nye beskeder', naesteSpil: 'Dit næste spil',
+    og: 'og', sletH: 'Slet gruppen', sletHint: 'Kun gruppeadministratorer kan slette gruppen.', sletSpm: 'Er du sikker på, at du vil slette {navn}?',
+    sletAndre1: 'Gruppen lukkes for det andet medlem: {navne}.', sletAndreN: 'Gruppen lukkes for de {n} andre medlemmer: {navne}.', sletIngen: 'Du er det eneste medlem.', sletNotif: 'De får en notifikation om, at du har slettet den.',
+    sletSkjult: 'Chat, spil og opslag på spillerbørsen kan ikke længere ses.', sletFortrydes: 'Det kan ikke fortrydes.', sletKlub: 'Kun klubbens administrator kan genskabe gruppen, hvis I henvender jer på {mail}.',
+    sletJa: 'Ja, slet gruppen', sletter: 'Sletter …', slettetOk: 'Gruppen er slettet.', erSlettetH: '{navn} er slettet',
+    erSlettetT: '{hvem} slettede gruppen {tid}. Er det en fejl, så kontakt klubben på {mail}, så kan den genskabes.',
+    fjernAdv: 'Du har fjernet {n} medlemmer det sidste døgn.', fjernAdvT: 'Vil du lukke gruppen helt, så brug "Slet gruppen" under Om. Så får alle besked.',
     sbNav: 'Grupper og spillerbørs', sbMineGrupper: 'Mine grupper', sbFane: 'Spillerbørs', sbAntalOpslag: '{n} åbne opslag',
     spSpoergNavn: 'Spørg {navn}', spSpoergGruppen: 'Spørg gruppen', spVilVide: 'Vil du vide mere først?',
     spVilVideT: 'Spørg om tid, sted eller gruppen, før du tilmelder dig. Kun du og gruppen kan se det.',
@@ -484,6 +499,12 @@ window.TEKSTER = {
     retSpillet: 'Edit the game', pladserOrd: 'places', faerre: 'Fewer places', flere: 'More places', aflys: 'Cancel the game', aflysIgen: 'Tap again to cancel', genaabn: 'Reopen the game',
     kr: 'DKK {n}', fejlGem: 'It could not be saved. Please try again.', fejlHent: 'Groups cannot be loaded right now. Please try again shortly.', ingenAdgang: 'You do not have access to this group.',
     systemOpret: 'created the group', uLaest: 'New messages', naesteSpil: 'Your next game',
+    og: 'and', sletH: 'Delete the group', sletHint: 'Only group admins can delete the group.', sletSpm: 'Are you sure you want to delete {navn}?',
+    sletAndre1: 'The group closes for the other member: {navne}.', sletAndreN: 'The group closes for the {n} other members: {navne}.', sletIngen: 'You are the only member.', sletNotif: 'They get a notification that you deleted it.',
+    sletSkjult: 'Chat, games and player exchange posts can no longer be seen.', sletFortrydes: 'This cannot be undone.', sletKlub: 'Only the club administrator can restore the group if you contact {mail}.',
+    sletJa: 'Yes, delete the group', sletter: 'Deleting …', slettetOk: 'The group has been deleted.', erSlettetH: '{navn} has been deleted',
+    erSlettetT: '{hvem} deleted the group {tid}. If this is a mistake, contact the club at {mail} and it can be restored.',
+    fjernAdv: 'You have removed {n} members in the last 24 hours.', fjernAdvT: 'If you want to close the group completely, use "Delete the group" under About. Then everyone is notified.',
     sbNav: 'Groups and player exchange', sbMineGrupper: 'My groups', sbFane: 'Player exchange', sbAntalOpslag: '{n} open posts',
     spSpoergNavn: 'Ask {navn}', spSpoergGruppen: 'Ask the group', spVilVide: 'Want to know more first?',
     spVilVideT: 'Ask about the time, the place or the group before you sign up. Only you and the group can see it.',
@@ -584,7 +605,9 @@ Object.assign(window.MOTOR_EN, {
 let FB = null;      // { app, auth, fs, au, db }
 let mig = null;     // { uid, type }
 let lyt = [];       // aktive realtidslyttere for den viste side
-let listeLyt = null;
+let listeLyt = null, sletLyt = null;
+const sletGids = new Set(); // grupper, man selv lige har slettet (browserens mellemlager kan vise dem et øjeblik)
+const KONTAKT = 'kontakt@roskildetennisklub.dk';
 let listeFejl = 0;
 const tilstand = { grupper: [], filter: 'alle', gruppe: null, medlemmer: [], beskeder: [], spil: [], spilEt: null, tilm: [], retter: null, aaben: null };
 
@@ -620,7 +643,7 @@ const erAdmin = () => minRolle() === 'admin';
 function maaInvitere() { const g = tilstand.gruppe; return !!g && (erAdmin() || minRolle() === 'inviter' || g.invitation === 'alle'); }
 function stopLyt() { lyt.forEach((f) => { try { f(); } catch (e) {} }); lyt = []; }
 function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil', 'vBoers', 'vOpslag', 'vGrOpslag', 'vNytOpslag'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
-function fejl(el, err) { console.warn(err); K.besked(el, err && err.code === 'permission-denied' ? t('ingenAdgang') : (err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem')), 'err'); }
+function fejl(el, err) { console.warn(err); if (err && err.code === 'permission-denied' && tilstand.gruppeVaek && Date.now() - tilstand.gruppeVaek < 10000) return; K.besked(el, err && err.code === 'permission-denied' ? t('ingenAdgang') : (err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem')), 'err'); }
 function laest(gid) { try { return Number(localStorage.getItem('rtk.gr.laest.' + gid) || 0); } catch (e) { return 0; } }
 function saetLaest(gid, ms) { try { if (ms > laest(gid)) localStorage.setItem('rtk.gr.laest.' + gid, String(ms)); } catch (e) {} }
 
@@ -677,7 +700,7 @@ async function logIndFirebase() {
 }
 
 function visLogin() {
-  stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; }
+  stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } tilstand.slettede = []; sletGids.clear();
   stopBoers();
   mig = null;
   for (const k in mineSvar) delete mineSvar[k];
@@ -725,12 +748,19 @@ function rute() {
 
 // ---------- Mine grupper
 function lytListe() {
-  if (listeLyt) return;
   const { fs, db } = FB;
+  // Grupper, man var med i, og som en gruppeadministrator har slettet: en besked i 14 dage (Lars 13. oktober kl. 06.52)
+  if (!sletLyt) sletLyt = fs.onSnapshot(fs.query(fs.collection(db, 'grupper'), fs.where('slettetFor', 'array-contains', mig.uid)), (snap) => {
+    const graense = Date.now() - 14 * 86400000;
+    tilstand.slettede = snap.docs.map((d) => Object.assign({ id: d.id }, d.data())).filter((g) => g.arkiveret && g.slettet && dato(g.slettet.tid) && dato(g.slettet.tid).getTime() > graense);
+    if (!$('vListe').classList.contains('hidden')) tegnSlettede();
+  }, (err) => { console.warn(err); sletLyt = null; setTimeout(() => { if (mig && !sletLyt && listeLyt) lytListe(); }, 15000); });
+  if (listeLyt) return;
   listeLyt = fs.onSnapshot(fs.query(fs.collection(db, 'grupper'), fs.where('medlemsIder', 'array-contains', mig.uid)), (snap) => {
     if (listeFejl >= 2) K.besked($('hentMsg'), '');
     listeFejl = 0;
-    tilstand.grupper = snap.docs.map((d) => Object.assign({ id: d.id }, d.data())).filter((g) => !g.arkiveret);
+    if (!snap.metadata.fromCache) snap.docs.forEach((d) => { if (!d.data().arkiveret) sletGids.delete(d.id); });
+    tilstand.grupper = snap.docs.map((d) => Object.assign({ id: d.id }, d.data())).filter((g) => !g.arkiveret && !sletGids.has(g.id));
     if (!$('vListe').classList.contains('hidden')) tegnListe();
     hentDetaljer();
   }, (err) => {
@@ -777,8 +807,19 @@ function visListe() {
   if (FB) hentDetaljer();
 }
 
+function tegnSlettede() {
+  const boks = $('slettede'); boks.innerHTML = '';
+  (tilstand.slettede || []).forEach((g) => {
+    const d = dato(g.slettet.tid);
+    const tid = dagOverskrift(d).toLowerCase() + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(d);
+    const p = K.el('div', { 'class': 'sb-info gr-slettet' });
+    p.append(K.el('b', null, t('erSlettetH', { navn: g.navn })), K.el('br'), t('erSlettetT', { hvem: fornavn(g.slettet.navn || ''), tid, mail: KONTAKT }));
+    boks.append(p);
+  });
+}
 function tegnListe() {
   if (!mig) return; // logget ud imens
+  tegnSlettede();
   const filtre = $('filtre'); filtre.innerHTML = '';
   ['alle', 'tennis', 'padel'].forEach((f) => {
     const b = K.el('button', { type: 'button', 'aria-pressed': String(tilstand.filter === f) }, t(f));
@@ -861,7 +902,7 @@ const FANER = [['chat', 'fChat', 'pChat'], ['spil', 'fSpil', 'pSpil'], ['medlemm
 function lytGruppe(gid, efter) {
   const { fs, db } = FB;
   lyt.push(fs.onSnapshot(fs.doc(db, 'grupper', gid), (d) => {
-    if (!d.exists() || d.data().arkiveret) { location.hash = ''; return; }
+    if (!d.exists() || d.data().arkiveret) { tilstand.gruppeVaek = Date.now(); location.hash = ''; return; }
     tilstand.gruppe = Object.assign({ id: d.id }, d.data());
     efter();
   }, (err) => { fejl($('hentMsg'), err); location.hash = ''; }));
@@ -903,7 +944,7 @@ function nulstilGruppeVisning() {
   $('tekst').value = ''; tilstand.retter = null; $('retter').classList.add('hidden');
   tilstand.svarTil = null; tilstand.sletKlar = null; $('svarBar').classList.add('hidden');
   $('gNavn').textContent = ''; $('gUnder').textContent = '';
-  foersteChat = true; forladKlar = false; fjernKlar = null;
+  foersteChat = true; forladKlar = false; fjernKlar = null; sletKlar = false; K.besked($('sletMsg'), '');
 }
 function tegnGruppe() {
   if (!mig) return; // logget ud imens
@@ -1671,6 +1712,13 @@ function tegnMedlemmer() {
     ul.append(li);
   });
   $('forlad').textContent = t(forladKlar ? 'forladIgen' : 'forlad');
+  // Advarsel, når man som gruppeadministrator har fjernet 2 eller flere det sidste døgn og er ved at fjerne én mere
+  const adv = $('fjernAdv'); adv.innerHTML = '';
+  const igaar = Date.now() - 86400000;
+  const fjernet = ((g.fjernetAf || {})[mig.uid] || []).filter((x) => dato(x) && dato(x).getTime() > igaar).length;
+  const vis2 = !!fjernKlar && fjernet >= 2;
+  adv.classList.toggle('hidden', !vis2);
+  if (vis2) adv.append(K.el('b', null, t('fjernAdv', { n: fjernet })), K.el('br'), t('fjernAdvT'));
 }
 let soegTimer = null, soegNr = 0;
 $('soeg').addEventListener('input', () => {
@@ -1720,11 +1768,47 @@ function tegnOm() {
     [t('synlighed'), t(g.synlighed === 'klub' ? 'klub' : 'lukket')], [t('invitation'), t(g.invitation === 'admin' ? 'invAdmin' : 'invAlle')]];
   fakta.forEach(([a, b]) => dl.append(K.el('dt', null, a), K.el('dd', null, b)));
   $('omForm').classList.toggle('hidden', !erAdmin());
+  tegnSlet();
   if (erAdmin() && document.activeElement && !$('omForm').contains(document.activeElement)) {
     $('omNavn').value = g.navn; $('omBeskrivelse').value = g.beskrivelse || '';
     radioer($('omSynlighed'), 'omSynlighed', SYNLIG, g.synlighed || 'lukket');
     radioer($('omInvitation'), 'omInvitation', INVIT, g.invitation || 'alle');
   }
+}
+// ---------- Slet gruppen (kun gruppeadministratorer, to tryk og en tydelig advarsel)
+let sletKlar = false;
+function tegnSlet() {
+  const g = tilstand.gruppe;
+  $('sletDel').classList.toggle('hidden', !erAdmin());
+  const adv = $('sletAdv'); adv.innerHTML = '';
+  adv.classList.toggle('hidden', !sletKlar);
+  $('sletKnap').classList.toggle('hidden', sletKlar);
+  if (!sletKlar || !g) return;
+  const andre = tilstand.medlemmer.filter((m) => m.id !== mig.uid).map((m) => fornavn(m.navn));
+  const navne = andre.length > 1 ? andre.slice(0, -1).join(', ') + ' ' + t('og') + ' ' + andre[andre.length - 1] : andre.join('');
+  adv.append(K.el('h3', null, t('sletSpm', { navn: g.navn })));
+  const ul = K.el('ul');
+  const li1 = K.el('li', null, andre.length ? t(andre.length === 1 ? 'sletAndre1' : 'sletAndreN', { n: andre.length, navne }) + ' ' : t('sletIngen'));
+  if (andre.length) li1.append(K.el('b', null, t('sletNotif')));
+  const li3 = K.el('li'); li3.append(K.el('b', null, t('sletFortrydes')), ' ' + t('sletKlub', { mail: KONTAKT }));
+  ul.append(li1, K.el('li', null, t('sletSkjult')), li3);
+  adv.append(ul);
+  const ja = K.el('button', { type: 'button', 'class': 'gr-farlig fyldt', id: 'sletJa' }, t('sletJa'));
+  const nej = K.el('button', { type: 'button', 'class': 'ghost' }, t('fortryd'));
+  ja.addEventListener('click', sletGruppen);
+  nej.addEventListener('click', () => { sletKlar = false; tegnSlet(); $('sletKnap').focus(); });
+  const k = K.el('div', { 'class': 'gr-knapper' }); k.append(ja, nej); adv.append(k);
+}
+$('sletKnap').addEventListener('click', () => { sletKlar = true; K.besked($('sletMsg'), ''); tegnSlet(); const j = $('sletJa'); if (j) j.focus(); });
+async function sletGruppen() {
+  const gid = tilstand.gruppe.id;
+  $('sletJa').disabled = true; K.besked($('sletMsg'), t('sletter'));
+  try {
+    await K.motor('grupper', 'slet', { gid }, K.nyId());
+    sletKlar = false; stopLyt(); sletGids.add(gid);
+    tilstand.grupper = tilstand.grupper.filter((g) => g.id !== gid); delete detaljer[gid];
+    location.hash = ''; K.besked($('hentMsg'), t('slettetOk'), 'okm');
+  } catch (err) { const j = $('sletJa'); if (j) j.disabled = false; fejl($('sletMsg'), err); }
 }
 $('omForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -1750,7 +1834,7 @@ document.addEventListener('sprog', () => {
 });
 
 // Når man forlader siden, lukkes forbindelsen til Firestore pænt (ellers kan den melde fejl i konsollen midt i et skift).
-window.addEventListener('pagehide', () => { stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (FB) FB.fs.terminate(FB.db).catch(() => {}); });
+window.addEventListener('pagehide', () => { stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } if (FB) FB.fs.terminate(FB.db).catch(() => {}); });
 if (K.loggetInd()) start(); else visLogin();
 
 // ==================== Spillerbørsen (12. oktober 2026). Bygges ind i grupper.html efter grupper_side.js.
