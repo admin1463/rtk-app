@@ -71,6 +71,8 @@
         <label for="nyBeskrivelse" data-t="beskrivelse">Om gruppen</label>
         <textarea id="nyBeskrivelse" maxlength="1000" rows="3" data-t-ph="beskrivelsePh"></textarea>
         <fieldset class="valg" id="nySynlighed"><legend data-t="hvemSer">Hvem kan se gruppen?</legend></fieldset>
+        <div class="gr-check ab-vippe"><button type="button" role="switch" class="vippe" id="nyAaben" aria-checked="false" aria-labelledby="nyAabenL" aria-describedby="nyAabenHint"></button><span><b id="nyAabenL" data-t="abAabenL">Åben for ansøgninger</b><span class="smaa" id="nyAabenHint"></span></span></div>
+        <div id="nySoegerDel" class="hidden"><label for="nySoeger" data-t="abSoegerL">Hvem søger I? (vises i Find en gruppe)</label><textarea id="nySoeger" maxlength="300" rows="2" data-t-ph="abSoegerPh"></textarea></div>
         <fieldset class="valg" id="nyInvitation"><legend data-t="hvemInviterer">Hvem må tilføje nye?</legend></fieldset>
         <div id="nyMsg" class="msg" aria-live="polite"></div>
         <div class="gr-knapper"><button type="submit" class="ok" data-t="opret">Opret gruppen</button><a href="#" class="gr-fortryd" data-t="fortryd">Fortryd</a></div>
@@ -107,6 +109,7 @@
         </div>
 
         <div id="pMedlemmer" role="tabpanel" class="hidden">
+          <section id="ansDel" class="sb-boks hidden"></section>
           <div id="inviterDel" class="card hidden">
             <label for="soeg" data-t="tilfoej">Tilføj et medlem af klubben</label>
             <input id="soeg" type="search" autocomplete="off" data-t-ph="soegPh" aria-describedby="soegHint" aria-controls="fund">
@@ -128,6 +131,8 @@
             <label for="omNavn" data-t="navn">Navn</label><input id="omNavn" maxlength="60">
             <label for="omBeskrivelse" data-t="beskrivelse">Om gruppen</label><textarea id="omBeskrivelse" maxlength="1000" rows="4" data-t-ph="beskrivelsePh"></textarea>
             <fieldset class="valg" id="omSynlighed"><legend data-t="hvemSer">Hvem kan se gruppen?</legend></fieldset>
+            <div class="gr-check ab-vippe"><button type="button" role="switch" class="vippe" id="omAaben" aria-checked="false" aria-labelledby="omAabenL" aria-describedby="omAabenHint"></button><span><b id="omAabenL" data-t="abAabenL">Åben for ansøgninger</b><span class="smaa" id="omAabenHint"></span></span></div>
+            <div id="omSoegerDel" class="hidden"><label for="omSoeger" data-t="abSoegerL">Hvem søger I? (vises i Find en gruppe)</label><textarea id="omSoeger" maxlength="300" rows="2" data-t-ph="abSoegerPh"></textarea></div>
             <fieldset class="valg" id="omInvitation"><legend data-t="hvemInviterer">Hvem må tilføje nye?</legend></fieldset>
             <div id="omMsg" class="msg" aria-live="polite"></div>
             <button type="submit" class="ok" data-t="gem">Gem</button>
@@ -216,6 +221,34 @@
         <div id="sbListe"></div>
         <p id="sbTom" class="hint hidden" data-t="sbTom">Ingen opslag lige nu. Kig forbi igen, eller slå en alarm til under Beskeder.</p>
         <div class="sb-hjem" data-t="sbHjem">Opslag fra dine egne grupper står under gruppen. Du laver et opslag fra gruppen eller fra et spil.</div>
+      </div>
+
+      <!-- Åbne grupper: Find en gruppe -->
+      <div id="vFind" class="hidden">
+        <div class="gr-hoved"><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
+        <nav id="navFind" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
+        <p class="hint sb-intro" data-t="abIntro">Grupper, som alle i klubben kan se. Bed om at komme med, eller skriv til gruppeadministratorerne.</p>
+        <div id="findMsg" class="msg" aria-live="polite"></div>
+        <label for="findSoeg" class="sr" data-t="abSoegPh">Søg på navn eller beskrivelse</label>
+        <input id="findSoeg" type="search" autocomplete="off" data-t-ph="abSoegPh">
+        <div id="findFiltre" class="chips gr-filtre" role="group" data-t-aria="filtrer" aria-label="Vis grupper"></div>
+        <div id="findListe"></div>
+        <p id="findTom" class="hint hidden" data-t="abTom">Ingen grupper passer. Prøv et andet ord, eller opret selv en gruppe.</p>
+        <p class="hint" data-t="abNote">Dine egne grupper står under Mine grupper. Kun voksne medlemmer kan se listen.</p>
+      </div>
+
+      <!-- Åbne grupper: en gruppe set udefra -->
+      <div id="vFindG" class="hidden">
+        <a href="#find" class="gr-tilbage" data-t="abTilbage">&#8592; Find en gruppe</a>
+        <div id="fgTags" class="sb-tags"></div>
+        <h1 class="lille" id="fgNavn"></h1>
+        <p id="fgTekst" class="gr-om"></p>
+        <dl class="sb-dl" id="fgFakta"></dl>
+        <div id="fgMsg" class="msg" aria-live="polite"></div>
+        <div class="sb-info hidden" id="fgInfo"></div>
+        <section class="sb-boks" id="fgBed" aria-live="polite"></section>
+        <section class="sb-boks hidden" id="fgSkriv"></section>
+        <p class="sr-kun" id="fgNyt" aria-live="polite"></p>
       </div>
 
       <!-- Spillerbørsen: et opslag set udefra -->
@@ -330,7 +363,30 @@ window.TEKSTER = {
     kLoggetInd: 'Logget ind som {navn}', tilbage: '← Grupper', tilbageGruppe: '← Tilbage', nyGruppeH: 'Ny gruppe', navn: 'Navn', sport: 'Sport',
     beskrivelse: 'Om gruppen', beskrivelsePh: 'Fx: Fast double søndag formiddag. Niveau 3 til 4.',
     hvemSer: 'Hvem kan se gruppen?', lukket: 'Kun medlemmerne', lukketTekst: 'Andre medlemmer kan ikke finde gruppen. Klubbens administratorer kan se navn, beskrivelse, medlemmer og hvor ofte gruppen spiller, men ikke chat og betalinger.',
-    klub: 'Alle i klubben', klubTekst: 'Alle medlemmer kan finde gruppen og læse beskrivelsen.',
+    klub: 'Alle i klubben', klubTekst: 'Gruppen står under "Find en gruppe". Alle kan læse beskrivelsen og skrive til gruppeadministratorerne.',
+    abFane: 'Find en gruppe', abIntro: 'Grupper, som alle i klubben kan se. Bed om at komme med, eller skriv til gruppeadministratorerne.', abSoegPh: 'Søg på navn eller beskrivelse',
+    abFiltAaben: 'Åben for ansøgninger', abAaben: 'Åben for ansøgninger', abInvitation: 'Kun efter invitation', abTom: 'Ingen grupper passer. Prøv et andet ord, eller opret selv en gruppe.',
+    abNote: 'Dine egne grupper står under Mine grupper. Kun voksne medlemmer kan se listen.', abStVenter: 'Ansøgning sendt', abStNej: 'Ikke optaget denne gang', abNytSvar: 'Nyt svar',
+    abDsoen: 'søndage', abDman: 'mandage', abDtir: 'tirsdage', abDons: 'onsdage', abDtor: 'torsdage', abDfre: 'fredage', abDloer: 'lørdage',
+    abTypisk: 'Typisk {dag}', abTypiskKl: 'Typisk {dag} kl. {kl}', abSpil30: '{n} spil de sidste 30 dage', abSpil30_1: '1 spil de sidste 30 dage',
+    abAdmin1: 'Gruppeadministrator: {navne}', abAdminN: 'Gruppeadministratorer: {navne}', abBedPil: 'Bed om at komme med ›', abSkrivPil: 'Skriv til {navn} ›', abSkrivPilFlere: 'Skriv til gruppeadministratorerne ›',
+    abTilbage: '← Find en gruppe', abFMedl: 'Medlemmer', abFSpiller: 'Spiller', abFAdmins: 'Gruppeadministratorer', abFSoeger: 'Søger',
+    abBedH: 'Bed om at komme med', abBedT: 'Skriv gerne lidt om dig selv. Gruppeadministratorerne ser din besked og dit navn.', abBedPh: 'Fx hvor længe du har spillet, og hvornår du kan', abSendAns: 'Send ansøgning', abSender: 'Sender …',
+    abSendtH: 'Din ansøgning er sendt', abSendtT: 'Sendt {tid}. Du får besked, når gruppen har svaret.', abTraek: 'Træk ansøgningen tilbage', abTraekIgen: 'Tryk igen for at trække den tilbage', abTrukket: 'Du har trukket din ansøgning tilbage. Du kan sende en ny.',
+    abNejH: '{navn} kan ikke tage nye med lige nu', abNejT: 'Tak for din interesse. Find andre grupper under Find en gruppe.', abNejFra: '{navn} skrev: "{tekst}"', abIgenFra: 'Du kan søge igen fra {dato}.',
+    abLukketH: 'Gruppen er slettet', abLukketT: 'Din ansøgning er lukket.', abJaH: 'Du er med i gruppen.', abAabn: 'Åbn gruppen',
+    abIkkeAaben: 'Gruppen tager ikke imod ansøgninger lige nu. Skriv til gruppeadministratorerne, hvis du gerne vil med.', abFindesIkke: 'Gruppen kan ikke findes. Den er måske gjort lukket eller slettet.',
+    abSkrivH: 'Skriv til gruppeadministratorerne', abSkrivT: 'Kun du og gruppeadministratorerne ser samtalen.', abSkrivPh: 'Skriv en besked', abSvarPh: 'Skriv et svar', abMaks: 'Højst 3 beskeder i træk, før der kommer svar.',
+    abAnsHN: 'Ansøgninger · {n}', abBeskH: 'Beskeder fra andre medlemmer', abAnsKun: 'Kun gruppeadministratorer og dem, der må invitere, ser dem',
+    abSoegte: 'Søgte {tid}', abSkrev: 'Skrev {tid}', abBeskN: '{n} beskeder', abBesk1: '1 besked',
+    abTagMed: 'Tag med i gruppen', abTagMedNavn: 'Tag {navn} med i gruppen', abTagerMed: 'Tager med i gruppen …', abSenderNej: 'Sender nej tak …', abNejTak: 'Nej tak', abNejTakNavn: 'Nej tak til {navn}',
+    abNejForm: 'Kort besked til {navn} (frivilligt)', abNejPh: 'Fx Vi er fulde lige nu, men prøv igen til foråret', abSendNej: 'Send nej tak',
+    abNejInfo: '{navn} får besked om, at gruppen ikke kan tage nye med lige nu, og din tekst, hvis du skriver en. {navn} kan søge igen om 30 dage.',
+    abSkrivTil: 'Skriv til {navn}', abUgeInfo: 'Ligger der en ansøgning uden svar mandag morgen, får gruppeadministratorerne en mail.',
+    abOptaget: '{navn} er med i gruppen.', abAfvist: '{navn} har fået et nej tak.',
+    abListeNye: '{n} venter på svar fra jer', abListeNye1: '1 venter på svar fra jer', abTalAria: '{n} ansøgninger eller beskeder venter på svar',
+    abAabenL: 'Åben for ansøgninger', abAabenT: 'Medlemmer kan trykke "Bed om at komme med". Gruppeadministratorerne og dem, der må invitere, siger ja eller nej.', abAabenKunKlub: 'Kan kun slås til, når alle i klubben kan se gruppen.',
+    abSoegerL: 'Hvem søger I? (vises i Find en gruppe)', abSoegerPh: 'Fx Erhvervsfolk, der vil spille og netværke. Alle niveauer.', abOmAns: 'Ansøgninger',
     hvemInviterer: 'Hvem må tilføje nye?', invAlle: 'Alle i gruppen', invAdmin: 'Kun gruppeadministratorer og øvrige gruppemedlemmer, der må invitere',
     opret: 'Opret gruppen', fortryd: 'Fortryd', opretter: 'Opretter …', mangerNavn: 'Giv gruppen et navn',
     fChat: 'Chat', fSpil: 'Spil', fMedlemmer: 'Medlemmer · {n}', fOm: 'Om',
@@ -380,7 +436,7 @@ window.TEKSTER = {
     sletJa: 'Ja, slet gruppen', sletter: 'Sletter …', slettetOk: 'Gruppen er slettet.', erSlettetH: '{navn} er slettet',
     erSlettetT: '{hvem} slettede gruppen {tid}. Er det en fejl, så kontakt klubben på {mail}, så kan den genskabes.',
     fjernAdv: 'Du har fjernet {n} medlemmer det sidste døgn.', fjernAdvT: 'Vil du lukke gruppen helt, så brug "Slet gruppen" under Om. Så får alle besked.',
-    sbNav: 'Grupper og spillerbørs', sbMineGrupper: 'Mine grupper', sbFane: 'Spillerbørs', sbAntalOpslag: '{n} åbne opslag',
+    sbNav: 'Grupper, spillerbørs og find en gruppe', sbMineGrupper: 'Mine grupper', sbFane: 'Spillerbørs', sbAntalOpslag: '{n} åbne opslag',
     spSpoergNavn: 'Spørg {navn}', spSpoergGruppen: 'Spørg gruppen', spVilVide: 'Vil du vide mere først?',
     spVilVideT: 'Spørg om tid, sted eller gruppen, før du tilmelder dig. Kun du og gruppen kan se det.',
     spDineH: 'Dine spørgsmål til gruppen', spDineT: 'Kun du og gruppen kan se det. Du er ikke tilmeldt, før du trykker Tilmeld.', spDineTMeldt: 'Kun du og gruppen kan se det.',
@@ -455,7 +511,30 @@ window.TEKSTER = {
     kLoggetInd: 'Logged in as {navn}', tilbage: '← Groups', tilbageGruppe: '← Back', nyGruppeH: 'New group', navn: 'Name', sport: 'Sport',
     beskrivelse: 'About the group', beskrivelsePh: 'E.g. Regular doubles Sunday morning. Level 3 to 4.',
     hvemSer: 'Who can see the group?', lukket: 'Only the members', lukketTekst: 'Other members cannot find the group. The club’s administrators can see its name, description, members and how often it plays, but not the chat or payments.',
-    klub: 'Everyone in the club', klubTekst: 'All members can find the group and read the description.',
+    klub: 'Everyone in the club', klubTekst: 'The group is listed under "Find a group". Everyone can read the description and write to the group admins.',
+    abFane: 'Find a group', abIntro: 'Groups everyone in the club can see. Ask to join, or write to the group admins.', abSoegPh: 'Search by name or description',
+    abFiltAaben: 'Open to requests', abAaben: 'Open to requests', abInvitation: 'By invitation only', abTom: 'No groups match. Try another word, or create a group yourself.',
+    abNote: 'Your own groups are under My groups. Only adult members can see the list.', abStVenter: 'Request sent', abStNej: 'Not this time', abNytSvar: 'New reply',
+    abDsoen: 'Sundays', abDman: 'Mondays', abDtir: 'Tuesdays', abDons: 'Wednesdays', abDtor: 'Thursdays', abDfre: 'Fridays', abDloer: 'Saturdays',
+    abTypisk: 'Usually {dag}', abTypiskKl: 'Usually {dag} at {kl}', abSpil30: '{n} games in the last 30 days', abSpil30_1: '1 game in the last 30 days',
+    abAdmin1: 'Group admin: {navne}', abAdminN: 'Group admins: {navne}', abBedPil: 'Ask to join ›', abSkrivPil: 'Write to {navn} ›', abSkrivPilFlere: 'Write to the group admins ›',
+    abTilbage: '← Find a group', abFMedl: 'Members', abFSpiller: 'Plays', abFAdmins: 'Group admins', abFSoeger: 'Looking for',
+    abBedH: 'Ask to join', abBedT: 'Feel free to write a little about yourself. The group admins see your message and your name.', abBedPh: 'E.g. how long you have played, and when you can play', abSendAns: 'Send request', abSender: 'Sending …',
+    abSendtH: 'Your request has been sent', abSendtT: 'Sent {tid}. You will get a message when the group has answered.', abTraek: 'Withdraw the request', abTraekIgen: 'Tap again to withdraw it', abTrukket: 'You withdrew your request. You can send a new one.',
+    abNejH: '{navn} cannot take new members right now', abNejT: 'Thank you for your interest. Find other groups under Find a group.', abNejFra: '{navn} wrote: "{tekst}"', abIgenFra: 'You can ask again from {dato}.',
+    abLukketH: 'The group has been deleted', abLukketT: 'Your request is closed.', abJaH: 'You are in the group.', abAabn: 'Open the group',
+    abIkkeAaben: 'The group is not taking requests right now. Write to the group admins if you would like to join.', abFindesIkke: 'The group cannot be found. It may have been made private or deleted.',
+    abSkrivH: 'Write to the group admins', abSkrivT: 'Only you and the group admins see the conversation.', abSkrivPh: 'Write a message', abSvarPh: 'Write a reply', abMaks: 'Up to 3 messages in a row before there is a reply.',
+    abAnsHN: 'Requests · {n}', abBeskH: 'Messages from other members', abAnsKun: 'Only group admins and members who can invite see them',
+    abSoegte: 'Asked {tid}', abSkrev: 'Wrote {tid}', abBeskN: '{n} messages', abBesk1: '1 message',
+    abTagMed: 'Add to the group', abTagMedNavn: 'Add {navn} to the group', abTagerMed: 'Adding to the group …', abSenderNej: 'Sending no thanks …', abNejTak: 'No thanks', abNejTakNavn: 'No thanks to {navn}',
+    abNejForm: 'Short message to {navn} (optional)', abNejPh: 'E.g. We are full right now, but try again in the spring', abSendNej: 'Send no thanks',
+    abNejInfo: '{navn} will be told that the group cannot take new members right now, along with your text if you write one. {navn} can ask again in 30 days.',
+    abSkrivTil: 'Write to {navn}', abUgeInfo: 'If a request is still unanswered on Monday morning, the group admins get an email.',
+    abOptaget: '{navn} is now in the group.', abAfvist: '{navn} has been sent a no thanks.',
+    abListeNye: '{n} waiting for your reply', abListeNye1: '1 waiting for your reply', abTalAria: '{n} requests or messages waiting for a reply',
+    abAabenL: 'Open to requests', abAabenT: 'Members can tap "Ask to join". The group admins and members who can invite say yes or no.', abAabenKunKlub: 'Can only be turned on when everyone in the club can see the group.',
+    abSoegerL: 'Who are you looking for? (shown in Find a group)', abSoegerPh: 'E.g. Business people who want to play and network. All levels.', abOmAns: 'Requests',
     hvemInviterer: 'Who can add new people?', invAlle: 'Everyone in the group', invAdmin: 'Only group admins and other group members who are allowed to invite',
     opret: 'Create the group', fortryd: 'Cancel', opretter: 'Creating …', mangerNavn: 'Give the group a name',
     fChat: 'Chat', fSpil: 'Games', fMedlemmer: 'Members · {n}', fOm: 'About',
@@ -505,7 +584,7 @@ window.TEKSTER = {
     sletJa: 'Yes, delete the group', sletter: 'Deleting …', slettetOk: 'The group has been deleted.', erSlettetH: '{navn} has been deleted',
     erSlettetT: '{hvem} deleted the group {tid}. If this is a mistake, contact the club at {mail} and it can be restored.',
     fjernAdv: 'You have removed {n} members in the last 24 hours.', fjernAdvT: 'If you want to close the group completely, use "Delete the group" under About. Then everyone is notified.',
-    sbNav: 'Groups and player exchange', sbMineGrupper: 'My groups', sbFane: 'Player exchange', sbAntalOpslag: '{n} open posts',
+    sbNav: 'Groups, player exchange and find a group', sbMineGrupper: 'My groups', sbFane: 'Player exchange', sbAntalOpslag: '{n} open posts',
     spSpoergNavn: 'Ask {navn}', spSpoergGruppen: 'Ask the group', spVilVide: 'Want to know more first?',
     spVilVideT: 'Ask about the time, the place or the group before you sign up. Only you and the group can see it.',
     spDineH: 'Your questions to the group', spDineT: 'Only you and the group can see it. You are not signed up until you press Sign up.', spDineTMeldt: 'Only you and the group can see it.',
@@ -641,8 +720,8 @@ function navnPaa(uid) { const m = tilstand.medlemmer.find((x) => x.id === uid); 
 function minRolle() { const m = tilstand.medlemmer.find((x) => x.id === (mig && mig.uid)); return m ? m.rolle : ''; }
 const erAdmin = () => minRolle() === 'admin';
 function maaInvitere() { const g = tilstand.gruppe; return !!g && (erAdmin() || minRolle() === 'inviter' || g.invitation === 'alle'); }
-function stopLyt() { lyt.forEach((f) => { try { f(); } catch (e) {} }); lyt = []; }
-function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil', 'vBoers', 'vOpslag', 'vGrOpslag', 'vNytOpslag'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
+function stopLyt() { lyt.forEach((f) => { try { f(); } catch (e) {} }); lyt = []; if (ab) ab.ansGid = null; }
+function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil', 'vBoers', 'vOpslag', 'vGrOpslag', 'vNytOpslag', 'vFind', 'vFindG'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
 function fejl(el, err) { console.warn(err); if (err && err.code === 'permission-denied' && tilstand.gruppeVaek && Date.now() - tilstand.gruppeVaek < 10000) return; K.besked(el, err && err.code === 'permission-denied' ? t('ingenAdgang') : (err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem')), 'err'); }
 function laest(gid) { try { return Number(localStorage.getItem('rtk.gr.laest.' + gid) || 0); } catch (e) { return 0; } }
 function saetLaest(gid, ms) { try { if (ms > laest(gid)) localStorage.setItem('rtk.gr.laest.' + gid, String(ms)); } catch (e) {} }
@@ -701,7 +780,7 @@ async function logIndFirebase() {
 
 function visLogin() {
   stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } tilstand.slettede = []; sletGids.clear();
-  stopBoers();
+  stopBoers(); stopAaben();
   mig = null;
   for (const k in mineSvar) delete mineSvar[k];
   if (FB) FB.auth.signOut(FB.au).catch(() => {});
@@ -721,6 +800,7 @@ async function start() {
     K.motor('kerne', 'mig').then((p) => { $('hvem').textContent = t('kLoggetInd', { navn: p.navn }); }).catch(() => {});
     lytListe();
     lytBoers();
+    lytAabenMine();
     rute();
   } catch (err) {
     console.warn(err);
@@ -728,7 +808,7 @@ async function start() {
   }
 }
 
-// ---------- Ruter: #  #ny  #g/<id>/<fane>  #g/<id>/spil/<sid>  #g/<id>/nytspil  #boers  #boers/<oid>  #g/<id>/opslag/<oid>  #g/<id>/nytopslag[/<sid>]
+// ---------- Ruter: #  #find  #find/<id>  #ny  #g/<id>/<fane>  #g/<id>/spil/<sid>  #g/<id>/nytspil  #boers  #boers/<oid>  #g/<id>/opslag/<oid>  #g/<id>/nytopslag[/<sid>]
 window.addEventListener('hashchange', () => { if (mig && mig.type === 'medlem') rute(); });
 function rute() {
   const h = location.hash.replace(/^#/, '').split('/');
@@ -736,6 +816,7 @@ function rute() {
   tilstand.retter = null; tilstand.aaben = null;
   if (h[0] === 'ny') return visNy();
   if (h[0] === 'boers') return h[1] ? visOpslag(h[1]) : visBoers();
+  if (h[0] === 'find') return h[1] ? visFindG(h[1]) : visFind();
   if (h[0] === 'g' && h[1]) {
     if (h[2] === 'spil' && h[3]) return visSpil(h[1], h[3]);
     if (h[2] === 'opslag' && h[3]) return visGrOpslag(h[1], h[3]);
@@ -778,10 +859,11 @@ async function hentDetaljer() {
   const nu = new Date(Date.now() - 3 * 3600000);
   await Promise.all(tilstand.grupper.map(async (g) => {
     try {
-      const [b, s, op] = await Promise.all([
+      const [b, s, op, mr] = await Promise.all([
         fs.getDocs(fs.query(fs.collection(db, 'grupper', g.id, 'beskeder'), fs.orderBy('tid', 'desc'), fs.limit(1))),
         fs.getDocs(fs.query(fs.collection(db, 'grupper', g.id, 'spil'), fs.where('start', '>=', nu), fs.orderBy('start'), fs.limit(3))),
-        fs.getDocs(fs.collection(db, 'grupper', g.id, 'opslag')).catch(() => ({ docs: [] }))
+        fs.getDocs(fs.collection(db, 'grupper', g.id, 'opslag')).catch(() => ({ docs: [] })),
+        mig ? fs.getDoc(fs.doc(db, 'grupper', g.id, 'medlemmer', mig.uid)).catch(() => null) : null
       ]);
       // Spillerbørsen: gruppens egne opslag står ikke på tavlen, og en markering viser, hvor mange der har meldt sig
       const opslag = op.docs.map((d) => Object.assign({ id: d.id }, d.data()));
@@ -791,7 +873,7 @@ async function hentDetaljer() {
       let minT = null;
       if (!mig) return;
       if (spil[0]) { const m = await fs.getDoc(fs.doc(db, 'grupper', g.id, 'spil', spil[0].id, 'tilmeldinger', mig.uid)); minT = m.exists() ? m.data() : null; }
-      detaljer[g.id] = { sidste, spil: spil[0] || null, minT, meldt: opslag.filter((o) => o.status === 'aaben').reduce((n, o) => n + (o.antalMeldt || 0), 0) };
+      detaljer[g.id] = { sidste, spil: spil[0] || null, minT, rolle: mr && mr.exists() ? mr.data().rolle : '', meldt: opslag.filter((o) => o.status === 'aaben').reduce((n, o) => n + (o.antalMeldt || 0), 0) };
     } catch (e) { console.warn(e); }
   }));
   if (!$('vListe').classList.contains('hidden')) tegnListe();
@@ -846,6 +928,8 @@ function tegnListe() {
     midt.append(K.el('span', { 'class': 'gr-linje' }, linje));
     if (d.spil) midt.append(K.el('span', { 'class': 'gr-linje2' }, kortDag(dato(d.spil.start)) + ' ' + kl(dato(d.spil.start)) + ' · ' + d.spil.titel));
     if (d.meldt) midt.append(K.el('span', { 'class': 'gr-linje2 sb-meldt' }, t('sbListeMeldt', { n: d.meldt })));
+    // Åbne grupper: ansøgninger og beskeder, der venter på svar (kun for dem, der kan se dem)
+    if (g.ansoegNye && (d.rolle === 'admin' || d.rolle === 'inviter')) midt.append(K.el('span', { 'class': 'gr-linje2 sb-meldt' }, t(g.ansoegNye === 1 ? 'abListeNye1' : 'abListeNye', { n: g.ansoegNye })));
     a.append(midt);
     const ny = d.sidste && dato(d.sidste.tid) && d.sidste.fra !== mig.uid && dato(d.sidste.tid).getTime() > laest(g.id);
     if (ny) a.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('uLaest') }, ''));
@@ -874,7 +958,9 @@ const SYNLIG = [['lukket', 'lukket', 'lukketTekst'], ['klub', 'klub', 'klubTekst
 const INVIT = [['alle', 'invAlle'], ['admin', 'invAdmin']];
 function tegnNy() {
   radioer($('nySport'), 'sport', SPORT, valgtI($('nySport')) || 'tennis');
-  radioer($('nySynlighed'), 'synlighed', SYNLIG, valgtI($('nySynlighed')) || 'lukket');
+  const nySyn = valgtI($('nySynlighed')) || 'lukket';
+  radioer($('nySynlighed'), 'synlighed', SYNLIG, nySyn, (v) => abVaelgSynlighed('ny', v));
+  abVaelgSynlighed('ny', nySyn);
   radioer($('nyInvitation'), 'invitation', INVIT, valgtI($('nyInvitation')) || 'alle');
 }
 function visNy() {
@@ -891,8 +977,10 @@ $('vNy').addEventListener('submit', async (e) => {
   if (!navn) { K.besked($('nyMsg'), t('mangerNavn'), 'err'); $('nyNavn').focus(); return; }
   K.besked($('nyMsg'), t('opretter'));
   try {
-    const r = await K.motor('grupper', 'opret', { navn, sport: valgtI($('nySport')), beskrivelse: $('nyBeskrivelse').value, synlighed: valgtI($('nySynlighed')), invitation: valgtI($('nyInvitation')) }, nyId);
-    nyId = K.nyId(); $('nyNavn').value = ''; $('nyBeskrivelse').value = '';
+    const synlighed = valgtI($('nySynlighed'));
+    const r = await K.motor('grupper', 'opret', { navn, sport: valgtI($('nySport')), beskrivelse: $('nyBeskrivelse').value, synlighed, invitation: valgtI($('nyInvitation')),
+      aaben: synlighed === 'klub' && $('nyAaben').getAttribute('aria-checked') === 'true', soeger: synlighed === 'klub' ? $('nySoeger').value : '' }, nyId);
+    nyId = K.nyId(); $('nyNavn').value = ''; $('nyBeskrivelse').value = ''; $('nySoeger').value = ''; $('nyAaben').setAttribute('aria-checked', 'false');
     location.hash = 'g/' + r.id + '/medlemmer';
   } catch (err) { fejl($('nyMsg'), err); }
 });
@@ -906,7 +994,12 @@ function lytGruppe(gid, efter) {
     tilstand.gruppe = Object.assign({ id: d.id }, d.data());
     efter();
   }, (err) => { fejl($('hentMsg'), err); location.hash = ''; }));
-  lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'medlemmer'), (s) => {
+  // Listen over medlemmer fra browserens mellemlager kan være delvis (Mine grupper henter ens egen rolle), så den første
+  // visning venter på svaret fra serveren. Ellers kan fx advarslen ved "Slet gruppen" mangle de andres navne.
+  let fraServer = false;
+  lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'medlemmer'), { includeMetadataChanges: true }, (s) => {
+    if (s.metadata.fromCache && !fraServer) return;
+    fraServer = true;
     tilstand.medlemmer = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
     efter();
   }, (err) => fejl($('hentMsg'), err)));
@@ -945,6 +1038,7 @@ function nulstilGruppeVisning() {
   tilstand.svarTil = null; tilstand.sletKlar = null; $('svarBar').classList.add('hidden');
   $('gNavn').textContent = ''; $('gUnder').textContent = '';
   foersteChat = true; forladKlar = false; fjernKlar = null; sletKlar = false; K.besked($('sletMsg'), '');
+  ab.ansAabne = new Set(); ab.nejAaben = null; ab.ans = []; $('ansDel').innerHTML = ''; $('ansDel').classList.add('hidden');
 }
 function tegnGruppe() {
   if (!mig) return; // logget ud imens
@@ -956,6 +1050,7 @@ function tegnGruppe() {
   const fan = $('faner'); fan.innerHTML = '';
   FANER.forEach(([id, navn, panel]) => {
     const b = K.el('button', { type: 'button', role: 'tab', id: 'fane-' + id, 'aria-controls': panel, 'aria-selected': String(tilstand.fane === id), tabindex: tilstand.fane === id ? '0' : '-1' }, t(navn, { n }));
+    if (id === 'medlemmer' && g.ansoegNye && maaSeAns()) b.append(' ', K.el('span', { 'class': 'tal', 'aria-label': t('abTalAria', { n: g.ansoegNye }) }, String(g.ansoegNye)));
     b.addEventListener('click', () => { location.hash = 'g/' + g.id + '/' + id; });
     b.addEventListener('keydown', (e) => {
       const i = FANER.findIndex((f) => f[0] === id);
@@ -1719,6 +1814,7 @@ function tegnMedlemmer() {
   const vis2 = !!fjernKlar && fjernet >= 2;
   adv.classList.toggle('hidden', !vis2);
   if (vis2) adv.append(K.el('b', null, t('fjernAdv', { n: fjernet })), K.el('br'), t('fjernAdvT'));
+  tegnAns();
 }
 let soegTimer = null, soegNr = 0;
 $('soeg').addEventListener('input', () => {
@@ -1766,12 +1862,17 @@ function tegnOm() {
   const dl = $('omFakta'); dl.innerHTML = '';
   const fakta = [[t('oprettetAf'), navnPaa(g.oprettetAf) || '–'], [t('oprettetDen'), dato(g.oprettet) ? kortDag(dato(g.oprettet)) + ' ' + dato(g.oprettet).getFullYear() : '–'],
     [t('synlighed'), t(g.synlighed === 'klub' ? 'klub' : 'lukket')], [t('invitation'), t(g.invitation === 'admin' ? 'invAdmin' : 'invAlle')]];
+  if (g.synlighed === 'klub') fakta.push([t('abOmAns'), t(g.aaben ? 'abAaben' : 'abInvitation')]);
+  if (g.synlighed === 'klub' && g.soeger) fakta.push([t('abFSoeger'), g.soeger]);
   fakta.forEach(([a, b]) => dl.append(K.el('dt', null, a), K.el('dd', null, b)));
   $('omForm').classList.toggle('hidden', !erAdmin());
   tegnSlet();
   if (erAdmin() && document.activeElement && !$('omForm').contains(document.activeElement)) {
     $('omNavn').value = g.navn; $('omBeskrivelse').value = g.beskrivelse || '';
-    radioer($('omSynlighed'), 'omSynlighed', SYNLIG, g.synlighed || 'lukket');
+    radioer($('omSynlighed'), 'omSynlighed', SYNLIG, g.synlighed || 'lukket', (v) => abVaelgSynlighed('om', v));
+    $('omSoeger').value = g.soeger || '';
+    abVippe('omAaben', !!g.aaben, g.synlighed === 'klub');
+    abVaelgSynlighed('om', g.synlighed || 'lukket');
     radioer($('omInvitation'), 'omInvitation', INVIT, g.invitation || 'alle');
   }
 }
@@ -1816,7 +1917,11 @@ $('omForm').addEventListener('submit', async (e) => {
   if (!navn) { K.besked($('omMsg'), t('mangerNavn'), 'err'); return; }
   K.besked($('omMsg'), t('gemmer'));
   try {
-    await FB.fs.updateDoc(FB.fs.doc(FB.db, 'grupper', tilstand.gruppe.id), { navn: navn.slice(0, 60), beskrivelse: $('omBeskrivelse').value.trim().slice(0, 1000), synlighed: valgtI($('omSynlighed')), invitation: valgtI($('omInvitation')) });
+    // Gennem motoren, så Find en gruppe altid passer med det, der er gemt (fund fra den uafhængige gennemgang 13. oktober)
+    const synlighed = valgtI($('omSynlighed'));
+    const klub = synlighed === 'klub';
+    await K.motor('grupper', 'indstil', { gid: tilstand.gruppe.id, navn: navn.slice(0, 60), beskrivelse: $('omBeskrivelse').value.trim().slice(0, 1000), synlighed, invitation: valgtI($('omInvitation')),
+      aaben: klub && $('omAaben').getAttribute('aria-checked') === 'true', soeger: $('omSoeger').value.trim().slice(0, 300) }, K.nyId());
     K.besked($('omMsg'), t('gemt'), 'okm');
   } catch (err) { fejl($('omMsg'), err); }
 });
@@ -1831,10 +1936,11 @@ document.addEventListener('sprog', () => {
   if (aaben('vNy')) tegnNy();
   if (aaben('vNytSpil')) { nsTegnRadioer(); nsBookere(); visGange(); }
   if (typeof sbSprog === 'function') sbSprog(aaben);
+  if (typeof abSprog === 'function') abSprog(aaben);
 });
 
 // Når man forlader siden, lukkes forbindelsen til Firestore pænt (ellers kan den melde fejl i konsollen midt i et skift).
-window.addEventListener('pagehide', () => { stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } if (FB) FB.fs.terminate(FB.db).catch(() => {}); });
+window.addEventListener('pagehide', () => { stopLyt(); stopAaben(); if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } if (FB) FB.fs.terminate(FB.db).catch(() => {}); });
 if (K.loggetInd()) start(); else visLogin();
 
 // ==================== Spillerbørsen (12. oktober 2026). Bygges ind i grupper.html efter grupper_side.js.
@@ -1956,7 +2062,7 @@ function sbSynlige() {
 }
 function tegnFaner() {
   const n = sbSynlige().length;
-  [['navListe', 'grupper'], ['navBoers', 'boers']].forEach(([id, valgt]) => {
+  [['navListe', 'grupper'], ['navBoers', 'boers'], ['navFind', 'find']].forEach(([id, valgt]) => {
     const nav = $(id); if (!nav) return;
     nav.innerHTML = '';
     const a1 = K.el('a', { href: '#', 'class': valgt === 'grupper' ? 'valgt' : '', 'aria-current': valgt === 'grupper' ? 'page' : 'false' }, t('sbMineGrupper'));
@@ -1965,7 +2071,10 @@ function tegnFaner() {
     const tilbud = Object.values(sb.mine).some((x) => x.status === 'tilbudt');
     if (tilbud) a2.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('sbStTilbudt') }, ''));
     else if (Object.values(sb.spm).some(spUlaest)) a2.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('spNytSvar') }, ''));
-    nav.append(a1, a2);
+    // Åbne grupper: Find en gruppe som tredje fane, med en prik ved nyt svar fra en gruppe
+    const a3 = K.el('a', { href: '#find', 'class': valgt === 'find' ? 'valgt' : '', 'aria-current': valgt === 'find' ? 'page' : 'false' }, t('abFane'));
+    if (typeof abNytSvar === 'function' && ab && abNytSvar()) a3.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('abNytSvar') }, ''));
+    nav.append(a1, a2, a3);
   });
 }
 
@@ -2587,6 +2696,379 @@ async function spSvar(x, tekst) {
     if (!sb.grKladde[k]) sb.grKladde[k] = tekst;
     if (sb.intern && sb.intern.id === o.id) { tegnGrSpm(); fejl($('goMsg'), err); }
   }
+}
+
+// ==================== Åbne grupper (13. oktober 2026): Find en gruppe, Bed om at komme med, Skriv til gruppeadministratorerne
+// Listen læses fra grupperFind (motorens rensede udgave). Ens egne ansøgninger og samtaler fra ansoegMig/{pid}/grupper.
+// Gruppeadministratorer og dem, der må invitere, ser ansøgningerne under Medlemmer (grupper/{gid}/ansoegninger).
+// Alt, der ændrer noget, går gennem motoren. Knapperne viser det nye med det samme og gemmer bagefter.
+// Tilstanden er "var", fordi visLogin kan kalde stopAaben, før denne del af scriptet er kørt.
+var ab = { find: [], mine: {}, findLyt: null, mineLyt: null, filter: 'alle', q: '', kladde: {}, venter: {}, bedVenter: {}, traekKlar: null,
+  ans: [], ansGid: null, ansAabne: new Set(), ansKladde: {}, ansVenter: {}, ansHandling: {}, nejAaben: null, nejTekst: {} };
+var AB_DAGE = { soen: 'abDsoen', man: 'abDman', tir: 'abDtir', ons: 'abDons', tor: 'abDtor', fre: 'abDfre', loer: 'abDloer' };
+
+function stopAaben() {
+  if (!ab) return;
+  if (ab.findLyt) { try { ab.findLyt(); } catch (e) {} ab.findLyt = null; }
+  if (ab.mineLyt) { try { ab.mineLyt(); } catch (e) {} ab.mineLyt = null; }
+  ab.find = []; ab.mine = {}; ab.kladde = {}; ab.venter = {}; ab.bedVenter = {}; ab.traekKlar = null;
+  ab.ans = []; ab.ansGid = null; ab.ansAabne = new Set(); ab.ansKladde = {}; ab.ansVenter = {}; ab.ansHandling = {}; ab.nejAaben = null; ab.nejTekst = {};
+}
+
+/** Ens egne ansøgninger og samtaler, til markeringer på listen og fanen. */
+function lytAabenMine() {
+  if (ab.mineLyt || !FB || !mig) return;
+  const { fs, db } = FB;
+  ab.mineLyt = fs.onSnapshot(fs.collection(db, 'ansoegMig', mig.uid, 'grupper'), (s) => {
+    const foer = ab.mine;
+    ab.mine = {};
+    s.docs.forEach((d) => { ab.mine[d.id] = Object.assign({ id: d.id }, d.data()); });
+    // Er en ventende besked eller ansøgning nået frem, er den ikke længere "ventende"
+    Object.keys(ab.venter).forEach((gid) => { const v = ab.venter[gid]; const x = ab.mine[gid]; if (x && spFremme(x.beskeder, v, (b) => !b.gruppe)) delete ab.venter[gid]; });
+    Object.keys(ab.bedVenter).forEach((gid) => { const x = ab.mine[gid]; if (x && x.status === ab.bedVenter[gid]) delete ab.bedVenter[gid]; });
+    const gid = abAabenGid();
+    if (gid && foer[gid] && ab.mine[gid] && (ab.mine[gid].beskeder || []).length > (foer[gid].beskeder || []).length) {
+      const b = ab.mine[gid].beskeder[ab.mine[gid].beskeder.length - 1];
+      if (b.gruppe) $('fgNyt').textContent = t('spNytFra', { navn: b.navn, tekst: b.tekst });
+    }
+    tegnFaner();
+    if (!$('vFind').classList.contains('hidden')) tegnFind();
+    if (gid) tegnFindG();
+  }, (err) => { console.warn(err); ab.mineLyt = null; setTimeout(() => { if (mig && !ab.mineLyt) lytAabenMine(); }, 15000); });
+}
+function lytAabenFind() {
+  if (ab.findLyt || !FB || !mig) return;
+  const { fs, db } = FB;
+  ab.findLyt = fs.onSnapshot(fs.query(fs.collection(db, 'grupperFind'), fs.limit(500)), (s) => {
+    ab.find = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    if (!$('vFind').classList.contains('hidden')) tegnFind();
+    if (abAabenGid()) tegnFindG();
+  }, (err) => { console.warn(err); ab.findLyt = null; fejl($('findMsg'), err); });
+}
+function abAabenGid() { return $('vFindG').classList.contains('hidden') ? '' : ($('vFindG').dataset.gid || ''); }
+
+/** Et nyt svar fra en gruppe, som man ikke har set endnu (huskes kun i denne browser). */
+function abSetTid(gid) { try { return Number(localStorage.getItem('rtk.ab.set.' + gid)) || 0; } catch (e) { return 0; } }
+function abSaetSet(x) { if (!x) return; try { if (abSetTid(x.id) < Date.now() - 1000) localStorage.setItem('rtk.ab.set.' + x.id, String(Date.now())); } catch (e) {} }
+function abUlaest(x) { const d = x && x.sidstGruppe && (x.beskeder || []).length && dato(x.sidst); return !!d && d.getTime() > abSetTid(x.id); }
+function abNytSvar() { return Object.values(ab.mine).some((x) => abUlaest(x) || (x.svar && x.status === 'nej' && dato(x.svar.tid) && dato(x.svar.tid).getTime() > abSetTid(x.id))); }
+
+function abSpillerTekst(f) {
+  if (!f.dag || !AB_DAGE[f.dag]) return '';
+  return f.kl ? t('abTypiskKl', { dag: t(AB_DAGE[f.dag]), kl: f.kl }) : t('abTypisk', { dag: t(AB_DAGE[f.dag]) });
+}
+function abAdmins(f) {
+  const navne = (f.admins || []).map(fornavn);
+  if (!navne.length) return '';
+  const liste = navne.length > 1 ? navne.slice(0, -1).join(', ') + ' ' + t('og') + ' ' + navne[navne.length - 1] : navne[0];
+  return t(navne.length === 1 ? 'abAdmin1' : 'abAdminN', { navne: liste });
+}
+function abNejIgen(x) {
+  if (!x || x.status !== 'nej' || !x.svar || !dato(x.svar.tid)) return null;
+  const d = new Date(dato(x.svar.tid).getTime() + 30 * 86400000);
+  return d.getTime() > Date.now() ? d : null;
+}
+function abStatus(gid) { const v = ab.bedVenter[gid]; if (v) return v; const x = ab.mine[gid]; return x ? x.status : ''; }
+
+// ---------- Find en gruppe (listen)
+function visFind() {
+  vis('vFind');
+  lytAabenFind(); lytAabenMine();
+  tegnFaner(); tegnFind();
+  if (FB) hentDetaljer();
+}
+var AB_FILTRE = [['alle', 'alle'], ['tennis', 'tennis'], ['padel', 'padel'], ['aaben', 'abFiltAaben']];
+function tegnFind() {
+  if (!mig) return;
+  const filtre = $('findFiltre'); filtre.innerHTML = '';
+  AB_FILTRE.forEach(([f, n]) => {
+    const b = K.el('button', { type: 'button', 'aria-pressed': String(ab.filter === f) }, t(n));
+    b.addEventListener('click', () => { ab.filter = f; tegnFind(); });
+    filtre.append(b);
+  });
+  const mine = new Set(tilstand.grupper.map((g) => g.id));
+  const q = ab.q.trim().toLowerCase();
+  const liste = ab.find.filter((f) => !mine.has(f.id))
+    .filter((f) => ab.filter === 'alle' || (ab.filter === 'aaben' ? f.aaben : f.sport === ab.filter || f.sport === 'begge'))
+    .filter((f) => !q || [f.navn, f.beskrivelse, f.soeger].join(' ').toLowerCase().indexOf(q) >= 0)
+    .sort((a, b) => (b.aaben ? 1 : 0) - (a.aaben ? 1 : 0) || (b.spil30 || 0) - (a.spil30 || 0) || String(a.navn).localeCompare(String(b.navn), 'da'));
+  const boks = $('findListe'); boks.innerHTML = '';
+  liste.forEach((f) => {
+    const a = K.el('a', { href: '#find/' + f.id, 'class': 'sb-kort ab-kort' });
+    const top = K.el('div', { 'class': 'sb-top' });
+    top.append(K.el('span', { 'class': 'ab-maerke' + (f.aaben ? '' : ' graa') }, t(f.aaben ? 'abAaben' : 'abInvitation')));
+    const st = abStatus(f.id); const x = ab.mine[f.id];
+    if (st === 'venter') top.append(K.el('span', { 'class': 'ab-maerke pink' }, t('abStVenter')));
+    else if (x && abUlaest(x)) top.append(K.el('span', { 'class': 'ab-maerke pink' }, t('abNytSvar')));
+    else if (st === 'nej' && abNejIgen(x)) top.append(K.el('span', { 'class': 'ab-maerke graa' }, t('abStNej')));
+    a.append(top, K.el('h3', null, f.navn));
+    const n = f.antal || 0;
+    const sp = abSpillerTekst(f);
+    a.append(K.el('div', { 'class': 'sb-l' }, [t(f.sport || 'tennis'), n === 1 ? t('medlemmer1') : t('medlemmerN', { n }), sp ? sp.charAt(0).toLowerCase() + sp.slice(1) : ''].filter(Boolean).join(' · ')));
+    const tekst = f.soeger || f.beskrivelse;
+    if (tekst) a.append(K.el('p', { 'class': 'ab-tekst' }, tekst));
+    const fod = K.el('div', { 'class': 'ab-fod' });
+    fod.append(K.el('span', null, abAdmins(f)), K.el('span', { 'class': 'ab-pil' }, f.aaben && st !== 'venter' ? t('abBedPil') : ((f.admins || []).length === 1 ? t('abSkrivPil', { navn: fornavn(f.admins[0]) }) : t('abSkrivPilFlere'))));
+    a.append(fod);
+    boks.append(a);
+  });
+  $('findTom').classList.toggle('hidden', liste.length > 0);
+}
+$('findSoeg').addEventListener('input', () => { ab.q = $('findSoeg').value; tegnFind(); });
+
+// ---------- En gruppe set udefra
+function visFindG(gid) {
+  vis('vFindG');
+  $('vFindG').dataset.gid = gid;
+  $('fgNyt').textContent = '';
+  K.besked($('fgMsg'), '');
+  ab.traekKlar = null;
+  lytAabenFind(); lytAabenMine();
+  tegnFindG();
+}
+function tegnFindG() {
+  const gid = abAabenGid();
+  if (!mig || !gid) return;
+  const f = ab.find.find((x) => x.id === gid) || null;
+  const x = ab.mine[gid] || null;
+  const med = tilstand.grupper.some((g) => g.id === gid);
+  const tags = $('fgTags'); tags.innerHTML = '';
+  const dl = $('fgFakta'); dl.innerHTML = '';
+  $('fgNavn').textContent = f ? f.navn : (x ? x.gruppeNavn : '');
+  $('fgTekst').textContent = f ? (f.beskrivelse || '') : '';
+  $('fgTekst').classList.toggle('hidden', !(f && f.beskrivelse));
+  if (f) {
+    tags.append(K.el('span', { 'class': 'ab-maerke' + (f.aaben ? '' : ' graa') }, t(f.aaben ? 'abAaben' : 'abInvitation')));
+    const n = f.antal || 0;
+    const sp = abSpillerTekst(f);
+    const spil = f.spil30 ? t(f.spil30 === 1 ? 'abSpil30_1' : 'abSpil30', { n: f.spil30 }) : '';
+    const fakta = [[t('sport'), t(f.sport || 'tennis')], [t('abFMedl'), String(n)]];
+    if (sp || spil) fakta.push([t('abFSpiller'), [sp, spil].filter(Boolean).join(' · ')]);
+    if (f.soeger) fakta.push([t('abFSoeger'), f.soeger]);
+    if ((f.admins || []).length) fakta.push([t('abFAdmins'), (f.admins || []).join(', ')]);
+    fakta.forEach(([a, b]) => dl.append(K.el('dt', null, a), K.el('dd', null, b)));
+  }
+  spBevarFokus(() => { tegnBed(gid, f, x, med); tegnSkrivTil(gid, f, x, med); });
+  if (x) abSaetSet(x);
+  tegnFaner();
+}
+function tegnBed(gid, f, x, med) {
+  const sec = $('fgBed'); sec.innerHTML = ''; sec.className = 'sb-boks';
+  const st = abStatus(gid);
+  const info = $('fgInfo'); info.innerHTML = ''; info.classList.add('hidden');
+  const infoTekst = (...dele) => { info.classList.remove('hidden'); dele.forEach((d) => info.append(d)); };
+  if (med || st === 'ja') {
+    infoTekst(K.el('b', null, t('abJaH')), ' ');
+    info.append(K.el('a', { href: '#g/' + gid + '/chat' }, t('abAabn')));
+    return;
+  }
+  if (!f && !x) { infoTekst(t('abFindesIkke')); return; }
+  if (st === 'lukket' && !f) { infoTekst(K.el('b', null, t('abLukketH')), K.el('br'), t('abLukketT')); return; }
+  if (st === 'venter') {
+    sec.classList.add('ok');
+    sec.append(K.el('h2', null, t('abSendtH')));
+    const d = x && dato(x.ansoegt);
+    sec.append(K.el('p', { style: 'margin:0' }, ab.bedVenter[gid] ? t('abSender') : t('abSendtT', { tid: d ? spTid(d) : '' })));
+    if (ab.bedVenter[gid]) return;
+    const b = K.el('button', { type: 'button', 'class': 'ghost small', id: 'fgTraek', style: 'margin-top:10px' }, t(ab.traekKlar === gid ? 'abTraekIgen' : 'abTraek'));
+    b.addEventListener('click', () => abTraek(gid));
+    sec.append(b);
+    return;
+  }
+  const igen = abNejIgen(x);
+  if (st === 'nej' && igen) {
+    sec.append(K.el('h2', null, t('abNejH', { navn: (f && f.navn) || (x && x.gruppeNavn) || '' })));
+    if (x.svar && x.svar.tekst) sec.append(K.el('div', { 'class': 'sb-citat' }, t('abNejFra', { navn: x.svar.navn || '', tekst: x.svar.tekst })));
+    else sec.append(K.el('p', { style: 'margin:0' }, t('abNejT')));
+    sec.append(K.el('p', { 'class': 'sb-l' }, t('abIgenFra', { dato: dagNavn(igen) })));
+    return;
+  }
+  if (!f || !f.aaben) { if (f) infoTekst(t('abIkkeAaben')); return; }
+  sec.append(K.el('h2', null, t('abBedH')), K.el('p', { 'class': 'hint', style: 'margin:0' }, t('abBedT')));
+  if (st === 'trukket') sec.append(K.el('p', { 'class': 'sb-l' }, t('abTrukket')));
+  const ta = K.el('textarea', { id: 'fgBedTekst', rows: '3', maxlength: '500', placeholder: t('abBedPh'), 'aria-label': t('abBedH') });
+  ta.value = ab.kladde['bed/' + gid] || '';
+  ta.addEventListener('input', () => { ab.kladde['bed/' + gid] = ta.value; });
+  const b = K.el('button', { type: 'button', 'class': 'ok', id: 'fgBedKnap' }, t('abSendAns'));
+  b.addEventListener('click', () => abBed(gid));
+  const k = K.el('div', { 'class': 'gr-knapper' }); k.append(b);
+  sec.append(ta, k);
+}
+async function abBed(gid) {
+  if (ab.bedVenter[gid]) return;
+  const tekst = (ab.kladde['bed/' + gid] || '').trim();
+  ab.bedVenter[gid] = 'venter'; K.besked($('fgMsg'), ''); tegnFindG(); tegnFind();
+  try {
+    await K.motor('grupper', 'ansoeg', { gid, tekst }, K.nyId());
+    ab.kladde['bed/' + gid] = '';
+    setTimeout(() => { if (ab.bedVenter[gid]) { delete ab.bedVenter[gid]; tegnFindG(); } }, 5000);
+  } catch (err) {
+    delete ab.bedVenter[gid];
+    if (abAabenGid() === gid) { tegnFindG(); fejl($('fgMsg'), err); }
+  }
+}
+async function abTraek(gid) {
+  if (ab.traekKlar !== gid) { ab.traekKlar = gid; tegnFindG(); setTimeout(() => { if (ab.traekKlar === gid) { ab.traekKlar = null; tegnFindG(); } }, 4000); return; }
+  ab.traekKlar = null;
+  ab.bedVenter[gid] = 'trukket'; tegnFindG();
+  try { await K.motor('grupper', 'traekAnsoeg', { gid }, K.nyId()); setTimeout(() => { if (ab.bedVenter[gid]) { delete ab.bedVenter[gid]; tegnFindG(); } }, 5000); }
+  catch (err) { delete ab.bedVenter[gid]; if (abAabenGid() === gid) { tegnFindG(); fejl($('fgMsg'), err); } }
+}
+function tegnSkrivTil(gid, f, x, med) {
+  const sec = $('fgSkriv'); sec.innerHTML = ''; sec.className = 'sb-boks' + (x && (x.beskeder || []).length ? ' mit' : '');
+  const st = abStatus(gid);
+  const beskeder = (x && x.beskeder) || [];
+  // Kan gruppen ikke længere ses, kan samtalen kun læses (motoren tager kun imod nye beskeder ved en ventende ansøgning)
+  const kunLaes = !f && st !== 'venter';
+  if (med || st === 'ja' || (kunLaes && !beskeder.length)) { sec.classList.add('hidden'); return; }
+  sec.append(K.el('h2', null, t('abSkrivH')), K.el('p', { 'class': 'hint', style: 'margin:0' }, t('abSkrivT')));
+  if (beskeder.length || ab.venter[gid]) sec.append(spBobler(beskeder, true, ab.venter[gid]));
+  if (kunLaes) return;
+  sec.append(spSkriv('fgSkrivTekst', t(beskeder.some((b) => b.gruppe) ? 'abSvarPh' : 'abSkrivPh'), ab.kladde['skriv/' + gid], (v) => { ab.kladde['skriv/' + gid] = v; }, (v) => abSkriv(gid, v)));
+  sec.append(K.el('p', { 'class': 'hint', style: 'margin:6px 0 0' }, t('abMaks')));
+}
+async function abSkriv(gid, tekst) {
+  if (ab.venter[gid]) return;
+  const x = ab.mine[gid];
+  const v = { tekst, venter: true, n: ((x && x.beskeder) || []).length + 1 };
+  ab.venter[gid] = v; ab.kladde['skriv/' + gid] = ''; K.besked($('fgMsg'), ''); tegnFindG();
+  try {
+    await K.motor('grupper', 'skrivTil', { gid, tekst }, K.nyId());
+    const nu = ab.mine[gid];
+    if (ab.venter[gid] === v && nu && spFremme(nu.beskeder, v, (b) => !b.gruppe)) { delete ab.venter[gid]; tegnFindG(); }
+    setTimeout(() => { if (ab.venter[gid] === v) { delete ab.venter[gid]; tegnFindG(); } }, 5000);
+  } catch (err) {
+    if (ab.venter[gid] === v) delete ab.venter[gid];
+    if (!ab.kladde['skriv/' + gid]) ab.kladde['skriv/' + gid] = tekst;
+    if (abAabenGid() === gid) { tegnFindG(); fejl($('fgMsg'), err); }
+  }
+}
+
+// ---------- Ansøgninger under Medlemmer (gruppeadministratorer og dem, der må invitere)
+function maaSeAns() { const r = minRolle(); return r === 'admin' || r === 'inviter'; }
+function lytAns(gid) {
+  if (ab.ansGid === gid || !FB) return;
+  ab.ansGid = gid; ab.ans = [];
+  const { fs, db } = FB;
+  lyt.push(fs.onSnapshot(fs.collection(db, 'grupper', gid, 'ansoegninger'), (s) => {
+    ab.ans = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    Object.keys(ab.ansVenter).forEach((pid) => { const x = ab.ans.find((y) => y.id === pid); if (x && spFremme(x.beskeder, ab.ansVenter[pid], (b) => b.gruppe)) delete ab.ansVenter[pid]; });
+    Object.keys(ab.ansHandling).forEach((pid) => { const x = ab.ans.find((y) => y.id === pid); if (x && x.status !== 'venter') delete ab.ansHandling[pid]; });
+    if (tilstand.fane === 'medlemmer') tegnAns();
+  }, (err) => { console.warn(err); if (ab.ansGid === gid) ab.ansGid = null; }));
+}
+function tegnAns() {
+  const sec = $('ansDel');
+  const g = tilstand.gruppe;
+  if (!mig || !g || !maaSeAns()) { sec.classList.add('hidden'); sec.innerHTML = ''; return; }
+  lytAns(g.id);
+  const venter = ab.ans.filter((x) => x.status === 'venter' || ab.ansHandling[x.id]);
+  const samtaler = ab.ans.filter((x) => x.status === 'ingen' && !ab.ansHandling[x.id] && (x.beskeder || []).length);
+  if (!venter.length && !samtaler.length) { sec.classList.add('hidden'); sec.innerHTML = ''; return; }
+  spBevarFokus(() => {
+    sec.classList.remove('hidden'); sec.innerHTML = '';
+    const top = K.el('div', { 'class': 'sb-top' });
+    top.append(K.el('h2', null, venter.length ? t('abAnsHN', { n: venter.length }) : t('abBeskH')), K.el('span', { 'class': 'sb-l' }, t('abAnsKun')));
+    sec.append(top);
+    venter.sort((a, b) => (dato(a.ansoegt) || 0) - (dato(b.ansoegt) || 0)).forEach((x) => sec.append(ansRaekke(x, true)));
+    if (venter.length && samtaler.length) sec.append(K.el('h3', { 'class': 'gr-lille', style: 'margin-top:14px' }, t('abBeskH')));
+    samtaler.sort((a, b) => (a.sidstGruppe === false ? 0 : 1) - (b.sidstGruppe === false ? 0 : 1) || (dato(b.sidst) || 0) - (dato(a.sidst) || 0)).forEach((x) => sec.append(ansRaekke(x, false)));
+    if (venter.length) sec.append(K.el('p', { 'class': 'hint', style: 'margin:10px 0 0' }, t('abUgeInfo')));
+  });
+}
+function ansRaekke(x, erAns) {
+  const r = K.el('div', { 'class': 'sb-kand' });
+  r.append(avatar(x.id, x.navn));
+  const midt = K.el('div', { style: 'flex:1;min-width:0' });
+  midt.append(K.el('div', { 'class': 'navn' }, x.navn));
+  const b = x.beskeder || [];
+  const d = erAns ? dato(x.ansoegt) : dato(x.sidst);
+  midt.append(K.el('div', { 'class': 'tid' }, [d ? t(erAns ? 'abSoegte' : 'abSkrev', { tid: spTid(d) }) : '', b.length ? t(b.length === 1 ? 'abBesk1' : 'abBeskN', { n: b.length }) : ''].filter(Boolean).join(' · ')));
+  const fn = fornavn(x.navn);
+  const ubesvaret = x.sidstGruppe === false && !ab.ansVenter[x.id];
+  const aaben = erAns || ubesvaret || ab.ansAabne.has(x.id) || !!ab.ansVenter[x.id];
+  if (!erAns && !ubesvaret) {
+    const k = K.el('button', { type: 'button', id: 'ansVis-' + x.id, 'class': 'ghost small', 'aria-expanded': String(aaben), style: 'margin-top:6px' }, t(aaben ? 'spSkjul' : 'spVis'));
+    k.addEventListener('click', () => { if (ab.ansAabne.has(x.id)) ab.ansAabne.delete(x.id); else ab.ansAabne.add(x.id); tegnAns(); });
+    midt.append(k);
+  }
+  if (aaben && (b.length || ab.ansVenter[x.id])) midt.append(spBobler(b, false, ab.ansVenter[x.id] ? Object.assign({ gruppe: true }, ab.ansVenter[x.id]) : null));
+  if (erAns) {
+    const h = ab.ansHandling[x.id];
+    if (h) midt.append(K.el('p', { 'class': 'sb-l staerk', 'aria-live': 'polite' }, t(h === 'ja' ? 'abTagerMed' : 'abSenderNej')));
+    else if (ab.nejAaben === x.id) {
+      const f = K.el('div', { 'class': 'ab-nej' });
+      const id = 'ansNej-' + x.id;
+      f.append(K.el('label', { 'for': id }, t('abNejForm', { navn: fn })));
+      const ta = K.el('textarea', { id, rows: '2', maxlength: '300', placeholder: t('abNejPh') });
+      ta.value = ab.nejTekst[x.id] || '';
+      ta.addEventListener('input', () => { ab.nejTekst[x.id] = ta.value; });
+      const ja = K.el('button', { type: 'button', 'class': 'gr-farlig', id: 'ansNejSend-' + x.id }, t('abSendNej'));
+      ja.addEventListener('click', () => abAfvis(x));
+      const nej = K.el('button', { type: 'button', 'class': 'ghost' }, t('fortryd'));
+      nej.addEventListener('click', () => { ab.nejAaben = null; tegnAns(); });
+      const k = K.el('div', { 'class': 'gr-knapper' }); k.append(ja, nej);
+      f.append(ta, K.el('p', { 'class': 'hint', style: 'margin:4px 0 0' }, t('abNejInfo', { navn: fn })), k);
+      midt.append(f);
+    } else {
+      const k = K.el('div', { 'class': 'knap2' });
+      const ja = K.el('button', { type: 'button', 'class': 'ok', id: 'ansJa-' + x.id, 'aria-label': t('abTagMedNavn', { navn: x.navn }) }, t('abTagMed'));
+      ja.addEventListener('click', () => abOptag(x));
+      const nej = K.el('button', { type: 'button', 'class': 'ghost', id: 'ansNejKnap-' + x.id, 'aria-label': t('abNejTakNavn', { navn: x.navn }) }, t('abNejTak'));
+      nej.addEventListener('click', () => { ab.nejAaben = x.id; tegnAns(); const ta = $('ansNej-' + x.id); if (ta) ta.focus(); });
+      k.append(ja, nej); midt.append(k);
+    }
+  }
+  if (aaben && !ab.ansHandling[x.id] && ab.nejAaben !== x.id) {
+    midt.append(spSkriv('ansTekst-' + x.id, t('abSkrivTil', { navn: fn }), ab.ansKladde[ab.ansGid + '/' + x.id], (v) => { ab.ansKladde[ab.ansGid + '/' + x.id] = v; }, (v) => abSvar(x, v)));
+  }
+  r.append(midt);
+  return r;
+}
+async function abOptag(x) {
+  const gid = ab.ansGid; if (!gid || ab.ansHandling[x.id]) return;
+  ab.ansHandling[x.id] = 'ja'; K.besked($('medlemMsg'), ''); tegnAns();
+  try { await K.motor('grupper', 'optag', { gid, pid: x.id }, K.nyId()); K.besked($('medlemMsg'), t('abOptaget', { navn: fornavn(x.navn) }), 'okm'); }
+  catch (err) { delete ab.ansHandling[x.id]; tegnAns(); fejl($('medlemMsg'), err); }
+}
+async function abAfvis(x) {
+  const gid = ab.ansGid; if (!gid || ab.ansHandling[x.id]) return;
+  const tekst = (ab.nejTekst[x.id] || '').trim();
+  ab.ansHandling[x.id] = 'nej'; ab.nejAaben = null; K.besked($('medlemMsg'), ''); tegnAns();
+  try { await K.motor('grupper', 'afvis', { gid, pid: x.id, tekst }, K.nyId()); delete ab.nejTekst[x.id]; K.besked($('medlemMsg'), t('abAfvist', { navn: fornavn(x.navn) }), 'okm'); }
+  catch (err) { delete ab.ansHandling[x.id]; ab.nejAaben = x.id; tegnAns(); fejl($('medlemMsg'), err); }
+}
+async function abSvar(x, tekst) {
+  const gid = ab.ansGid; if (!gid || ab.ansVenter[x.id]) return;
+  const v = { tekst, venter: true, n: (x.beskeder || []).length + 1 };
+  const k = gid + '/' + x.id;
+  ab.ansVenter[x.id] = v; ab.ansKladde[k] = ''; ab.ansAabne.add(x.id); K.besked($('medlemMsg'), ''); tegnAns();
+  try {
+    await K.motor('grupper', 'svarAnsoeg', { gid, pid: x.id, tekst }, K.nyId());
+    const nu = ab.ans.find((y) => y.id === x.id);
+    if (ab.ansVenter[x.id] === v && nu && spFremme(nu.beskeder, v, (b) => b.gruppe)) { delete ab.ansVenter[x.id]; tegnAns(); }
+    setTimeout(() => { if (ab.ansVenter[x.id] === v) { delete ab.ansVenter[x.id]; tegnAns(); } }, 5000);
+  } catch (err) {
+    if (ab.ansVenter[x.id] === v) delete ab.ansVenter[x.id];
+    if (!ab.ansKladde[k]) ab.ansKladde[k] = tekst;
+    if (ab.ansGid === gid) { tegnAns(); fejl($('medlemMsg'), err); }
+  }
+}
+
+// ---------- Om gruppen og Ny gruppe: "Åben for ansøgninger" og "Hvem søger I?"
+function abVippe(id, til, klub) {
+  const v = $(id);
+  v.setAttribute('aria-checked', String(!!til && klub));
+  v.disabled = !klub;
+  const hint = $(id + 'Hint'); if (hint) hint.textContent = klub ? t('abAabenT') : t('abAabenKunKlub');
+}
+['nyAaben', 'omAaben'].forEach((id) => $(id).addEventListener('click', () => { const v = $(id); if (v.disabled) return; v.setAttribute('aria-checked', String(v.getAttribute('aria-checked') !== 'true')); }));
+function abVaelgSynlighed(prefix, v) { abVippe(prefix + 'Aaben', $(prefix + 'Aaben').getAttribute('aria-checked') === 'true', v === 'klub'); $(prefix + 'SoegerDel').classList.toggle('hidden', v !== 'klub'); }
+function abSprog(aaben) {
+  if (aaben('vFind')) tegnFind();
+  if (aaben('vFindG')) tegnFindG();
+  if (aaben('vGruppe') && tilstand.fane === 'medlemmer') tegnAns();
+  ['ny', 'om'].forEach((p) => { const h = $(p + 'AabenHint'); if (h) h.textContent = $(p + 'Aaben').disabled ? t('abAabenKunKlub') : t('abAabenT'); });
 }
 </script>
 </body>

@@ -488,3 +488,20 @@ td.n,th.n{text-align:right}
 .gr-farlig{border:1px solid var(--bad);color:var(--bad);background:#FFFFFF}
 .gr-farlig.fyldt{border:2px solid var(--bad);color:#FFFFFF;background:var(--bad)}
 .gr-slettet{margin:0 0 12px}
+/* Åbne grupper (13. oktober 2026): Find en gruppe, ansøgninger */
+.ab-maerke{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:#E3F1EC;color:var(--teal);white-space:nowrap}
+.ab-maerke.graa{background:var(--soft);color:var(--muted)}
+.ab-maerke.pink{background:var(--pink);color:#fff}
+.ab-kort .sb-top{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.ab-tekst{margin:6px 0 0;font-size:15px;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.ab-fod{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.ab-pil{color:var(--ink);font-weight:600}
+#findSoeg{width:100%;margin-top:4px}
+.ab-vippe{align-items:flex-start !important}
+.ab-vippe .smaa{display:block;font-size:14px;color:var(--muted);line-height:1.4}
+.ab-nej{margin-top:10px}
+.ab-nej textarea{width:100%}
+#fgBed:empty{display:none}
+.gr-tabs .tal{display:inline-block;min-width:20px;padding:1px 6px;border-radius:99px;background:var(--pink);color:#fff;font-size:12px;text-align:center;line-height:1.4}
+.sb-faner a{white-space:nowrap}
+@media (max-width:420px){.sb-faner{overflow-x:auto}.sb-faner a{font-size:15px;padding:8px 2px;gap:4px}}

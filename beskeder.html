@@ -261,6 +261,7 @@ window.TEKSTER = {
     valgBoers: 'Spillerbørsen', vBoersSpoerg: 'Spørgsmål og svar om opslag', vBoersSpoergT: 'Når nogen spørger om jeres opslag, og når en gruppe svarer på dit spørgsmål.', vBoersMeldt: 'Svar i spillerbørsen', vBoersMeldtT: 'Når nogen melder sig til jeres opslag, når du bliver valgt, og når en plads bliver ledig for dig som reserve.',
     vBoersAlarm: 'Nye opslag (alarm)', vBoersAlarmT: 'Når en gruppe søger en spiller, der passer til dig. Højst tre om dagen.',
     vAlarmFilter: 'Kun opslag med det valgte. Vælger du ingen, får du alle.', aSport: 'Sport', aSpilform: 'Spilform', aTennis: 'Tennis', aPadel: 'Padel', aDouble: 'Double', aSingle: 'Single', aMix: 'Mixdouble',
+    vAnsoeg: 'Ansøgninger til grupper', vAnsoegT: 'Når nogen beder om at komme med i en gruppe, hvor du er gruppeadministrator eller må invitere, og når en gruppe svarer dig.', vMailAnsoeg: 'Ugentlig mail om ansøgninger, der venter', vMailAnsoegT: 'Mandag morgen, hvis der ligger ansøgninger, som ingen har svaret på. Kun til gruppeadministratorer.',
     vMailUge: 'Ugentlig oversigt på mail', vMailUgeT: 'Mandag morgen en mail med det, der står åbent på spillerbørsen. Kun når der er noget.',
     vStille: 'Stille om natten', vStilleT: 'Ingen notifikationer kl. 22 til 7. De venter til om morgenen. Driftsbeskeder kommer altid.',
     p12t: '12 timer før', pMorgen: 'Om morgenen', p2t: '2 timer før', p1t: '1 time før', pMorgenT: 'Kl. 8 samme dag. Er spillet før kl. 10, aftenen før kl. 20.',
@@ -322,6 +323,7 @@ window.TEKSTER = {
     valgBoers: 'Player exchange', vBoersSpoerg: 'Questions and replies about posts', vBoersSpoergT: 'When someone asks about your post, and when a group replies to your question.', vBoersMeldt: 'Answers on the player exchange', vBoersMeldtT: 'When someone signs up for your post, when you are chosen, and when a place becomes free for you as a reserve.',
     vBoersAlarm: 'New posts (alert)', vBoersAlarmT: 'When a group is looking for a player who matches you. At most three a day.',
     vAlarmFilter: 'Only posts with what you choose. If you choose none, you get all.', aSport: 'Sport', aSpilform: 'Format', aTennis: 'Tennis', aPadel: 'Padel', aDouble: 'Doubles', aSingle: 'Singles', aMix: 'Mixed doubles',
+    vAnsoeg: 'Requests to join groups', vAnsoegT: 'When someone asks to join a group where you are a group admin or can invite, and when a group replies to you.', vMailAnsoeg: 'Weekly email about waiting requests', vMailAnsoegT: 'Monday morning, if there are requests no one has answered. Only for group admins.',
     vMailUge: 'Weekly summary by email', vMailUgeT: 'Monday morning an email with what is open on the player exchange. Only when there is something.',
     vStille: 'Quiet at night', vStilleT: 'No notifications from 10 pm to 7 am. They wait until morning. Club notices always come.',
     p12t: '12 hours before', pMorgen: 'In the morning', p2t: '2 hours before', p1t: '1 hour before', pMorgenT: '8 am the same day. If the game is before 10 am, 8 pm the evening before.',
@@ -431,7 +433,7 @@ function visTid(s) {
   return d.toLocaleDateString(document.documentElement.lang === 'en' ? 'en-GB' : 'da-DK', { day: 'numeric', month: 'short' }) + ' ' + m[4] + '.' + m[5];
 }
 // ---------- Hvad vil du have besked om? (push trin 2). Kontakterne skifter med det samme og gemmer bagefter.
-const VALG_GRUPPER = [['ledig', 'vLedig', 'vLedigT'], ['aflyst', 'vAflyst', 'vAflystT'], ['nyeSpil', 'vNyeSpil', 'vNyeSpilT'], ['chat', 'vChat', 'vChatT'], ['afbud', 'vAfbud', 'vAfbudT']];
+const VALG_GRUPPER = [['ledig', 'vLedig', 'vLedigT'], ['aflyst', 'vAflyst', 'vAflystT'], ['nyeSpil', 'vNyeSpil', 'vNyeSpilT'], ['chat', 'vChat', 'vChatT'], ['afbud', 'vAfbud', 'vAfbudT'], ['ansoeg', 'vAnsoeg', 'vAnsoegT']];
 const PAAMIND = [['morgen', 'pMorgen'], ['12t', 'p12t'], ['2t', 'p2t'], ['1t', 'p1t']];
 let valgVenter = null, valgGemmer = false;
 function vipRaekke(noegle, navn, tekst, til, paa) {
@@ -468,6 +470,10 @@ function visValg() {
     }
     if (k === 'afbud' && v.afbud !== false) {
       const m = vipRaekke('mailAfbud', 'vMailAfbud', 'vMailAfbudT', v.mailAfbud !== false, (ny) => gemPushValg({ mailAfbud: ny }));
+      m.style.paddingLeft = '16px'; g.append(m);
+    }
+    if (k === 'ansoeg') {
+      const m = vipRaekke('mailAnsoeg', 'vMailAnsoeg', 'vMailAnsoegT', v.mailAnsoeg !== false, (ny) => gemPushValg({ mailAnsoeg: ny }));
       m.style.paddingLeft = '16px'; g.append(m);
     }
   });
