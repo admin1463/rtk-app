@@ -505,3 +505,47 @@ td.n,th.n{text-align:right}
 .gr-tabs .tal{display:inline-block;min-width:20px;padding:1px 6px;border-radius:99px;background:var(--pink);color:#fff;font-size:12px;text-align:center;line-height:1.4}
 .sb-faner a{white-space:nowrap}
 @media (max-width:420px){.sb-faner{overflow-x:auto}.sb-faner a{font-size:15px;padding:8px 2px;gap:4px}}
+/* Egne opslag, profilkort og billeder i fuld skærm (13. oktober 2026) */
+.sb-type.mig{background:#E3F1EC;color:var(--teal)}
+.sb-kort.eget{border:2px solid var(--teal)}
+.sb-kort.inv{cursor:default}
+.sb-kort.inv h3{margin-top:0}
+.sb-egne{margin:4px 0 12px}
+.eg-hvem{display:inline-flex;align-items:center;gap:8px}
+.eg-hvem .gr-av{flex-basis:24px;width:24px;height:24px;font-size:10px}
+.gr-av.foto{background-size:cover !important;background-position:center !important}
+.gr-knapper.lodret{flex-direction:column;align-items:stretch}
+.pr-kort{border:1px solid var(--line);border-radius:6px;background:#fff;padding:14px 16px;margin:12px 0}
+.pr-hoved{display:flex;gap:14px;align-items:flex-start}
+.pr-billede{flex:0 0 64px;width:64px;height:64px;border-radius:99px;border:0;padding:0;background-size:cover;background-position:center;cursor:zoom-in;color:#fff;font-weight:700;font-size:20px;display:inline-flex;align-items:center;justify-content:center}
+.pr-billede.tom{cursor:default}
+.pr-midt{flex:1;min-width:0}
+.pr-navn{font-size:18px;font-weight:700;color:var(--ink)}
+.pr-tekst{margin:6px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.pr-ekstra{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.pr-ekstra button{width:72px;height:72px;border-radius:6px;border:1px solid var(--line);padding:0;background-size:cover;background-position:center;cursor:zoom-in}
+.pr-pladser{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 4px}
+.pr-plads{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
+.pr-felt{width:100%;aspect-ratio:1;border-radius:6px;border:1px solid var(--line);background:var(--soft) center/cover no-repeat;padding:0;cursor:zoom-in;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);font-size:26px;text-align:center}
+.pr-plads.hoved .pr-felt{border-radius:99px}
+.pr-felt.tom{border-style:dashed;cursor:pointer}
+.pr-felt.tom .smaa{font-size:12px;line-height:1.2;padding:0 4px}
+.pr-plads-navn{font-size:12px;color:var(--muted);text-align:center}
+.pr-plads:has(.pr-felt.tom) .pr-plads-navn{display:none}
+.pr-plads:has(input[type=file]:focus) .pr-felt{outline:3px solid var(--pink);outline-offset:2px}
+.niv-tekst{margin:6px 0 0;font-size:14px;color:var(--ink);background:var(--soft);border-radius:6px;padding:8px 10px}
+.niv-forkl{margin-top:8px;font-size:14px}
+.niv-forkl summary{cursor:pointer;color:var(--teal);font-weight:600}
+.niv-forkl dt{font-weight:700;margin-top:8px}
+.niv-forkl dd{margin:2px 0 0}
+.fuld{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center}
+.fuld.hidden{display:none}
+.fuld img{max-width:100vw;max-height:100vh;object-fit:contain}
+.fuld button{position:absolute;background:rgba(0,0,0,.45);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:99px;width:48px;height:48px;font-size:30px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.fuld button.hidden{display:none}
+.fuld-luk{top:12px;right:12px}
+.fuld-pil{top:50%;transform:translateY(-50%)}
+.fuld-pil.v{left:10px}
+.fuld-pil.h{right:10px}
+.fuld-tal{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#fff;margin:0;font-size:14px}
+body.fuld-aaben{overflow:hidden}

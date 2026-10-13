@@ -14,7 +14,7 @@ self.addEventListener('push', (e) => {
   const valg = {
     body: String(p.tekst || ''),
     icon: '/ikon-medlem-192.png',
-    badge: '/ikon-medlem-192.png',
+    badge: '/ikon-maerke-96.png',
     data: { link: String(p.link || '/') },
     lang: 'da'
   };

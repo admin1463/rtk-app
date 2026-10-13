@@ -216,10 +216,13 @@
         <div class="gr-hoved"><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
         <nav id="navBoers" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
         <p class="hint sb-intro" data-t="sbIntro">Grupper, der mangler en spiller til et spil eller søger en fast spiller. Tilmeld dig, hvis du har lyst. Kun gruppen ser, at du har tilmeldt dig.</p>
+        <div class="gr-knapper sb-egne"><a href="#soeger" class="gr-knap ok" id="sbSoegerKnap" data-t="egSoegerKnap">+ Jeg søger en gruppe eller makker</a><a href="#profil" class="gr-knap ghost" id="sbProfilKnap" data-t="prMitKort">Mit profilkort</a></div>
+        <div id="sbMsg" class="msg" aria-live="polite"></div>
         <section id="sbMine" class="hidden sb-mine" aria-labelledby="sbMineH"><h2 id="sbMineH" class="gr-lille" data-t="sbDineSvar">Dine svar</h2><div id="sbMineListe"></div></section>
         <div id="sbFiltre" class="chips gr-filtre" role="group" data-t-aria="sbFiltrer" aria-label="Vis opslag"></div>
         <div id="sbListe"></div>
         <p id="sbTom" class="hint hidden" data-t="sbTom">Ingen opslag lige nu. Kig forbi igen, eller slå en alarm til under Beskeder.</p>
+        <p class="hint" data-t="egNote">Et medlems eget opslag står med fornavn og forbogstav, ligesom på profilkortet. Højst ét åbent opslag pr. sport.</p>
         <div class="sb-hjem" data-t="sbHjem">Opslag fra dine egne grupper står under gruppen. Du laver et opslag fra gruppen eller fra et spil.</div>
       </div>
 
@@ -310,7 +313,7 @@
         <div class="sb-felt"><span class="l" id="noAntalL" data-t="sbAntal">Antal spillere</span><div id="noAntal" class="chips" role="group" aria-labelledby="noAntalL"></div></div>
         <div class="sb-felt"><span class="l" data-t="sbNiveauFelt">Niveau (frivilligt)</span>
           <div class="sb-to"><label class="sr" for="noNivFra" data-t="sbNivFraL">Niveau fra</label><select id="noNivFra"></select><label class="sr" for="noNivTil" data-t="sbNivTilL">Niveau til</label><select id="noNivTil"></select></div>
-          <p class="hint" data-t="sbNiveauHint">Tennis 1 til 7 efter NTRP. Beskrivelserne kommer.</p></div>
+          <p class="hint" data-t="sbNiveauHint">Tennis efter NTRP, padel efter den danske padelskala.</p><div id="noNivForkl"></div></div>
         <div class="sb-felt"><span class="l" id="noAlderL" data-t="sbAlderFelt">Alder (frivilligt, vælg gerne flere)</span><div id="noAlder" class="chips" role="group" aria-labelledby="noAlderL" aria-describedby="noAlderH"></div>
           <p class="hint" id="noAlderH" data-t="sbAlderHint">Vælger du ingen, er alle aldre velkomne.</p></div>
         <label for="noTitel" data-t="sbOverskrift">Overskrift</label><input id="noTitel" maxlength="80" data-t-ph="sbOverskriftPh">
@@ -323,7 +326,76 @@
         <div id="noMsg" class="msg" aria-live="polite"></div>
         <div class="gr-knapper"><button type="submit" class="ok" data-t="sbLaegUd">Læg opslaget ud</button></div>
       </form>
+
+      <!-- Egne opslag: Jeg søger -->
+      <form id="vSoeger" class="hidden gr-form" novalidate>
+        <a href="#boers" class="gr-tilbage" data-t="sbTilbage">&#8592; Spillerbørs</a>
+        <h1 class="lille" data-t="egSoegerH">Jeg søger</h1>
+        <fieldset class="valg gr-valg2" id="soType"><legend data-t="egHvadSoeger">Hvad søger du?</legend></fieldset>
+        <div class="sb-felt"><span class="l" id="soSportL" data-t="sport">Sport</span><div id="soSport" class="chips" role="group" aria-labelledby="soSportL"></div></div>
+        <div class="sb-felt"><span class="l" id="soSpilformL" data-t="sbSpilform">Spilform</span><div id="soSpilform" class="chips" role="group" aria-labelledby="soSpilformL"></div></div>
+        <div class="sb-felt"><label for="soNiveau" class="l" data-t="egMitNiveau">Mit niveau</label><select id="soNiveau"></select>
+          <p class="niv-tekst hidden" id="soNivTekst" aria-live="polite"></p>
+          <label class="gr-check hidden" id="soNivGemL"><input type="checkbox" id="soNivGem" checked> <span data-t="egNivGem">Gem også niveauet på mit profilkort</span></label>
+          <div id="soNivForkl"></div></div>
+        <div class="sb-felt"><span class="l" id="soDageL" data-t="egHvornaar">Hvornår kan du?</span><div id="soDage" class="chips" role="group" aria-labelledby="soDageL"></div><div id="soTid" class="chips" role="group" aria-labelledby="soDageL" style="margin-top:8px"></div>
+          <p class="hint" data-t="egHvornaarHint">Vælger du ingen, står der ikke noget om tid i opslaget.</p></div>
+        <label for="soTitel" data-t="sbOverskrift">Overskrift</label><input id="soTitel" maxlength="80" data-t-ph="egOverskriftPh">
+        <label for="soTekst" data-t="egLidtOm">Lidt om dig (frivilligt)</label><textarea id="soTekst" maxlength="500" rows="3" data-t-ph="egLidtOmPh"></textarea>
+        <p class="hint" data-t="egStaar30">Opslaget står i 30 dage. Du kan lukke det, når du har fundet nogen. Alle voksne medlemmer kan se det og skrive til dig.</p>
+        <div id="soMsg" class="msg" aria-live="polite"></div>
+        <div class="gr-knapper"><button type="submit" class="ok" data-t="sbLaegUd">Læg opslaget ud</button></div>
+      </form>
+
+      <!-- Egne opslag: et opslag fra et medlem -->
+      <div id="vSpiller" class="hidden">
+        <a href="#boers" class="gr-tilbage" data-t="sbTilbage">&#8592; Spillerbørs</a>
+        <div id="plTags" class="sb-tags"></div>
+        <h1 class="lille" id="plTitel"></h1>
+        <div id="plProfil"></div>
+        <div class="sb-citat hidden" id="plTekst"></div>
+        <p class="hint hidden" id="plNivTekst"></p>
+        <p class="sb-l" id="plFrist"></p>
+        <div id="plMsg" class="msg" aria-live="polite"></div>
+        <section class="sb-boks" id="plBoks"></section>
+        <section class="sb-boks hidden" id="plInv"></section>
+        <section class="sb-boks hidden" id="plSam"></section>
+      </div>
+
+      <!-- Mit profilkort -->
+      <div id="vProfil" class="hidden">
+        <a href="#boers" class="gr-tilbage" data-t="sbTilbage">&#8592; Spillerbørs</a>
+        <h1 class="lille" data-t="prMitKort">Mit profilkort</h1>
+        <p class="hint" data-t="prIntro">Frivilligt. Andre voksne medlemmer ser kortet på dine opslag og i dine grupper. Navnet kommer fra klubbens medlemsliste.</p>
+        <div id="prMsg" class="msg" aria-live="polite"></div>
+        <section class="sb-boks">
+          <h2 data-t="prBilleder">Billeder</h2>
+          <p class="hint" style="margin:0" data-t="prBillederT">Et profilbillede og op til tre andre, fx fra banen eller med din familie. Tryk på et billede for at se det stort.</p>
+          <div id="prPlads" class="pr-pladser"></div>
+          <p class="hint" data-t="prSamtykke">Læg kun billeder op af andre, hvis de har sagt ja. Billeder af børn kun af dine egne.</p>
+        </section>
+        <section class="sb-boks gr-form">
+          <h2 data-t="prNiveauer">Niveau</h2>
+          <label for="prNivTennis" data-t="tennis">Tennis</label><select id="prNivTennis"></select><p class="niv-tekst hidden" id="prNivTennisT"></p>
+          <label for="prNivPadel" data-t="padel">Padel</label><select id="prNivPadel"></select><p class="niv-tekst hidden" id="prNivPadelT"></p>
+          <div id="prNivForkl"></div>
+        </section>
+        <section class="sb-boks gr-form">
+          <label for="prTekst" data-t="prOmMig">Lidt om mig</label><textarea id="prTekst" maxlength="300" rows="3" data-t-ph="prOmMigPh"></textarea>
+          <div class="gr-knapper"><button type="button" class="ok" id="prGemTekst" data-t="gem">Gem</button></div>
+        </section>
+        <section class="sb-boks"><h2 data-t="prSaadan">Sådan ser andre dit kort</h2><div id="prVis"></div></section>
+        <div class="gr-knapper"><button type="button" class="ghost" id="prSlet" data-t="prSlet">Slet mit profilkort</button></div>
+      </div>
     </section>
+    <!-- Billedet i fuld skærm -->
+    <div id="fuld" class="fuld hidden" role="dialog" aria-modal="true">
+      <img id="fuldImg" alt="">
+      <button type="button" id="fuldLuk" class="fuld-luk" data-t-aria="prLuk" aria-label="Luk">&#215;</button>
+      <button type="button" id="fuldForrige" class="fuld-pil v" data-t-aria="prForrige" aria-label="Forrige billede">&#8249;</button>
+      <button type="button" id="fuldNaeste" class="fuld-pil h" data-t-aria="prNaeste" aria-label="Næste billede">&#8250;</button>
+      <p id="fuldTal" class="fuld-tal" aria-live="polite"></p>
+    </div>
   </div>
 
   <div class="wrap partnere">
@@ -490,12 +562,44 @@ window.TEKSTER = {
     sbHvilketSpil: 'Hvilket spil', sbIngenSpil: 'Ingen kommende spil med ledige pladser. Opret spillet først, eller giv det flere pladser.', sbFraSpillet: 'Tid, sted, bane og pris tages fra spillet.',
     sbTider: 'Hvornår spiller I?', sbTiderPh: 'Fx Torsdage kl. 20 til 21', sbPrisFast: 'Pris (frivilligt)', sbPrisPh: 'Fx Ca. 1.000 kr. for vinteren', sbFastBaneCheck: 'Vi har fast bane',
     sbKoenHint: 'Fx "Dame" til en mixdouble eller "Herre" til en herredouble. Står der underordnet, vises intet i opslaget.',
-    sbAntal: 'Antal spillere', sbEn: '1', sbTo: '2', sbTre: '3', sbNiveauFelt: 'Niveau (frivilligt)', sbNivFraL: 'Niveau fra', sbNivTilL: 'Niveau til', sbNiveauHint: 'Tennis 1 til 7 efter NTRP. Beskrivelserne kommer.',
+    sbAntal: 'Antal spillere', sbEn: '1', sbTo: '2', sbTre: '3', sbNiveauFelt: 'Niveau (frivilligt)', sbNivFraL: 'Niveau fra', sbNivTilL: 'Niveau til', sbNiveauHint: 'Tennis efter NTRP, padel efter den danske padelskala.',
     sbAlderFelt: 'Alder (frivilligt, vælg gerne flere)', sbAlderHint: 'Vælger du ingen, er alle aldre velkomne.',
     sbOverskrift: 'Overskrift', sbOverskriftPh: 'Fx Double i aften, vi er tre', sbMereOm: 'Mere om det (frivilligt)', sbMereOmPh: 'Fx Hyggelig double med lange dueller.',
     sbFrist1t: '1 time før', sbFrist2t: '2 timer før', sbFristDag: 'Dagen før', sbFristHint: 'Opslaget lukker selv ved fristen.', sbFristDato: 'Svar senest (dato)',
     sbVisNavn: 'Vis gruppens navn i opslaget', sbVisNavnHint: 'Slår du det fra, står der "En gruppe", indtil en er valgt.',
     sbLaegUd: 'Læg opslaget ud', sbLaeggerUd: 'Lægger opslaget ud …', sbVaelgSpil: 'Vælg det spil, I mangler en til.', sbManglerTitel: 'Skriv en overskrift',
+    sbFiltSpillere: 'Spillere', egSoegerKnap: '+ Jeg søger en gruppe eller makker', egNote: 'Et medlems eget opslag står med fornavn og forbogstav, ligesom på profilkortet. Højst ét åbent opslag pr. sport.',
+    egSpillerSoeger: 'Spiller søger', egDitOpslag: 'Dit opslag', egSkrevet1: '1 har skrevet', egSkrevetN: '{n} har skrevet', egStaarTil: 'Står til {dato}', egStaarTilLang: 'Opslaget står til {dato}',
+    egNiveauN: 'Niveau {n}', egSoegerGruppe: 'Søger en gruppe', egSoegerMakker: 'Søger en makker',
+    egMan: 'Man', egTir: 'Tir', egOns: 'Ons', egTor: 'Tor', egFre: 'Fre', egLoer: 'Lør', egSoen: 'Søn', egMorgen: 'Morgen', egDag: 'Dag', egAften: 'Aften',
+    egAlleDage: 'Alle dage', egHverdage: 'Hverdage', egWeekender: 'Weekender',
+    egSoegerH: 'Jeg søger', egHvadSoeger: 'Hvad søger du?', egEnGruppe: 'En gruppe', egEnGruppeT: 'Fast spil sammen med andre', egEnMakker: 'En makker', egEnMakkerT: 'Én at spille single eller double med',
+    egMitNiveau: 'Mit niveau', egNivVaelg: 'Vælg dit niveau (frivilligt)', egNivGem: 'Gem også niveauet på mit profilkort', nivHvad: 'Hvad betyder niveauerne i {sport}?',
+    egHvornaar: 'Hvornår kan du?', egHvornaarHint: 'Vælger du ingen, står der ikke noget om tid i opslaget.',
+    egOverskriftPh: 'Fx Søger fast double om ugen', egLidtOm: 'Lidt om dig (frivilligt)', egLidtOmPh: 'Fx Har spillet i 8 år, mest double. Kan hverdage efter kl. 17.',
+    egStaar30: 'Opslaget står i 30 dage. Du kan lukke det, når du har fundet nogen. Alle voksne medlemmer kan se det og skrive til dig.',
+    egNivBetyder: '{sport} {n}: {tekst}',
+    egHarDuPlads: 'Har du plads til {navn}?', egHarDuPladsT: 'Skriv til {navn}, eller inviter {navn} til en gruppe, du må invitere til. {navn} siger selv ja eller nej.',
+    egHarDuPladsMakker: '{navn} søger en makker. Skriv til {navn}, eller inviter {navn} til en gruppe, du må invitere til.',
+    egSkrivTil: 'Skriv til {navn}', egSamtaleMed: 'Din samtale med {navn}', egKunI2: 'Kun du og {navn} ser samtalen.', egSkrivPh: 'Skriv en besked',
+    egInviterTil: 'Inviter til en gruppe', egVaelgGruppe: 'Vælg gruppen', egInvVenter: 'Inviteret, venter på svar', egInvSagdeNej: 'Har sagt nej tak',
+    egInvBesked: 'Besked til {navn} (frivilligt)', egInvPh: 'Fx Hej {navn}. Vi mangler en fast spiller om torsdagen. Har du lyst?',
+    egInvHint: '{navn} får invitationen på spillerbørsen og siger selv ja eller nej. Den gælder i 14 dage.', egSendInv: 'Send invitationen',
+    egInvSendt: 'Invitationen er sendt. {navn} siger selv ja eller nej.', egInvSendtMsg: 'Invitationen er sendt til {navn}.',
+    egDitAabent: 'Dit opslag er åbent', egDitLukket: 'Dit opslag er lukket', egDitAabentT: 'Andre kan skrive til dig og invitere dig til en gruppe. Svarene står herunder, og du får besked.',
+    egDitLukketT: 'Ingen nye kan skrive til dig. Du kan stadig svare dem, der har skrevet.', egLuk: 'Luk opslaget', egLukIgen: 'Tryk igen for at lukke opslaget', egLukket: 'Opslaget er lukket.',
+    egSamtaler: 'Dem, der har skrevet til dig',
+    egInvTil: 'Invitation til {navn}', egInvSkrev: '{navn} skriver: "{tekst}"', egInvFra: 'Fra {navn}.', egInvJa: 'Ja tak, jeg er med', egInvNej: 'Nej tak',
+    egInvJaH: 'Du er med i gruppen', egInvNejH: 'Du har sagt nej tak.', egInvUdloeber: 'Gælder til {dato}', egInvJaMsg: 'Du er med i {navn}.', egInvNejMsg: 'Du har sagt nej tak til {navn}.',
+    prMitKort: 'Mit profilkort', prRet: 'Ret mit profilkort', prIntro: 'Frivilligt. Andre voksne medlemmer ser kortet på dine opslag og i dine grupper. Navnet kommer fra klubbens medlemsliste.',
+    prBilleder: 'Billeder', prBillederT: 'Et profilbillede og op til tre andre, fx fra banen eller med din familie. Tryk på et billede for at se det stort.',
+    prSamtykke: 'Læg kun billeder op af andre, hvis de har sagt ja. Billeder af børn kun af dine egne.',
+    prProfilbillede: 'Profilbillede', prEkstraN: 'Billede {n}', prFjern: 'Fjern', prFjernNavn: 'Fjern {navn}', prFjernet: 'Billedet er fjernet.',
+    prBehandler: 'Gør billedet klar …', prForStort: 'Billedet kunne ikke gøres lille nok. Prøv et andet.', prKanIkkeLaese: 'Billedet kan ikke læses. Prøv et JPEG- eller PNG-billede.', prKunBilleder: 'Vælg et billede.',
+    prNiveauer: 'Niveau', prIkkeAngivet: 'Ikke angivet', prOmMig: 'Lidt om mig', prOmMigPh: 'Fx Har spillet i 8 år, mest double.',
+    prSaadan: 'Sådan ser andre dit kort', prSlet: 'Slet mit profilkort', prSletIgen: 'Tryk igen for at slette kortet og billederne', prSlettet: 'Dit profilkort og dine billeder er slettet.',
+    prVisBillede: 'Vis billedet af {navn} i fuld skærm', prVisBilledeN: 'Vis billede {n} af {navn} i fuld skærm', prBillederAf: 'Billeder af {navn}', prBilledeAfN: 'Billede {n} af {af} fra {navn}', prNAf: '{n} af {af}',
+    prLuk: 'Luk', prForrige: 'Forrige billede', prNaeste: 'Næste billede',
   },
   en: {
     titel: 'Groups · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
@@ -638,12 +742,44 @@ window.TEKSTER = {
     sbHvilketSpil: 'Which game', sbIngenSpil: 'No upcoming games with free places. Create the game first, or give it more places.', sbFraSpillet: 'Time, place, court and price come from the game.',
     sbTider: 'When do you play?', sbTiderPh: 'E.g. Thursdays 8 to 9 pm', sbPrisFast: 'Price (optional)', sbPrisPh: 'E.g. About DKK 1,000 for the winter', sbFastBaneCheck: 'We have a regular court',
     sbKoenHint: 'E.g. "Woman" for mixed doubles or "Man" for men’s doubles. If it says either, nothing is shown in the post.',
-    sbAntal: 'Number of players', sbEn: '1', sbTo: '2', sbTre: '3', sbNiveauFelt: 'Level (optional)', sbNivFraL: 'Level from', sbNivTilL: 'Level to', sbNiveauHint: 'Tennis 1 to 7 based on NTRP. Descriptions are coming.',
+    sbAntal: 'Number of players', sbEn: '1', sbTo: '2', sbTre: '3', sbNiveauFelt: 'Level (optional)', sbNivFraL: 'Level from', sbNivTilL: 'Level to', sbNiveauHint: 'Tennis by NTRP, padel by the Danish padel scale.',
     sbAlderFelt: 'Age (optional, choose several if you like)', sbAlderHint: 'If you choose none, all ages are welcome.',
     sbOverskrift: 'Heading', sbOverskriftPh: 'E.g. Doubles tonight, we are three', sbMereOm: 'More about it (optional)', sbMereOmPh: 'E.g. Friendly doubles with long rallies.',
     sbFrist1t: '1 hour before', sbFrist2t: '2 hours before', sbFristDag: 'The day before', sbFristHint: 'The post closes by itself at the deadline.', sbFristDato: 'Answer by (date)',
     sbVisNavn: 'Show the group name in the post', sbVisNavnHint: 'If you turn it off, it says "A group" until someone is chosen.',
     sbLaegUd: 'Post it', sbLaeggerUd: 'Posting …', sbVaelgSpil: 'Choose the game you need someone for.', sbManglerTitel: 'Write a heading',
+    sbFiltSpillere: 'Players', egSoegerKnap: '+ I am looking for a group or partner', egNote: 'A member’s own post shows their first name and initial, as on the profile card. At most one open post per sport.',
+    egSpillerSoeger: 'Player looking', egDitOpslag: 'Your post', egSkrevet1: '1 has written', egSkrevetN: '{n} have written', egStaarTil: 'Open until {dato}', egStaarTilLang: 'The post is open until {dato}',
+    egNiveauN: 'Level {n}', egSoegerGruppe: 'Looking for a group', egSoegerMakker: 'Looking for a partner',
+    egMan: 'Mon', egTir: 'Tue', egOns: 'Wed', egTor: 'Thu', egFre: 'Fri', egLoer: 'Sat', egSoen: 'Sun', egMorgen: 'Morning', egDag: 'Daytime', egAften: 'Evening',
+    egAlleDage: 'Every day', egHverdage: 'Weekdays', egWeekender: 'Weekends',
+    egSoegerH: 'I am looking', egHvadSoeger: 'What are you looking for?', egEnGruppe: 'A group', egEnGruppeT: 'Regular games with others', egEnMakker: 'A partner', egEnMakkerT: 'Someone to play singles or doubles with',
+    egMitNiveau: 'My level', egNivVaelg: 'Choose your level (optional)', egNivGem: 'Also save the level on my profile card', nivHvad: 'What do the levels in {sport} mean?',
+    egHvornaar: 'When can you play?', egHvornaarHint: 'If you choose none, the post says nothing about time.',
+    egOverskriftPh: 'E.g. Looking for weekly doubles', egLidtOm: 'A little about you (optional)', egLidtOmPh: 'E.g. Have played for 8 years, mostly doubles. Weekdays after 5 pm.',
+    egStaar30: 'The post stays up for 30 days. You can close it when you have found someone. All adult members can see it and write to you.',
+    egNivBetyder: '{sport} {n}: {tekst}',
+    egHarDuPlads: 'Do you have room for {navn}?', egHarDuPladsT: 'Write to {navn}, or invite {navn} to a group you can invite to. {navn} decides whether to say yes.',
+    egHarDuPladsMakker: '{navn} is looking for a partner. Write to {navn}, or invite {navn} to a group you can invite to.',
+    egSkrivTil: 'Write to {navn}', egSamtaleMed: 'Your conversation with {navn}', egKunI2: 'Only you and {navn} see the conversation.', egSkrivPh: 'Write a message',
+    egInviterTil: 'Invite to a group', egVaelgGruppe: 'Choose the group', egInvVenter: 'Invited, waiting for an answer', egInvSagdeNej: 'Said no thanks',
+    egInvBesked: 'Message to {navn} (optional)', egInvPh: 'E.g. Hi {navn}. We need a regular player on Thursdays. Interested?',
+    egInvHint: '{navn} gets the invitation on the player exchange and decides whether to say yes. It is valid for 14 days.', egSendInv: 'Send the invitation',
+    egInvSendt: 'The invitation has been sent. {navn} decides whether to say yes.', egInvSendtMsg: 'The invitation has been sent to {navn}.',
+    egDitAabent: 'Your post is open', egDitLukket: 'Your post is closed', egDitAabentT: 'Others can write to you and invite you to a group. The replies are below, and you get a message.',
+    egDitLukketT: 'No one new can write to you. You can still reply to those who have written.', egLuk: 'Close the post', egLukIgen: 'Tap again to close the post', egLukket: 'The post is closed.',
+    egSamtaler: 'People who have written to you',
+    egInvTil: 'Invitation to {navn}', egInvSkrev: '{navn} writes: "{tekst}"', egInvFra: 'From {navn}.', egInvJa: 'Yes please, I am in', egInvNej: 'No thanks',
+    egInvJaH: 'You are in the group', egInvNejH: 'You said no thanks.', egInvUdloeber: 'Valid until {dato}', egInvJaMsg: 'You are in {navn}.', egInvNejMsg: 'You said no thanks to {navn}.',
+    prMitKort: 'My profile card', prRet: 'Edit my profile card', prIntro: 'Optional. Other adult members see the card on your posts and in your groups. The name comes from the club’s member list.',
+    prBilleder: 'Photos', prBillederT: 'A profile photo and up to three more, e.g. from the court or with your family. Tap a photo to see it full size.',
+    prSamtykke: 'Only upload photos of other people if they have said yes. Photos of children only of your own.',
+    prProfilbillede: 'Profile photo', prEkstraN: 'Photo {n}', prFjern: 'Remove', prFjernNavn: 'Remove {navn}', prFjernet: 'The photo has been removed.',
+    prBehandler: 'Preparing the photo …', prForStort: 'The photo could not be made small enough. Try another one.', prKanIkkeLaese: 'The photo cannot be read. Try a JPEG or PNG photo.', prKunBilleder: 'Choose a photo.',
+    prNiveauer: 'Level', prIkkeAngivet: 'Not stated', prOmMig: 'A little about me', prOmMigPh: 'E.g. Have played for 8 years, mostly doubles.',
+    prSaadan: 'How others see your card', prSlet: 'Delete my profile card', prSletIgen: 'Tap again to delete the card and the photos', prSlettet: 'Your profile card and photos have been deleted.',
+    prVisBillede: 'Show the photo of {navn} full screen', prVisBilledeN: 'Show photo {n} of {navn} full screen', prBillederAf: 'Photos of {navn}', prBilledeAfN: 'Photo {n} of {af} from {navn}', prNAf: '{n} of {af}',
+    prLuk: 'Close', prForrige: 'Previous photo', prNaeste: 'Next photo',
   }
 };
 </script>
@@ -651,6 +787,8 @@ window.TEKSTER = {
 <script src="sprog.js"></script>
 <script src="velkomst.js"></script>
 <script type="module">
+// Lavet af niveauer.py ud fra niveauer.md. Ret i niveauer.md, ikke her.
+const NIVEAUER = {"tennis": {"niveauer": [{"v": 1.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har begrænset erfaring med slagene og arbejder primært på at få bolden i spil.", "en": "You have limited experience with the strokes and are mainly working on getting the ball into play."}}, {"v": 2.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har brug for spilletid og har svært ved at finde det rigtige træfpunkt. Du kender endnu ikke de grundlæggende positioner i single og double.", "en": "You need court time and find it hard to judge where to meet the ball. You do not yet know the basic positions in singles and doubles."}}, {"v": 2.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du kan holde en duel i lavt tempo fra baglinjen med spillere på dit niveau og lærer at bedømme, hvor bolden er på vej hen.", "en": "You can keep a slow-paced rally going from the baseline with players at your level and are learning to judge where the ball is going."}}, {"v": 3.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du er ret stabil på bolde i middel tempo, men mangler præcision, når du vil styre retning, dybde og fart.", "en": "You are fairly consistent on medium-paced balls but lack precision when you try to control direction, depth and pace."}}, {"v": 3.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har stabile slag med retningskontrol på moderate bolde, men mangler dybde og variation. Lob, smash og flugtninger er stadig begrænsede.", "en": "You have consistent strokes with directional control on moderate balls but lack depth and variety. Lobs, smashes and volleys are still limited."}}, {"v": 4.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har stabile slag med retning og dybde på både forhånd og baghånd i moderat tempo og bruger lob, smash og flugtninger med succes.", "en": "You have dependable strokes with direction and depth on both forehand and backhand at moderate pace and use lobs, smashes and volleys with success."}}, {"v": 4.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du varierer fart og spin, dækker banen godt og lægger en kampplan ud fra styrker og svagheder. Du slår førsteserven med kraft og præcision.", "en": "You vary pace and spin, cover the court well and plan matches around strengths and weaknesses. You hit your first serve with power and accuracy."}}, {"v": 5.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du forudser slagene godt og vinder jævnligt point på korte bolde og med flugtninger. Du har dybde og spin på de fleste andenserver.", "en": "You anticipate shots well and regularly win points on short balls and at the net. You have depth and spin on most second serves."}}, {"v": 5.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Fart eller stabilitet er blevet dit store våben. Du kan skifte strategi og spillestil og slå sikre slag under pres.", "en": "Power or consistency has become your main weapon. You can change strategy and style of play and hit dependable shots under pressure."}}], "kilde": "det amerikanske tennisforbunds NTRP-skala (USTA, \"NTRP General Characteristics\"), oversat tæt.", "fodnote": {"da": "Skalaen er det amerikanske tennisforbunds NTRP. 6.0 er spillere med national rangering, 6.5 og 7.0 er verdensklasse.", "en": "The scale is the US Tennis Association's NTRP. 6.0 is nationally ranked players, 6.5 and 7.0 are world class."}}, "padel": {"niveauer": [{"v": 1.0, "navn": {"da": "Begynder", "en": "Beginner"}, "tekst": {"da": "Har ingen erfaring med padel.", "en": "No experience with padel."}}, {"v": 1.5, "navn": {"da": "Begynder", "en": "Beginner"}, "tekst": {"da": "Du har spillet få gange og kan reglerne. Du har endnu ikke lært at bruge glasset ordentligt og bruger det ikke, men kan så småt få nogle dueller i gang. Du mangler stadig kontrol i dit spil og har mangler i din basisteknik.", "en": "You have played a few times and know the rules. You have not yet learned to use the glass properly and do not use it, but you can start to get some rallies going. You still lack control in your game and have gaps in your basic technique."}}, {"v": 2.0, "navn": {"da": "Let øvet", "en": "Improver"}, "tekst": {"da": "Du spiller med nogen kontrol og bruger glasset oftere og oftere. Du har evt. erfaring fra anden ketchersport og har fordel af dette. Du kan have nogle gode kampe med forholdsvis lange dueller, når du møder nogen på eget niveau.", "en": "You play with some control and use the glass more and more. You may have experience from another racket sport and benefit from it. You can have some good matches with fairly long rallies against players at your own level."}}, {"v": 2.5, "navn": {"da": "Let øvet", "en": "Improver"}, "tekst": {"da": "Du er begyndt at spille med taktisk forståelse og kan bruge forskellige padelslag gennem kampen. Du spiller fint med i americanoer.", "en": "You have started to play with tactical understanding and can use different padel shots during a match. You keep up well in americanos."}}, {"v": 3.0, "navn": {"da": "Øvet", "en": "Intermediate"}, "tekst": {"da": "Du spiller regelmæssigt og med kontrol og sikkerhed i store dele af kampen. Dog har du stadig mange uprovokerede fejl i dit spil og spiller ofte for aggressivt.", "en": "You play regularly, with control and consistency for large parts of the match. You still make many unforced errors and often play too aggressively."}}, {"v": 3.5, "navn": {"da": "Øvet", "en": "Intermediate"}, "tekst": {"da": "Du spiller ugentligt og har færre uprovokerede fejl samt længere dueller. Du har forståelse for taktik og positionering på banen. Du kan bruge glasset og kontrollere farten i dine dueller. Du kan deltage i DPF 100-turneringer og spille 2. division i Lunar Ligaen.", "en": "You play weekly, make fewer unforced errors and have longer rallies. You understand tactics and positioning on court. You can use the glass and control the pace of your rallies. You can take part in DPF 100 tournaments and play in the 2nd division of the Lunar League."}}, {"v": 4.0, "navn": {"da": "Meget øvet", "en": "Advanced"}, "tekst": {"da": "Du spiller med stor sikkerhed og er på et godt niveau taktisk og teknisk. Du har evt. spillet flere DPF-turneringer. Du har niveau til DPF 200-turneringer og 1. division i Lunar Ligaen.", "en": "You play with great consistency and are at a good level tactically and technically. You may have played several DPF tournaments. You are at the level of DPF 200 tournaments and the 1st division of the Lunar League."}}, {"v": 4.5, "navn": {"da": "Meget øvet", "en": "Advanced"}, "tekst": {"da": "Du er seedet i DPF 200-turneringer eller spiller DPF 400-turneringer. Du har niveau til Elitedivisionen i Lunar Ligaen.", "en": "You are seeded in DPF 200 tournaments or play DPF 400 tournaments. You are at the level of the Elite Division of the Lunar League."}}, {"v": 5.0, "navn": {"da": "Elite", "en": "Elite"}, "tekst": {"da": "Du er seedet i DPF 400-turneringer og har niveau til Elitedivisionen i Lunar Ligaen.", "en": "You are seeded in DPF 400 tournaments and are at the level of the Elite Division of the Lunar League."}}, {"v": 5.5, "navn": {"da": "Elite", "en": "Elite"}, "tekst": {"da": "Landsholdsspillere.", "en": "National team players."}}], "kilde": "Padelracks beskrivelser af den danske padelskala (\"Den Nye Skala\"). Teksten er fra Lars 13. oktober 2026 kl. 12.27.", "fodnote": {"da": "Lavet af spillere og padelcentre til hele landet. Beskrivelserne er Padelracks. 6.0 og 7.0 er professionelle.", "en": "Made by players and padel centres for the whole country. The descriptions are Padelrack's. 6.0 and 7.0 are professionals."}}};
 // Grupper på Mit RTK. Login via motoren (login-broen), derefter Firestore direkte i realtid.
 // Medlemskab, roller og pladser går gennem motoren. Chat, spil, booking og betalt skriver siden selv.
 const K = window.RTK_KONTO;
@@ -713,7 +851,12 @@ function dagOverskrift(d) {
 const FARVER = ['#0B3D3A', '#B5476B', '#3E6B8A', '#2E7D6B', '#8A6D1E', '#6B4E9A', '#A3542B', '#4A5560'];
 function farve(id) { let h = 0; for (const c of String(id)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return FARVER[h % FARVER.length]; }
 function initialer(navn) { return String(navn || '?').replace(/^Test\s+/, '').split(/\s+/).filter(Boolean).map((x) => x[0]).join('').slice(0, 2).toUpperCase(); }
-function avatar(id, navn) { const a = K.el('span', { 'class': 'gr-av', 'aria-hidden': 'true', style: 'background:' + farve(id) }, initialer(navn)); return a; }
+function avatar(id, navn) {
+  const a = K.el('span', { 'class': 'gr-av', 'aria-hidden': 'true', style: 'background:' + farve(id) }, initialer(navn));
+  // Profilbilledet i stedet for initialerne, når personen har et (egne_side.js)
+  if (/^P\d+$/.test(String(id)) && typeof prAvatar === 'function') prAvatar(a, id);
+  return a;
+}
 function fornavn(navn) { return String(navn || '').replace(/^Test\s+/, '').split(/\s+/)[0] || String(navn || ''); }
 function medDig(navn) { return (navn || '') + ' (' + t('dig') + ')'; }
 function navnPaa(uid) { const m = tilstand.medlemmer.find((x) => x.id === uid); return m ? m.navn : ''; }
@@ -721,7 +864,7 @@ function minRolle() { const m = tilstand.medlemmer.find((x) => x.id === (mig && 
 const erAdmin = () => minRolle() === 'admin';
 function maaInvitere() { const g = tilstand.gruppe; return !!g && (erAdmin() || minRolle() === 'inviter' || g.invitation === 'alle'); }
 function stopLyt() { lyt.forEach((f) => { try { f(); } catch (e) {} }); lyt = []; if (ab) ab.ansGid = null; }
-function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil', 'vBoers', 'vOpslag', 'vGrOpslag', 'vNytOpslag', 'vFind', 'vFindG'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
+function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil', 'vBoers', 'vOpslag', 'vGrOpslag', 'vNytOpslag', 'vFind', 'vFindG', 'vSoeger', 'vSpiller', 'vProfil'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
 function fejl(el, err) { console.warn(err); if (err && err.code === 'permission-denied' && tilstand.gruppeVaek && Date.now() - tilstand.gruppeVaek < 10000) return; K.besked(el, err && err.code === 'permission-denied' ? t('ingenAdgang') : (err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem')), 'err'); }
 function laest(gid) { try { return Number(localStorage.getItem('rtk.gr.laest.' + gid) || 0); } catch (e) { return 0; } }
 function saetLaest(gid, ms) { try { if (ms > laest(gid)) localStorage.setItem('rtk.gr.laest.' + gid, String(ms)); } catch (e) {} }
@@ -808,15 +951,19 @@ async function start() {
   }
 }
 
-// ---------- Ruter: #  #find  #find/<id>  #ny  #g/<id>/<fane>  #g/<id>/spil/<sid>  #g/<id>/nytspil  #boers  #boers/<oid>  #g/<id>/opslag/<oid>  #g/<id>/nytopslag[/<sid>]
+// ---------- Ruter: #  #soeger  #spiller/<oid>  #profil  #find  #find/<id>  #ny  #g/<id>/<fane>  #g/<id>/spil/<sid>  #g/<id>/nytspil  #boers  #boers/<oid>  #g/<id>/opslag/<oid>  #g/<id>/nytopslag[/<sid>]
 window.addEventListener('hashchange', () => { if (mig && mig.type === 'medlem') rute(); });
 function rute() {
   const h = location.hash.replace(/^#/, '').split('/');
   stopLyt();
+  if (typeof prLuk === 'function') prLuk();
   tilstand.retter = null; tilstand.aaben = null;
   if (h[0] === 'ny') return visNy();
   if (h[0] === 'boers') return h[1] ? visOpslag(h[1]) : visBoers();
   if (h[0] === 'find') return h[1] ? visFindG(h[1]) : visFind();
+  if (h[0] === 'soeger') return visSoeger();
+  if (h[0] === 'spiller' && h[1]) return visSpiller(h[1]);
+  if (h[0] === 'profil') return visProfil();
   if (h[0] === 'g' && h[1]) {
     if (h[2] === 'spil' && h[3]) return visSpil(h[1], h[3]);
     if (h[2] === 'opslag' && h[3]) return visGrOpslag(h[1], h[3]);
@@ -1937,6 +2084,7 @@ document.addEventListener('sprog', () => {
   if (aaben('vNytSpil')) { nsTegnRadioer(); nsBookere(); visGange(); }
   if (typeof sbSprog === 'function') sbSprog(aaben);
   if (typeof abSprog === 'function') abSprog(aaben);
+  if (typeof egSprog === 'function') egSprog(aaben);
 });
 
 // Når man forlader siden, lukkes forbindelsen til Firestore pænt (ellers kan den melde fejl i konsollen midt i et skift).
@@ -1991,11 +2139,13 @@ function stopBoers() {
   if (sbMigLyt) { try { sbMigLyt(); } catch (e) {} sbMigLyt = null; }
   if (sbSpmLyt) { try { sbSpmLyt(); } catch (e) {} sbSpmLyt = null; }
   sb.tavle = []; sb.mine = {}; sb.spm = {}; sb.spmKladde = {}; sb.grKladde = {}; sb.spmSet = null; sb.egne = new Set();
+  if (typeof stopEgne === 'function') stopEgne();
 }
 
 /** Tavlen og ens egne svar i realtid, så længe man er logget ind. Tallet på fanen kommer herfra. */
 function lytBoers() {
   if (!FB || !mig || mig.type !== 'medlem') return;
+  if (typeof lytEgne === 'function') lytEgne();
   const { fs, db } = FB;
   if (!sbLyt) sbLyt = fs.onSnapshot(fs.query(fs.collection(db, 'boers'), fs.where('status', '==', 'aaben')), (s) => {
     sb.tavle = s.docs.map((d) => Object.assign({ id: d.id }, d.data()));
@@ -2032,8 +2182,8 @@ function sbFrist(o) {
 function sbTypeTekst(o) { return o.type === 'fast' ? t('sbFastT') : t(o.antal > 1 ? 'sbManglerN' : 'sbMangler1', { n: o.antal || 1 }); }
 function sbNiveauKort(o) {
   if (!o.niveauFra && !o.niveauTil) return '';
-  if (o.niveauFra && o.niveauTil) return o.niveauFra === o.niveauTil ? String(o.niveauFra) : t('sbFraTil', { a: o.niveauFra, b: o.niveauTil });
-  return o.niveauFra ? t('sbFraN', { n: o.niveauFra }).toLowerCase() : t('sbTilN', { n: o.niveauTil }).toLowerCase();
+  if (o.niveauFra && o.niveauTil) return o.niveauFra === o.niveauTil ? nivTal(o.niveauFra) : t('sbFraTil', { a: nivTal(o.niveauFra), b: nivTal(o.niveauTil) });
+  return o.niveauFra ? t('sbFraN', { n: nivTal(o.niveauFra) }).toLowerCase() : t('sbTilN', { n: nivTal(o.niveauTil) }).toLowerCase();
 }
 function sbNiveau(o) { const k = sbNiveauKort(o); return k ? t('sbNiveauPre', { x: k }) : ''; }
 const SB_ALDER = [['u35', 'sbU35'], ['35-55', 'sb3555'], ['o55', 'sbO55']];
@@ -2061,7 +2211,8 @@ function sbSynlige() {
   return sb.tavle.filter((o) => !sb.egne.has(o.id) && dato(o.frist) && dato(o.frist).getTime() > nu);
 }
 function tegnFaner() {
-  const n = sbSynlige().length;
+  // Ens egne opslag tæller ikke med i tallet
+  const n = sbSynlige().filter((o) => !(o.type === 'mig' && typeof egErMin === 'function' && egErMin(o))).length;
   [['navListe', 'grupper'], ['navBoers', 'boers'], ['navFind', 'find']].forEach(([id, valgt]) => {
     const nav = $(id); if (!nav) return;
     nav.innerHTML = '';
@@ -2070,7 +2221,7 @@ function tegnFaner() {
     if (n) a2.append(K.el('span', { 'class': 'tal', 'aria-label': t('sbAntalOpslag', { n }) }, String(n)));
     const tilbud = Object.values(sb.mine).some((x) => x.status === 'tilbudt');
     if (tilbud) a2.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('sbStTilbudt') }, ''));
-    else if (Object.values(sb.spm).some(spUlaest)) a2.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('spNytSvar') }, ''));
+    else if (Object.values(sb.spm).some(spUlaest) || (typeof egNyt === 'function' && egNyt())) a2.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('spNytSvar') }, ''));
     // Åbne grupper: Find en gruppe som tredje fane, med en prik ved nyt svar fra en gruppe
     const a3 = K.el('a', { href: '#find', 'class': valgt === 'find' ? 'valgt' : '', 'aria-current': valgt === 'find' ? 'page' : 'false' }, t('abFane'));
     if (typeof abNytSvar === 'function' && ab && abNytSvar()) a3.append(K.el('span', { 'class': 'gr-ny', role: 'img', 'aria-label': t('abNytSvar') }, ''));
@@ -2085,7 +2236,7 @@ function visBoers() {
   tegnFaner(); tegnTavle();
   if (FB) hentDetaljer();
 }
-const SB_FILTRE = [['alle', 'alle'], ['tennis', 'tennis'], ['padel', 'padel'], ['et', 'sbFiltEt'], ['fast', 'sbFiltFast']];
+const SB_FILTRE = [['alle', 'alle'], ['tennis', 'tennis'], ['padel', 'padel'], ['et', 'sbFiltEt'], ['fast', 'sbFiltFast'], ['mig', 'sbFiltSpillere']];
 function tegnTavle() {
   if (!mig) return;
   const filtre = $('sbFiltre'); filtre.innerHTML = '';
@@ -2114,15 +2265,17 @@ function tegnTavle() {
     if (x.status === 'tilbudt' && dato(x.tilbudFrist)) a.append(K.el('div', { 'class': 'sb-l staerk' }, t('sbSvarInden', { kl: kl(dato(x.tilbudFrist)) })));
     ml.append(a);
   });
-  $('sbMine').classList.toggle('hidden', !mine.length);
+  if (typeof egDineSvar === 'function') egDineSvar(ml);
+  $('sbMine').classList.toggle('hidden', !ml.childNodes.length);
   // Opslagene
   const ud = $('sbListe'); ud.innerHTML = '';
   const vist = sbSynlige().filter((o) => sb.filter === 'alle' || o.sport === sb.filter || o.type === sb.filter)
-    .sort((a, b) => dato(a.frist) - dato(b.frist));
+    .sort((a, b) => (a.type === 'mig' && egErMin(a) ? 0 : 1) - (b.type === 'mig' && egErMin(b) ? 0 : 1) || (a.type === 'mig' ? 1 : 0) - (b.type === 'mig' ? 1 : 0) || dato(a.frist) - dato(b.frist));
   vist.forEach((o) => ud.append(sbKort(o)));
   $('sbTom').classList.toggle('hidden', vist.length > 0);
 }
 function sbKort(o) {
+  if (o.type === 'mig') return egKort(o);
   const a = K.el('a', { href: '#boers/' + o.id, 'class': 'sb-kort' });
   const top = K.el('div', { 'class': 'sb-top' });
   top.append(K.el('span', { 'class': 'sb-type ' + (o.type === 'fast' ? 'fast' : 'et') }, sbTypeTekst(o)), K.el('span', { 'class': 'sb-l' }, t('sbSvarSenest', { tid: sbFrist(o) })));
@@ -2154,6 +2307,8 @@ function visOpslag(oid) {
   const { fs, db } = FB;
   lyt.push(fs.onSnapshot(fs.doc(db, 'boers', oid), (d) => {
     sb.o = d.exists() ? Object.assign({ id: d.id }, d.data()) : null;
+    // Et medlems eget opslag har sin egen side
+    if (sb.o && sb.o.type === 'mig') { location.replace('#spiller/' + oid); return; }
     if (!sb.o) { K.besked($('opMsg'), t('sbFindesIkke'), 'err'); return; }
     tegnOpslag();
   }, (err) => fejl($('opMsg'), err)));
@@ -2507,13 +2662,14 @@ function tegnNytOpslag() {
   chipGruppe('noAntal', [[1, 'sbEn'], [2, 'sbTo'], [3, 'sbTre']].filter((x) => x[0] <= ledige), nyO.antal, (v) => { nyO.antal = v; tegnNytOpslag(); });
   chipGruppe('noAlder', SB_ALDER, nyO.alder, (v) => { nyO.alder = nyO.alder.indexOf(v) >= 0 ? nyO.alder.filter((x) => x !== v) : nyO.alder.concat([v]); tegnNytOpslag(); }, true);
   chipGruppe('noFrist', [['1t', 'sbFrist1t'], ['2t', 'sbFrist2t'], ['dag', 'sbFristDag']], nyO.frist, (v) => { nyO.frist = v; tegnNytOpslag(); });
+  // Niveauerne for den valgte sport (niveauer.md). Skifter sporten, nulstilles valget
   ['noNivFra', 'noNivTil'].forEach((id) => {
-    const e = $(id); if (e.options.length && e.dataset.sprog === (window.RTK_SPROG ? RTK_SPROG.sprog : 'da')) return;
-    const v = e.value; e.innerHTML = ''; e.dataset.sprog = (window.RTK_SPROG ? RTK_SPROG.sprog : 'da');
-    e.append(K.el('option', { value: '' }, t(id === 'noNivFra' ? 'sbFraAlle' : 'sbTilAlle')));
-    for (let i = 1; i <= 7; i++) e.append(K.el('option', { value: String(i) }, t(id === 'noNivFra' ? 'sbFraN' : 'sbTilN', { n: i })));
-    e.value = v;
+    const e = $(id); if (e.options.length && e.dataset.sprog === nivSprog() && e.dataset.sport === nyO.sport) return;
+    const v = e.dataset.sport === nyO.sport ? e.value : '';
+    nivSelect(e, nyO.sport, v, t(id === 'noNivFra' ? 'sbFraAlle' : 'sbTilAlle'));
+    [...e.options].forEach((op) => { if (op.value) op.textContent = t(id === 'noNivFra' ? 'sbFraN' : 'sbTilN', { n: op.textContent }); });
   });
+  const fk = $('noNivForkl'); if (fk.dataset.sport !== nyO.sport + '/' + nivSprog()) { fk.innerHTML = ''; fk.append(nivForklaring(nyO.sport)); fk.dataset.sport = nyO.sport + '/' + nivSprog(); }
 }
 $('noSpil').addEventListener('change', () => { nyO.sid = $('noSpil').value; tegnNytOpslag(); });
 $('vNytOpslag').addEventListener('submit', async (e) => {
@@ -3073,6 +3229,785 @@ function abSprog(aaben) {
   if (aaben('vFindG')) tegnFindG();
   if (aaben('vGruppe') && tilstand.fane === 'medlemmer') tegnAns();
   ['ny', 'om'].forEach((p) => { const h = $(p + 'AabenHint'); if (h) h.textContent = $(p + 'Aaben').disabled ? t('abAabenKunKlub') : t('abAabenT'); });
+}
+
+// ==================== Egne opslag, profilkort, niveauer og invitationer (13. oktober 2026). Bygges ind i grupper.html
+// efter aaben_side.js. Mockup godkendt 11.53, valg af Lars 11.54 til 12.29: medlemmet siger selv ja til en invitation,
+// alle voksne medlemmer kan skrive til et eget opslag, profilkort med billede og op til tre ekstra billeder, tryk på et
+// billede viser det i fuld skærm, niveauerne kommer fra niveauer.md (tennis NTRP og den danske padelskala, til 5.5).
+// Opslag, samtaler og invitationer skrives af motoren. Profilkortet og billederne skriver man selv (se firestore.rules).
+Object.assign(window.MOTOR_EN, {
+  'Du har allerede et åbent opslag om tennis. Luk det først.': 'You already have an open post about tennis. Close it first.',
+  'Du har allerede et åbent opslag om padel. Luk det først.': 'You already have an open post about padel. Close it first.',
+  'Kun den, der har lagt opslaget ud, kan lukke det': 'Only the person who posted it can close it',
+  'Skriv din besked': 'Write your message',
+  'Samtalen findes ikke': 'The conversation does not exist',
+  'Kun gruppeadministratorer kan invitere i denne gruppe': 'Only group admins can invite in this group',
+  'Du kan ikke invitere dig selv': 'You cannot invite yourself',
+  'Personen er allerede med i gruppen': 'The person is already in the group',
+  'Gruppen har mange invitationer, der venter på svar': 'The group has many invitations waiting for an answer',
+  'Invitationen findes ikke': 'The invitation does not exist',
+  'Invitationen er udløbet': 'The invitation has expired',
+  'Gruppen er fuld': 'The group is full',
+  'Personen har sagt nej tak for nylig. Prøv igen senere.': 'The person said no thanks recently. Try again later.',
+  'Opslaget er lukket, så der kan ikke inviteres fra det': 'The post is closed, so no one can be invited from it',
+  'Gruppen er slettet': 'The group has been deleted'
+});
+
+// var, ikke const/let: stopBoers kan kalde stopEgne, før denne del af scriptet er nået
+var eg = { inv: {}, sam: {}, prof: {}, profVent: {}, o: null, venter: {}, invVenter: {}, kladde: {}, skrivAaben: false, invAaben: false, invGid: '', invStatus: {}, lukKlar: false, sletKlar: false, travl: false, ny: null };
+var egInvLyt = null, egSamLyt = null, egProfLyt = null;
+
+function stopEgne() {
+  if (!eg) return;
+  [egInvLyt, egSamLyt, egProfLyt].forEach((f) => { if (f) { try { f(); } catch (e) {} } });
+  egInvLyt = null; egSamLyt = null; egProfLyt = null;
+  if (egFuld) prLuk();
+  eg.inv = {}; eg.sam = {}; eg.prof = {}; eg.profVent = {}; eg.mini = {}; eg.venter = {}; eg.invVenter = {}; eg.kladde = {}; eg.invStatus = {}; eg.mit = null;
+  eg.mitNavn = ''; eg.ny = null; eg.prTekstRet = false; eg.prVenter = null; eg.o = null; eg.prTravl = false; eg.travl = false;
+  ['soTitel', 'soTekst', 'prTekst'].forEach((id) => { const e = document.getElementById(id); if (e) e.value = ''; });
+  clearTimeout(eg.genLyt);
+}
+
+/** Ens invitationer, ens samtaler om egne opslag og ens eget profilkort i realtid. */
+function lytEgne() {
+  if (!FB || !mig || mig.type !== 'medlem') return;
+  const { fs, db } = FB;
+  const tegn = () => { tegnFaner(); if (!$('vBoers').classList.contains('hidden')) tegnTavle(); if (!$('vSpiller').classList.contains('hidden')) tegnSpiller(); };
+  if (!egInvLyt) egInvLyt = fs.onSnapshot(fs.collection(db, 'invitationMig', mig.uid, 'fra'), (s) => {
+    eg.fejl = 0; eg.inv = {}; s.docs.forEach((d) => { eg.inv[d.id] = Object.assign({ id: d.id }, d.data()); });
+    tegn();
+  }, (err) => { console.warn(err); egInvLyt = null; egLytIgen(); });
+  if (!egSamLyt) egSamLyt = fs.onSnapshot(fs.query(fs.collection(db, 'egneSamtaler'), fs.where('deltagere', 'array-contains', mig.uid)), (s) => {
+    eg.sam = {}; s.docs.forEach((d) => { eg.sam[d.id] = Object.assign({ id: d.id }, d.data()); });
+    Object.keys(eg.venter).forEach((sid) => { const v = eg.venter[sid]; if (v && eg.sam[sid] && egFremme(eg.sam[sid], v)) delete eg.venter[sid]; });
+    tegn();
+  }, (err) => { console.warn(err); egSamLyt = null; egLytIgen(); });
+  if (!egProfLyt) egProfLyt = fs.onSnapshot(fs.doc(db, 'profiler', mig.uid), (d) => {
+    eg.mit = d.exists() ? d.data() : {};
+    eg.prof[mig.uid] = { p: eg.mit, tid: Date.now() };
+    if (!$('vProfil').classList.contains('hidden')) tegnProfil();
+  }, (err) => { console.warn(err); egProfLyt = null; egLytIgen(); });
+}
+/** Efter en fejl (fx mens login fornyes): prøv igen om lidt, så nye invitationer og svar stadig kommer. */
+function egLytIgen() {
+  clearTimeout(eg.genLyt); eg.fejl = (eg.fejl || 0) + 1;
+  eg.genLyt = setTimeout(() => { if (mig && mig.type === 'medlem') lytEgne(); }, Math.min(30000, 2000 * Math.pow(2, eg.fejl - 1)));
+}
+
+// ---------- Niveauer (fra niveauer.md)
+function nivListe(sport) { return ((NIVEAUER[sport] || NIVEAUER.tennis).niveauer) || []; }
+function nivSprog() { return window.RTK_SPROG && RTK_SPROG.sprog === 'en' ? 'en' : 'da'; }
+/** 4 bliver "4,0" på dansk og "4.0" på engelsk, som skalaerne skrives. */
+function nivTal(v) { const n = Number(v); if (!n) return ''; const s = n.toFixed(1); return nivSprog() === 'da' ? s.replace('.', ',') : s; }
+function nivFind(sport, v) { return nivListe(sport).find((x) => x.v === Number(v)) || null; }
+/** Et valg med niveauerne for sporten. tom: teksten for "intet valgt" (tom streng = intet tomt valg). */
+function nivSelect(sel, sport, valgt, tom) {
+  sel.innerHTML = '';
+  if (tom) sel.append(K.el('option', { value: '' }, tom));
+  nivListe(sport).forEach((n) => {
+    const navn = n.navn[nivSprog()] || '';
+    sel.append(K.el('option', { value: String(n.v) }, nivTal(n.v) + (navn ? ' · ' + navn : '')));
+  });
+  sel.value = valgt && nivFind(sport, valgt) ? String(nivFind(sport, valgt).v) : '';
+  if (!tom && !sel.value && sel.options.length) sel.selectedIndex = 0;
+  sel.dataset.sport = sport; sel.dataset.sprog = nivSprog();
+}
+/** Teksten til det valgte niveau under valget. */
+function nivTekst(el, sport, v) {
+  const n = nivFind(sport, v);
+  el.textContent = n ? n.tekst[nivSprog()] : '';
+  el.classList.toggle('hidden', !n);
+}
+/** "Hvad betyder niveauerne?": alle niveauer for sporten, med fodnoten. */
+function nivForklaring(sport) {
+  const d = K.el('details', { 'class': 'niv-forkl' });
+  d.append(K.el('summary', null, t('nivHvad', { sport: t(sport) })));
+  const dl = K.el('dl');
+  nivListe(sport).forEach((n) => {
+    const navn = n.navn[nivSprog()];
+    dl.append(K.el('dt', null, nivTal(n.v) + (navn ? ' · ' + navn : '')), K.el('dd', null, n.tekst[nivSprog()]));
+  });
+  d.append(dl);
+  const f = (NIVEAUER[sport] || {}).fodnote; if (f && f[nivSprog()]) d.append(K.el('p', { 'class': 'hint' }, f[nivSprog()]));
+  return d;
+}
+function nivTag(sport, v) { return t(sport) + ' ' + nivTal(v); }
+
+// ---------- Profilkort. Hentes én gang pr. person og huskes i fem minutter
+function prHent(pid) {
+  pid = String(pid || '');
+  if (!/^P\d+$/.test(pid) || !FB || !mig) return Promise.resolve(null);
+  const c = eg.prof[pid];
+  if (c && Date.now() - c.tid < 300000) return Promise.resolve(c.p);
+  if (eg.profVent[pid]) return eg.profVent[pid];
+  const { fs, db } = FB;
+  eg.profVent[pid] = fs.getDoc(fs.doc(db, 'profiler', pid)).then((d) => {
+    const p = d.exists() ? d.data() : null;
+    eg.prof[pid] = { p, tid: Date.now() }; delete eg.profVent[pid];
+    return p;
+  }).catch((err) => { console.warn(err); delete eg.profVent[pid]; return null; });
+  return eg.profVent[pid];
+}
+/** Billedet i stedet for initialerne, når personen har et profilbillede (kaldes fra avatar()). */
+function prAvatar(a, pid) {
+  pid = String(pid || '');
+  if (!/^P\d+$/.test(pid) || !FB || !mig) return;
+  if (!eg.mini) eg.mini = {};
+  let c = eg.mini[pid];
+  if (!c || Date.now() - c.tid > 300000) {
+    const { fs, db } = FB;
+    c = eg.mini[pid] = { tid: Date.now(), p: fs.getDoc(fs.doc(db, 'profilMini', pid)).then((d) => (d.exists() ? d.data().mini : '')).catch(() => '') };
+  }
+  c.p.then((mini) => {
+    if (!mini) return;
+    a.textContent = ''; a.classList.add('foto');
+    a.style.backgroundImage = 'url("' + mini + '")';
+  });
+}
+/** Billederne på et profilkort: [{i, thumb}], profilbilledet først. */
+function prBilleder(p) {
+  const ud = [];
+  if (p && p.billede) ud.push({ i: 0, thumb: p.billede });
+  ((p && p.ekstra) || []).forEach((x, k) => { if (x) ud.push({ i: k + 1, thumb: x }); });
+  return ud;
+}
+/**
+ * Profilkortet: billede (eller initialer), navn, niveauer, en linje og teksten. Tryk på et billede viser det i fuld skærm.
+ * linje: fx dage og tidsrum fra et opslag.
+ */
+function prKort(pid, navn, linje, egen) {
+  const k = K.el('div', { 'class': 'pr-kort' });
+  const tegn = (p) => {
+    k.innerHTML = '';
+    const billeder = prBilleder(p);
+    const hoved = K.el('div', { 'class': 'pr-hoved' });
+    if (p && p.billede) {
+      const b = K.el('button', { type: 'button', 'class': 'pr-billede', 'aria-label': t('prVisBillede', { navn }) });
+      b.style.backgroundImage = 'url("' + p.billede + '")';
+      b.addEventListener('click', () => prVis(pid, navn, billeder, 0));
+      hoved.append(b);
+    } else hoved.append(K.el('span', { 'class': 'pr-billede tom', 'aria-hidden': 'true', style: 'background:' + farve(pid) }, initialer(navn)));
+    const midt = K.el('div', { 'class': 'pr-midt' });
+    midt.append(K.el('div', { 'class': 'pr-navn' }, navn + (egen ? ' (' + t('dig') + ')' : '')));
+    const tags = K.el('div', { 'class': 'sb-tags' });
+    ['tennis', 'padel'].forEach((s) => { const v = p && p.niveau && p.niveau[s]; if (v) tags.append(K.el('span', { 'class': 'sb-tag' }, nivTag(s, v))); });
+    if (linje) tags.append(K.el('span', { 'class': 'sb-tag' }, linje));
+    if (tags.childNodes.length) midt.append(tags);
+    if (p && p.tekst) midt.append(K.el('p', { 'class': 'pr-tekst' }, p.tekst));
+    hoved.append(midt); k.append(hoved);
+    const ekstra = billeder.filter((x) => x.i > 0);
+    if (ekstra.length) {
+      const r = K.el('div', { 'class': 'pr-ekstra' });
+      ekstra.forEach((x) => {
+        const b = K.el('button', { type: 'button', 'aria-label': t('prVisBilledeN', { navn, n: billeder.indexOf(x) + 1 }) });
+        b.style.backgroundImage = 'url("' + x.thumb + '")';
+        b.addEventListener('click', () => prVis(pid, navn, billeder, billeder.indexOf(x)));
+        r.append(b);
+      });
+      k.append(r);
+    }
+  };
+  const c = eg.prof[pid];
+  tegn(c ? c.p : null);
+  prHent(pid).then((p) => { if (k.isConnected || !c) tegn(p); });
+  return k;
+}
+
+// ---------- Billedet i fuld skærm. Viser det lille billede med det samme og det store, når det er hentet
+var egFuld = null;
+function prVis(pid, navn, billeder, i) {
+  if (!billeder.length) return;
+  const foer = document.activeElement;
+  egFuld = { pid, navn, billeder, i, foer, kort: foer && foer.closest ? foer.closest('.pr-kort, #prPlads') : null };
+  const f = $('fuld'); f.classList.remove('hidden'); f.setAttribute('aria-label', t('prBillederAf', { navn }));
+  document.body.classList.add('fuld-aaben');
+  prVisNr(i);
+  $('fuldLuk').focus();
+}
+function prVisNr(i) {
+  const x = egFuld; if (!x) return;
+  const n = x.billeder.length;
+  x.i = (i + n) % n;
+  const b = x.billeder[x.i];
+  const img = $('fuldImg'); img.src = b.thumb; img.alt = t('prBilledeAfN', { navn: x.navn, n: x.i + 1, af: n });
+  $('fuldTal').textContent = n > 1 ? t('prNAf', { n: x.i + 1, af: n }) : '';
+  $('fuldForrige').classList.toggle('hidden', n < 2); $('fuldNaeste').classList.toggle('hidden', n < 2);
+  const { fs, db } = FB;
+  const nr = x.i;
+  fs.getDoc(fs.doc(db, 'profilBilleder', x.pid + '_' + b.i)).then((d) => {
+    if (egFuld === x && x.i === nr && d.exists() && d.data().data) img.src = d.data().data;
+  }).catch((err) => console.warn(err));
+}
+function prLuk() {
+  if (!egFuld) return;
+  const x = egFuld; egFuld = null;
+  $('fuld').classList.add('hidden'); $('fuldImg').src = ''; document.body.classList.remove('fuld-aaben');
+  // Er knappen tegnet igen imens, går fokus til det første billede på samme kort
+  const til = x.foer && x.foer.isConnected ? x.foer : (x.kort && x.kort.isConnected ? x.kort.querySelector('button') : null);
+  if (til && til.focus) til.focus();
+}
+$('fuldLuk').addEventListener('click', prLuk);
+$('fuldForrige').addEventListener('click', () => prVisNr(egFuld.i - 1));
+$('fuldNaeste').addEventListener('click', () => prVisNr(egFuld.i + 1));
+$('fuld').addEventListener('click', (e) => { if (e.target === $('fuld') || e.target === $('fuldImg')) prLuk(); });
+document.addEventListener('keydown', (e) => {
+  if (!egFuld) return;
+  if (e.key === 'Escape') { e.preventDefault(); prLuk(); }
+  else if (e.key === 'ArrowLeft' && egFuld.billeder.length > 1) prVisNr(egFuld.i - 1);
+  else if (e.key === 'ArrowRight' && egFuld.billeder.length > 1) prVisNr(egFuld.i + 1);
+  else if (e.key === 'Tab') {
+    // Fokus bliver i billedvisningen
+    const k = [...$('fuld').querySelectorAll('button:not(.hidden)')]; if (!k.length) return;
+    const i = k.indexOf(document.activeElement);
+    e.preventDefault(); k[(i + (e.shiftKey ? -1 : 1) + k.length) % k.length].focus();
+  }
+});
+// Stryg til siden på en telefon
+(function () {
+  let x0 = null;
+  $('fuld').addEventListener('touchstart', (e) => { x0 = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+  $('fuld').addEventListener('touchend', (e) => {
+    if (x0 === null || !egFuld) return;
+    const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50 && egFuld.billeder.length > 1) prVisNr(egFuld.i + (dx < 0 ? 1 : -1));
+  });
+})();
+
+// ---------- Tavlen: kort, filter, Dine svar og prikken på fanen
+const EG_DAGE = [['man', 'egMan'], ['tir', 'egTir'], ['ons', 'egOns'], ['tor', 'egTor'], ['fre', 'egFre'], ['loer', 'egLoer'], ['soen', 'egSoen']];
+const EG_TID = [['morgen', 'egMorgen'], ['dag', 'egDag'], ['aften', 'egAften']];
+/** "Man, tir, tor · aften" eller "Hverdage" og "Weekender", når det passer. */
+function egHvornaar(o) {
+  const d = o.dage || [], ti = o.tidsrum || [];
+  let dage = '';
+  const hverdage = ['man', 'tir', 'ons', 'tor', 'fre'];
+  if (d.length === 7) dage = t('egAlleDage');
+  else if (d.length === 5 && hverdage.every((x) => d.indexOf(x) >= 0)) dage = t('egHverdage');
+  else if (d.length === 2 && d.indexOf('loer') >= 0 && d.indexOf('soen') >= 0) dage = t('egWeekender');
+  else dage = EG_DAGE.filter((x) => d.indexOf(x[0]) >= 0).map((x) => t(x[1]).toLowerCase()).join(', ');
+  const tid = ti.length === 3 ? '' : EG_TID.filter((x) => ti.indexOf(x[0]) >= 0).map((x) => t(x[1]).toLowerCase()).join(', ');
+  const s = [dage, tid].filter(Boolean).join(' · ');
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+}
+function egErMin(o) { return !!mig && String(o.ejer) === String(mig.uid); }
+function egDato(d) { return d ? new Intl.DateTimeFormat(lokal(), { day: 'numeric', month: 'short' }).format(d) : ''; }
+function egKort(o) {
+  const min = egErMin(o);
+  const a = K.el('a', { href: '#spiller/' + o.id, 'class': 'sb-kort' + (min ? ' eget' : '') });
+  const top = K.el('div', { 'class': 'sb-top' });
+  const op = dato(o.oprettet);
+  top.append(K.el('span', { 'class': 'sb-type mig' }, t(min ? 'egDitOpslag' : 'egSpillerSoeger')),
+    K.el('span', { 'class': 'sb-l' }, min ? t(o.antalSkrevet === 1 ? 'egSkrevet1' : 'egSkrevetN', { n: o.antalSkrevet || 0 }) : (op ? dagOverskrift(op) : '')));
+  a.append(top, K.el('h3', null, o.titel));
+  const linje = [t(o.sport || 'tennis'), (SB_FORM.find((x) => x[0] === o.spilform) || [])[1] ? t(SB_FORM.find((x) => x[0] === o.spilform)[1]) : '',
+    o.niveauFra ? t('egNiveauN', { n: nivTal(o.niveauFra) }) : '', egHvornaar(o)].filter(Boolean).join(' · ');
+  a.append(K.el('div', { 'class': 'sb-l' }, linje));
+  const fod = K.el('div', { 'class': 'sb-fod' });
+  const v = K.el('span', { 'class': 'eg-hvem' });
+  v.append(avatar(o.ejer, o.kontakt), K.el('b', null, o.kontakt + (min ? ' (' + t('dig') + ')' : '')));
+  fod.append(v, K.el('span', null, t('egStaarTil', { dato: egDato(dato(o.frist)) })));
+  a.append(fod);
+  return a;
+}
+/** Til fanen: nye invitationer og nye svar i samtaler. */
+function egIkkeSet(x) {
+  const d = dato(x && x.sidst); if (!d) return false;
+  const fra = egErMin({ ejer: x.ejer }) ? 'svar' : 'ejer';
+  if (x.sidstAf !== fra) return false;
+  try { return d.getTime() > (Number(localStorage.getItem('rtk.eg.set.' + x.id)) || 0); } catch (e) { return false; }
+}
+function egSaetSet(x) { const d = dato(x && x.sidst); if (!d) return; try { localStorage.setItem('rtk.eg.set.' + x.id, String(d.getTime())); } catch (e) {} }
+function egErMedI(gid) { return (tilstand.grupper || []).some((g) => g.id === gid); }
+function egInvAaben(x, nu) { return x.status === 'venter' && dato(x.udloeber) && dato(x.udloeber).getTime() > nu && !egErMedI(x.id); }
+function egInvAabne() { const nu = Date.now(); return Object.values(eg.inv).filter((x) => egInvAaben(x, nu)); }
+function egNyt() { return egInvAabne().length > 0 || Object.values(eg.sam).some(egIkkeSet); }
+
+/** Under Dine svar: invitationer (med Ja tak og Nej tak) og nye svar i samtaler. */
+function egDineSvar(ml) {
+  const nu = Date.now();
+  Object.values(eg.inv).filter((x) => egInvAaben(x, nu) || eg.invVenter[x.id] || (x.svarTid && nu - dato(x.svarTid).getTime() < 3600000 && x.status === 'ja'))
+    .sort((a, b) => (dato(b.tid) || 0) - (dato(a.tid) || 0)).forEach((x) => ml.append(egInvKort(x)));
+  Object.values(eg.sam).filter(egIkkeSet).sort((a, b) => dato(b.sidst) - dato(a.sidst)).forEach((x) => {
+    const min = egErMin({ ejer: x.ejer });
+    const a = K.el('a', { href: '#spiller/' + x.oid, 'class': 'sb-kort mit' });
+    const top = K.el('div', { 'class': 'sb-top' });
+    top.append(K.el('b', null, x.titel), K.el('span', { 'class': 'sb-ok ok' }, t('spNytSvar')));
+    const bs = x.beskeder || []; const b = bs[bs.length - 1] || {};
+    a.append(top, K.el('div', { 'class': 'sb-l' }, (min ? x.navn : x.navnEjer) + ': "' + String(b.tekst || '').slice(0, 80) + (String(b.tekst || '').length > 80 ? '…' : '') + '"'));
+    ml.append(a);
+  });
+}
+function egGruppeLinje(x) {
+  const dag = x.dag ? t('abD' + x.dag) : '';
+  return [t(x.antal === 1 ? 'medlemmer1' : 'medlemmerN', { n: x.antal || 0 }), dag ? (x.kl ? t('abTypiskKl', { dag, kl: x.kl }) : t('abTypisk', { dag })).toLowerCase() : '', x.sport ? t(x.sport === 'begge' ? 'begge' : x.sport) : ''].filter(Boolean).join(' · ');
+}
+function egInvKort(x) {
+  const v = eg.invVenter[x.id];
+  const status = v || x.status;
+  const k = K.el('section', { 'class': 'sb-kort inv' + (status === 'venter' ? ' haster' : ''), 'aria-label': t('egInvTil', { navn: x.gruppeNavn }) });
+  k.append(K.el('h3', null, t('egInvTil', { navn: x.gruppeNavn })), K.el('div', { 'class': 'sb-l' }, egGruppeLinje(x)));
+  if (x.beskrivelse) k.append(K.el('p', { 'class': 'sb-l' }, x.beskrivelse));
+  if (x.tekst) k.append(K.el('div', { 'class': 'sb-citat' }, t('egInvSkrev', { navn: x.afNavn, tekst: x.tekst })));
+  else k.append(K.el('p', { 'class': 'sb-l' }, t('egInvFra', { navn: x.afNavn })));
+  if (status === 'ja') {
+    k.append(K.el('p', { 'class': 'sb-ok ok' }, t('egInvJaH')));
+    const d = K.el('div', { 'class': 'gr-knapper' }); d.append(K.el('a', { href: '#g/' + x.id + '/chat', 'class': 'gr-knap' }, t('sbAabnGruppen'))); k.append(d);
+    return k;
+  }
+  if (status === 'nej') { k.append(K.el('p', { 'class': 'sb-l' }, t('egInvNejH'))); return k; }
+  const d = K.el('div', { 'class': 'gr-knapper' });
+  const ja = K.el('button', { type: 'button', 'class': 'ok' }, t('egInvJa'));
+  const nej = K.el('button', { type: 'button', 'class': 'ghost' }, t('egInvNej'));
+  ja.addEventListener('click', () => egSvarInv(x, 'ja'));
+  nej.addEventListener('click', () => egSvarInv(x, 'nej'));
+  d.append(ja, nej); k.append(d);
+  if (dato(x.udloeber)) k.append(K.el('p', { 'class': 'hint', style: 'margin:6px 0 0' }, t('egInvUdloeber', { dato: egDato(dato(x.udloeber)) })));
+  return k;
+}
+/** Ja tak eller Nej tak: vises med det samme og gemmes bagefter. Kan det ikke gemmes, hopper kortet tilbage. */
+async function egSvarInv(x, svar) {
+  if (eg.invVenter[x.id]) return;
+  eg.invVenter[x.id] = svar; K.besked($('sbMsg'), ''); tegnTavle();
+  try {
+    await K.motor('grupper', 'svarInvitation', { gid: x.id, svar }, K.nyId());
+    K.besked($('sbMsg'), t(svar === 'ja' ? 'egInvJaMsg' : 'egInvNejMsg', { navn: x.gruppeNavn }), 'okm');
+    if (svar === 'ja' && typeof lytListeIgen === 'function') lytListeIgen();
+  } catch (err) { fejl($('sbMsg'), err); }
+  setTimeout(() => { delete eg.invVenter[x.id]; if (!$('vBoers').classList.contains('hidden')) tegnTavle(); }, 1500);
+  tegnTavle();
+}
+
+// ---------- Jeg søger (nyt eget opslag)
+function egNyStart() { return { soeger: 'gruppe', sport: 'tennis', spilform: 'double', dage: [], tidsrum: [], niveau: '', id: K.nyId(), sportSat: false }; }
+function visSoeger() {
+  vis('vSoeger');
+  lytBoers();
+  if (!eg.ny) eg.ny = egNyStart();
+  K.besked($('soMsg'), '');
+  tegnSoeger();
+}
+function tegnSoeger() {
+  if (!mig) return;
+  const n = eg.ny;
+  // Mit niveau: fra profilkortet, hvis der står et
+  if (!n.nivSat && !n.niveau && eg.mit && eg.mit.niveau && eg.mit.niveau[n.sport]) n.niveau = String(eg.mit.niveau[n.sport]);
+  radioer($('soType'), 'sotype', [['gruppe', 'egEnGruppe', 'egEnGruppeT'], ['makker', 'egEnMakker', 'egEnMakkerT']], n.soeger, (v) => { n.soeger = v; });
+  chipGruppe('soSport', [['tennis', 'tennis'], ['padel', 'padel']], n.sport, (v) => { if (v !== n.sport) { n.sport = v; n.niveau = ''; n.nivSat = false; } tegnSoeger(); });
+  chipGruppe('soSpilform', SB_FORM, n.spilform, (v) => { n.spilform = v; tegnSoeger(); });
+  chipGruppe('soDage', EG_DAGE, n.dage, (v) => { n.dage = n.dage.indexOf(v) >= 0 ? n.dage.filter((x) => x !== v) : n.dage.concat([v]); tegnSoeger(); }, true);
+  chipGruppe('soTid', EG_TID, n.tidsrum, (v) => { n.tidsrum = n.tidsrum.indexOf(v) >= 0 ? n.tidsrum.filter((x) => x !== v) : n.tidsrum.concat([v]); tegnSoeger(); }, true);
+  nivSelect($('soNiveau'), n.sport, n.niveau, t('egNivVaelg'));
+  nivTekst($('soNivTekst'), n.sport, n.niveau);
+  const fk = $('soNivForkl'); fk.innerHTML = ''; fk.append(nivForklaring(n.sport));
+  $('soNivGemL').classList.toggle('hidden', !n.niveau || !!(eg.mit && eg.mit.niveau && Number(eg.mit.niveau[n.sport]) === Number(n.niveau)));
+}
+$('soNiveau').addEventListener('change', () => { eg.ny.niveau = $('soNiveau').value; eg.ny.nivSat = true; tegnSoeger(); });
+$('vSoeger').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const n = eg.ny; if (!n || eg.travl) return;
+  const titel = $('soTitel').value.trim();
+  if (!titel) { K.besked($('soMsg'), t('sbManglerTitel'), 'err'); $('soTitel').focus(); return; }
+  eg.travl = true; K.besked($('soMsg'), t('sbLaeggerUd'));
+  try {
+    const r = await K.motor('boers', 'egenOpret', { soeger: n.soeger, sport: n.sport, spilform: n.spilform, niveau: n.niveau, dage: n.dage, tidsrum: n.tidsrum, titel, tekst: $('soTekst').value.trim() }, n.id);
+    // Niveauet på profilkortet også, hvis man har valgt det
+    if (n.niveau && $('soNivGem').checked && !$('soNivGemL').classList.contains('hidden')) {
+      const niv = Object.assign({}, (eg.mit && eg.mit.niveau) || {}); niv[n.sport] = Number(n.niveau);
+      prGem({ niveau: niv }).catch((err) => console.warn(err));
+    }
+    $('soTitel').value = ''; $('soTekst').value = ''; eg.ny = null;
+    location.hash = 'spiller/' + r.id;
+  } catch (err) { fejl($('soMsg'), err); }
+  finally { eg.travl = false; }
+});
+
+// ---------- Et eget opslag: set af andre (Skriv til, Inviter til en gruppe) og af ejeren (samtalerne, Luk)
+function visSpiller(oid) {
+  vis('vSpiller');
+  lytBoers();
+  eg.o = null; eg.oid = oid; eg.skrivAaben = false; eg.invAaben = false; eg.invGid = ''; eg.invStatus = {}; eg.lukKlar = false; eg.aabneSam = new Set();
+  K.besked($('plMsg'), '');
+  ['plTags', 'plProfil', 'plBoks', 'plSam', 'plInv'].forEach((id) => { $(id).innerHTML = ''; });
+  $('plProfil').dataset.oid = '';
+  $('plTitel').textContent = ''; $('plTekst').classList.add('hidden');
+  const { fs, db } = FB;
+  lyt.push(fs.onSnapshot(fs.doc(db, 'boers', oid), (d) => {
+    eg.o = d.exists() && d.data().type === 'mig' ? Object.assign({ id: d.id }, d.data()) : null;
+    if (!eg.o) { K.besked($('plMsg'), t('sbFindesIkke'), 'err'); return; }
+    tegnSpiller();
+  }, (err) => fejl($('plMsg'), err)));
+  if (FB && typeof hentDetaljer === 'function') hentDetaljer().then(() => tegnSpiller()).catch(() => {});
+}
+function egAaben(o) { return o.status === 'aaben' && dato(o.frist) && dato(o.frist).getTime() > Date.now(); }
+function egSid(o, pid) { return o.id + '_' + pid; }
+function tegnSpiller() {
+  const o = eg.o; if (!mig || !o || $('vSpiller').classList.contains('hidden')) return;
+  const min = egErMin(o);
+  const aaben = egAaben(o);
+  const tags = $('plTags'); tags.innerHTML = '';
+  tags.append(K.el('span', { 'class': 'sb-type mig' }, t(min ? 'egDitOpslag' : 'egSpillerSoeger')), K.el('span', { 'class': 'sb-tag staerk' }, t(o.soeger === 'makker' ? 'egSoegerMakker' : 'egSoegerGruppe')),
+    K.el('span', { 'class': 'sb-tag' }, t(o.sport || 'tennis')));
+  const f = SB_FORM.find((x) => x[0] === o.spilform); if (f) tags.append(K.el('span', { 'class': 'sb-tag' }, t(f[1])));
+  if (o.niveauFra) tags.append(K.el('span', { 'class': 'sb-tag' }, t('egNiveauN', { n: nivTal(o.niveauFra) })));
+  $('plTitel').textContent = o.titel;
+  // Profilkortet tegnes kun igen, når det er et andet opslag (ellers blinker billederne)
+  const pr = $('plProfil');
+  if (pr.dataset.oid !== o.id + '/' + nivSprog()) { pr.innerHTML = ''; pr.append(prKort(o.ejer, o.kontakt, egHvornaar(o), min)); pr.dataset.oid = o.id + '/' + nivSprog(); }
+  const tx = $('plTekst'); tx.textContent = o.tekst || ''; tx.classList.toggle('hidden', !o.tekst);
+  const niv = nivFind(o.sport, o.niveauFra);
+  const nt = $('plNivTekst'); nt.textContent = niv ? t('egNivBetyder', { n: nivTal(niv.v), sport: t(o.sport), tekst: niv.tekst[nivSprog()] }) : ''; nt.classList.toggle('hidden', !niv);
+  $('plFrist').textContent = aaben ? t('egStaarTilLang', { dato: egDato(dato(o.frist)) }) : '';
+  if (min) return tegnEjer(o, aaben);
+  tegnAndre(o, aaben);
+}
+function tegnAndre(o, aaben) {
+  const boks = $('plBoks'); const fn = fornavn(o.kontakt);
+  const sid = egSid(o, mig.uid); const sam = eg.sam[sid];
+  spBevarFokus(() => {
+    boks.innerHTML = ''; boks.className = 'sb-boks';
+    if (!aaben && !sam) { boks.append(K.el('h2', null, t('egLukket'))); $('plInv').innerHTML = ''; $('plInv').classList.add('hidden'); return; }
+    if (aaben) {
+      boks.append(K.el('h2', null, t('egHarDuPlads', { navn: fn })), K.el('p', { 'class': 'hint', style: 'margin:0' }, t(o.soeger === 'makker' ? 'egHarDuPladsMakker' : 'egHarDuPladsT', { navn: fn })));
+      const d = K.el('div', { 'class': 'gr-knapper lodret' });
+      if (!sam && !eg.skrivAaben) {
+        const b = K.el('button', { type: 'button', 'class': 'ghost', id: 'plSkrivKnap' }, t('egSkrivTil', { navn: fn }));
+        b.addEventListener('click', () => { eg.skrivAaben = true; tegnSpiller(); const ta = $('plSkrivTekst'); if (ta) ta.focus(); });
+        d.append(b);
+      }
+      if (egMineInvGrupper(o).length && !eg.invAaben) {
+        const b = K.el('button', { type: 'button', 'class': 'ok', id: 'plInvKnap' }, t('egInviterTil'));
+        b.addEventListener('click', () => { eg.invAaben = true; tegnSpiller(); const r = $('plInv').querySelector('input'); if (r) r.focus(); });
+        d.append(b);
+      }
+      if (d.childNodes.length) boks.append(d);
+    }
+    // Samtalen med ejeren
+    if (sam || eg.skrivAaben || eg.venter[sid]) {
+      const del = K.el('div', { 'class': 'afsnit' });
+      del.append(K.el('h3', { 'class': 'gr-lille' }, t(sam ? 'egSamtaleMed' : 'egSkrivTil', { navn: fn })), K.el('p', { 'class': 'hint', style: 'margin:0' }, t('egKunI2', { navn: fn })));
+      del.append(spBobler(egBeskeder(sam, true), true, eg.venter[sid] ? { tekst: eg.venter[sid].tekst, venter: true } : null));
+      if (sam) egSaetSet(sam);
+      if (aaben || sam) {
+        del.append(spSkriv('plSkrivTekst', t(sam ? 'spSvarPh' : 'egSkrivPh'), eg.kladde[sid], (v) => { eg.kladde[sid] = v; }, (v) => egSend(o, mig.uid, v)));
+        del.append(K.el('p', { 'class': 'hint', style: 'margin:6px 0 0' }, t('spMaks')));
+      }
+      boks.append(del);
+    }
+  });
+  tegnInv(o, aaben);
+}
+/** Beskederne i den form, spBobler bruger. minSide: den, der skrev til opslaget. */
+function egBeskeder(sam, minSide) {
+  return ((sam && sam.beskeder) || []).map((b) => ({ gruppe: b.af === 'ejer', tekst: b.tekst, tid: b.tid,
+    navn: b.af === 'ejer' ? (minSide ? sam.navnEjer : t('spDig')) : (minSide ? t('spDig') : sam.navn) }));
+}
+function egFremme(sam, v) {
+  const b = (sam && sam.beskeder) || [];
+  if (b.length < v.n) return false;
+  const sidste = b[b.length - 1];
+  return !!sidste && sidste.tekst === v.tekst.slice(0, 500);
+}
+async function egSend(o, pid, tekst) {
+  const sid = egSid(o, pid); if (eg.venter[sid]) return;
+  const v = { tekst, n: ((eg.sam[sid] && eg.sam[sid].beskeder) || []).length + 1 };
+  eg.venter[sid] = v; eg.kladde[sid] = ''; K.besked($('plMsg'), ''); tegnSpiller();
+  try {
+    await K.motor('boers', 'egenSkriv', Object.assign({ oid: o.id, tekst }, egErMin(o) ? { pid } : {}), K.nyId());
+    if (eg.venter[sid] === v && egFremme(eg.sam[sid], v)) { delete eg.venter[sid]; tegnSpiller(); }
+    setTimeout(() => { if (eg.venter[sid] === v) { delete eg.venter[sid]; tegnSpiller(); } }, 5000);
+  } catch (err) {
+    if (eg.venter[sid] === v) delete eg.venter[sid];
+    if (!eg.kladde[sid]) eg.kladde[sid] = tekst;
+    if (eg.o && eg.o.id === o.id) { tegnSpiller(); fejl($('plMsg'), err); }
+  }
+}
+
+// Inviter til en gruppe: de grupper, hvor man må invitere, og hvor personen ikke er med
+function egMineInvGrupper(o) {
+  return (tilstand.grupper || []).filter((g) => {
+    const r = (detaljer[g.id] || {}).rolle;
+    return (r === 'admin' || r === 'inviter' || (r && g.invitation === 'alle')) && (g.medlemsIder || []).indexOf(String(o.ejer)) < 0;
+   }).sort((a, b) => String(a.navn).localeCompare(String(b.navn), 'da'));
+}
+function tegnInv(o, aaben) {
+  const sec = $('plInv');
+  const grupper = egMineInvGrupper(o);
+  if (!eg.invAaben || !aaben || !grupper.length) { sec.classList.add('hidden'); sec.innerHTML = ''; return; }
+  // Hvem er allerede inviteret (gruppens medlemmer kan læse invitationerne)
+  const { fs, db } = FB;
+  grupper.forEach((g) => {
+    if (eg.invStatus[g.id] !== undefined) return;
+    eg.invStatus[g.id] = null;
+    fs.getDoc(fs.doc(db, 'grupper', g.id, 'invitationer', String(o.ejer))).then((d) => {
+      eg.invStatus[g.id] = d.exists() ? d.data() : false; tegnInv(eg.o, egAaben(eg.o));
+    }).catch(() => { eg.invStatus[g.id] = false; if (eg.o) tegnInv(eg.o, egAaben(eg.o)); });
+  });
+  if (!eg.invGid || !grupper.some((g) => g.id === eg.invGid)) eg.invGid = grupper[0].id;
+  spBevarFokus(() => {
+    sec.classList.remove('hidden'); sec.innerHTML = ''; sec.className = 'sb-boks';
+    sec.append(K.el('h2', null, t('egInviterTil')));
+    const fsl = K.el('fieldset', { 'class': 'valg' }); fsl.append(K.el('legend', null, t('egVaelgGruppe')));
+    sec.append(fsl);
+    radioer(fsl, 'spinv', grupper.map((g) => [g.id, 'egVaelgGruppe', '']), eg.invGid, (v) => { eg.invGid = v; tegnInv(eg.o, egAaben(eg.o)); });
+    // radioer bruger t() på titlerne. Navnene er brugernes egne, så de sættes bagefter
+    [...fsl.querySelectorAll('label')].forEach((l, i) => {
+      const g = grupper[i]; const s = eg.invStatus[g.id];
+      const venter = s && s.status === 'venter' && dato(s.udloeber) && dato(s.udloeber).getTime() > Date.now();
+      const sp = l.querySelector('span'); sp.innerHTML = '';
+      sp.append(K.el('b', null, g.navn), K.el('span', { 'class': 'smaa' }, [t(g.medlemsIder.length === 1 ? 'medlemmer1' : 'medlemmerN', { n: g.medlemsIder.length }), venter ? t('egInvVenter') : (s && s.status === 'nej' ? t('egInvSagdeNej') : '')].filter(Boolean).join(' · ')));
+    });
+    const fn = fornavn(o.kontakt);
+    const s = eg.invStatus[eg.invGid];
+    const venter = s && s.status === 'venter' && dato(s.udloeber) && dato(s.udloeber).getTime() > Date.now();
+    if (venter) {
+      sec.append(K.el('p', { 'class': 'sb-ok vent' }, t('egInvSendt', { navn: fn })));
+      return;
+    }
+    sec.append(K.el('label', { 'for': 'plInvTekst' }, t('egInvBesked', { navn: fn })));
+    const ta = K.el('textarea', { id: 'plInvTekst', rows: '3', maxlength: '500', placeholder: t('egInvPh', { navn: fn }) });
+    ta.value = eg.kladde['inv/' + o.id] || '';
+    ta.addEventListener('input', () => { eg.kladde['inv/' + o.id] = ta.value; });
+    sec.append(ta, K.el('p', { 'class': 'hint' }, t('egInvHint', { navn: fn })));
+    const b = K.el('button', { type: 'button', 'class': 'ok', id: 'plInvSend' }, t('egSendInv'));
+    b.addEventListener('click', () => egInviter(o, eg.invGid, ta.value.trim()));
+    const d = K.el('div', { 'class': 'gr-knapper' }); d.append(b); sec.append(d);
+  });
+}
+async function egInviter(o, gid, tekst) {
+  if (eg.travl) return;
+  eg.travl = true;
+  const foer = eg.invStatus[gid];
+  eg.invStatus[gid] = { status: 'venter', udloeber: new Date(Date.now() + 14 * 86400000) };
+  K.besked($('plMsg'), ''); tegnInv(o, true);
+  try {
+    await K.motor('grupper', 'inviterOpslag', { gid, oid: o.id, tekst }, K.nyId());
+    eg.kladde['inv/' + o.id] = '';
+    K.besked($('plMsg'), t('egInvSendtMsg', { navn: fornavn(o.kontakt) }), 'okm');
+  } catch (err) {
+    eg.invStatus[gid] = foer; tegnInv(o, true); fejl($('plMsg'), err);
+  } finally { eg.travl = false; }
+}
+
+// Ejeren: samtalerne om opslaget, svar til hver for sig, Luk opslaget (to tryk)
+function tegnEjer(o, aaben) {
+  $('plInv').classList.add('hidden'); $('plInv').innerHTML = '';
+  const boks = $('plBoks');
+  const samtaler = Object.values(eg.sam).filter((x) => x.oid === o.id && egErMin({ ejer: x.ejer })).sort((a, b) => dato(b.sidst) - dato(a.sidst));
+  spBevarFokus(() => {
+    boks.innerHTML = ''; boks.className = 'sb-boks mit';
+    const top = K.el('div', { 'class': 'sb-top' });
+    top.append(K.el('h2', null, t(aaben ? 'egDitAabent' : 'egDitLukket')), K.el('span', { 'class': 'sb-l' }, t(samtaler.length === 1 ? 'egSkrevet1' : 'egSkrevetN', { n: samtaler.length })));
+    boks.append(top);
+    boks.append(K.el('p', { 'class': 'hint', style: 'margin:0' }, t(aaben ? 'egDitAabentT' : 'egDitLukketT')));
+    const d = K.el('div', { 'class': 'gr-knapper' });
+    d.append(K.el('a', { href: '#profil', 'class': 'gr-knap ghost' }, t('prRet')));
+    if (aaben) {
+      const luk = K.el('button', { type: 'button', 'class': 'ghost', id: 'plLuk' }, t(eg.lukKlar ? 'egLukIgen' : 'egLuk'));
+      luk.addEventListener('click', egLuk);
+      d.append(luk);
+    }
+    boks.append(d);
+    const sec = $('plSam'); sec.innerHTML = '';
+    if (!samtaler.length) { sec.classList.add('hidden'); return; }
+    sec.classList.remove('hidden');
+    sec.append(K.el('h2', null, t('egSamtaler')));
+    samtaler.forEach((x) => {
+      const r = K.el('div', { 'class': 'sb-kand' });
+      r.append(avatar(x.pid, x.navn));
+      const midt = K.el('div', { style: 'flex:1;min-width:0' });
+      const ny = egIkkeSet(x);
+      const n = K.el('div', { 'class': 'navn' }, x.navn); if (ny) n.append(' ', K.el('span', { 'class': 'sp-mark' }, t('spNytSvar')));
+      midt.append(n);
+      const aabenSam = ny || eg.aabneSam.has(x.id) || !!eg.venter[x.id];
+      const b = x.beskeder || [];
+      midt.append(K.el('div', { 'class': 'tid' }, [dato(x.sidst) ? dagOverskrift(dato(x.sidst)) : '', t('spBeskeder', { n: b.length })].filter(Boolean).join(' · ')));
+      const vk = K.el('button', { type: 'button', id: 'plSamVis-' + x.pid, 'class': 'ghost small', 'aria-expanded': String(aabenSam), style: 'margin-top:6px' }, t(aabenSam ? 'spSkjul' : 'spVis'));
+      vk.addEventListener('click', () => { if (eg.aabneSam.has(x.id)) eg.aabneSam.delete(x.id); else eg.aabneSam.add(x.id); if (ny) egSaetSet(x); tegnSpiller(); });
+      midt.append(vk);
+      if (aabenSam) {
+        eg.aabneSam.add(x.id);
+        midt.append(spBobler(egBeskeder(x, false), false, eg.venter[x.id] ? { gruppe: true, tekst: eg.venter[x.id].tekst, venter: true } : null));
+        midt.append(spSkriv('plSvar-' + x.pid, t('spSvarNavn', { navn: x.navn }), eg.kladde[x.id], (v) => { eg.kladde[x.id] = v; }, (v) => egSend(o, x.pid, v)));
+        egSaetSet(x);
+      }
+      r.append(midt); sec.append(r);
+    });
+  });
+}
+async function egLuk() {
+  const o = eg.o; if (!o || eg.travl) return;
+  if (!eg.lukKlar) { eg.lukKlar = true; tegnSpiller(); setTimeout(() => { if (eg.lukKlar) { eg.lukKlar = false; tegnSpiller(); } }, 5000); return; }
+  eg.lukKlar = false; eg.travl = true;
+  const foer = o.status;
+  o.status = 'lukket'; tegnSpiller();
+  try {
+    await K.motor('boers', 'egenLuk', { oid: o.id }, K.nyId());
+    K.besked($('plMsg'), t('egLukket'), 'okm');
+  } catch (err) { if (eg.o === o) { o.status = foer; tegnSpiller(); } fejl($('plMsg'), err); }
+  finally { eg.travl = false; }
+}
+
+// ---------- Mit profilkort: billede, op til tre ekstra billeder, lidt om mig og niveauer
+const PR_LILLE = { side: 320, tegn: 30000 }, PR_STOR = { side: 1280, tegn: 400000 }, PR_MINI = { side: 96, tegn: 8000 };
+function visProfil() {
+  vis('vProfil');
+  lytEgne();
+  eg.sletKlar = false;
+  K.besked($('prMsg'), '');
+  if (!eg.mitNavn) K.motor('kerne', 'mig').then((p) => { eg.mitNavn = p.navn; tegnProfil(); }).catch(() => {});
+  tegnProfil();
+}
+function prEgne() { const p = eg.mit || {}; return { billede: p.billede || '', ekstra: [0, 1, 2].map((i) => (p.ekstra || [])[i] || ''), tekst: p.tekst || '', niveau: Object.assign({}, p.niveau || {}) }; }
+function tegnProfil() {
+  if (!mig || $('vProfil').classList.contains('hidden')) return;
+  const p = Object.assign(prEgne(), eg.prVenter || {});
+  const pl = $('prPlads'); pl.innerHTML = '';
+  [p.billede].concat(p.ekstra).forEach((x, i) => {
+    const felt = K.el('div', { 'class': 'pr-plads' + (i === 0 ? ' hoved' : '') });
+    const navn = t(i === 0 ? 'prProfilbillede' : 'prEkstraN', { n: i });
+    if (x) {
+      const b = K.el('button', { type: 'button', 'class': 'pr-felt', 'aria-label': t('prVisBilledeN', { navn: t('dig'), n: i + 1 }) });
+      b.style.backgroundImage = 'url("' + x + '")';
+      b.addEventListener('click', () => prVis(mig.uid, t('dig'), prBilleder(p), prBilleder(p).findIndex((y) => y.i === i)));
+      const fj = K.el('button', { type: 'button', 'class': 'ghost small', id: 'prFjern' + i }, t('prFjern'));
+      fj.setAttribute('aria-label', t('prFjernNavn', { navn }));
+      fj.addEventListener('click', () => prFjern(i));
+      felt.append(b, fj);
+    } else {
+      const lab = K.el('label', { 'class': 'pr-felt tom', 'for': 'prFil' + i });
+      lab.append(K.el('span', { 'aria-hidden': 'true' }, '+'), K.el('span', { 'class': 'smaa' }, navn));
+      const inp = K.el('input', { type: 'file', id: 'prFil' + i, accept: 'image/*', 'class': 'sr' });
+      inp.addEventListener('change', () => { const f = inp.files && inp.files[0]; inp.value = ''; if (f) prNyt(i, f); });
+      felt.append(lab, inp);
+    }
+    felt.append(K.el('span', { 'class': 'pr-plads-navn' }, navn));
+    pl.append(felt);
+  });
+  const ta = $('prTekst');
+  if (document.activeElement !== ta && !eg.prTekstRet) ta.value = p.tekst;
+  ['tennis', 'padel'].forEach((s) => {
+    const sel = $(s === 'tennis' ? 'prNivTennis' : 'prNivPadel');
+    if (document.activeElement !== sel || sel.dataset.sprog !== nivSprog()) nivSelect(sel, s, p.niveau[s] || '', t('prIkkeAngivet'));
+    nivTekst($(s === 'tennis' ? 'prNivTennisT' : 'prNivPadelT'), s, p.niveau[s] || '');
+  });
+  const fk = $('prNivForkl'); fk.innerHTML = ''; fk.append(nivForklaring('tennis'), nivForklaring('padel'));
+  const vis2 = $('prVis'); vis2.innerHTML = '';
+  eg.prof[mig.uid] = { p: Object.assign({}, eg.mit || {}, p), tid: Date.now() };
+  vis2.append(prKort(mig.uid, eg.mitNavn || t('dig'), '', false));
+  $('prSlet').textContent = t(eg.sletKlar ? 'prSletIgen' : 'prSlet');
+  $('prSlet').classList.toggle('hidden', !eg.mit || !Object.keys(eg.mit).length);
+}
+/** Skaler et billede til JPEG under en grænse: først lavere kvalitet, så mindre. */
+async function prSkaler(fil, maal) {
+  const url = URL.createObjectURL(fil);
+  try {
+    const img = await new Promise((ok, nej) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => nej(new Error('billede')); i.src = url; });
+    let side = maal.side, q = 0.85;
+    for (let k = 0; k < 12; k++) {
+      const s = Math.min(1, side / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(img.naturalWidth * s)); c.height = Math.max(1, Math.round(img.naturalHeight * s));
+      const x = c.getContext('2d'); x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+      const data = c.toDataURL('image/jpeg', q);
+      if (data.length <= maal.tegn && data.indexOf('data:image/jpeg;base64,') === 0) return data;
+      if (q > 0.6) q -= 0.1; else side = Math.round(side * 0.8);
+    }
+    throw new Error('stort');
+  } finally { URL.revokeObjectURL(url); }
+}
+/** Gem felter på profilkortet (resten bliver stående). */
+function prGem(felter) {
+  const { fs, db } = FB;
+  return fs.setDoc(fs.doc(db, 'profiler', mig.uid), Object.assign({}, felter, { opdateret: fs.serverTimestamp() }), { merge: true });
+}
+async function prNyt(i, fil) {
+  if (eg.prTravl) return;
+  if (!/^image\//.test(fil.type || '')) { K.besked($('prMsg'), t('prKunBilleder'), 'err'); return; }
+  eg.prTravl = true; K.besked($('prMsg'), t('prBehandler'));
+  try {
+    const [lille, stor] = await Promise.all([prSkaler(fil, PR_LILLE), prSkaler(fil, PR_STOR)]);
+    // Vis det nye billede med det samme, og gem bagefter
+    const p = prEgne();
+    eg.prVenter = i === 0 ? { billede: lille } : { ekstra: p.ekstra.map((x, k) => (k === i - 1 ? lille : x)) };
+    tegnProfil(); K.besked($('prMsg'), t('gemmer'));
+    const { fs, db } = FB;
+    await fs.setDoc(fs.doc(db, 'profilBilleder', mig.uid + '_' + i), { data: stor, opdateret: fs.serverTimestamp() });
+    try {
+      await prGem(i === 0 ? { billede: lille } : { ekstra: prEgne().ekstra.map((x, k) => (k === i - 1 ? lille : x)) });
+    } catch (err) {
+      // Kortet kunne ikke gemmes: den store udgave skal ikke ligge tilbage uden kort
+      if (!(i === 0 ? prEgne().billede : prEgne().ekstra[i - 1])) fs.deleteDoc(fs.doc(db, 'profilBilleder', mig.uid + '_' + i)).catch(() => {});
+      throw err;
+    }
+    if (i === 0) {
+      const mini = await prSkaler(fil, PR_MINI);
+      await fs.setDoc(fs.doc(db, 'profilMini', mig.uid), { mini, opdateret: fs.serverTimestamp() });
+      if (eg.mini) delete eg.mini[mig.uid];
+    }
+    K.besked($('prMsg'), t('gemt'), 'okm');
+  } catch (err) {
+    console.warn(err);
+    K.besked($('prMsg'), err && err.message === 'stort' ? t('prForStort') : err && err.message === 'billede' ? t('prKanIkkeLaese') : t('fejlGem'), 'err');
+  } finally { eg.prVenter = null; eg.prTravl = false; tegnProfil(); }
+}
+async function prFjern(i) {
+  if (eg.prTravl) return;
+  eg.prTravl = true;
+  const p = prEgne();
+  eg.prVenter = i === 0 ? { billede: '' } : { ekstra: p.ekstra.map((x, k) => (k === i - 1 ? '' : x)) };
+  tegnProfil(); K.besked($('prMsg'), t('gemmer'));
+  try {
+    const { fs, db } = FB;
+    // Den store udgave først: billedet skal være væk for andre, selv om resten skulle fejle
+    await fs.deleteDoc(fs.doc(db, 'profilBilleder', mig.uid + '_' + i));
+    if (i === 0) { await fs.deleteDoc(fs.doc(db, 'profilMini', mig.uid)); if (eg.mini) delete eg.mini[mig.uid]; }
+    await prGem(eg.prVenter);
+    K.besked($('prMsg'), t('prFjernet'), 'okm');
+  } catch (err) { fejl($('prMsg'), err); }
+  finally { eg.prVenter = null; eg.prTravl = false; tegnProfil(); }
+}
+async function prGemNiveau(sport, v) {
+  const niv = Object.assign({}, prEgne().niveau);
+  if (v) niv[sport] = Number(v); else delete niv[sport];
+  eg.prVenter = { niveau: niv }; tegnProfil(); K.besked($('prMsg'), t('gemmer'));
+  try {
+    // merge fletter kortet. Et fjernet niveau skal væk, så hele kortet over niveauer skrives med updateDoc, når det findes
+    const { fs, db } = FB;
+    if (eg.mit && Object.keys(eg.mit).length) await fs.updateDoc(fs.doc(db, 'profiler', mig.uid), { niveau: niv, opdateret: fs.serverTimestamp() });
+    else await prGem({ niveau: niv });
+    K.besked($('prMsg'), t('gemt'), 'okm');
+  } catch (err) { fejl($('prMsg'), err); }
+  finally { eg.prVenter = null; tegnProfil(); }
+}
+$('prNivTennis').addEventListener('change', () => prGemNiveau('tennis', $('prNivTennis').value));
+$('prNivPadel').addEventListener('change', () => prGemNiveau('padel', $('prNivPadel').value));
+$('prTekst').addEventListener('input', () => { eg.prTekstRet = true; });
+$('prGemTekst').addEventListener('click', async () => {
+  const v = $('prTekst').value.trim().slice(0, 300);
+  K.besked($('prMsg'), t('gemmer'));
+  try { await prGem({ tekst: v }); eg.prTekstRet = false; K.besked($('prMsg'), t('gemt'), 'okm'); } catch (err) { fejl($('prMsg'), err); }
+});
+$('prSlet').addEventListener('click', async () => {
+  if (!eg.sletKlar) { eg.sletKlar = true; tegnProfil(); setTimeout(() => { if (eg.sletKlar) { eg.sletKlar = false; tegnProfil(); } }, 5000); return; }
+  eg.sletKlar = false; K.besked($('prMsg'), t('gemmer'));
+  try {
+    const { fs, db } = FB;
+    await Promise.all([0, 1, 2, 3].map((i) => fs.deleteDoc(fs.doc(db, 'profilBilleder', mig.uid + '_' + i))).concat([fs.deleteDoc(fs.doc(db, 'profilMini', mig.uid))]));
+    if (eg.mini) delete eg.mini[mig.uid];
+    await fs.deleteDoc(fs.doc(db, 'profiler', mig.uid));
+    $('prTekst').value = ''; eg.prTekstRet = false;
+    K.besked($('prMsg'), t('prSlettet'), 'okm');
+  } catch (err) { fejl($('prMsg'), err); }
+  tegnProfil();
+});
+
+// ---------- Skift af sprog
+function egSprog(aaben) {
+  if (aaben('vSoeger')) tegnSoeger();
+  if (aaben('vSpiller')) { $('plProfil').dataset.oid = ''; tegnSpiller(); }
+  if (aaben('vProfil')) tegnProfil();
+  if (egFuld) prVisNr(egFuld.i);
 }
 </script>
 </body>
