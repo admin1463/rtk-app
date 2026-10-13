@@ -234,7 +234,7 @@
         <div id="findFiltre" class="chips gr-filtre" role="group" data-t-aria="filtrer" aria-label="Vis grupper"></div>
         <div id="findListe"></div>
         <p id="findTom" class="hint hidden" data-t="abTom">Ingen grupper passer. Prøv et andet ord, eller opret selv en gruppe.</p>
-        <p class="hint" data-t="abNote">Dine egne grupper står under Mine grupper. Kun voksne medlemmer kan se listen.</p>
+        <p class="hint" data-t="abNote">Dine egne synlige grupper står også her. Lukkede grupper står kun under Mine grupper. Kun voksne medlemmer kan se listen.</p>
       </div>
 
       <!-- Åbne grupper: en gruppe set udefra -->
@@ -366,7 +366,7 @@ window.TEKSTER = {
     klub: 'Alle i klubben', klubTekst: 'Gruppen står under "Find en gruppe". Alle kan læse beskrivelsen og skrive til gruppeadministratorerne.',
     abFane: 'Find en gruppe', abIntro: 'Grupper, som alle i klubben kan se. Bed om at komme med, eller skriv til gruppeadministratorerne.', abSoegPh: 'Søg på navn eller beskrivelse',
     abFiltAaben: 'Åben for ansøgninger', abAaben: 'Åben for ansøgninger', abInvitation: 'Kun efter invitation', abTom: 'Ingen grupper passer. Prøv et andet ord, eller opret selv en gruppe.',
-    abNote: 'Dine egne grupper står under Mine grupper. Kun voksne medlemmer kan se listen.', abStVenter: 'Ansøgning sendt', abStNej: 'Ikke optaget denne gang', abNytSvar: 'Nyt svar',
+    abNote: 'Dine egne synlige grupper står også her. Lukkede grupper står kun under Mine grupper. Kun voksne medlemmer kan se listen.', abDuErMed: 'Du er med', abAabnPil: 'Åbn gruppen ›', abStVenter: 'Ansøgning sendt', abStNej: 'Ikke optaget denne gang', abNytSvar: 'Nyt svar',
     abDsoen: 'søndage', abDman: 'mandage', abDtir: 'tirsdage', abDons: 'onsdage', abDtor: 'torsdage', abDfre: 'fredage', abDloer: 'lørdage',
     abTypisk: 'Typisk {dag}', abTypiskKl: 'Typisk {dag} kl. {kl}', abSpil30: '{n} spil de sidste 30 dage', abSpil30_1: '1 spil de sidste 30 dage',
     abAdmin1: 'Gruppeadministrator: {navne}', abAdminN: 'Gruppeadministratorer: {navne}', abBedPil: 'Bed om at komme med ›', abSkrivPil: 'Skriv til {navn} ›', abSkrivPilFlere: 'Skriv til gruppeadministratorerne ›',
@@ -514,7 +514,7 @@ window.TEKSTER = {
     klub: 'Everyone in the club', klubTekst: 'The group is listed under "Find a group". Everyone can read the description and write to the group admins.',
     abFane: 'Find a group', abIntro: 'Groups everyone in the club can see. Ask to join, or write to the group admins.', abSoegPh: 'Search by name or description',
     abFiltAaben: 'Open to requests', abAaben: 'Open to requests', abInvitation: 'By invitation only', abTom: 'No groups match. Try another word, or create a group yourself.',
-    abNote: 'Your own groups are under My groups. Only adult members can see the list.', abStVenter: 'Request sent', abStNej: 'Not this time', abNytSvar: 'New reply',
+    abNote: 'Your own visible groups are listed here too. Private groups are only under My groups. Only adult members can see the list.', abDuErMed: 'You are in', abAabnPil: 'Open the group ›', abStVenter: 'Request sent', abStNej: 'Not this time', abNytSvar: 'New reply',
     abDsoen: 'Sundays', abDman: 'Mondays', abDtir: 'Tuesdays', abDons: 'Wednesdays', abDtor: 'Thursdays', abDfre: 'Fridays', abDloer: 'Saturdays',
     abTypisk: 'Usually {dag}', abTypiskKl: 'Usually {dag} at {kl}', abSpil30: '{n} games in the last 30 days', abSpil30_1: '1 game in the last 30 days',
     abAdmin1: 'Group admin: {navne}', abAdminN: 'Group admins: {navne}', abBedPil: 'Ask to join ›', abSkrivPil: 'Write to {navn} ›', abSkrivPilFlere: 'Write to the group admins ›',
@@ -2788,17 +2788,20 @@ function tegnFind() {
   });
   const mine = new Set(tilstand.grupper.map((g) => g.id));
   const q = ab.q.trim().toLowerCase();
-  const liste = ab.find.filter((f) => !mine.has(f.id))
+  // Egne grupper står også her med "Du er med" (Lars 13. oktober kl. 11.14)
+  const liste = ab.find
     .filter((f) => ab.filter === 'alle' || (ab.filter === 'aaben' ? f.aaben : f.sport === ab.filter || f.sport === 'begge'))
     .filter((f) => !q || [f.navn, f.beskrivelse, f.soeger].join(' ').toLowerCase().indexOf(q) >= 0)
     .sort((a, b) => (b.aaben ? 1 : 0) - (a.aaben ? 1 : 0) || (b.spil30 || 0) - (a.spil30 || 0) || String(a.navn).localeCompare(String(b.navn), 'da'));
   const boks = $('findListe'); boks.innerHTML = '';
   liste.forEach((f) => {
-    const a = K.el('a', { href: '#find/' + f.id, 'class': 'sb-kort ab-kort' });
+    const med = mine.has(f.id);
+    const a = K.el('a', { href: med ? '#g/' + f.id + '/chat' : '#find/' + f.id, 'class': 'sb-kort ab-kort' + (med ? ' mit' : '') });
     const top = K.el('div', { 'class': 'sb-top' });
     top.append(K.el('span', { 'class': 'ab-maerke' + (f.aaben ? '' : ' graa') }, t(f.aaben ? 'abAaben' : 'abInvitation')));
     const st = abStatus(f.id); const x = ab.mine[f.id];
-    if (st === 'venter') top.append(K.el('span', { 'class': 'ab-maerke pink' }, t('abStVenter')));
+    if (med) top.append(K.el('span', { 'class': 'ab-maerke pink' }, t('abDuErMed')));
+    else if (st === 'venter') top.append(K.el('span', { 'class': 'ab-maerke pink' }, t('abStVenter')));
     else if (x && abUlaest(x)) top.append(K.el('span', { 'class': 'ab-maerke pink' }, t('abNytSvar')));
     else if (st === 'nej' && abNejIgen(x)) top.append(K.el('span', { 'class': 'ab-maerke graa' }, t('abStNej')));
     a.append(top, K.el('h3', null, f.navn));
@@ -2809,6 +2812,7 @@ function tegnFind() {
     if (tekst) a.append(K.el('p', { 'class': 'ab-tekst' }, tekst));
     const fod = K.el('div', { 'class': 'ab-fod' });
     fod.append(K.el('span', null, abAdmins(f)), K.el('span', { 'class': 'ab-pil' }, f.aaben && st !== 'venter' ? t('abBedPil') : ((f.admins || []).length === 1 ? t('abSkrivPil', { navn: fornavn(f.admins[0]) }) : t('abSkrivPilFlere'))));
+    if (med) fod.lastChild.textContent = t('abAabnPil');
     a.append(fod);
     boks.append(a);
   });
