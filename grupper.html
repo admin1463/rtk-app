@@ -48,16 +48,13 @@
 
       <!-- Mine grupper -->
       <div id="vListe" class="hidden">
-        <div class="gr-hoved">
-          <h1 class="lille" data-t="mineGrupper">Grupper</h1>
-          <button type="button" id="nyKnap" class="ok" data-t="nyGruppe">+ Ny gruppe</button>
-        </div>
+        <div class="gr-top"><img src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><span class="gr-top-kick" data-t="grTopKick">Spil, chat og spillerbørs</span><h1 class="lille" data-t="mineGrupper">Grupper</h1><button type="button" id="nyKnap" class="ok" data-t="nyGruppe">+ Ny gruppe</button></div>
         <nav id="navListe" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
         <div id="naeste" class="gr-naeste hidden"></div>
         <div id="filtre" class="chips gr-filtre" role="group" data-t-aria="filtrer" aria-label="Vis grupper"></div>
         <div id="slettede" aria-live="polite"></div>
         <ul id="liste" class="gr-liste"></ul>
-        <div id="tom" class="card hidden"><b data-t="tomH">Du er ikke med i nogen grupper endnu</b><p class="hint" data-t="tomTekst">Opret en gruppe til dem, du spiller med, eller bed en, du kender, om at tilføje dig.</p></div>
+        <div id="tom" class="gr-tom hidden"><img src="billeder/tom-grupper.jpg" alt="" width="1200" height="500" loading="lazy"><div class="gr-tom-t"><b data-t="tomH">Du er ikke med i nogen grupper endnu</b><p data-t="tomTekst">Opret en gruppe til dem, du spiller med, eller find en åben gruppe i klubben.</p><div class="gr-knapper"><a href="#ny" class="gr-knap ok" data-t="nyGruppe">+ Ny gruppe</a><a href="#find" class="gr-knap ghost" data-t="tomFind">Find en gruppe</a></div></div></div>
         <div class="who gr-who"><span id="hvem"></span><button type="button" class="ghost small" id="logud" data-t="kLogUd">Log ud</button></div>
       </div>
 
@@ -213,7 +210,7 @@
 
       <!-- Spillerbørsen: tavlen -->
       <div id="vBoers" class="hidden">
-        <div class="gr-hoved"><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
+        <div class="gr-top"><img src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><span class="gr-top-kick" data-t="grTopKick">Spil, chat og spillerbørs</span><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
         <nav id="navBoers" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
         <p class="hint sb-intro" data-t="sbIntro">Grupper, der mangler en spiller til et spil eller søger en fast spiller. Tilmeld dig, hvis du har lyst. Kun gruppen ser, at du har tilmeldt dig.</p>
         <div class="gr-knapper sb-egne"><a href="#soeger" class="gr-knap ok" id="sbSoegerKnap" data-t="egSoegerKnap">+ Jeg søger en gruppe eller makker</a><a href="#profil" class="gr-knap ghost" id="sbProfilKnap" data-t="prMitKort">Mit profilkort</a></div>
@@ -221,14 +218,14 @@
         <section id="sbMine" class="hidden sb-mine" aria-labelledby="sbMineH"><h2 id="sbMineH" class="gr-lille" data-t="sbDineSvar">Dine svar</h2><div id="sbMineListe"></div></section>
         <div id="sbFiltre" class="chips gr-filtre" role="group" data-t-aria="sbFiltrer" aria-label="Vis opslag"></div>
         <div id="sbListe"></div>
-        <p id="sbTom" class="hint hidden" data-t="sbTom">Ingen opslag lige nu. Kig forbi igen, eller slå en alarm til under Beskeder.</p>
+        <div id="sbTom" class="gr-tom hidden"><img src="billeder/tom-boers.jpg" alt="" width="1200" height="500" loading="lazy"><div class="gr-tom-t"><b data-t="sbTomH">Ingen opslag lige nu</b><p data-t="sbTom">Kig forbi igen, eller slå en alarm til under Beskeder.</p></div></div>
         <p class="hint" data-t="egNote">Et medlems eget opslag står med fornavn og forbogstav, ligesom på profilkortet. Højst ét åbent opslag pr. sport.</p>
         <div class="sb-hjem" data-t="sbHjem">Opslag fra dine egne grupper står under gruppen. Du laver et opslag fra gruppen eller fra et spil.</div>
       </div>
 
       <!-- Åbne grupper: Find en gruppe -->
       <div id="vFind" class="hidden">
-        <div class="gr-hoved"><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
+        <div class="gr-top"><img src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><span class="gr-top-kick" data-t="grTopKick">Spil, chat og spillerbørs</span><h1 class="lille" data-t="mineGrupper">Grupper</h1></div>
         <nav id="navFind" class="sb-faner" data-t-aria="sbNav" aria-label="Grupper og spillerbørs"></nav>
         <p class="hint sb-intro" data-t="abIntro">Grupper, som alle i klubben kan se. Bed om at komme med, eller skriv til gruppeadministratorerne.</p>
         <div id="findMsg" class="msg" aria-live="polite"></div>
@@ -366,6 +363,7 @@
       <div id="vProfil" class="hidden">
         <a href="#boers" class="gr-tilbage" data-t="sbTilbage">&#8592; Spillerbørs</a>
         <h1 class="lille" data-t="prMitKort">Mit profilkort</h1>
+        <div id="prTom" class="gr-tom hidden"><img src="billeder/tom-profil.jpg" alt="" width="1200" height="450" loading="lazy"><div class="gr-tom-t"><b data-t="prTomH">Lav dit profilkort</b><p data-t="prTomT">Et billede, lidt om dig og dit niveau, så andre ved, hvem de spiller med.</p></div></div>
         <p class="hint" data-t="prIntro">Frivilligt. Andre voksne medlemmer ser kortet på dine opslag og i dine grupper. Navnet kommer fra klubbens medlemsliste.</p>
         <div id="prMsg" class="msg" aria-live="polite"></div>
         <section class="sb-boks">
@@ -431,7 +429,7 @@ window.TEKSTER = {
     henter: 'Henter …', kunVoksneH: 'Grupper er for voksne medlemmer',
     kunVoksneTekst: 'Indtil videre kan kun voksne medlemmer være med i grupper. Juniorer og forældre kommer senere.',
     mineGrupper: 'Grupper', nyGruppe: '+ Ny gruppe', filtrer: 'Vis grupper', alle: 'Alle', tennis: 'Tennis', padel: 'Padel', begge: 'Tennis og padel', andet: 'Andet',
-    tomH: 'Du er ikke med i nogen grupper endnu', tomTekst: 'Opret en gruppe til dem, du spiller med, eller bed en, du kender, om at tilføje dig.',
+    tomH: 'Du er ikke med i nogen grupper endnu', tomTekst: 'Opret en gruppe til dem, du spiller med, eller find en åben gruppe i klubben.', tomFind: 'Find en gruppe', grTopKick: 'Spil, chat og spillerbørs',
     kLoggetInd: 'Logget ind som {navn}', tilbage: '← Grupper', tilbageGruppe: '← Tilbage', nyGruppeH: 'Ny gruppe', navn: 'Navn', sport: 'Sport',
     beskrivelse: 'Om gruppen', beskrivelsePh: 'Fx: Fast double søndag formiddag. Niveau 3 til 4.',
     hvemSer: 'Hvem kan se gruppen?', lukket: 'Kun medlemmerne', lukketTekst: 'Andre medlemmer kan ikke finde gruppen. Klubbens administratorer kan se navn, beskrivelse, medlemmer og hvor ofte gruppen spiller, men ikke chat og betalinger.',
@@ -519,7 +517,7 @@ window.TEKSTER = {
     spVenter1: '1 spørgsmål venter på svar', spVenterN: '{n} spørgsmål venter på svar', spMaks: 'Højst 500 tegn.', spNytFra: 'Ny besked fra {navn}: {tekst}',
     sbIntro: 'Grupper, der mangler en spiller til et spil eller søger en fast spiller. Tilmeld dig, hvis du har lyst. Kun gruppen ser, at du har tilmeldt dig.',
     sbDineSvar: 'Dine svar', sbFiltrer: 'Vis opslag', sbFiltEt: 'Til ét spil', sbFiltFast: 'Fast plads',
-    sbTom: 'Ingen opslag lige nu. Kig forbi igen, eller slå en alarm til under Beskeder.',
+    sbTomH: 'Ingen opslag lige nu', sbTom: 'Kig forbi igen, eller slå en alarm til under Beskeder.', prTomH: 'Lav dit profilkort', prTomT: 'Et billede, lidt om dig og dit niveau, så andre ved, hvem de spiller med.',
     sbHjem: 'Opslag fra dine egne grupper står under gruppen. Du laver et opslag fra gruppen eller fra et spil.',
     sbTilbage: '← Spillerbørs', sbMangler1: 'Mangler 1 til ét spil', sbManglerN: 'Mangler {n} til ét spil', sbFastT: 'Søger fast spiller',
     sbSvarSenest: 'Svar senest {tid}', sbSvarSenestOrd: 'Svar senest', sbImorgen: 'i morgen', sbTil: 'til',
@@ -611,7 +609,7 @@ window.TEKSTER = {
     henter: 'Loading …', kunVoksneH: 'Groups are for adult members',
     kunVoksneTekst: 'For now, only adult members can join groups. Juniors and parents will come later.',
     mineGrupper: 'Groups', nyGruppe: '+ New group', filtrer: 'Show groups', alle: 'All', tennis: 'Tennis', padel: 'Padel', begge: 'Tennis and padel', andet: 'Other',
-    tomH: 'You are not in any groups yet', tomTekst: 'Create a group for the people you play with, or ask someone you know to add you.',
+    tomH: 'You are not in any groups yet', tomTekst: 'Create a group for the people you play with, or find an open group in the club.', tomFind: 'Find a group', grTopKick: 'Games, chat and player exchange',
     kLoggetInd: 'Logged in as {navn}', tilbage: '← Groups', tilbageGruppe: '← Back', nyGruppeH: 'New group', navn: 'Name', sport: 'Sport',
     beskrivelse: 'About the group', beskrivelsePh: 'E.g. Regular doubles Sunday morning. Level 3 to 4.',
     hvemSer: 'Who can see the group?', lukket: 'Only the members', lukketTekst: 'Other members cannot find the group. The club’s administrators can see its name, description, members and how often it plays, but not the chat or payments.',
@@ -699,7 +697,7 @@ window.TEKSTER = {
     spVenter1: '1 question waiting for a reply', spVenterN: '{n} questions waiting for a reply', spMaks: 'At most 500 characters.', spNytFra: 'New message from {navn}: {tekst}',
     sbIntro: 'Groups that need a player for a game or are looking for a regular player. Sign up if you like. Only the group sees that you signed up.',
     sbDineSvar: 'Your answers', sbFiltrer: 'Show posts', sbFiltEt: 'Single game', sbFiltFast: 'Regular place',
-    sbTom: 'No posts right now. Check back later, or turn on an alert under Messages.',
+    sbTomH: 'No posts right now', sbTom: 'Check back later, or turn on an alert under Messages.', prTomH: 'Make your profile card', prTomT: 'A photo, a little about you and your level, so others know who they are playing with.',
     sbHjem: 'Posts from your own groups are shown under the group. You create a post from the group or from a game.',
     sbTilbage: '← Player exchange', sbMangler1: 'Needs 1 for a game', sbManglerN: 'Needs {n} for a game', sbFastT: 'Looking for a regular player',
     sbSvarSenest: 'Answer by {tid}', sbSvarSenestOrd: 'Answer by', sbImorgen: 'tomorrow', sbTil: 'to',
@@ -3862,6 +3860,8 @@ function prEgne() { const p = eg.mit || {}; return { billede: p.billede || '', e
 function tegnProfil() {
   if (!mig || $('vProfil').classList.contains('hidden')) return;
   const p = Object.assign(prEgne(), eg.prVenter || {});
+  // Billede og kort introduktion, så længe kortet er helt tomt (ikke mens profilen hentes, så den ikke blinker)
+  $('prTom').classList.toggle('hidden', eg.mit === null || !!(p.billede || p.ekstra.some(Boolean) || p.tekst || Object.keys(p.niveau).some((k) => p.niveau[k])));
   const pl = $('prPlads'); pl.innerHTML = '';
   [p.billede].concat(p.ekstra).forEach((x, i) => {
     const felt = K.el('div', { 'class': 'pr-plads' + (i === 0 ? ' hoved' : '') });
