@@ -72,6 +72,7 @@
         <div class="gr-check ab-vippe"><button type="button" role="switch" class="vippe" id="nyAaben" aria-checked="false" aria-labelledby="nyAabenL" aria-describedby="nyAabenHint"></button><span><b id="nyAabenL" data-t="abAabenL">Åben for ansøgninger</b><span class="smaa" id="nyAabenHint"></span></span></div>
         <div id="nySoegerDel" class="hidden"><label for="nySoeger" data-t="abSoegerL">Hvem søger I? (vises i Find en gruppe)</label><textarea id="nySoeger" maxlength="300" rows="2" data-t-ph="abSoegerPh"></textarea></div>
         <fieldset class="valg" id="nyInvitation"><legend data-t="hvemInviterer">Hvem må tilføje nye?</legend></fieldset>
+        <section id="nyBillede" class="gb-boks"></section>
         <div id="nyMsg" class="msg" aria-live="polite"></div>
         <div class="gr-knapper"><button type="submit" class="ok" data-t="opret">Opret gruppen</button><a href="#" class="gr-fortryd" data-t="fortryd">Fortryd</a></div>
       </form>
@@ -79,7 +80,7 @@
       <!-- En gruppe -->
       <div id="vGruppe" class="hidden">
         <a href="#" class="gr-tilbage" data-t="tilbage">&#8592; Grupper</a>
-        <div class="gr-titel"><h1 class="lille" id="gNavn"></h1><span id="gUnder" class="hint"></span></div>
+        <div class="gr-titel gb-titel"><span id="gBill" class="gb-th hidden" aria-hidden="true"></span><div><h1 class="lille" id="gNavn"></h1><span id="gUnder" class="hint"></span></div></div>
         <div class="tabs gr-tabs" role="tablist" id="faner"></div>
 
         <div id="pChat" role="tabpanel" class="hidden">
@@ -124,6 +125,7 @@
         <div id="pOm" role="tabpanel" class="hidden">
           <p id="omTekst" class="gr-om"></p>
           <dl class="adresser" id="omFakta"></dl>
+          <section id="omBillede" class="gb-boks hidden"></section>
           <form id="omForm" class="hidden gr-form" novalidate>
             <h2 data-t="retGruppen">Ret gruppen</h2>
             <label for="omNavn" data-t="navn">Navn</label><input id="omNavn" maxlength="60">
@@ -242,7 +244,7 @@
       <div id="vFindG" class="hidden">
         <a href="#find" class="gr-tilbage" data-t="abTilbage">&#8592; Find en gruppe</a>
         <div id="fgTags" class="sb-tags"></div>
-        <h1 class="lille" id="fgNavn"></h1>
+        <div class="gb-titel"><span id="fgBill" class="gb-th hidden" aria-hidden="true"></span><h1 class="lille" id="fgNavn"></h1></div>
         <p id="fgTekst" class="gr-om"></p>
         <dl class="sb-dl" id="fgFakta"></dl>
         <div id="fgMsg" class="msg" aria-live="polite"></div>
@@ -437,6 +439,7 @@ window.TEKSTER = {
     klub: 'Alle i klubben', klubTekst: 'Gruppen står under "Find en gruppe". Alle kan læse beskrivelsen og skrive til gruppeadministratorerne.',
     abFane: 'Find en gruppe', abIntro: 'Grupper, som alle i klubben kan se. Bed om at komme med, eller skriv til gruppeadministratorerne.', abSoegPh: 'Søg på navn eller beskrivelse',
     abFiltAaben: 'Åben for ansøgninger', abAaben: 'Åben for ansøgninger', abInvitation: 'Kun efter invitation', abTom: 'Ingen grupper passer. Prøv et andet ord, eller opret selv en gruppe.',
+    gbOverskrift: 'Gruppens billede', gbIntro: 'Vises i Mine grupper, i toppen af gruppen og i Find en gruppe.', gbNyOverskrift: 'Billede (frivilligt)', gbVaelg: 'Vælg et af klubbens billeder', gbUpload: 'Upload jeres eget billede', gbFjern: 'Fjern billedet', gbIntet: 'Gruppen har intet billede endnu.', gbKlubbens: 'Et af klubbens billeder', gbJeres: 'Jeres eget billede', gbEget: 'Eget billede', gbNote: 'Kun gruppeadministratorer kan skifte billedet. Brug kun billeder, I selv har taget eller må bruge, og kun af personer, der har sagt ja.', gbUploadH: 'Upload jeres eget billede', gbTraek: 'Træk billedet, så det vigtigste er inden for rammen. Det gemmes som et lille kvadratisk billede.', gbRammeAria: 'Beskæring af billedet. Flyt det med piletasterne.', gbBrug: 'Brug billedet', gbGemt: 'Billedet er gemt.', gbFjernet: 'Billedet er fjernet.', gbNavn1: 'Double oppefra', gbNavn2: 'Fire spillere', gbNavn3: 'Baner i skoven', gbNavn4: 'Bold på netstolpen', gbNavn5: 'Bolde i nettet', gbNavn6: 'Venner', gbNavn7: 'Serv i aftenlys', gbNavn8: 'Padel om aftenen', gbNavn9: 'Padelbane', gbNavn10: 'Bold på padelbanen',
     abNote: 'Dine egne synlige grupper står også her. Lukkede grupper står kun under Mine grupper. Kun voksne medlemmer kan se listen.', abDuErMed: 'Du er med', abAabnPil: 'Åbn gruppen ›', abStVenter: 'Ansøgning sendt', abStNej: 'Ikke optaget denne gang', abNytSvar: 'Nyt svar',
     abDsoen: 'søndage', abDman: 'mandage', abDtir: 'tirsdage', abDons: 'onsdage', abDtor: 'torsdage', abDfre: 'fredage', abDloer: 'lørdage',
     abTypisk: 'Typisk {dag}', abTypiskKl: 'Typisk {dag} kl. {kl}', abSpil30: '{n} spil de sidste 30 dage', abSpil30_1: '1 spil de sidste 30 dage',
@@ -617,6 +620,7 @@ window.TEKSTER = {
     klub: 'Everyone in the club', klubTekst: 'The group is listed under "Find a group". Everyone can read the description and write to the group admins.',
     abFane: 'Find a group', abIntro: 'Groups everyone in the club can see. Ask to join, or write to the group admins.', abSoegPh: 'Search by name or description',
     abFiltAaben: 'Open to requests', abAaben: 'Open to requests', abInvitation: 'By invitation only', abTom: 'No groups match. Try another word, or create a group yourself.',
+    gbOverskrift: 'Group photo', gbIntro: 'Shown in My groups, at the top of the group and in Find a group.', gbNyOverskrift: 'Photo (optional)', gbVaelg: 'Choose one of the club’s photos', gbUpload: 'Upload your own photo', gbFjern: 'Remove the photo', gbIntet: 'The group has no photo yet.', gbKlubbens: 'One of the club’s photos', gbJeres: 'Your own photo', gbEget: 'Own photo', gbNote: 'Only group admins can change the photo. Only use photos you took yourselves or may use, and only of people who have said yes.', gbUploadH: 'Upload your own photo', gbTraek: 'Drag the photo so the most important part is inside the frame. It is saved as a small square photo.', gbRammeAria: 'Cropping the photo. Move it with the arrow keys.', gbBrug: 'Use the photo', gbGemt: 'The photo is saved.', gbFjernet: 'The photo is removed.', gbNavn1: 'Doubles from above', gbNavn2: 'Four players', gbNavn3: 'Courts in the woods', gbNavn4: 'Ball on the net post', gbNavn5: 'Balls in the net', gbNavn6: 'Friends', gbNavn7: 'Serve in the evening light', gbNavn8: 'Padel in the evening', gbNavn9: 'Padel court', gbNavn10: 'Ball on the padel court',
     abNote: 'Your own visible groups are listed here too. Private groups are only under My groups. Only adult members can see the list.', abDuErMed: 'You are in', abAabnPil: 'Open the group ›', abStVenter: 'Request sent', abStNej: 'Not this time', abNytSvar: 'New reply',
     abDsoen: 'Sundays', abDman: 'Mondays', abDtir: 'Tuesdays', abDons: 'Wednesdays', abDtor: 'Thursdays', abDfre: 'Fridays', abDloer: 'Saturdays',
     abTypisk: 'Usually {dag}', abTypiskKl: 'Usually {dag} at {kl}', abSpil30: '{n} games in the last 30 days', abSpil30_1: '1 game in the last 30 days',
@@ -939,6 +943,7 @@ function visLogin() {
   stopBoers(); stopAaben();
   mig = null;
   if (typeof rydMig === 'function') rydMig();
+  if (typeof gbRyd === 'function') gbRyd(true);
   for (const k in mineSvar) delete mineSvar[k];
   if (FB) FB.auth.signOut(FB.au).catch(() => {});
   try { localStorage.removeItem('rtk.gr.uid'); } catch (e) {}
@@ -1087,7 +1092,7 @@ function tegnListe() {
     const d = detaljer[g.id] || {};
     const li = K.el('li');
     const a = K.el('a', { href: '#g/' + g.id + '/chat', 'class': 'gr-kort' });
-    a.append(K.el('span', { 'class': 'gr-sport s-' + (g.sport || 'tennis'), 'aria-hidden': 'true' }, { tennis: 'TEN', padel: 'PAD', begge: 'T+P', andet: '•' }[g.sport] || 'TEN'));
+    a.append(gbTh(g.billede, 'gr-billede') || K.el('span', { 'class': 'gr-sport s-' + (g.sport || 'tennis'), 'aria-hidden': 'true' }, { tennis: 'TEN', padel: 'PAD', begge: 'T+P', andet: '•' }[g.sport] || 'TEN'));
     const midt = K.el('span', { 'class': 'gr-midt' });
     midt.append(K.el('b', null, g.navn));
     let linje = '';
@@ -1134,6 +1139,7 @@ function tegnNy() {
 function visNy() {
   vis('vNy');
   tegnNy();
+  gbTegnNy();
   K.besked($('nyMsg'), '');
   $('nyNavn').focus();
 }
@@ -1147,8 +1153,8 @@ $('vNy').addEventListener('submit', async (e) => {
   try {
     const synlighed = valgtI($('nySynlighed'));
     const r = await K.motor('grupper', 'opret', { navn, sport: valgtI($('nySport')), beskrivelse: $('nyBeskrivelse').value, synlighed, invitation: valgtI($('nyInvitation')),
-      aaben: synlighed === 'klub' && $('nyAaben').getAttribute('aria-checked') === 'true', soeger: synlighed === 'klub' ? $('nySoeger').value : '' }, nyId);
-    nyId = K.nyId(); $('nyNavn').value = ''; $('nyBeskrivelse').value = ''; $('nySoeger').value = ''; $('nyAaben').setAttribute('aria-checked', 'false');
+      aaben: synlighed === 'klub' && $('nyAaben').getAttribute('aria-checked') === 'true', soeger: synlighed === 'klub' ? $('nySoeger').value : '', billede: gb.ny }, nyId);
+    nyId = K.nyId(); gb.ny = ''; gbRyd(false); $('nyNavn').value = ''; $('nyBeskrivelse').value = ''; $('nySoeger').value = ''; $('nyAaben').setAttribute('aria-checked', 'false');
     location.hash = 'g/' + r.id + '/medlemmer';
   } catch (err) { fejl($('nyMsg'), err); }
 });
@@ -1204,7 +1210,7 @@ function nulstilGruppeVisning() {
   $('beskeder').innerHTML = ''; $('chatSpil').innerHTML = ''; $('spilListe').innerHTML = ''; $('medlemmer').innerHTML = '';
   $('tekst').value = ''; tilstand.retter = null; $('retter').classList.add('hidden');
   tilstand.svarTil = null; tilstand.sletKlar = null; $('svarBar').classList.add('hidden');
-  $('gNavn').textContent = ''; $('gUnder').textContent = '';
+  $('gNavn').textContent = ''; $('gUnder').textContent = ''; gbSaet($('gBill'), ''); gbRyd(false);
   foersteChat = true; forladKlar = false; fjernKlar = null; sletKlar = false; K.besked($('sletMsg'), '');
   ab.ansAabne = new Set(); ab.nejAaben = null; ab.ans = []; $('ansDel').innerHTML = ''; $('ansDel').classList.add('hidden');
 }
@@ -1213,6 +1219,7 @@ function tegnGruppe() {
   const g = tilstand.gruppe;
   if (!g) return;
   $('gNavn').textContent = g.navn;
+  tegnGbTop();
   const n = tilstand.medlemmer.length || (g.medlemsIder || []).length;
   $('gUnder').textContent = (n === 1 ? t('medlemmer1') : t('medlemmerN', { n })) + ' · ' + t(g.sport || 'tennis');
   const fan = $('faner'); fan.innerHTML = '';
@@ -2034,6 +2041,7 @@ function tegnOm() {
   if (g.synlighed === 'klub' && g.soeger) fakta.push([t('abFSoeger'), g.soeger]);
   fakta.forEach(([a, b]) => dl.append(K.el('dt', null, a), K.el('dd', null, b)));
   $('omForm').classList.toggle('hidden', !erAdmin());
+  gbTegnOm();
   tegnSlet();
   if (erAdmin() && document.activeElement && !$('omForm').contains(document.activeElement)) {
     $('omNavn').value = g.navn; $('omBeskrivelse').value = g.beskrivelse || '';
@@ -2101,7 +2109,7 @@ document.addEventListener('sprog', () => {
   if (aaben('vListe')) tegnListe();
   if (aaben('vGruppe')) tegnGruppe();
   if (aaben('vSpil')) tegnSpil();
-  if (aaben('vNy')) tegnNy();
+  if (aaben('vNy')) { tegnNy(); gbTegnNy(); }
   if (aaben('vNytSpil')) { nsTegnRadioer(); nsBookere(); visGange(); }
   if (typeof sbSprog === 'function') sbSprog(aaben);
   if (typeof abSprog === 'function') abSprog(aaben);
@@ -2981,7 +2989,11 @@ function tegnFind() {
     else if (st === 'venter') top.append(K.el('span', { 'class': 'ab-maerke pink' }, t('abStVenter')));
     else if (x && abUlaest(x)) top.append(K.el('span', { 'class': 'ab-maerke pink' }, t('abNytSvar')));
     else if (st === 'nej' && abNejIgen(x)) top.append(K.el('span', { 'class': 'ab-maerke graa' }, t('abStNej')));
-    a.append(top, K.el('h3', null, f.navn));
+    const th = gbTh(f.billede, 'ab-billede');
+    const navnRk = K.el('div', { 'class': 'ab-navn' });
+    if (th) navnRk.append(th);
+    navnRk.append(K.el('h3', null, f.navn));
+    a.append(top, navnRk);
     const n = f.antal || 0;
     const sp = abSpillerTekst(f);
     a.append(K.el('div', { 'class': 'sb-l' }, [t(f.sport || 'tennis'), n === 1 ? t('medlemmer1') : t('medlemmerN', { n }), sp ? sp.charAt(0).toLowerCase() + sp.slice(1) : ''].filter(Boolean).join(' · ')));
@@ -3016,6 +3028,7 @@ function tegnFindG() {
   const tags = $('fgTags'); tags.innerHTML = '';
   const dl = $('fgFakta'); dl.innerHTML = '';
   $('fgNavn').textContent = f ? f.navn : (x ? x.gruppeNavn : '');
+  gbSaet($('fgBill'), f ? f.billede : '');
   $('fgTekst').textContent = f ? (f.beskrivelse || '') : '';
   $('fgTekst').classList.toggle('hidden', !(f && f.beskrivelse));
   if (f) {
@@ -3258,6 +3271,8 @@ function abSprog(aaben) {
 // billede viser det i fuld skærm, niveauerne kommer fra niveauer.md (tennis NTRP og den danske padelskala, til 5.5).
 // Opslag, samtaler og invitationer skrives af motoren. Profilkortet og billederne skriver man selv (se firestore.rules).
 Object.assign(window.MOTOR_EN, {
+  'Billedet kan ikke bruges. Vælg et andet, eller gør det mindre.': 'The photo cannot be used. Choose another one, or make it smaller.',
+  'Kun gruppeadministratorer kan skifte gruppens billede': 'Only group admins can change the group photo',
   'Du har allerede et åbent opslag om tennis. Luk det først.': 'You already have an open post about tennis. Close it first.',
   'Du har allerede et åbent opslag om padel. Luk det først.': 'You already have an open post about padel. Close it first.',
   'Kun den, der har lagt opslaget ud, kan lukke det': 'Only the person who posted it can close it',
@@ -4058,6 +4073,233 @@ function egSprog(aaben) {
   if (aaben('vSpiller')) { $('plProfil').dataset.oid = ''; tegnSpiller(); }
   if (aaben('vProfil')) tegnProfil();
   if (egFuld) prVisNr(egFuld.i);
+}
+// ---------- Gruppens billede (Lars 13. oktober 2026 kl. 20.38): et af 10 faste, eget billede eller intet.
+// Kun gruppeadministratorer skifter det (gennem motoren, grupper.billede). Vises i Mine grupper, i toppen af gruppen og i Find en gruppe.
+// Værdien er '' (intet), 'g01' til 'g10' (billeder/grupper/g01.jpg ...) eller et lille kvadratisk JPEG som tekst.
+var gb = { ny: '', venter: null, naeste: null, msgOm: null, url: '' };
+const GB_FASTE = ['g01', 'g02', 'g03', 'g04', 'g05', 'g06', 'g07', 'g08', 'g09', 'g10'];
+// 192 punkter er skarpt nok til de højst 88 punkter, billedet vises i, og holder Find en gruppe let (gennemgangen 13. oktober aften)
+const GB_SIDE = 192, GB_TEGN = 15000;
+function gbUrl(b) {
+  const s = String(b || '');
+  if (/^g(0[1-9]|10)$/.test(s)) return 'billeder/grupper/' + s + '.jpg';
+  if (/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(s)) return s;
+  return '';
+}
+/** Et lille kvadratisk billede (span) eller null, når der ikke er et billede. */
+function gbTh(b, kls) {
+  const u = gbUrl(b);
+  if (!u) return null;
+  const s = K.el('span', { 'class': 'gb-th' + (kls ? ' ' + kls : ''), 'aria-hidden': 'true' });
+  s.style.backgroundImage = 'url("' + u + '")';
+  return s;
+}
+/** Sæt et billede på et fast element (fx toppen af gruppen) eller skjul det. */
+function gbSaet(el, b) {
+  const u = gbUrl(b);
+  el.classList.toggle('hidden', !u);
+  el.style.backgroundImage = u ? 'url("' + u + '")' : '';
+}
+
+/**
+ * Vælgeren: det nuværende billede, de 10 faste, upload og fjern. ved(v) kaldes med den nye værdi.
+ * Mens man beskærer et uploadet billede, tegnes vælgeren ikke om (så en opdatering fra databasen ikke afbryder).
+ */
+function gbVaelger(boks, valgt, ved, idPre) {
+  if (boks.dataset.besk === '1') return;
+  const fokus = document.activeElement && boks.contains(document.activeElement) ? (document.activeElement.getAttribute('data-g') ? '[data-g="' + document.activeElement.getAttribute('data-g') + '"]' : (document.activeElement.id ? '#' + document.activeElement.id : '')) : '';
+  boks.innerHTML = '';
+  const nu = K.el('div', { 'class': 'gb-nu' });
+  const th = gbTh(valgt);
+  if (th) {
+    const tk = K.el('div');
+    tk.append(K.el('b', null, /^g/.test(valgt) ? t('gbNavn' + Number(valgt.slice(1))) : t('gbEget')), K.el('br'), K.el('span', { 'class': 'hint' }, /^g/.test(valgt) ? t('gbKlubbens') : t('gbJeres')));
+    nu.append(th, tk);
+  } else nu.append(K.el('span', { 'class': 'gb-th gb-ingen', 'aria-hidden': 'true' }), K.el('span', { 'class': 'hint' }, t('gbIntet')));
+  boks.append(nu, K.el('b', { id: idPre + 'GitterL' }, t('gbVaelg')));
+  const gitter = K.el('div', { 'class': 'gb-gitter', role: 'group', 'aria-labelledby': idPre + 'GitterL' });
+  GB_FASTE.forEach((g, i) => {
+    const b = K.el('button', { type: 'button', 'class': 'gb-valg' + (g === valgt ? ' valgt' : ''), 'aria-pressed': String(g === valgt), 'aria-label': t('gbNavn' + (i + 1)), 'data-g': g });
+    b.style.backgroundImage = 'url("' + gbUrl(g) + '")';
+    b.addEventListener('click', () => { if (g !== valgt) ved(g); });
+    gitter.append(b);
+  });
+  boks.append(gitter);
+  const knapper = K.el('div', { 'class': 'gb-knapper' });
+  const fil = K.el('input', { type: 'file', accept: 'image/*', id: idPre + 'Fil', 'class': 'sr' });
+  const op = K.el('label', { 'for': idPre + 'Fil', 'class': 'gr-knap ok gb-op' }, t('gbUpload'));
+  fil.addEventListener('change', () => { const f = fil.files && fil.files[0]; fil.value = ''; if (f) { boks.dataset.besk = '1'; gbBeskaer(f, boks, ved, idPre); } });
+  knapper.append(fil, op);
+  if (valgt) {
+    const fj = K.el('button', { type: 'button', 'class': 'ghost', id: idPre + 'Fjern' }, t('gbFjern'));
+    fj.addEventListener('click', () => ved(''));
+    knapper.append(fj);
+  }
+  boks.append(knapper, K.el('p', { 'class': 'gb-note' }, t('gbNote')));
+  if (fokus) { const f = boks.querySelector(fokus) || boks.querySelector('.gb-op'); if (f) f.focus(); }
+}
+/** Hvilket element i boksen har fokus (så det kan få det igen, når boksen er tegnet om). */
+function gbFokus(boks) {
+  const a = document.activeElement;
+  if (!a || !boks.contains(a)) return '';
+  return a.getAttribute('data-g') ? '[data-g="' + a.getAttribute('data-g') + '"]' : (a.id ? '#' + a.id : '');
+}
+function gbFokusIgen(boks, sel) { if (!sel) return; const f = boks.querySelector(sel) || boks.querySelector('.gb-op'); if (f) f.focus(); }
+/** Ryd vælgerne helt (log ud, skift af gruppe, efter oprettelse). */
+function gbRyd(alt) {
+  if (!gb) return;   // visLogin kan kaldes, før denne del af scriptet er kørt
+  if (gb.url) { URL.revokeObjectURL(gb.url); gb.url = ''; }
+  ['omBillede', 'nyBillede'].forEach((id) => { const b = $(id); if (b) b.innerHTML = ''; });
+  gb.msgOm = null;
+  if (alt) { gb.ny = ''; gb.venter = null; gb.naeste = null; }
+}
+
+/** Upload: billedet i en kvadratisk ramme, som man trækker på plads (eller flytter med piletasterne). Gemmes som 320 × 320 JPEG. */
+function gbBeskaer(fil, boks, ved, idPre) {
+  // Nogle filvælgere på Android giver ingen type: så prøver vi at læse billedet alligevel
+  if (fil.type && !/^image\//.test(fil.type)) { delete boks.dataset.besk; gbFejl(boks, t('prKunBilleder')); return; }
+  if (gb.url) URL.revokeObjectURL(gb.url);
+  const url = gb.url = URL.createObjectURL(fil);
+  const img = new Image();
+  img.onerror = () => { URL.revokeObjectURL(url); gb.url = ''; delete boks.dataset.besk; gbFejl(boks, t('prKanIkkeLaese')); };
+  img.onload = () => {
+    boks.dataset.besk = '1';
+    if (idPre === 'om') { gb.msgOm = null; if ($('omBilledeMsg')) K.besked($('omBilledeMsg'), ''); }
+    boks.innerHTML = '';
+    const ramme = K.el('div', { 'class': 'gb-ramme', tabindex: '0', role: 'group', 'aria-label': t('gbRammeAria') });
+    const bil = K.el('img', { src: url, alt: '', draggable: 'false' });
+    ramme.append(bil, K.el('div', { 'class': 'gb-maske', 'aria-hidden': 'true' }));
+    boks.append(K.el('b', null, t('gbUploadH')), ramme, K.el('p', { 'class': 'hint' }, t('gbTraek')));
+    const st = { x: 0, y: 0, s: 1, S: 0 };
+    const tegn = () => { bil.style.width = (img.naturalWidth * st.s) + 'px'; bil.style.height = (img.naturalHeight * st.s) + 'px'; bil.style.transform = 'translate(' + st.x + 'px,' + st.y + 'px)'; };
+    const grænse = () => { st.x = Math.min(0, Math.max(st.S - img.naturalWidth * st.s, st.x)); st.y = Math.min(0, Math.max(st.S - img.naturalHeight * st.s, st.y)); };
+    const maal = () => {
+      st.S = ramme.clientWidth || 280;
+      st.s = Math.max(st.S / img.naturalWidth, st.S / img.naturalHeight);
+      st.x = (st.S - img.naturalWidth * st.s) / 2; st.y = (st.S - img.naturalHeight * st.s) / 2;
+      tegn();
+    };
+    // Ændrer rammen bredde (telefonen drejes), skaleres billedet med, så det gemte passer med det viste
+    const ro = window.ResizeObserver ? new ResizeObserver(() => {
+      const S = ramme.clientWidth; if (!S || !st.S || S === st.S) { if (S && !st.S) maal(); return; }
+      const k = S / st.S; st.S = S; st.s *= k; st.x *= k; st.y *= k; grænse(); tegn();
+    }) : null;
+    if (ro) ro.observe(ramme);
+    let p0 = null;
+    ramme.addEventListener('pointerdown', (e) => { p0 = { px: e.clientX, py: e.clientY, x: st.x, y: st.y }; ramme.setPointerCapture(e.pointerId); });
+    ramme.addEventListener('pointermove', (e) => { if (!p0) return; st.x = p0.x + e.clientX - p0.px; st.y = p0.y + e.clientY - p0.py; grænse(); tegn(); });
+    ramme.addEventListener('pointerup', () => { p0 = null; });
+    ramme.addEventListener('pointercancel', () => { p0 = null; });
+    ramme.addEventListener('keydown', (e) => {
+      const d = { ArrowLeft: [10, 0], ArrowRight: [-10, 0], ArrowUp: [0, 10], ArrowDown: [0, -10] }[e.key];
+      if (!d) return;
+      e.preventDefault(); st.x += d[0]; st.y += d[1]; grænse(); tegn();
+    });
+    const msg = K.el('div', { 'class': 'msg', 'aria-live': 'polite' });
+    const knapper = K.el('div', { 'class': 'gb-knapper' });
+    const brug = K.el('button', { type: 'button', 'class': 'ok', id: idPre + 'Brug' }, t('gbBrug'));
+    const fortryd = K.el('button', { type: 'button', 'class': 'ghost', id: idPre + 'Fortryd' }, t('fortryd'));
+    const slut = () => { if (ro) ro.disconnect(); URL.revokeObjectURL(url); if (gb.url === url) gb.url = ''; delete boks.dataset.besk; };
+    brug.addEventListener('click', () => {
+      const data = gbTilJpeg(img, st);
+      if (!data) { K.besked(msg, t('prForStort'), 'err'); return; }
+      slut(); ved(data);
+    });
+    fortryd.addEventListener('click', () => { slut(); gbOpdater(); const o = boks.querySelector('.gb-op'); if (o) o.focus(); });
+    knapper.append(brug, fortryd);
+    boks.append(knapper, msg);
+    requestAnimationFrame(maal);
+    ramme.focus();
+  };
+  img.src = url;
+}
+function gbTilJpeg(img, st) {
+  const c = document.createElement('canvas'); c.width = GB_SIDE; c.height = GB_SIDE;
+  const x = c.getContext('2d'); x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, GB_SIDE, GB_SIDE);
+  const k = GB_SIDE / st.S;
+  x.drawImage(img, st.x * k, st.y * k, img.naturalWidth * st.s * k, img.naturalHeight * st.s * k);
+  for (let q = 0.85; q >= 0.45; q -= 0.1) {
+    const d = c.toDataURL('image/jpeg', q);
+    if (d.length <= GB_TEGN && d.indexOf('data:image/jpeg;base64,') === 0) return d;
+  }
+  return '';
+}
+function gbFejl(boks, tekst) {
+  let m = boks.querySelector('.gb-fejl');
+  if (!m) { m = K.el('div', { 'class': 'msg gb-fejl', 'aria-live': 'polite' }); boks.append(m); }
+  K.besked(m, tekst, 'err');
+}
+/** Tegn vælgerne igen (efter Fortryd, sprogskift eller en opdatering). */
+function gbOpdater() {
+  if (!$('vNy').classList.contains('hidden')) gbTegnNy();
+  if (tilstand.gruppe && !$('vGruppe').classList.contains('hidden')) gbTegnOm();
+}
+
+// ---------- Om gruppen: kun gruppeadministratorer ser vælgeren. Valget vises med det samme og gemmes bagefter
+function gbTegnOm() {
+  const g = tilstand.gruppe; const boks = $('omBillede');
+  if (!g || !mig) return;
+  boks.classList.toggle('hidden', !erAdmin());
+  if (!erAdmin()) return;
+  const valgt = gb.venter && gb.venter.gid === g.id ? gb.venter.v : String(g.billede || '');
+  if (!boks.querySelector('[data-besk="1"]')) {
+    const sel = gbFokus(boks);
+    const h = K.el('h2', null, t('gbOverskrift'));
+    const intro = K.el('p', { 'class': 'hint', style: 'margin:0' }, t('gbIntro'));
+    const indre = K.el('div');
+    gbVaelger(indre, valgt, (v) => gbGemOm(g.id, v), 'om');
+    boks.innerHTML = ''; boks.append(h, intro, indre, K.el('div', { 'class': 'msg', id: 'omBilledeMsg', 'aria-live': 'polite' }));
+    if (gb.msgOm && gb.msgOm[2] === g.id) K.besked($('omBilledeMsg'), gb.msgOm[0], gb.msgOm[1]);
+    gbFokusIgen(boks, sel);
+  }
+}
+// Ét kald ad gangen: trykker man igen, mens der gemmes, sendes kun det sidste valg bagefter (gennemgangen 13. oktober aften)
+async function gbGemOm(gid, v) {
+  gb.venter = { gid, v };
+  gb.msgOm = [t('gemmer'), '', gid];
+  gbTegnOm(); tegnGbTop();
+  if (gb.sender) { gb.naeste = { gid, v }; return; }
+  gb.sender = true;
+  let x = { gid, v };
+  while (x) {
+    gb.naeste = null;
+    try {
+      await K.motor('grupper', 'billede', { gid: x.gid, billede: x.v });
+      if (!gb.naeste) gb.msgOm = [t(x.v ? 'gbGemt' : 'gbFjernet'), 'okm', x.gid];
+    } catch (err) {
+      console.warn(err);
+      gb.msgOm = [err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem'), 'err', x.gid];
+    }
+    x = gb.naeste;
+  }
+  gb.sender = false;
+  // Det viste valg gælder, til databasen melder det samme tilbage (højst 5 sekunder), så billedet ikke blinker
+  const vist = gb.venter;
+  setTimeout(() => { if (gb.venter === vist) { gb.venter = null; gbTegnOm(); tegnGbTop(); } }, 5000);
+  if (vist && tilstand.gruppe && tilstand.gruppe.id === vist.gid && String(tilstand.gruppe.billede || '') === vist.v) gb.venter = null;
+  if (gb.msgOm && gb.msgOm[1] === 'err') gb.venter = null;
+  gbTegnOm(); tegnGbTop();
+}
+/** Billedet ved gruppens navn øverst i gruppen. */
+function tegnGbTop() {
+  const g = tilstand.gruppe;
+  if (g && gb.venter && gb.venter.gid === g.id && String(g.billede || '') === gb.venter.v && !gb.sender) gb.venter = null;
+  const v = g && gb.venter && gb.venter.gid === g.id ? gb.venter.v : (g ? g.billede : '');
+  gbSaet($('gBill'), v);
+}
+
+// ---------- Ny gruppe: billedet er frivilligt og sendes med, når gruppen oprettes
+function gbTegnNy() {
+  const boks = $('nyBillede');
+  if (boks.querySelector('[data-besk="1"]')) return;
+  const sel = gbFokus(boks);
+  boks.innerHTML = '';
+  boks.append(K.el('h2', null, t('gbNyOverskrift')));
+  const indre = K.el('div');
+  gbVaelger(indre, gb.ny, (v) => { gb.ny = v; gbTegnNy(); }, 'ny');
+  boks.append(indre);
+  gbFokusIgen(boks, sel);
 }
 </script>
 </body>

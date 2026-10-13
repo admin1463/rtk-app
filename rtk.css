@@ -583,3 +583,32 @@ body.fuld-aaben{overflow:hidden}
   .foto-felt .foto{height:120px}
   .foto-felt .ind{flex-direction:row;align-items:center;gap:14px;padding:14px 16px}
 }
+
+/* Gruppens billede (13. oktober 2026 aften). Se kilder/gbillede_side.js */
+.gb-th{display:block;flex:0 0 52px;width:52px;height:52px;border-radius:8px;background:#E9EEF0 center/cover no-repeat}
+.gb-th.hidden{display:none}
+.gb-ingen{border:1px dashed var(--line2)}
+.gb-titel{display:flex;gap:12px;align-items:center}
+.gb-titel .gb-th{flex-basis:56px;width:56px;height:56px;border-radius:10px}
+.gb-titel h1{margin:0}
+.gb-boks{border:1px solid var(--line);border-radius:8px;background:#fff;padding:14px 16px;margin:14px 0}
+.gb-boks h2{margin:0 0 4px;font-size:18px}
+.gb-nu{display:flex;gap:14px;align-items:center;margin:10px 0 12px}
+.gb-nu .gb-th{flex-basis:80px;width:80px;height:80px;border-radius:12px}
+.gb-gitter{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:8px 0 4px}
+.gb-valg{position:relative;aspect-ratio:1;width:100%;min-height:44px;padding:0;border-radius:8px;background:#E9EEF0 center/cover no-repeat;border:2px solid transparent;cursor:pointer}
+.gb-valg.valgt{border-color:var(--pink);box-shadow:0 0 0 2px #fff inset}
+.gb-valg.valgt:after{content:'✓';position:absolute;right:3px;top:3px;background:var(--pink);color:#fff;border-radius:99px;width:20px;height:20px;font-size:13px;line-height:20px;text-align:center;font-weight:700}
+.gb-valg:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.gb-knapper{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.gb-op{cursor:pointer}
+input.sr:focus-visible+.gb-op{outline:3px solid var(--pink);outline-offset:2px}
+.gb-note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.gb-ramme{position:relative;width:min(100%,320px);aspect-ratio:1;overflow:hidden;border-radius:12px;background:#000;touch-action:none;cursor:grab;margin:10px 0;user-select:none}
+.gb-ramme:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.gb-ramme img{position:absolute;left:0;top:0;max-width:none;pointer-events:none}
+.gb-maske{position:absolute;inset:0;border:3px solid #fff;border-radius:12px;pointer-events:none}
+.gr-kort .gr-billede{flex:0 0 52px}
+.ab-navn{display:flex;gap:12px;align-items:center}
+.ab-navn .gb-th{flex-basis:48px;width:48px;height:48px}
+.ab-navn h3{min-width:0;overflow-wrap:anywhere}
