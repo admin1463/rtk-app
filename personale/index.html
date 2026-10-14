@@ -51,7 +51,7 @@
       <form id="kodeForm" class="hidden" autocomplete="off">
         <label for="kode" id="kodeLabel">Koden fra sms'en</label>
         <div class="big"><input id="kode" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code"></div>
-        <p class="hint" style="margin:6px 0 0">Koden gælder i 10 minutter.</p>
+        <p class="hint" style="margin:6px 0 0">Koden gælder i 10 minutter. Kommer der ingen sms, så tjek nummeret.</p>
         <label style="display:flex;align-items:center;gap:12px;margin:14px 0 0;font-size:15px;min-height:44px"><input type="checkbox" id="husk" checked style="width:22px;height:22px;min-height:0;margin:0;accent-color:#E6005C"> Husk mig på denne enhed i 30 dage</label>
         <button type="submit" style="width:100%;margin-top:10px">Log ind</button>
         <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:8px">
@@ -166,8 +166,8 @@ function visTrin(t) {
 async function sendKode(kanal) {
   besked($('loginMsg'), kanal === 'mail' ? 'Sender koden på mail …' : 'Sender koden …');
   try {
-    const r = await motor('kerne', 'sendKode', { mobil: loginMobil, kanal });
-    $('kodeLabel').textContent = r.kanal === 'mail' ? 'Koden fra mailen til ' + r.til : "Koden fra sms'en til " + r.til;
+    const r = await motor('kerne', 'sendKode', { mobil: loginMobil, kanal, enhed });
+    $('kodeLabel').textContent = r.kanal === 'mail' ? 'Koden fra mailen. Har klubben ikke din mail, kommer der ingen.' : "Koden fra sms'en til " + r.til;
     $('sendMail').classList.toggle('hidden', !r.harMail || r.kanal === 'mail');
     visTrin('kode'); besked($('loginMsg'), '');
     $('kode').value = ''; setTimeout(() => $('kode').focus(), 50);

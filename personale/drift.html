@@ -36,6 +36,20 @@
     <div id="indhold" class="hidden">
       <div id="status"></div>
 
+      <section class="afsnit" id="loginSik">
+        <h2>Login og sikkerhed</h2>
+        <dl class="adresser">
+          <dt>Koder sendt i dag</dt><dd id="sikKoder"></dd>
+          <dt>Forkerte koder, sidste time</dt><dd id="sikForkert"></dd>
+          <dt>Ukendte numre i dag</dt><dd id="sikUkendte"></dd>
+          <dt>Kodelogin</dt><dd id="sikLogin"></dd>
+        </dl>
+        <h3 style="font-size:16px;margin:16px 0 6px">Til opfølgning</h3>
+        <div id="sikLinjer"></div>
+        <div class="msg" id="sikMsg" aria-live="polite"></div>
+        <p class="hint" id="sikHint"></p>
+      </section>
+
       <section class="afsnit" style="margin-top:8px">
         <h2>Sms i dag</h2>
         <div class="linje" style="align-items:baseline"><span>Beskeder</span><span><b id="iDag" style="font-size:28px"></b> <span class="hint" style="margin:0" id="iDagAf"></span></span></div>
@@ -161,7 +175,7 @@ function graf(dage, loft) {
 function vis(d) {
   const l = d.lofter;
   $('status').innerHTML = d.problemer.length
-    ? '<section class="card" style="border-color:var(--bad);background:var(--badbg);color:#7A1A12"><b style="display:block;font-size:17px;margin-bottom:6px">' + d.problemer.length + (d.problemer.length === 1 ? ' ting kræver' : ' ting kræver') + ' opmærksomhed</b>' + d.problemer.map((p) => '<div style="margin-top:4px">• ' + esc(((t) => t.charAt(0).toUpperCase() + t.slice(1))(p.replace(/^Sms: /, ''))) + '</div>').join('') + '<div class="hint" style="color:#7A1A12">Vagthunden sender også alarmen på mail til administratorerne.</div></section>'
+    ? '<section class="card" style="border-color:var(--bad);background:var(--badbg);color:#7A1A12"><b style="display:block;font-size:17px;margin-bottom:6px">' + d.problemer.length + (d.problemer.length === 1 ? ' ting kræver' : ' ting kræver') + ' opmærksomhed</b>' + d.problemer.map((p) => '<div style="margin-top:4px">• ' + esc(((t) => t.charAt(0).toUpperCase() + t.slice(1))(p.replace(/^Sms: /, ''))) + '</div>').join('') + (d.problemer.some((p) => !/^Login: /.test(p)) ? '<div class="hint" style="color:#7A1A12">Vagthunden sender også alarmen på mail til administratorerne.</div>' : '') + '</section>'
     : '<section class="tak"><b>Alt kører normalt.</b></section>';
   $('iDag').textContent = d.idag.drift;
   $('iDagAf').textContent = 'af højst ' + l.dag;
@@ -187,6 +201,49 @@ function vis(d) {
   $('graenser').innerHTML = [['Sms pr. nummer pr. dag', l.nummer], ['Sms for klubben pr. dag', l.dag], ['Alarm pr. time', l.time], ['Alarm ved saldo under', l.saldo + ' kr.']].map((g) => '<dt>' + g[0] + '</dt><dd>' + esc(g[1]) + '</dd>').join('');
   if (d.links.driftsark) $('arkLink').href = d.links.driftsark; else $('arkLink').classList.add('hidden');
   $('tid').textContent = d.tid;
+  visSik(d.sikkerhed);
+}
+
+// Login og sikkerhed (Lars 14. oktober kl. 06.29 til 06.41): tal for i dag og hændelser, ingen har set.
+// "Set" gælder for alle administratorer. Kortet forsvinder med det samme og gemmes bagefter.
+let sik = null;
+function visSik(s) {
+  sik = s || null;
+  $('loginSik').classList.toggle('hidden', !sik);
+  if (!sik) return;
+  const L = sik.lofter;
+  $('sikKoder').textContent = sik.koder;
+  $('sikForkert').innerHTML = esc(sik.forkertTime) + ' <span class="hint">(spærrer ved ' + esc(L.forkertTime) + ')</span>';
+  $('sikUkendte').textContent = sik.ukendte;
+  $('sikLogin').innerHTML = sik.spaerretTil ? '<b style="color:var(--bad)">Spærret til ' + esc(sik.spaerretTil) + '</b>' : 'Åbent';
+  const boks = $('sikLinjer'); boks.innerHTML = '';
+  if (!sik.linjer.length) boks.innerHTML = '<p class="hint">Intet at følge op på. Alt ser normalt ud.</p>';
+  sik.linjer.forEach((l) => {
+    const k = document.createElement('div');
+    k.className = 'sik-kort';
+    k.style.cssText = 'border:1px solid var(--line);border-left:4px solid ' + (l.alvor === 'hoej' ? 'var(--bad)' : '#C98A00') + ';border-radius:8px;padding:10px 12px;margin:8px 0;background:#fff';
+    k.innerHTML = '<div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline"><b></b><span class="hint" style="white-space:nowrap"></span></div><div style="margin-top:4px" class="sik-tekst"></div>'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px"><span class="hint sik-status"></span><button type="button" class="ghost small">Set</button></div>';
+    k.querySelector('b').textContent = l.titel;
+    k.querySelector('.hint').textContent = l.tid;
+    k.querySelector('.sik-tekst').textContent = l.tekst;
+    k.querySelector('.sik-status').textContent = l.status;
+    const knap = k.querySelector('button');
+    knap.setAttribute('aria-label', 'Set: ' + l.titel + ', ' + l.tid);
+    knap.addEventListener('click', () => saetSet(l, k));
+    boks.append(k);
+  });
+  $('sikHint').textContent = 'Grænser: højst ' + L.prDag + ' koder pr. nummer pr. døgn, ' + L.forsoeg + ' forsøg pr. kode. ' + L.forkertTime + ' forkerte koder på en time i hele klubben spærrer kodelogin i ' + L.spaerring + ' minutter, og administratorerne får en mail. En enhed med ' + L.enhed + ' forkerte koder eller ukendte numre på en time spærres i en time. Numre vises skjult.';
+}
+async function saetSet(l, kort) {
+  const naeste = kort.nextElementSibling && kort.nextElementSibling.querySelector('button');
+  kort.remove();
+  sik.linjer = sik.linjer.filter((x) => x.id !== l.id);
+  if (!sik.linjer.length) $('sikLinjer').innerHTML = '<p class="hint">Intet at følge op på. Alt ser normalt ud.</p>';
+  if (naeste) naeste.focus(); else $('opdater').focus();
+  besked($('sikMsg'), '');
+  try { await motor('kerne', 'sikkerhedSet', { id: l.id }); }
+  catch (err) { besked($('sikMsg'), 'Kunne ikke gemme "Set": ' + err.message, 'err'); hentData(); }
 }
 
 async function hentData() {
