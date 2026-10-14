@@ -1433,8 +1433,9 @@ function tegnSvarBar() {
 $('svarFortryd').addEventListener('click', () => { tilstand.svarTil = null; tegnSvarBar(); $('tekst').focus(); });
 function citatKnap(s) {
   const org = tilstand.beskeder.find((x) => x.id === s.id);
-  const navn = fornavn(navnPaa(s.fra) || '…');
-  const tekst = org && org.slettet ? t(org.fjernet ? 'fjernet' : 'slettet') : s.tekst;
+  // Står den oprindelige besked i chatten, vises dens afsender og tekst, ikke det, svaret påstår (gennemgangen 14. oktober)
+  const navn = fornavn(navnPaa(org ? org.fra : s.fra) || '…');
+  const tekst = org ? (org.slettet ? t(org.fjernet ? 'fjernet' : 'slettet') : String(org.tekst || '').slice(0, 140)) : s.tekst;
   const k = K.el('button', { type: 'button', 'class': 'gr-citat', 'aria-label': t('svarPaaLabel', { navn, tekst }) });
   k.append(K.el('b', null, navn), K.el('span', null, tekst));
   k.addEventListener('click', () => visBesked(s.id));

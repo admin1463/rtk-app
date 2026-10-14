@@ -12,13 +12,13 @@
   var TEKST = {
     da: {
       kMobil: 'Dit mobilnummer', kLandekode: 'Danske numre skrives uden +45. Udenlandske med landekode, fx +46.', kSend: 'Send kode på sms', kKode: "Koden fra sms'en", kKodeTil: "Koden fra sms'en til {til}",
-      kKodeMail: 'Koden fra mailen til {til}', kGaelder: 'Koden gælder i 10 minutter.', kHusk: 'Husk mig på denne enhed i 30 dage',
+      kKodeMail: 'Koden fra mailen. Har klubben ikke din mail, kommer der ingen.', kGaelder: 'Koden gælder i 10 minutter. Kommer der ingen sms, så tjek nummeret.', kHusk: 'Husk mig på denne enhed i 30 dage',
       kLogInd: 'Log ind', kIgen: 'Send igen', kMail: 'Send koden på mail i stedet', kAndet: 'Brug et andet nummer',
       kSender: 'Sender koden …', kLogger: 'Logger ind …', kLogUd: 'Log ud', kLoggetInd: 'Logget ind som {navn}'
     },
     en: {
       kMobil: 'Your mobile number', kLandekode: 'Danish numbers without +45. Other countries with the country code, e.g. +46.', kSend: 'Send code by text', kKode: 'The code from the text message', kKodeTil: 'The code from the text message to {til}',
-      kKodeMail: 'The code from the email to {til}', kGaelder: 'The code is valid for 10 minutes.', kHusk: 'Remember me on this device for 30 days',
+      kKodeMail: 'The code from the email. If the club does not have your email, none will arrive.', kGaelder: 'The code is valid for 10 minutes. If no text message arrives, check the number.', kHusk: 'Remember me on this device for 30 days',
       kLogInd: 'Log in', kIgen: 'Send again', kMail: 'Send the code by email instead', kAndet: 'Use another number',
       kSender: 'Sending the code …', kLogger: 'Logging in …', kLogUd: 'Log out', kLoggetInd: 'Logged in as {navn}'
     }
@@ -33,6 +33,11 @@
     'Vi har ingen mail til dig. Brug sms.': 'We have no email address for you. Please use text message.',
     'Koden er udløbet. Bed om en ny.': 'The code has expired. Please ask for a new one.',
     'For mange forkerte forsøg. Bed om en ny kode.': 'Too many wrong attempts. Please ask for a new code.',
+    'Nummeret har fået 5 koder i dag. Prøv igen i morgen, eller skriv til kontakt@roskildetennisklub.dk.': 'This number has had 5 codes today. Please try again tomorrow, or write to kontakt@roskildetennisklub.dk.',
+    'For mange forsøg fra denne enhed. Prøv igen om en time.': 'Too many attempts from this device. Please try again in an hour.',
+    'Login med kode er midlertidigt spærret. Prøv igen om 15 minutter.': 'Login with a code is temporarily blocked. Please try again in 15 minutes.',
+    'Du har sendt mange fejlmeldinger. Prøv igen om en time, eller skriv til kontakt@roskildetennisklub.dk.': 'You have sent many error reports. Please try again in an hour, or write to kontakt@roskildetennisklub.dk.',
+    'Du har skrevet mange gange til opstrengeren. Prøv igen om en time, eller skriv til kontakt@roskildetennisklub.dk.': 'You have written to the stringer many times. Please try again in an hour, or write to kontakt@roskildetennisklub.dk.',
     'Forkert kode. Prøv igen.': 'Wrong code. Please try again.',
     'Kontoen er ikke aktiv. Skriv til kontakt@roskildetennisklub.dk.': 'The account is not active. Please write to kontakt@roskildetennisklub.dk.',
     'Systemet er optaget. Prøv igen om et øjeblik.': 'The system is busy. Please try again in a moment.',
@@ -133,7 +138,7 @@
     async function sendKode(kanal) {
       besked(msg, t('kSender'));
       try {
-        var r = await motor('kerne', 'sendKode', { mobil: mobilNr, kanal: kanal });
+        var r = await motor('kerne', 'sendKode', { mobil: mobilNr, kanal: kanal, enhed: enhed });
         kodeTil = r;
         kLabel.textContent = t(r.kanal === 'mail' ? 'kKodeMail' : 'kKodeTil', { til: r.til });
         paaMail.classList.toggle('hidden', !r.harMail || r.kanal === 'mail');
