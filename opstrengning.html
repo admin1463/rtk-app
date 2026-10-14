@@ -150,19 +150,17 @@ window.MOTOR_EN = {
   'Skriv en kort besked': 'Please write a short message',
   'Systemet er optaget. Prøv igen om et øjeblik.': 'The system is busy. Please try again in a moment.',
   'Ugyldig forespørgsel': 'Invalid request',
-  'Ukendt handling': 'Unknown request'
+  'Ukendt handling': 'Unknown request',
+  'Du har skrevet mange gange til opstrengeren. Prøv igen om en time, eller skriv til kontakt@roskildetennisklub.dk.': 'You have written to the stringer many times. Please try again in an hour, or write to kontakt@roskildetennisklub.dk.'
 };
 </script>
+<script src="konfig.js"></script>
 <script src="sprog.js"></script>
 <script src="velkomst.js"></script>
 <script>
-// Adressen til motoren. Test og produktion har hver sin. Ingen hemmeligheder her.
-const MOTOR = {
-  test: 'https://script.google.com/macros/s/AKfycbz_-LFD4pLRRxJjBI1kosmF3e0rKs8xPzZmgm4JLzl9oK6CQiMQrz-qPjxpvscDpn0r/exec',
-  produktion: ''
-};
-const MILJOE = new URLSearchParams(location.search).get('miljoe') === 'produktion' && MOTOR.produktion ? 'produktion' : 'test';
-const URL_MOTOR = MOTOR[MILJOE];
+// Adressen til motoren står i konfig.js (fælles for alle sider)
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
 
 const $ = (id) => document.getElementById(id);
 const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));

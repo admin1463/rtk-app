@@ -3,11 +3,8 @@
    så man kun logger ind én gang på telefonen. Mobilnummeret gemmes ikke i browseren.
    Teksterne lægges ind i window.TEKSTER, så sprog.js oversætter dem. */
 (function () {
-  var MOTOR = {
-    test: 'https://script.google.com/macros/s/AKfycbz_-LFD4pLRRxJjBI1kosmF3e0rKs8xPzZmgm4JLzl9oK6CQiMQrz-qPjxpvscDpn0r/exec',
-    produktion: ''
-  };
-  var MILJOE = new URLSearchParams(location.search).get('miljoe') === 'produktion' && MOTOR.produktion ? 'produktion' : 'test';
+  // Adressen til motoren står i konfig.js, som indlæses før denne fil
+  var KONFIG = window.RTK_KONFIG;
 
   var TEKST = {
     da: {
@@ -29,7 +26,6 @@
     'Log ind igen': 'Please log in again',
     'Skriv dit mobilnummer med 8 cifre': 'Please enter your mobile number with 8 digits',
     'Der er sendt mange koder. Vent 15 minutter, og prøv igen.': 'Many codes have been sent. Please wait 15 minutes and try again.',
-    'Vi kender ikke nummeret. Brug det nummer, du har givet klubben, eller skriv til kontakt@roskildetennisklub.dk.': 'We do not know this number. Use the number you gave the club, or write to kontakt@roskildetennisklub.dk.',
     'Vi har ingen mail til dig. Brug sms.': 'We have no email address for you. Please use text message.',
     'Koden er udløbet. Bed om en ny.': 'The code has expired. Please ask for a new one.',
     'For mange forkerte forsøg. Bed om en ny kode.': 'Too many wrong attempts. Please ask for a new code.',
@@ -59,8 +55,21 @@
     'Kun for juniorer': 'For juniors only',
     'Vælg, hvad du vil bede om': 'Choose what you want to ask for',
     'Det er allerede slået til': 'It is already turned on',
-    'Du har allerede bedt om det i dag. Prøv igen i morgen.': 'You have already asked for this today. Try again tomorrow.'
+    'Du har allerede bedt om det i dag. Prøv igen i morgen.': 'You have already asked for this today. Try again tomorrow.',
+    'Skriv hvad der er galt': 'Please describe what is wrong',
+    'Ugyldig push-nøgle': 'Invalid push key',
+    'Du har sendt mange prøver. Vent 10 minutter.': 'You have sent many tests. Please wait 10 minutes.',
+    'Notifikationer er ikke slået til på nogen af dine enheder': 'Notifications are not turned on on any of your devices',
+    'Ukendt handling': 'Unknown request',
+    'Kræver POST': 'Requires POST',
+    'Ugyldig forespørgsel': 'Invalid request',
+    'Du har ikke adgang til det her': 'You do not have access to this'
   };
+  // Fejl med en dato i teksten oversættes med et mønster (gennemgangen 14. oktober, M7)
+  var MDR_EN = { 'jan.': 'January', 'feb.': 'February', 'mar.': 'March', 'apr.': 'April', 'maj': 'May', 'jun.': 'June', 'jul.': 'July', 'aug.': 'August', 'sep.': 'September', 'okt.': 'October', 'nov.': 'November', 'dec.': 'December' };
+  var MOTOR_EN_MOENSTRE = [
+    [/^Du kan søge igen fra (\d{1,2})\. (\S+)$/, function (m, d, mdr) { return MDR_EN[mdr] ? 'You can apply again from ' + MDR_EN[mdr] + ' ' + d : null; }]
+  ];
   window.TEKSTER = window.TEKSTER || { da: {}, en: {} };
   ['da', 'en'].forEach(function (s) { Object.keys(TEKST[s]).forEach(function (k) { if (window.TEKSTER[s][k] === undefined) window.TEKSTER[s][k] = TEKST[s][k]; }); });
   window.MOTOR_EN = Object.assign({}, MOTOR_EN, window.MOTOR_EN || {});
@@ -73,13 +82,22 @@
 
   function S() { return window.RTK_SPROG; }
   function t(k, v) { return String(S() ? S().t(k) : k).replace(/\{(\w+)\}/g, function (m, n) { return v && v[n] !== undefined ? v[n] : m; }); }
-  function fejlTekst(m) { return (S() && S().sprog === 'en' && window.MOTOR_EN[m]) ? window.MOTOR_EN[m] : m; }
+  function fejlTekst(m) {
+    if (!(S() && S().sprog === 'en')) return m;
+    if (window.MOTOR_EN[m]) return window.MOTOR_EN[m];
+    for (var i = 0; i < MOTOR_EN_MOENSTRE.length; i++) {
+      var r = String(m).match(MOTOR_EN_MOENSTRE[i][0]);
+      var ud = r && MOTOR_EN_MOENSTRE[i][1].apply(null, r);
+      if (ud) return ud;
+    }
+    return m;
+  }
 
   /** Ét kald til motoren med sessionen. Udløbet session sender tilbage til login. */
   async function motor(modul, handling, data, id) {
     var res;
     try {
-      res = await fetch(MOTOR[MILJOE], { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      res = await fetch(KONFIG.motor, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ modul: modul, handling: handling, data: data || {}, token: hent('rtk.token') || '', id: id || '' }) });
     } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
     var svar = await res.json();

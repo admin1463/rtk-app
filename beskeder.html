@@ -261,7 +261,7 @@ window.TEKSTER = {
     valgBoers: 'Spillerbørsen', vBoersSpoerg: 'Spørgsmål og svar om opslag', vBoersSpoergT: 'Når nogen spørger om jeres opslag, og når en gruppe svarer på dit spørgsmål.', vBoersMeldt: 'Svar i spillerbørsen', vBoersMeldtT: 'Når nogen melder sig til jeres opslag, når du bliver valgt, og når en plads bliver ledig for dig som reserve.',
     vBoersAlarm: 'Nye opslag (alarm)', vBoersAlarmT: 'Når en gruppe søger en spiller, der passer til dig. Højst tre om dagen.',
     vAlarmFilter: 'Kun opslag med det valgte. Vælger du ingen, får du alle.', aSport: 'Sport', aSpilform: 'Spilform', aTennis: 'Tennis', aPadel: 'Padel', aDouble: 'Double', aSingle: 'Single', aMix: 'Mixdouble',
-    aDage: 'Dage', aMan: 'Man', aTir: 'Tir', aOns: 'Ons', aTor: 'Tor', aFre: 'Fre', aLoer: 'Lør', aSoen: 'Søn', aNiveau: 'Niveau', aNivFra: 'Niveau fra', aNivTil: 'Niveau til', aNivFraS: '{sport}: niveau fra', aNivTilS: '{sport}: niveau til',
+    aDage: 'Dage', aMan: 'Man', aTir: 'Tir', aOns: 'Ons', aTor: 'Tor', aFre: 'Fre', aLoer: 'Lør', aSoen: 'Søn', aNiveau: 'Niveau', aNivFraS: '{sport}: niveau fra', aNivTilS: '{sport}: niveau til',
     aFraAlle: 'Fra (alle)', aTilAlle: 'Til (alle)', aFraN: 'Fra {n}', aTilN: 'Til {n}', aNiveauT: 'Tennis efter NTRP, padel efter den danske skala. Opslag uden niveau kommer altid med. Dagene gælder spil på en bestemt dag.',
     vInvitation: 'Invitationer til grupper', vInvitationT: 'Når nogen inviterer dig til en gruppe fra dit opslag på spillerbørsen, og når en, du har inviteret, svarer.',
     vAnsoeg: 'Ansøgninger til grupper', vAnsoegT: 'Når nogen beder om at komme med i en gruppe, hvor du er gruppeadministrator eller må invitere, og når en gruppe svarer dig.', vMailAnsoeg: 'Ugentlig mail om ansøgninger, der venter', vMailAnsoegT: 'Mandag morgen, hvis der ligger ansøgninger, som ingen har svaret på. Kun til gruppeadministratorer.',
@@ -326,7 +326,7 @@ window.TEKSTER = {
     valgBoers: 'Player exchange', vBoersSpoerg: 'Questions and replies about posts', vBoersSpoergT: 'When someone asks about your post, and when a group replies to your question.', vBoersMeldt: 'Answers on the player exchange', vBoersMeldtT: 'When someone signs up for your post, when you are chosen, and when a place becomes free for you as a reserve.',
     vBoersAlarm: 'New posts (alert)', vBoersAlarmT: 'When a group is looking for a player who matches you. At most three a day.',
     vAlarmFilter: 'Only posts with what you choose. If you choose none, you get all.', aSport: 'Sport', aSpilform: 'Format', aTennis: 'Tennis', aPadel: 'Padel', aDouble: 'Doubles', aSingle: 'Singles', aMix: 'Mixed doubles',
-    aDage: 'Days', aMan: 'Mon', aTir: 'Tue', aOns: 'Wed', aTor: 'Thu', aFre: 'Fri', aLoer: 'Sat', aSoen: 'Sun', aNiveau: 'Level', aNivFra: 'Level from', aNivTil: 'Level to', aNivFraS: '{sport}: level from', aNivTilS: '{sport}: level to',
+    aDage: 'Days', aMan: 'Mon', aTir: 'Tue', aOns: 'Wed', aTor: 'Thu', aFre: 'Fri', aLoer: 'Sat', aSoen: 'Sun', aNiveau: 'Level', aNivFraS: '{sport}: level from', aNivTilS: '{sport}: level to',
     aFraAlle: 'From (all)', aTilAlle: 'To (all)', aFraN: 'From {n}', aTilN: 'To {n}', aNiveauT: 'Tennis by NTRP, padel by the Danish scale. Posts without a level are always included. The days apply to games on a specific day.',
     vInvitation: 'Invitations to groups', vInvitationT: 'When someone invites you to a group from your post on the player exchange, and when someone you invited answers.',
     vAnsoeg: 'Requests to join groups', vAnsoegT: 'When someone asks to join a group where you are a group admin or can invite, and when a group replies to you.', vMailAnsoeg: 'Weekly email about waiting requests', vMailAnsoegT: 'Monday morning, if there are requests no one has answered. Only for group admins.',
@@ -338,6 +338,7 @@ window.TEKSTER = {
   }
 };
 </script>
+<script src="konfig.js"></script>
 <script src="konto.js"></script>
 <script src="sprog.js"></script>
 <script src="velkomst.js"></script>
@@ -382,10 +383,10 @@ function kanalKort() {
 
 // ---------- Notifikationer (push). Besluttet af Lars 12. oktober kl. 12.47: push er den primære kanal.
 const PUSH = {
-  vapid: 'BHqx6aBwsxJg2-BMVlnkDteTMUWU268HoU_9xBRyOCR9JVKPqy3AojTskwDeTSisoCv7yYfdjsTu_y2aSxed_DM',
-  fb: 'https://www.gstatic.com/firebasejs/12.19.0/',
-  cfg: { apiKey: 'AIzaSyDn-RtvKrm2g2D1HY7KLx6XXFXQDZZgcD4', authDomain: 'mitrtk-282fa.firebaseapp.com', projectId: 'mitrtk-282fa',
-    storageBucket: 'mitrtk-282fa.firebasestorage.app', messagingSenderId: '1093255886930', appId: '1:1093255886930:web:0139ea144939078093078b' }
+  // Nøglerne står i konfig.js (fælles for alle sider)
+  vapid: window.RTK_KONFIG.vapid,
+  fb: 'https://www.gstatic.com/firebasejs/' + window.RTK_KONFIG.firebaseVersion + '/',
+  cfg: window.RTK_KONFIG.firebase
 };
 const pushHent = () => { try { return localStorage.getItem('rtk.push.id') || ''; } catch (e) { return ''; } };
 const pushGem = (v) => { try { v ? localStorage.setItem('rtk.push.id', v) : localStorage.removeItem('rtk.push.id'); } catch (e) {} };
