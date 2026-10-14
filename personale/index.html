@@ -108,6 +108,7 @@ const IKON = {
   bold: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="22" cy="22" r="15"/><path d="M10 12c6 5 6 15 0 20"/><path d="M34 12c-6 5-6 15 0 20"/></svg>',
   drift: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><path d="M6 32a16 16 0 0 1 32 0"/><line x1="22" y1="32" x2="31" y2="20" stroke-width="2.5"/><circle cx="22" cy="32" r="2.5"/><line x1="6" y1="38" x2="38" y2="38"/></svg>',
   grupper: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="15" cy="15" r="6"/><circle cx="31" cy="17" r="5"/><path d="M4 37c0-7 5-11 11-11s11 4 11 11"/><path d="M27 26c1-.6 2.4-1 4-1 5 0 9 3.5 9 10"/></svg>',
+  liste: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><rect x="9" y="7" width="26" height="33" rx="2"/><rect x="16" y="4" width="12" height="6" rx="1.5"/><path d="M14 19l2.5 2.5 4.5-5"/><line x1="24" y1="19" x2="30" y2="19"/><path d="M14 28l2.5 2.5 4.5-5"/><line x1="24" y1="28" x2="30" y2="28"/></svg>',
   ketsjer: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><ellipse cx="17" cy="16" rx="11" ry="13"/><line x1="9" y1="10" x2="25" y2="10"/><line x1="7" y1="16" x2="27" y2="16"/><line x1="9" y1="22" x2="25" y2="22"/><line x1="12" y1="4" x2="12" y2="28"/><line x1="17" y1="3" x2="17" y2="29"/><line x1="22" y1="4" x2="22" y2="28"/><line x1="24" y1="27" x2="38" y2="41" stroke-width="3"/></svg>'
 };
 
@@ -115,6 +116,9 @@ const IKON = {
 const FELTER = [
   { navn: 'Boldregnskab', side: 'bolde.html', ikon: 'bold', roller: ['admin', 'traener', 'cheftraener', 'boldansvarlig'],
     tekst: (p) => harRolle(p, ['admin', 'cheftraener', 'boldansvarlig']) ? 'Tag bolde, lager, forbrug, optælling og bestilling.' : 'Tag bolde til træning, og se lageret.' },
+  // Pladsholder (Lars 14. oktober kl. 21.43): trænerne registrerer deltagerne ved hver holdtræning, også nye.
+  { navn: 'Deltagerregistrering', snart: true, ikon: 'liste', roller: ['admin', 'traener', 'cheftraener'],
+    tekst: () => 'Registrér deltagerne ved hver holdtræning, også nye spillere.' },
   { navn: 'Opstrengere', side: 'opstrengning.html', ikon: 'ketsjer', roller: ['admin', 'opstrenger'],
     tekst: () => 'Kø, tøm skabet, meld klar, måneden og strengelager.' },
   { navn: 'Drift og forbrug', side: 'drift.html', ikon: 'drift', roller: ['admin'],
@@ -209,16 +213,20 @@ function visFelter(p) {
   const mine = FELTER.filter((f) => harRolle(p, f.roller));
   $('felter').innerHTML = '';
   mine.forEach((f) => {
-    const a = document.createElement('a'); a.className = 'tile'; a.href = f.side;
+    // Et felt, der kommer snart, er gråt og kan ikke trykkes på, ligesom på medlemssiden
+    const a = document.createElement(f.snart ? 'div' : 'a'); a.className = 'tile';
+    if (f.snart) a.setAttribute('aria-disabled', 'true'); else a.href = f.side;
     a.insertAdjacentHTML('afterbegin', IKON[f.ikon]);
+    if (f.snart) a.querySelector('svg').style.opacity = '.45';
     const tk = document.createElement('span'); tk.className = 'tk';
     const b = document.createElement('b'); b.textContent = f.navn;
     const s = document.createElement('span'); s.className = 'tekst'; s.textContent = f.tekst(p);
     tk.append(b, s);
+    if (f.snart) { const sn = document.createElement('span'); sn.className = 'snart'; sn.textContent = 'Kommer snart'; tk.append(sn); a.append(tk); $('felter').append(a); return; }
     const aabn = document.createElement('span'); aabn.className = 'aabn'; aabn.innerHTML = '<span class="ord">Åbn</span> &#8594;';
     a.append(tk, aabn); $('felter').append(a);
   });
-  $('ingen').classList.toggle('hidden', mine.length > 0);
+  $('ingen').classList.toggle('hidden', mine.some((f) => !f.snart));
 }
 
 $('loginForm').addEventListener('submit', async (e) => {
