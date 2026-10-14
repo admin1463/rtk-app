@@ -36,6 +36,7 @@
     'Nummeret har fået 5 koder i dag. Prøv igen i morgen, eller skriv til kontakt@roskildetennisklub.dk.': 'This number has had 5 codes today. Please try again tomorrow, or write to kontakt@roskildetennisklub.dk.',
     'For mange forsøg fra denne enhed. Prøv igen om en time.': 'Too many attempts from this device. Please try again in an hour.',
     'Login med kode er midlertidigt spærret. Prøv igen om 15 minutter.': 'Login with a code is temporarily blocked. Please try again in 15 minutes.',
+    'Login med pinkode er slået fra. Brug dit mobilnummer og en kode på sms.': 'Login with a PIN is turned off. Use your mobile number and a code by text message.',
     'Du har sendt mange fejlmeldinger. Prøv igen om en time, eller skriv til kontakt@roskildetennisklub.dk.': 'You have sent many error reports. Please try again in an hour, or write to kontakt@roskildetennisklub.dk.',
     'Du har skrevet mange gange til opstrengeren. Prøv igen om en time, eller skriv til kontakt@roskildetennisklub.dk.': 'You have written to the stringer many times. Please try again in an hour, or write to kontakt@roskildetennisklub.dk.',
     'Forkert kode. Prøv igen.': 'Wrong code. Please try again.',
