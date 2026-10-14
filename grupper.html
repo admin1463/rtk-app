@@ -916,58 +916,104 @@ async function hentFirebase() {
   return FB;
 }
 
+/** Et kort fingeraftryk af login-sessionen i motoren (ikke selve sessionen). */
+async function tokenBinding() {
+  const tok = (() => { try { return localStorage.getItem('rtk.token') || ''; } catch (e) { return ''; } })();
+  if (window.crypto && crypto.subtle) {
+    const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('rtk.gr:' + tok));
+    return Array.from(new Uint8Array(h)).slice(0, 12).map((x) => x.toString(16).padStart(2, '0')).join('');
+  }
+  // Uden sikker forbindelse (fx http på det lokale net) findes crypto.subtle ikke: en enkel kontrolsum er nok her
+  let a = 2166136261, b = 5381;
+  for (let i = 0; i < tok.length; i++) { const c = tok.charCodeAt(i); a = Math.imul(a ^ c, 16777619) >>> 0; b = (Math.imul(b, 33) + c) >>> 0; }
+  return 'f' + a.toString(16) + b.toString(16);
+}
+// Tælles op ved hvert log ud og hver start, så et sent svar fra den forrige ikke tegnes for den næste (gennemgangen 14. oktober)
+let gen = 0;
+const AFBRUDT = 'afbrudt';
+/** Læst- og set-markeringer i browseren hører til personen, ikke telefonen: ryd dem, når en anden logger ind eller der logges ud. */
+function rydLokalt() {
+  try { Object.keys(localStorage).filter((k) => /^rtk\.(gr\.laest|sp\.set|ab\.set|eg\.set)/.test(k)).forEach((k) => localStorage.removeItem(k)); } catch (e) {}
+}
 async function logIndFirebase() {
   await hentFirebase();
   await FB.au.authStateReady();
   tidMaal('login fundet');
   let u = FB.au.currentUser;
   let type = '';
+  // Firebase-login hører til det login i motoren (rtk.token), det blev lavet med. Er der logget ind på ny, også på en
+  // anden side (Beskeder, Mine børn, personalesiden), skal der hentes en ny Firebase-adgang (gennemgangen 13. oktober aften).
+  const binding = await tokenBinding();
   if (u) {
     const r = await u.getIdTokenResult();
     type = r.claims.type || '';
     const gemt = (() => { try { return localStorage.getItem('rtk.gr.uid'); } catch (e) { return null; } })();
-    if (gemt !== u.uid) u = null;   // en anden har logget ind på Mit RTK siden sidst
+    const gemtTok = (() => { try { return localStorage.getItem('rtk.gr.tok'); } catch (e) { return null; } })();
+    if (gemt !== u.uid || gemtTok !== binding) { u = null; await FB.auth.signOut(FB.au).catch(() => {}); }
   }
   if (!u) {
+    const g = gen;
     const svar = await K.motor('kerne', 'firebase');
+    if (g !== gen || !K.loggetInd()) throw new Error(AFBRUDT);   // logget ud imens
     const c = await FB.auth.signInWithCustomToken(FB.au, svar.token);
+    if (g !== gen || !K.loggetInd()) { await FB.auth.signOut(FB.au).catch(() => {}); throw new Error(AFBRUDT); }
     u = c.user; type = svar.type;
-    try { localStorage.setItem('rtk.gr.uid', u.uid); } catch (e) {}
+    const forrige = (() => { try { return localStorage.getItem('rtk.gr.uid'); } catch (e) { return null; } })();
+    if (forrige && forrige !== u.uid) rydLokalt();
+    try { localStorage.setItem('rtk.gr.uid', u.uid); localStorage.setItem('rtk.gr.tok', binding); } catch (e) {}
   }
   mig = { uid: u.uid, type };
   return mig;
 }
 
 function visLogin() {
+  gen++;
+  const varInde = mig !== null;
   stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } tilstand.slettede = []; sletGids.clear();
   stopBoers(); stopAaben();
   mig = null;
   if (typeof rydMig === 'function') rydMig();
   if (typeof gbRyd === 'function') gbRyd(true);
   for (const k in mineSvar) delete mineSvar[k];
+  // Intet fra den forrige må stå tilbage til den næste på samme telefon (gennemgangen 13. oktober aften)
+  for (const k in detaljer) delete detaljer[k];
+  Object.assign(tilstand, { grupper: [], gruppe: null, medlemmer: [], beskeder: [], spil: [], spilEt: null, tilm: [], serie: [], opslag: [], svarTil: null, aaben: null, retter: null });
+  vis('');
+  ['liste', 'naeste', 'slettede', 'beskeder', 'chatSpil', 'spilListe', 'medlemmer', 'fund', 'hvem'].forEach((id) => { const e = $(id); if (e) e.textContent = ''; });
+  ['spTitel', 'spHvornaar', 'spTags', 'spSpillere', 'spVente', 'spMaaske', 'spSerieTekst', 'spNote', 'omTekst', 'omFakta'].forEach((id) => { const e = $(id); if (e) e.textContent = ''; });
+  // Halvskrevne kladder (besked, nyt spil, nyt opslag, ansøgning, søgning) må heller ikke stå til den næste
+  document.querySelectorAll('#indeDel input, #indeDel textarea').forEach((e) => { if (e.type !== 'checkbox' && e.type !== 'radio' && e.type !== 'file' && e.type !== 'button' && e.type !== 'submit') e.value = e.defaultValue; });
+  try { if (typeof nyORyd === 'function') nyORyd(); } catch (e) {}   // const i boers_side.js findes ikke endnu ved første kald
+  if (typeof ab !== 'undefined' && ab) { ab.q = ''; ab.kladde = {}; }
+  // Adressen (fx #g/<id>/spil/<sid>) nulstilles kun, når nogen var logget ind, så et link åbnet før login stadig virker bagefter
+  if (varInde && location.hash) history.replaceState(null, '', location.pathname + location.search);
+  rydLokalt();
   if (FB) FB.auth.signOut(FB.au).catch(() => {});
-  try { localStorage.removeItem('rtk.gr.uid'); } catch (e) {}
+  try { localStorage.removeItem('rtk.gr.uid'); localStorage.removeItem('rtk.gr.tok'); } catch (e) {}
   $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
   K.loginKort($('login'), { onLogin: start });
 }
 K.vedLogud(visLogin);
 
 async function start() {
+  const g = ++gen;
   $('loginDel').classList.add('hidden'); $('indeDel').classList.remove('hidden');
   K.besked($('hentMsg'), t('henter'));
   try {
     await logIndFirebase();
+    if (g !== gen) return;
     K.besked($('hentMsg'), '');
     tidMaal('login klar');
     $('ikkeVoksen').classList.toggle('hidden', mig.type === 'medlem');
     if (mig.type !== 'medlem') { vis(''); return; }
     const uid0 = mig.uid;
-    K.motor('kerne', 'mig').then((p) => { $('hvem').textContent = t('kLoggetInd', { navn: p.navn }); if (typeof egMigNavn === 'function') egMigNavn(p.navn, uid0); }).catch(() => {});
+    K.motor('kerne', 'mig').then((p) => { if (!mig || mig.uid !== uid0) return; $('hvem').textContent = t('kLoggetInd', { navn: p.navn }); if (typeof egMigNavn === 'function') egMigNavn(p.navn, uid0); }).catch(() => {});
     lytListe();
     lytBoers();
     lytAabenMine();
     rute();
   } catch (err) {
+    if (err && err.message === AFBRUDT) return;
     console.warn(err);
     if (K.loggetInd()) K.besked($('hentMsg'), err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlHent'), 'err');
   }
@@ -1028,6 +1074,8 @@ function lytListeIgen() { if (listeLyt) { listeLyt(); listeLyt = null; } lytList
 const detaljer = {};
 async function hentDetaljer() {
   const { fs, db } = FB;
+  const uid0 = mig && mig.uid;
+  const samme = () => mig && mig.uid === uid0;
   const nu = new Date(Date.now() - 3 * 3600000);
   await Promise.all(tilstand.grupper.map(async (g) => {
     try {
@@ -1038,6 +1086,7 @@ async function hentDetaljer() {
         mig ? fs.getDoc(fs.doc(db, 'grupper', g.id, 'medlemmer', mig.uid)).catch(() => null) : null
       ]);
       // Spillerbørsen: gruppens egne opslag står ikke på tavlen, og en markering viser, hvor mange der har meldt sig
+      if (!samme()) return;
       const opslag = op.docs.map((d) => Object.assign({ id: d.id }, d.data()));
       opslag.forEach((o) => sb.egne.add(o.id));
       const sidste = b.docs[0] ? b.docs[0].data() : null;
@@ -1045,9 +1094,11 @@ async function hentDetaljer() {
       let minT = null;
       if (!mig) return;
       if (spil[0]) { const m = await fs.getDoc(fs.doc(db, 'grupper', g.id, 'spil', spil[0].id, 'tilmeldinger', mig.uid)); minT = m.exists() ? m.data() : null; }
+      if (!samme()) return;
       detaljer[g.id] = { sidste, spil: spil[0] || null, minT, rolle: mr && mr.exists() ? mr.data().rolle : '', meldt: opslag.filter((o) => o.status === 'aaben').reduce((n, o) => n + (o.antalMeldt || 0), 0) };
     } catch (e) { console.warn(e); }
   }));
+  if (!samme()) return;
   if (!$('vListe').classList.contains('hidden')) tegnListe();
   tidMaal('næste spil og beskeder hentet');
   tegnFaner();
@@ -2118,6 +2169,10 @@ document.addEventListener('sprog', () => {
 
 // Når man forlader siden, lukkes forbindelsen til Firestore pænt (ellers kan den melde fejl i konsollen midt i et skift).
 window.addEventListener('pagehide', () => { stopLyt(); stopAaben(); if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } if (FB) FB.fs.terminate(FB.db).catch(() => {}); });
+// En anden fane logger ud eller ind som en anden: genindlæs, så bindingen til Firebase tjekkes igen (gennemgangen 14. oktober)
+window.addEventListener('storage', (e) => { if (e.key === 'rtk.token' || e.key === null) location.reload(); });
+// Siden kan komme tilbage fra browserens tilbage-cache med den forriges indhold og en lukket Firestore: indlæs den på ny
+window.addEventListener('pageshow', (e) => { if (e.persisted) location.reload(); });
 if (K.loggetInd()) start(); else visLogin();
 
 // ==================== Spillerbørsen (12. oktober 2026). Bygges ind i grupper.html efter grupper_side.js.
@@ -2634,6 +2689,8 @@ $('goRetForm').addEventListener('submit', async (e) => {
 
 // ---------- Nyt opslag
 const nyO = { type: 'et', sport: 'tennis', spilform: 'double', koen: '', antal: 1, alder: [], frist: '2t', spil: [], autoTitel: '' };
+/** Nyt opslag forfra (log ud, gennemgangen 14. oktober). */
+function nyORyd() { Object.assign(nyO, { type: 'et', sport: 'tennis', spilform: 'double', koen: '', antal: 1, alder: [], frist: '2t', spil: [], autoTitel: '' }); }
 function chipGruppe(id, valg, valgt, ved, multi) {
   const g = $(id); g.innerHTML = '';
   valg.forEach(([v, n]) => {
