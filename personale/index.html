@@ -161,7 +161,8 @@ function visTrin(t) {
   $('mobilForm').classList.toggle('hidden', t !== 'mobil');
   $('kodeForm').classList.toggle('hidden', t !== 'kode');
   $('loginForm').classList.toggle('hidden', t !== 'pin');
-  $('pinSkift').classList.toggle('hidden', t === 'pin' || MILJOE === 'produktion');
+  // Login med pinkode er slået fra (Lars 14. oktober kl. 08.36). Knappen vises kun med ?pin=1, til test af en motor, hvor den er slået til
+  $('pinSkift').classList.toggle('hidden', t === 'pin' || MILJOE === 'produktion' || !new URLSearchParams(location.search).has('pin'));
 }
 async function sendKode(kanal) {
   besked($('loginMsg'), kanal === 'mail' ? 'Sender koden på mail …' : 'Sender koden …');
