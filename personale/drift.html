@@ -119,13 +119,11 @@
   </div>
 </footer>
 
+<script src="../konfig.js"></script>
 <script>
-const MOTOR = {
-  test: 'https://script.google.com/macros/s/AKfycbz_-LFD4pLRRxJjBI1kosmF3e0rKs8xPzZmgm4JLzl9oK6CQiMQrz-qPjxpvscDpn0r/exec',
-  produktion: ''
-};
-const MILJOE = new URLSearchParams(location.search).get('miljoe') === 'produktion' && MOTOR.produktion ? 'produktion' : 'test';
-const URL_MOTOR = MOTOR[MILJOE];
+// Adressen til motoren står i konfig.js (fælles for alle sider)
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
 
 // Drift og forbrug: kun for administratorer. Besluttet af Lars 11. oktober kl. 17.24, mockup godkendt kl. 18.36.
 const $ = (id) => document.getElementById(id);
