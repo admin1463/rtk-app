@@ -641,9 +641,18 @@ input.sr:focus-visible+.gb-op{outline:3px solid var(--pink);outline-offset:2px}
 .af-hvem .gr-av.mm{opacity:.45}
 .af-felt{border:0;padding:0;margin:14px 0 0;min-width:0}
 .af-felt legend{font-size:14px;font-weight:500;padding:0;margin:0 0 6px}
-.af-forslag{display:flex;gap:8px;align-items:center;margin:0 0 8px}
-.af-forslag input{flex:1;min-width:0;margin:0}
-.af-forslag .x{flex:0 0 44px;min-height:44px;padding:0;border:1px solid var(--line2);background:#FFFFFF;border-radius:8px;font-size:20px;color:inherit}
+/* Én tid med dato, fra og til (15. oktober 2026) */
+.af-raekke{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 10px;background:#FFFFFF}
+.af-raekke label{font-size:13px;margin:0 0 4px}
+.af-raekke input{margin:0;width:100%;min-width:0}
+.af-raekke-top{display:flex;gap:8px;align-items:flex-end}
+.af-raekke-top>div{flex:1;min-width:0}
+.af-raekke-tid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.af-raekke-tid>div{min-width:0}
+.af-raekke .x{flex:0 0 44px;min-height:44px;padding:0;border:1px solid var(--line2);background:#FFFFFF;border-radius:8px;font-size:20px;color:inherit}
+.af-laengde{display:block;font-size:13px;color:var(--muted);margin-top:6px;min-height:1.2em}
+.af-flere-hint{font-size:13px;margin:6px 0 0}
+.af-r1 small{display:block;font-weight:400;font-size:14px;color:var(--muted);margin-top:2px}
 .af-styr{border-top:1px solid var(--line);margin-top:22px;padding-top:6px}
 .af-status{border:2px solid var(--ok);border-radius:8px;padding:12px 14px;background:var(--okbg);margin:12px 0}
 .af-foreslaa{margin-top:10px}

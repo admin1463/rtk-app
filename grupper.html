@@ -186,7 +186,8 @@
         <p class="hint" data-t="afNyTekst">Foreslå nogle tider. Gruppen svarer ja, måske eller nej, og du lægger den bedste ud som spil.</p>
         <label for="afTitel" data-t="afTitelL">Hvad skal I?</label><input id="afTitel" maxlength="80" data-t-ph="afTitelPh">
         <fieldset class="af-felt"><legend data-t="afTiderL">Forslag til tider (højst 12)</legend><div id="afTider"></div>
-          <button type="button" id="afFlere" class="ghost small" data-t="afFlere">+ Endnu en tid</button></fieldset>
+          <button type="button" id="afFlere" class="ghost small" data-t="afFlere">+ Endnu en tid</button>
+          <p class="hint af-flere-hint" data-t="afFlereHint">En ny tid får samme længde som den forrige.</p></fieldset>
         <label for="afSted" data-t="afStedL">Sted (valgfrit)</label><input id="afSted" maxlength="80" data-t-ph="stedPh">
         <div class="grid gr-tre">
           <div><label for="afFristDato" data-t="afFristL">Svar senest (valgfrit)</label><input id="afFristDato" type="date"></div>
@@ -213,6 +214,7 @@
             <div class="grid gr-tre">
               <div><label for="afNyDato" data-t="dato">Dato</label><input id="afNyDato" type="date"></div>
               <div><label for="afNyKl" data-t="fra">Fra</label><input id="afNyKl" type="time" value="19:00"></div>
+              <div><label for="afNyTil" data-t="til">Til</label><input id="afNyTil" type="time" value="21:00"></div>
             </div>
             <div class="gr-knapper"><button type="submit" id="afForeslaaSend" class="ok small" data-t="afTilfoej">Tilføj tiden</button><button type="button" id="afForeslaaFortryd" class="ghost small" data-t="fortryd">Fortryd</button></div>
           </form>
@@ -675,6 +677,9 @@ window.TEKSTER = {
     afErLukket: 'Afstemningen er lukket.', afFindesIkke: 'Afstemningen findes ikke længere.', afForeslaa: '+ Foreslå en anden tid', afTilfoej: 'Tilføj tiden',
     afTidTilfoejet: 'Tiden er tilføjet.', afStyrH: 'Læg en tid ud som spil', afValgL: 'Tid', afTilmeldL: 'Meld dem, der sagde ja, til spillet',
     afLaegUd: 'Læg spillet ud', afLuk: 'Luk afstemningen', afLukIgen: 'Tryk igen for at lukke',
+    afFlereHint: 'En ny tid får samme længde som den forrige.', afTime1: '1 time', afTimer: '{n} timer', afMin: '{n} min.', afTimerMin: '{h} t. {m} min.',
+    afManglerSlut: 'Vælg en sluttid for hver tid', afForLang: 'En tid kan højst vare 24 timer', afEns: '"Til" skal være et andet klokkeslæt end "Fra"',
+    afTidNr: 'Tid {n}', afFjernTidNr: 'Fjern tid {n}',
     sys_afstemOpret: '{a} startede en afstemning: {titel}', sys_afstemValgt: '{a} valgte en tid og lagde {titel} ud som spil',
   },
   en: {
@@ -877,6 +882,9 @@ window.TEKSTER = {
     afErLukket: 'The poll is closed.', afFindesIkke: 'The poll no longer exists.', afForeslaa: '+ Suggest another time', afTilfoej: 'Add the time',
     afTidTilfoejet: 'The time has been added.', afStyrH: 'Post a time as a game', afValgL: 'Time', afTilmeldL: 'Sign up those who said yes',
     afLaegUd: 'Post the game', afLuk: 'Close the poll', afLukIgen: 'Tap again to close',
+    afFlereHint: 'A new time gets the same length as the one before.', afTime1: '1 hour', afTimer: '{n} hours', afMin: '{n} min', afTimerMin: '{h} h {m} min',
+    afManglerSlut: 'Choose an end time for each time', afForLang: 'A time can last at most 24 hours', afEns: '"To" must be a different time from "From"',
+    afTidNr: 'Time {n}', afFjernTidNr: 'Remove time {n}',
     sys_afstemOpret: '{a} started a poll: {titel}', sys_afstemValgt: '{a} chose a time and posted {titel} as a game',
   }
 };
@@ -908,6 +916,9 @@ Object.assign(window.MOTOR_EN, {
   'Gruppen har allerede 10 åbne afstemninger': 'The group already has 10 open polls',
   'Afstemningen findes ikke': 'The poll does not exist',
   'Afstemningen er lukket': 'The poll is closed',
+  'Vælg en sluttid': 'Choose an end time',
+  'Sluttiden skal ligge efter starttiden': 'The end time must be after the start time',
+  'En tid kan højst vare 24 timer': 'A time can last at most 24 hours',
   'Skriv, hvad I skal': 'Write what it is for',
   'Foreslå mindst to tider': 'Suggest at least two times',
   'Foreslå mindst to forskellige tider': 'Suggest at least two different times',
@@ -4525,6 +4536,51 @@ function afRyd() {
 
 const afDag = (d) => grStortBogstav(new Intl.DateTimeFormat(lokal(), { weekday: 'long', day: 'numeric', month: 'short' }).format(d));
 const afTid = (d) => afDag(d) + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(d);
+// Fra og til pr. tid (Lars 15. oktober kl. 08.05). Ældre tider uden slut vises med starttiden alene.
+const afSlut = (tid) => dato(tid.slut);
+function afLaengde(ms) {
+  const m = Math.round(ms / 60000), h = Math.floor(m / 60), r = m % 60;
+  if (!r) return t(h === 1 ? 'afTime1' : 'afTimer', { n: h });
+  if (!h) return t('afMin', { n: r });
+  return t('afTimerMin', { h, m: r });
+}
+/** "kl. 13.00–15.00 · 2 timer" (eller kun "kl. 13.00" for en tid uden slut) */
+function afKlTekst(tid) {
+  const a = dato(tid.start), b = afSlut(tid); if (!a) return '';
+  return (lokal() === 'da-DK' ? 'kl. ' : '') + kl(a) + (b ? '–' + kl(b) + ' · ' + afLaengde(b - a) : '');
+}
+/** Hele tiden på én linje: "Lørdag 18. okt. kl. 13.00–15.00" */
+const afTidHel = (tid) => { const a = dato(tid.start), b = afSlut(tid); return a ? afTid(a) + (b ? '–' + kl(b) : '') : ''; };
+const toCifre = (n) => String(n).padStart(2, '0');
+const afDatoV = (d) => d.getFullYear() + '-' + toCifre(d.getMonth() + 1) + '-' + toCifre(d.getDate());
+const afKlV = (d) => toCifre(d.getHours()) + ':' + toCifre(d.getMinutes());
+/** Dagen efter som "åååå-mm-dd" (efter kalenderen, så skift til og fra sommertid ikke flytter klokkeslættet) */
+function afNaesteDag(dag) {
+  const d = tilDato(dag, '12:00'); if (!d) return '';
+  d.setDate(d.getDate() + 1); return afDatoV(d);
+}
+/** Minutter fra "Fra" til "Til" på uret (over midnat regnes til næste dag). 0 betyder ens. */
+function afUrMin(fra, til) {
+  const m = (v) => { const [h, mm] = String(v || '').split(':').map(Number); return isNaN(h) || isNaN(mm) ? null : h * 60 + mm; };
+  const a = m(fra), b = m(til); if (a === null || b === null) return null;
+  return (b - a + 1440) % 1440;
+}
+function afPlusMin(fra, min) {
+  const [h, mm] = String(fra).split(':').map(Number); const x = (h * 60 + mm + min) % 1440;
+  return toCifre(Math.floor(x / 60)) + ':' + toCifre(x % 60);
+}
+/**
+ * Start og slut fra dato, fra og til. Ligger "Til" før "Fra", er det over midnat (næste dag efter kalenderen).
+ * Er "Til" det samme som "Fra", er der ingen slut, og ens er sand (gennemgangen af varigheden 15. oktober).
+ */
+function afFraTil(dag, fra, til) {
+  const start = tilDato(dag, fra); if (!start) return null;
+  if (!til) return { start, slut: null };
+  if (afUrMin(fra, til) === 0) return { start, slut: null, ens: true };
+  let slut = tilDato(dag, til);
+  if (slut && slut <= start) slut = tilDato(afNaesteDag(dag), til);
+  return { start, slut };
+}
 function grStortBogstav(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
 
 /** Antal ja og måske pr. tid, og hvilken tid flest kan (flest ja, derefter flest måske). */
@@ -4576,18 +4632,52 @@ function tegnAfstemListe() {
 }
 
 // ---------- Ny afstemning
-function afNyRaekke(start) {
-  const r = K.el('div', { 'class': 'af-forslag' });
-  const d = start || new Date(Date.now() + 2 * 86400000);
-  const dag = K.el('input', { type: 'date', 'aria-label': t('dato'), value: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') });
-  const tid = K.el('input', { type: 'time', 'aria-label': t('fra'), value: start ? String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') : '19:00' });
-  const x = K.el('button', { type: 'button', 'class': 'x', 'aria-label': t('afFjernTid') }, '×');
+let afRaekkeNr = 0;
+/** Én tid i formularen: dato, fra og til. Længden står under og følger med, når man retter. Standard er 2 timer. */
+function afNyRaekke(dagV, fraV, tilV) {
+  const n = ++afRaekkeNr;
+  const r = K.el('div', { 'class': 'af-raekke', role: 'group' });
+  const felt = (navn, type, vaerdi) => {
+    const boks = K.el('div');
+    boks.append(K.el('label', { 'for': 'af' + navn + n, 'data-t': navn === 'Dag' ? 'dato' : navn === 'Fra' ? 'fra' : 'til' }, t(navn === 'Dag' ? 'dato' : navn === 'Fra' ? 'fra' : 'til')));
+    const inp = K.el('input', { id: 'af' + navn + n, type, value: vaerdi, 'data-af-felt': navn.toLowerCase() });
+    boks.append(inp);
+    return [boks, inp];
+  };
+  const [bDag, dag] = felt('Dag', 'date', dagV);
+  const [bFra, fra] = felt('Fra', 'time', fraV || '19:00');
+  const [bTil, til] = felt('Til', 'time', tilV || afPlusMin(fraV || '19:00', 120));
+  const x = K.el('button', { type: 'button', 'class': 'x' }, '×');
   x.addEventListener('click', () => { r.remove(); afTaelRaekker(); });
-  r.append(dag, tid, x);
+  const top = K.el('div', { 'class': 'af-raekke-top' }); top.append(bDag, x);
+  const tre = K.el('div', { 'class': 'af-raekke-tid' }); tre.append(bFra, bTil);
+  const l = K.el('span', { 'class': 'af-laengde' });
+  r.append(top, tre, l);
+  // Flyttes "Fra", flytter "Til" med, så længden på uret bliver den samme. Længden huskes, også hvis "Fra" tømmes undervejs.
+  let lgd = afUrMin(fra.value, til.value) || 120;
+  fra.addEventListener('change', () => { if (fra.value) til.value = afPlusMin(fra.value, lgd); afRaekkeLaengde(r); });
+  til.addEventListener('change', () => { const m = afUrMin(fra.value, til.value); if (m) lgd = m; afRaekkeLaengde(r); });
+  dag.addEventListener('change', () => afRaekkeLaengde(r));
+  [dag, fra, til].forEach((e) => e.addEventListener('input', () => afRaekkeLaengde(r)));
+  afRaekkeLaengde(r);
   return r;
+}
+function afRaekkeVaerdi(r) {
+  const v = (f) => (r.querySelector('[data-af-felt="' + f + '"]') || {}).value || '';
+  return afFraTil(v('dag'), v('fra'), v('til'));
+}
+function afRaekkeLaengde(r) {
+  const ft = afRaekkeVaerdi(r);
+  r.querySelector('.af-laengde').textContent = ft && ft.slut ? afLaengde(ft.slut - ft.start) : '';
 }
 function afTaelRaekker() {
   const n = $('afTider').children.length;
+  // Hver række har et navn ("Tid 2"), så en skærmlæser kan skelne dem
+  [...$('afTider').children].forEach((r, i) => {
+    r.setAttribute('aria-label', t('afTidNr', { n: i + 1 }));
+    r.querySelector('.x').setAttribute('aria-label', t('afFjernTidNr', { n: i + 1 }));
+    afRaekkeLaengde(r);
+  });
   $('afFlere').disabled = n >= 12;
   [...$('afTider').querySelectorAll('.x')].forEach((b) => { b.disabled = n <= 2; });
 }
@@ -4602,30 +4692,35 @@ function visAfstemNy(gid) {
     $('afTitel').value = ''; $('afSted').value = ''; $('afFristDato').value = ''; $('afFristKl').value = '12:00'; $('afAndre').checked = true;
     $('afTider').innerHTML = '';
     // Tre forslag at rette i: i overmorgen og de to næste dage kl. 19
-    for (let i = 2; i <= 4; i++) { const d = new Date(Date.now() + i * 86400000); d.setHours(19, 0, 0, 0); $('afTider').append(afNyRaekke(d)); }
+    let dag = afDatoV(new Date());
+    for (let i = 1; i <= 4; i++) { dag = afNaesteDag(dag); if (i >= 2) $('afTider').append(afNyRaekke(dag, '19:00', '21:00')); }
   }
   afTaelRaekker();
   $('afTitel').focus();
 }
 $('afFlere').addEventListener('click', () => {
   const sidste = [...$('afTider').children].pop();
-  let start = null;
-  if (sidste) { const [dag, tid] = sidste.querySelectorAll('input'); start = tilDato(dag.value, tid.value); if (start) start = new Date(start.getTime() + 86400000); }
-  $('afTider').append(afNyRaekke(start)); afTaelRaekker();
+  // Dagen efter den sidste (efter kalenderen), samme fra og til
+  const v = (f) => sidste ? (sidste.querySelector('[data-af-felt="' + f + '"]') || {}).value || '' : '';
+  const dag = v('dag') ? afNaesteDag(v('dag')) : afNaesteDag(afNaesteDag(afDatoV(new Date())));
+  $('afTider').append(afNyRaekke(dag, v('fra') || '19:00', v('til') || '')); afTaelRaekker();
 });
 $('vAfstemNy').addEventListener('submit', async (e) => {
   e.preventDefault();
   const gid = af.gid; if (!gid) return;
   const titel = $('afTitel').value.trim();
   if (!titel) { K.besked($('afNyMsg'), t('afManglerTitel'), 'err'); $('afTitel').focus(); return; }
-  const tider = [...$('afTider').children].map((r) => { const [dag, tid] = r.querySelectorAll('input'); return tilDato(dag.value, tid.value); });
+  const tider = [...$('afTider').children].map(afRaekkeVaerdi);
   if (tider.some((d) => !d)) { K.besked($('afNyMsg'), t('mangerDato'), 'err'); return; }
+  if (tider.some((d) => d.ens)) { K.besked($('afNyMsg'), t('afEns'), 'err'); return; }
+  if (tider.some((d) => !d.slut)) { K.besked($('afNyMsg'), t('afManglerSlut'), 'err'); return; }
+  if (tider.some((d) => d.slut - d.start > 24 * 3600000)) { K.besked($('afNyMsg'), t('afForLang'), 'err'); return; }
   let frist = null;
   if ($('afFristDato').value) { frist = tilDato($('afFristDato').value, $('afFristKl').value || '12:00'); if (!frist) { K.besked($('afNyMsg'), t('mangerDato'), 'err'); return; } }
   const knap = $('afSend'); knap.disabled = true;
   K.besked($('afNyMsg'), t('gemmer'));
   try {
-    const r = await K.motor('grupper', 'afstemOpret', { gid, titel, sted: $('afSted').value.trim(), tider: tider.map((d) => d.toISOString()), frist: frist ? frist.toISOString() : '', andre: $('afAndre').checked }, K.nyId());
+    const r = await K.motor('grupper', 'afstemOpret', { gid, titel, sted: $('afSted').value.trim(), tider: tider.map((d) => ({ start: d.start.toISOString(), slut: d.slut.toISOString() })), frist: frist ? frist.toISOString() : '', andre: $('afAndre').checked }, K.nyId());
     $('afTider').innerHTML = '';
     location.hash = 'g/' + gid + '/afstemning/' + r.id;
   } catch (err) { fejl($('afNyMsg'), err); } finally { knap.disabled = false; }
@@ -4682,7 +4777,8 @@ function tegnAfstem() {
     const valgt = a.status === 'valgt' && a.valgt && a.valgt.tid === tid.id;
     const li = K.el('li', { 'class': 'af-tid' + (bedst === tid.id && aaben ? ' bedst' : '') + (valgt ? ' valgt' : '') });
     const r1 = K.el('div', { 'class': 'af-r1' });
-    r1.append(K.el('b', null, afTid(d)));
+    const ov = K.el('b', null, afDag(d)); ov.append(K.el('small', null, afKlTekst(tid)));
+    r1.append(ov);
     const tl = K.el('span', { 'class': 'af-tal' }); tl.append(K.el('strong', null, t('afJaN', { n: x.ja.length })));
     if (x.maaske.length) tl.append(' · ' + t('afMaaskeN', { n: x.maaske.length }));
     r1.append(tl); li.append(r1);
@@ -4690,7 +4786,7 @@ function tegnAfstem() {
     else if (bedst === tid.id && aaben) li.append(K.el('span', { 'class': 'af-flest' }, t('afFlestKan')));
     if (tid.af) li.append(K.el('span', { 'class': 'hint af-af' }, t('afForeslaaetAf', { a: tid.af })));
     if (aaben) {
-      const sv = K.el('div', { 'class': 'af-svar', role: 'group', 'aria-label': t('afDitSvar', { tid: afTid(d) }) });
+      const sv = K.el('div', { 'class': 'af-svar', role: 'group', 'aria-label': t('afDitSvar', { tid: afTidHel(tid) }) });
       [['ja', 'afJa'], ['maaske', 'afMaaske'], ['nej', 'afNej']].forEach(([v, n]) => {
         const b = K.el('button', { type: 'button', 'class': mit === v ? v : '', 'aria-pressed': String(mit === v), 'data-af': tid.id + '-' + v }, t(n));
         b.addEventListener('click', () => afSvar(tid.id, mit === v ? '' : v));
@@ -4729,7 +4825,7 @@ function tegnAfstem() {
   if (aaben && maaStyre) {
     const sel = $('afValg'); const foer = sel.value;
     sel.innerHTML = '';
-    (a.tider || []).forEach((tid) => { const d = dato(tid.start); if (d) sel.append(K.el('option', { value: tid.id }, afTid(d) + ' · ' + t('afJaN', { n: tal[tid.id].ja.length }))); });
+    (a.tider || []).forEach((tid) => { const d = dato(tid.start); if (d) sel.append(K.el('option', { value: tid.id }, afTidHel(tid) + ' · ' + t('afJaN', { n: tal[tid.id].ja.length }))); });
     // Den tid, flest kan, er valgt, indtil man selv vælger en anden
     sel.value = af.valgRoert && (a.tider || []).some((x) => x.id === foer) ? foer : (bedst || ((a.tider || [])[0] || {}).id || '');
     const bk = $('afBooker'); const bf = af.bookerRoert ? bk.value : mig.uid;
@@ -4769,16 +4865,26 @@ $('afForeslaaKnap').addEventListener('click', () => {
   const d = new Date(Date.now() + 86400000);
   $('afNyDato').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   if (!$('afNyKl').value) $('afNyKl').value = '19:00';
+  // Samme længde som den første tid i afstemningen (ellers 2 timer)
+  const t0 = ((af.et || {}).tider || [])[0];
+  af.nyLgd = (t0 && afSlut(t0) && dato(t0.start) && afUrMin(afKlV(dato(t0.start)), afKlV(afSlut(t0)))) || 120;
+  $('afNyTil').value = afPlusMin($('afNyKl').value, af.nyLgd);
   tegnAfstem(); $('afNyDato').focus();
 });
+// Flyttes "Fra", flytter "Til" med (samme længde på uret)
+$('afNyKl').addEventListener('change', () => { if ($('afNyKl').value) $('afNyTil').value = afPlusMin($('afNyKl').value, af.nyLgd || 120); });
+$('afNyTil').addEventListener('change', () => { const m = afUrMin($('afNyKl').value, $('afNyTil').value); if (m) af.nyLgd = m; });
 $('afForeslaaFortryd').addEventListener('click', () => { af.foreslaa = false; tegnAfstem(); $('afForeslaaKnap').focus(); });
 $('afForeslaaForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const start = tilDato($('afNyDato').value, $('afNyKl').value);
-  if (!start) { K.besked($('afMsg'), t('mangerDato'), 'err'); return; }
+  const ft = afFraTil($('afNyDato').value, $('afNyKl').value, $('afNyTil').value);
+  if (!ft) { K.besked($('afMsg'), t('mangerDato'), 'err'); return; }
+  if (ft.ens) { K.besked($('afMsg'), t('afEns'), 'err'); return; }
+  if (!ft.slut) { K.besked($('afMsg'), t('afManglerSlut'), 'err'); return; }
+  if (ft.slut - ft.start > 24 * 3600000) { K.besked($('afMsg'), t('afForLang'), 'err'); return; }
   const knap = $('afForeslaaSend'); knap.disabled = true;
   try {
-    await K.motor('grupper', 'afstemForeslaa', { gid: af.gid, aid: af.aid, start: start.toISOString() }, K.nyId());
+    await K.motor('grupper', 'afstemForeslaa', { gid: af.gid, aid: af.aid, start: ft.start.toISOString(), slut: ft.slut.toISOString() }, K.nyId());
     af.foreslaa = false; K.besked($('afMsg'), t('afTidTilfoejet'), 'okm'); tegnAfstem();
   } catch (err) { fejl($('afMsg'), err); } finally { knap.disabled = false; }
 });
@@ -4809,7 +4915,9 @@ $('afNyKnap').addEventListener('click', () => { location.hash = 'g/' + tilstand.
 function afSprog(aaben) {
   if (aaben('vGruppe') && tilstand.fane === 'spil') tegnAfstemListe();
   if (aaben('vAfstem')) tegnAfstem();
-  if (aaben('vAfstemNy')) [...$('afTider').querySelectorAll('.x')].forEach((b) => b.setAttribute('aria-label', t('afFjernTid')));
+  if (aaben('vAfstemNy')) {
+    afTaelRaekker();
+  }
 }
 
 // ==================== Til sidst: sidens start (gennemgangen 14. oktober, trin 4)
