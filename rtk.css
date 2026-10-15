@@ -75,6 +75,9 @@ a.tile{border:2px solid var(--pink)}
 label{display:block;font-size:14px;font-weight:500;color:var(--ink);margin:0 0 4px}
 input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:6px;background:#FFFFFF;color:var(--ink);min-height:50px}
 textarea{min-height:96px;resize:vertical}
+/* Dato og klokkeslæt: iPhone giver felterne en mindstebredde og centreret tekst, så de stikker ud af smalle kasser (Lars 15. oktober kl. 22.13) */
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;display:block;min-width:0;max-width:100%;text-align:left}
+input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--frost);box-shadow:0 0 0 3px rgba(143,184,222,.5)}
 button{border:2px solid var(--pink);border-radius:6px;padding:10px 18px;min-height:48px;white-space:nowrap;background:#FFFFFF;color:var(--ink);font-weight:700;cursor:pointer}
 button:focus-visible,a:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
