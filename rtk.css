@@ -612,3 +612,38 @@ input.sr:focus-visible+.gb-op{outline:3px solid var(--pink);outline-offset:2px}
 .ab-navn{display:flex;gap:12px;align-items:center}
 .ab-navn .gb-th{flex-basis:48px;width:48px;height:48px}
 .ab-navn h3{min-width:0;overflow-wrap:anywhere}
+
+/* ---------- Afstemning om tidspunkt i en gruppe (14. oktober 2026) */
+.af-start{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 12px}
+.af-start .hint{margin:0;font-size:14px}
+.af-kort{display:block;border:2px solid var(--pink);border-radius:8px;padding:14px 16px;margin:0 0 14px;text-decoration:none;color:inherit;background:#FFFFFF}
+.af-kort .af-top{display:block;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--pink)}
+.af-kort b{display:block;font-size:18px;margin:6px 0 2px}
+.af-kort .hint{display:block;margin:0}
+.af-maal{display:block;height:6px;border-radius:99px;background:var(--soft);margin:10px 0 2px;overflow:hidden}
+.af-maal i{display:block;height:100%;background:var(--pink)}
+.af-liste{list-style:none;margin:12px 0 0;padding:0}
+.af-tid{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:0 0 10px;background:#FFFFFF}
+.af-tid.bedst,.af-tid.valgt{border:2px solid var(--ok)}
+.af-r1{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.af-r1 b{font-size:17px}
+.af-tal{font-size:14px;color:var(--muted);white-space:nowrap}
+.af-tal strong{color:var(--ok)}
+.af-flest{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--okbg);color:var(--ok);margin-top:4px}
+.af-af{display:block;font-size:13px;margin:4px 0 0}
+.af-svar{display:flex;gap:6px;margin-top:10px}
+.af-svar button{flex:1;min-height:44px;padding:6px 4px;font-size:15px;border:1px solid var(--line2);background:#FFFFFF;border-radius:8px;font-weight:600;color:inherit}
+.af-svar button.ja{border:2px solid var(--ok);background:var(--okbg);color:var(--ok)}
+.af-svar button.maaske{border:2px solid var(--wait);background:var(--waitbg);color:var(--wait)}
+.af-svar button.nej{border:2px solid #9AA5AE;background:var(--soft);color:var(--muted)}
+.af-hvem{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;align-items:center}
+.af-hvem .gr-av{width:26px;height:26px;font-size:11px}
+.af-hvem .gr-av.mm{opacity:.45}
+.af-felt{border:0;padding:0;margin:14px 0 0;min-width:0}
+.af-felt legend{font-size:14px;font-weight:500;padding:0;margin:0 0 6px}
+.af-forslag{display:flex;gap:8px;align-items:center;margin:0 0 8px}
+.af-forslag input{flex:1;min-width:0;margin:0}
+.af-forslag .x{flex:0 0 44px;min-height:44px;padding:0;border:1px solid var(--line2);background:#FFFFFF;border-radius:8px;font-size:20px;color:inherit}
+.af-styr{border-top:1px solid var(--line);margin-top:22px;padding-top:6px}
+.af-status{border:2px solid var(--ok);border-radius:8px;padding:12px 14px;background:var(--okbg);margin:12px 0}
+.af-foreslaa{margin-top:10px}

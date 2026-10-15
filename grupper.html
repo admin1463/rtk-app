@@ -103,6 +103,8 @@
             <p id="grOpslagTom" class="hint" data-t="sbGrTom">Mangler I en spiller til et spil, eller søger I en fast spiller? Læg et opslag på spillerbørsen.</p>
           </section>
           <div class="gr-hoved"><h2 data-t="kommende">Kommende spil og arrangementer</h2><button type="button" id="nytSpilKnap" class="ok small" data-t="nytSpil">+ Nyt spil</button></div>
+          <div class="af-start"><button type="button" id="afNyKnap" class="ghost small" data-t="afNy">+ Afstemning</button><span class="hint" data-t="afNyHint">Find en tid, der passer de fleste</span></div>
+          <div id="afstemListe"></div>
           <ul id="spilListe" class="gr-spilliste"></ul>
           <p id="ingenSpil" class="hint hidden" data-t="ingenSpil">Ingen spil planlagt. Opret det næste.</p>
         </div>
@@ -176,6 +178,57 @@
         <div id="nsMsg" class="msg" aria-live="polite"></div>
         <div class="gr-knapper"><button type="submit" class="ok" data-t="opretSpil">Opret</button></div>
       </form>
+
+      <!-- Ny afstemning om tidspunkt (14. oktober 2026) -->
+      <form id="vAfstemNy" class="hidden gr-form" novalidate>
+        <a href="#" id="afNyTilbage" class="gr-tilbage" data-t="tilbageGruppe">&#8592; Tilbage</a>
+        <h1 class="lille" data-t="afNyH">Ny afstemning</h1>
+        <p class="hint" data-t="afNyTekst">Foreslå nogle tider. Gruppen svarer ja, måske eller nej, og du lægger den bedste ud som spil.</p>
+        <label for="afTitel" data-t="afTitelL">Hvad skal I?</label><input id="afTitel" maxlength="80" data-t-ph="afTitelPh">
+        <fieldset class="af-felt"><legend data-t="afTiderL">Forslag til tider (højst 12)</legend><div id="afTider"></div>
+          <button type="button" id="afFlere" class="ghost small" data-t="afFlere">+ Endnu en tid</button></fieldset>
+        <label for="afSted" data-t="afStedL">Sted (valgfrit)</label><input id="afSted" maxlength="80" data-t-ph="stedPh">
+        <div class="grid gr-tre">
+          <div><label for="afFristDato" data-t="afFristL">Svar senest (valgfrit)</label><input id="afFristDato" type="date"></div>
+          <div><label for="afFristKl" data-t="afFristKlL">Klokken</label><input id="afFristKl" type="time" value="12:00"></div>
+        </div>
+        <label class="gr-check"><input type="checkbox" id="afAndre" checked> <span data-t="afAndreL">Andre må foreslå flere tider</span></label>
+        <div id="afNyMsg" class="msg" aria-live="polite"></div>
+        <div class="gr-knapper"><button type="submit" id="afSend" class="ok" data-t="afSend">Send til gruppen</button></div>
+        <p class="hint" data-t="afSendHint">Gruppen får en notifikation, og der kommer en linje i chatten.</p>
+      </form>
+
+      <!-- En afstemning -->
+      <div id="vAfstem" class="hidden">
+        <a href="#" id="afTilbage" class="gr-tilbage" data-t="tilbageGruppe">&#8592; Tilbage</a>
+        <h1 class="lille" id="afTitelH"></h1>
+        <p class="hint" id="afInfo"></p>
+        <p id="afStatus" class="af-status hidden"></p>
+        <ul id="afTiderListe" class="af-liste"></ul>
+        <p class="hint" id="afMangler"></p>
+        <div id="afMsg" class="msg" aria-live="polite"></div>
+        <div id="afForeslaaDel" class="hidden">
+          <button type="button" id="afForeslaaKnap" class="ghost small" data-t="afForeslaa">+ Foreslå en anden tid</button>
+          <form id="afForeslaaForm" class="hidden af-foreslaa" novalidate>
+            <div class="grid gr-tre">
+              <div><label for="afNyDato" data-t="dato">Dato</label><input id="afNyDato" type="date"></div>
+              <div><label for="afNyKl" data-t="fra">Fra</label><input id="afNyKl" type="time" value="19:00"></div>
+            </div>
+            <div class="gr-knapper"><button type="submit" id="afForeslaaSend" class="ok small" data-t="afTilfoej">Tilføj tiden</button><button type="button" id="afForeslaaFortryd" class="ghost small" data-t="fortryd">Fortryd</button></div>
+          </form>
+        </div>
+        <section id="afStyr" class="af-styr hidden" aria-labelledby="afStyrH">
+          <h2 id="afStyrH" data-t="afStyrH">Læg en tid ud som spil</h2>
+          <label for="afValg" data-t="afValgL">Tid</label><select id="afValg"></select>
+          <div class="grid gr-tre">
+            <div><label for="afPladser" data-t="pladser">Pladser</label><input id="afPladser" type="number" inputmode="numeric" min="1" max="500" value="4"></div>
+          </div>
+          <label for="afBooker" data-t="booker">Hvem booker banen i ForeningsLet?</label><select id="afBooker"></select>
+          <label class="gr-check"><input type="checkbox" id="afTilmeld" checked> <span data-t="afTilmeldL">Meld dem, der sagde ja, til spillet</span></label>
+          <div id="afStyrMsg" class="msg" aria-live="polite"></div>
+          <div class="gr-knapper"><button type="button" id="afLaegUd" class="ok" data-t="afLaegUd">Læg spillet ud</button><button type="button" id="afLuk" class="ghost small gr-farlig" data-t="afLuk">Luk afstemningen</button></div>
+        </section>
+      </div>
 
       <!-- Et spil -->
       <div id="vSpil" class="hidden">
@@ -610,6 +663,19 @@ window.TEKSTER = {
     prSaadan: 'Sådan ser andre dit kort', prSlet: 'Slet mit profilkort', prSletIgen: 'Tryk igen for at slette kortet og billederne', prSlettet: 'Dit profilkort og dine billeder er slettet.',
     prVisBillede: 'Vis billedet af {navn} i fuld skærm', prVisBilledeN: 'Vis billede {n} af {navn} i fuld skærm', prBillederAf: 'Billeder af {navn}', prBilledeAfN: 'Billede {n} af {af} fra {navn}', prNAf: '{n} af {af}',
     prLuk: 'Luk', prForrige: 'Forrige billede', prNaeste: 'Næste billede',
+    afNy: '+ Afstemning', afNyHint: 'Find en tid, der passer de fleste', afNyH: 'Ny afstemning',
+    afNyTekst: 'Foreslå nogle tider. Gruppen svarer ja, måske eller nej, og du lægger den bedste ud som spil.',
+    afTitelL: 'Hvad skal I?', afTitelPh: 'Fx Double i næste uge', afTiderL: 'Forslag til tider (højst 12)', afFlere: '+ Endnu en tid', afFjernTid: 'Fjern tiden',
+    afStedL: 'Sted (valgfrit)', afFristL: 'Svar senest (valgfrit)', afFristKlL: 'Klokken', afAndreL: 'Andre må foreslå flere tider',
+    afSend: 'Send til gruppen', afSendHint: 'Gruppen får en notifikation, og der kommer en linje i chatten.', afManglerTitel: 'Skriv, hvad I skal',
+    afKicker: 'Afstemning', afSvarSenest: 'svar senest {tid}', afStatus: '{n} forslag · {a} af {b} har svaret', afDuMangler: 'du mangler at svare',
+    afForeslog: '{a} foreslog {n} tider', afTrykSvar: 'Tryk på dit svar, det gemmes med det samme', afJaN: '{n} ja', afMaaskeN: '{n} måske',
+    afFlestKan: 'Flest kan', afValgtTid: 'Valgt', afForeslaaetAf: 'Foreslået af {a}', afDitSvar: 'Dit svar til {tid}', afJa: 'Ja', afMaaske: 'Måske', afNej: 'Nej',
+    afHvemSr: 'Ja: {ja}. Måske: {mm}.', afManglerSvar: 'Mangler at svare: {navne}', afErLagtUd: 'Tiden er valgt og lagt ud som spil.', afSeSpillet: 'Se spillet',
+    afErLukket: 'Afstemningen er lukket.', afFindesIkke: 'Afstemningen findes ikke længere.', afForeslaa: '+ Foreslå en anden tid', afTilfoej: 'Tilføj tiden',
+    afTidTilfoejet: 'Tiden er tilføjet.', afStyrH: 'Læg en tid ud som spil', afValgL: 'Tid', afTilmeldL: 'Meld dem, der sagde ja, til spillet',
+    afLaegUd: 'Læg spillet ud', afLuk: 'Luk afstemningen', afLukIgen: 'Tryk igen for at lukke',
+    sys_afstemOpret: '{a} startede en afstemning: {titel}', sys_afstemValgt: '{a} valgte en tid og lagde {titel} ud som spil',
   },
   en: {
     titel: 'Groups · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
@@ -799,6 +865,19 @@ window.TEKSTER = {
     prSaadan: 'How others see your card', prSlet: 'Delete my profile card', prSletIgen: 'Tap again to delete the card and the photos', prSlettet: 'Your profile card and photos have been deleted.',
     prVisBillede: 'Show the photo of {navn} full screen', prVisBilledeN: 'Show photo {n} of {navn} full screen', prBillederAf: 'Photos of {navn}', prBilledeAfN: 'Photo {n} of {af} from {navn}', prNAf: '{n} of {af}',
     prLuk: 'Close', prForrige: 'Previous photo', prNaeste: 'Next photo',
+    afNy: '+ Poll', afNyHint: 'Find a time that suits most people', afNyH: 'New poll',
+    afNyTekst: 'Suggest a few times. The group answers yes, maybe or no, and you post the best one as a game.',
+    afTitelL: 'What is it for?', afTitelPh: 'E.g. Doubles next week', afTiderL: 'Suggested times (up to 12)', afFlere: '+ Another time', afFjernTid: 'Remove the time',
+    afStedL: 'Place (optional)', afFristL: 'Answer by (optional)', afFristKlL: 'Time', afAndreL: 'Others may suggest more times',
+    afSend: 'Send to the group', afSendHint: 'The group gets a notification, and a line appears in the chat.', afManglerTitel: 'Write what it is for',
+    afKicker: 'Poll', afSvarSenest: 'answer by {tid}', afStatus: '{n} suggestions · {a} of {b} have answered', afDuMangler: 'you have not answered',
+    afForeslog: '{a} suggested {n} times', afTrykSvar: 'Tap your answer, it is saved straight away', afJaN: '{n} yes', afMaaskeN: '{n} maybe',
+    afFlestKan: 'Most can', afValgtTid: 'Chosen', afForeslaaetAf: 'Suggested by {a}', afDitSvar: 'Your answer for {tid}', afJa: 'Yes', afMaaske: 'Maybe', afNej: 'No',
+    afHvemSr: 'Yes: {ja}. Maybe: {mm}.', afManglerSvar: 'Not answered yet: {navne}', afErLagtUd: 'The time is chosen and posted as a game.', afSeSpillet: 'See the game',
+    afErLukket: 'The poll is closed.', afFindesIkke: 'The poll no longer exists.', afForeslaa: '+ Suggest another time', afTilfoej: 'Add the time',
+    afTidTilfoejet: 'The time has been added.', afStyrH: 'Post a time as a game', afValgL: 'Time', afTilmeldL: 'Sign up those who said yes',
+    afLaegUd: 'Post the game', afLuk: 'Close the poll', afLukIgen: 'Tap again to close',
+    sys_afstemOpret: '{a} started a poll: {titel}', sys_afstemValgt: '{a} chose a time and posted {titel} as a game',
   }
 };
 </script>
@@ -825,6 +904,24 @@ const FB_VERSION = window.RTK_KONFIG.firebaseVersion;
 const CONFIG = window.RTK_KONFIG.firebase;
 Object.assign(window.MOTOR_EN, {
   'Ukendt gruppe': 'Unknown group',
+  'Du har startet mange afstemninger. Prøv igen om en time.': 'You have started many polls. Please try again in an hour.',
+  'Gruppen har allerede 10 åbne afstemninger': 'The group already has 10 open polls',
+  'Afstemningen findes ikke': 'The poll does not exist',
+  'Afstemningen er lukket': 'The poll is closed',
+  'Skriv, hvad I skal': 'Write what it is for',
+  'Foreslå mindst to tider': 'Suggest at least two times',
+  'Foreslå mindst to forskellige tider': 'Suggest at least two different times',
+  'Højst 12 tider': 'At most 12 times',
+  'Vælg dato og tidspunkt': 'Choose date and time',
+  'En af tiderne er allerede overstået': 'One of the times has already passed',
+  'En af tiderne ligger mere end et år ude i fremtiden': 'One of the times is more than a year ahead',
+  'Svarfristen er overstået': 'The answer deadline has passed',
+  'Tiden findes ikke længere': 'The time no longer exists',
+  'Den tid er allerede foreslået': 'That time has already been suggested',
+  'Tiden er allerede overstået': 'The time has already passed',
+  'Kun den, der startede afstemningen, kan foreslå tider': 'Only the person who started the poll can suggest times',
+  'Kun den, der startede afstemningen, og gruppeadministratorer kan lægge en tid ud': 'Only the person who started the poll and group admins can post a time',
+  'Kun den, der startede afstemningen, og gruppeadministratorer kan lukke den': 'Only the person who started the poll and group admins can close it',
   'Ukendt rolle': 'Unknown role',
   'Ukendt person': 'Unknown person',
   'Ukendt besked': 'Unknown message',
@@ -909,7 +1006,7 @@ function minRolle() { const m = tilstand.medlemmer.find((x) => x.id === (mig && 
 const erAdmin = () => minRolle() === 'admin';
 function maaInvitere() { const g = tilstand.gruppe; return !!g && (erAdmin() || minRolle() === 'inviter' || g.invitation === 'alle'); }
 function stopLyt() { lyt.forEach((f) => { try { f(); } catch (e) {} }); lyt = []; if (ab) ab.ansGid = null; }
-function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil', 'vBoers', 'vOpslag', 'vGrOpslag', 'vNytOpslag', 'vFind', 'vFindG', 'vSoeger', 'vSpiller', 'vProfil'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
+function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil', 'vBoers', 'vOpslag', 'vGrOpslag', 'vNytOpslag', 'vFind', 'vFindG', 'vSoeger', 'vSpiller', 'vProfil', 'vAfstemNy', 'vAfstem'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
 function fejl(el, err) { console.warn(err); if (err && err.code === 'permission-denied' && tilstand.gruppeVaek && Date.now() - tilstand.gruppeVaek < 10000) return; K.besked(el, err && err.code === 'permission-denied' ? t('ingenAdgang') : (err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem')), 'err'); }
 function laest(gid) { try { return Number(localStorage.getItem('rtk.gr.laest.' + gid) || 0); } catch (e) { return 0; } }
 function saetLaest(gid, ms) { try { if (ms > laest(gid)) localStorage.setItem('rtk.gr.laest.' + gid, String(ms)); } catch (e) {} }
@@ -1026,6 +1123,7 @@ function visLogin() {
   // Halvskrevne kladder (besked, nyt spil, nyt opslag, ansøgning, søgning) må heller ikke stå til den næste
   document.querySelectorAll('#indeDel input, #indeDel textarea').forEach((e) => { if (e.type !== 'checkbox' && e.type !== 'radio' && e.type !== 'file' && e.type !== 'button' && e.type !== 'submit') e.value = e.defaultValue; });
   nyORyd();
+  afRyd();
   ab.q = ''; ab.kladde = {};
   // Adressen (fx #g/<id>/spil/<sid>) nulstilles kun, når nogen var logget ind, så et link åbnet før login stadig virker bagefter
   if (varInde && location.hash) history.replaceState(null, '', location.pathname + location.search);
@@ -1082,6 +1180,7 @@ function rute() {
     if (h[2] === 'opslag' && h[3]) return visGrOpslag(h[1], h[3]);
     if (h[2] === 'nytopslag') return visNytOpslag(h[1], h[3] || '');
     if (h[2] === 'nytspil') return visNytSpil(h[1]);
+    if (h[2] === 'afstemning' && h[3]) return h[3] === 'ny' ? visAfstemNy(h[1]) : visAfstem(h[1], h[3]);
     return visGruppe(h[1], h[2] || 'chat');
   }
   visListe();
@@ -1294,6 +1393,7 @@ function visGruppe(gid, fane) {
   }, (err) => fejl($('hentMsg'), err)));
   tilstand.opslag = [];
   lytGrOpslag(gid);
+  lytAfstemListe(gid);
   tegnGruppe();
 }
 
@@ -1307,6 +1407,7 @@ function nulstilGruppeVisning() {
   $('gNavn').textContent = ''; $('gUnder').textContent = ''; gbSaet($('gBill'), ''); gbRyd(false);
   foersteChat = true; forladKlar = false; fjernKlar = null; sletKlar = false; K.besked($('sletMsg'), '');
   ab.ansAabne = new Set(); ab.nejAaben = null; ab.ans = []; $('ansDel').innerHTML = ''; $('ansDel').classList.add('hidden');
+  afRyd();
 }
 function tegnGruppe() {
   if (!mig) return; // logget ud imens
@@ -1330,7 +1431,7 @@ function tegnGruppe() {
     $(panel).setAttribute('aria-labelledby', 'fane-' + id);
   });
   if (tilstand.fane === 'chat') { tegnChat(); tegnChatSpil(); }
-  if (tilstand.fane === 'spil') { tegnSpilListe(); tegnGrOpslagListe(); }
+  if (tilstand.fane === 'spil') { tegnSpilListe(); tegnGrOpslagListe(); tegnAfstemListe(); }
   if (tilstand.fane === 'medlemmer') tegnMedlemmer();
   if (tilstand.fane === 'om') tegnOm();
 }
@@ -2209,6 +2310,7 @@ document.addEventListener('sprog', () => {
   sbSprog(aaben);
   abSprog(aaben);
   egSprog(aaben);
+  afSprog(aaben);
 });
 
 // ==================== Spillerbørsen (12. oktober 2026). Bygges ind i grupper.html efter grupper_side.js.
@@ -4407,6 +4509,307 @@ function gbTegnNy() {
   gbVaelger(indre, gb.ny, (v) => { gb.ny = v; gbTegnNy(); }, 'ny');
   boks.append(indre);
   gbFokusIgen(boks, sel);
+}
+
+// ==================== Afstemning om tidspunkt (14. oktober 2026): "Find en tid" i en gruppe, som Doodle.
+// Lars 22.06: rykket frem som det næste i Grupper. Mockup 22.10, valg 22.15: alle medlemmer kan starte en afstemning,
+// dem, der sagde ja, meldes til spillet (forvalgt), og knappen hedder "Afstemning".
+// Alt, der ændrer noget, går gennem motoren (grupper.afstem*). Siden lytter på grupper/{gid}/afstemninger.
+// Svarknapperne skifter med det samme og gemmes bagefter. Det sidste tryk gælder.
+const af = { liste: [], et: null, gid: null, aid: null, venter: {}, sendes: {}, lukKlar: false, foreslaa: false, valgRoert: false, bookerRoert: false };
+
+function afRyd() {
+  af.liste = []; af.et = null; af.gid = null; af.aid = null; af.venter = {}; af.sendes = {}; af.lukKlar = false; af.foreslaa = false; af.valgRoert = false; af.bookerRoert = false;
+  ['afstemListe', 'afTiderListe', 'afTider'].forEach((id) => { const e = $(id); if (e) e.innerHTML = ''; });
+}
+
+const afDag = (d) => grStortBogstav(new Intl.DateTimeFormat(lokal(), { weekday: 'long', day: 'numeric', month: 'short' }).format(d));
+const afTid = (d) => afDag(d) + ' ' + (lokal() === 'da-DK' ? 'kl. ' : '') + kl(d);
+function grStortBogstav(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+/** Antal ja og måske pr. tid, og hvilken tid flest kan (flest ja, derefter flest måske). */
+function afOptael(a) {
+  const tal = {};
+  (a.tider || []).forEach((t) => { tal[t.id] = { ja: [], maaske: [], nej: [] }; });
+  Object.keys(a.svar || {}).forEach((pid) => {
+    const s = a.svar[pid] || {};
+    Object.keys(s.tider || {}).forEach((tid) => { const v = s.tider[tid]; if (tal[tid] && tal[tid][v]) tal[tid][v].push(pid); });
+  });
+  let bedst = null;
+  (a.tider || []).forEach((t) => {
+    const x = tal[t.id];
+    if (!x.ja.length) return;
+    if (!bedst || x.ja.length > tal[bedst].ja.length || (x.ja.length === tal[bedst].ja.length && x.maaske.length > tal[bedst].maaske.length)) bedst = t.id;
+  });
+  return { tal, bedst };
+}
+function afSvarede(a) {
+  const med = new Set(tilstand.medlemmer.map((m) => m.id));
+  return Object.keys(a.svar || {}).filter((pid) => (!med.size || med.has(pid)) && Object.keys((a.svar[pid] || {}).tider || {}).length > 0);
+}
+// En åben afstemning, hvis tider alle er overstået, vises ikke øverst på Spil (natjobbet lukker den)
+const afAktuel = (a) => (a.tider || []).some((t) => dato(t.start) && dato(t.start).getTime() > Date.now());
+
+// ---------- På fanen Spil: de åbne afstemninger øverst
+function lytAfstemListe(gid) {
+  const { fs, db } = FB;
+  af.liste = [];
+  lyt.push(fs.onSnapshot(fs.query(fs.collection(db, 'grupper', gid, 'afstemninger'), fs.where('status', '==', 'aaben')), (s) => {
+    af.liste = s.docs.map((d) => Object.assign({ id: d.id }, d.data())).sort((x, y) => (dato(x.oprettet) || 0) - (dato(y.oprettet) || 0));
+    if (tilstand.fane === 'spil') tegnAfstemListe();
+  }, (err) => fejl($('hentMsg'), err)));
+}
+function tegnAfstemListe() {
+  const boks = $('afstemListe'); if (!boks || !mig || !tilstand.gruppe) return;
+  boks.innerHTML = '';
+  const n = tilstand.medlemmer.length || (tilstand.gruppe.medlemsIder || []).length;
+  af.liste.filter(afAktuel).forEach((a) => {
+    const svarede = afSvarede(a);
+    const mangler = svarede.indexOf(mig.uid) < 0;
+    const k = K.el('a', { 'class': 'af-kort', href: '#g/' + tilstand.gruppe.id + '/afstemning/' + a.id });
+    k.append(K.el('span', { 'class': 'af-top' }, t('afKicker') + (dato(a.frist) ? ' · ' + t('afSvarSenest', { tid: afTid(dato(a.frist)).toLowerCase() }) : '')));
+    k.append(K.el('b', null, a.titel));
+    k.append(K.el('span', { 'class': 'hint' }, t('afStatus', { n: (a.tider || []).length, a: svarede.length, b: n }) + (mangler ? ' · ' + t('afDuMangler') : '')));
+    const maal = K.el('span', { 'class': 'af-maal', 'aria-hidden': 'true' }); maal.append(K.el('i', { style: 'width:' + Math.round(100 * Math.min(1, svarede.length / Math.max(1, n))) + '%' })); k.append(maal);
+    boks.append(k);
+  });
+}
+
+// ---------- Ny afstemning
+function afNyRaekke(start) {
+  const r = K.el('div', { 'class': 'af-forslag' });
+  const d = start || new Date(Date.now() + 2 * 86400000);
+  const dag = K.el('input', { type: 'date', 'aria-label': t('dato'), value: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') });
+  const tid = K.el('input', { type: 'time', 'aria-label': t('fra'), value: start ? String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') : '19:00' });
+  const x = K.el('button', { type: 'button', 'class': 'x', 'aria-label': t('afFjernTid') }, '×');
+  x.addEventListener('click', () => { r.remove(); afTaelRaekker(); });
+  r.append(dag, tid, x);
+  return r;
+}
+function afTaelRaekker() {
+  const n = $('afTider').children.length;
+  $('afFlere').disabled = n >= 12;
+  [...$('afTider').querySelectorAll('.x')].forEach((b) => { b.disabled = n <= 2; });
+}
+function visAfstemNy(gid) {
+  vis('vAfstemNy');
+  $('afNyTilbage').setAttribute('href', '#g/' + gid + '/spil');
+  K.besked($('afNyMsg'), '');
+  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.gruppe = null; tilstand.medlemmer = []; }
+  lytGruppe(gid, () => {});
+  if (af.gid !== gid || !$('afTider').children.length) {
+    af.gid = gid;
+    $('afTitel').value = ''; $('afSted').value = ''; $('afFristDato').value = ''; $('afFristKl').value = '12:00'; $('afAndre').checked = true;
+    $('afTider').innerHTML = '';
+    // Tre forslag at rette i: i overmorgen og de to næste dage kl. 19
+    for (let i = 2; i <= 4; i++) { const d = new Date(Date.now() + i * 86400000); d.setHours(19, 0, 0, 0); $('afTider').append(afNyRaekke(d)); }
+  }
+  afTaelRaekker();
+  $('afTitel').focus();
+}
+$('afFlere').addEventListener('click', () => {
+  const sidste = [...$('afTider').children].pop();
+  let start = null;
+  if (sidste) { const [dag, tid] = sidste.querySelectorAll('input'); start = tilDato(dag.value, tid.value); if (start) start = new Date(start.getTime() + 86400000); }
+  $('afTider').append(afNyRaekke(start)); afTaelRaekker();
+});
+$('vAfstemNy').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const gid = af.gid; if (!gid) return;
+  const titel = $('afTitel').value.trim();
+  if (!titel) { K.besked($('afNyMsg'), t('afManglerTitel'), 'err'); $('afTitel').focus(); return; }
+  const tider = [...$('afTider').children].map((r) => { const [dag, tid] = r.querySelectorAll('input'); return tilDato(dag.value, tid.value); });
+  if (tider.some((d) => !d)) { K.besked($('afNyMsg'), t('mangerDato'), 'err'); return; }
+  let frist = null;
+  if ($('afFristDato').value) { frist = tilDato($('afFristDato').value, $('afFristKl').value || '12:00'); if (!frist) { K.besked($('afNyMsg'), t('mangerDato'), 'err'); return; } }
+  const knap = $('afSend'); knap.disabled = true;
+  K.besked($('afNyMsg'), t('gemmer'));
+  try {
+    const r = await K.motor('grupper', 'afstemOpret', { gid, titel, sted: $('afSted').value.trim(), tider: tider.map((d) => d.toISOString()), frist: frist ? frist.toISOString() : '', andre: $('afAndre').checked }, K.nyId());
+    $('afTider').innerHTML = '';
+    location.hash = 'g/' + gid + '/afstemning/' + r.id;
+  } catch (err) { fejl($('afNyMsg'), err); } finally { knap.disabled = false; }
+});
+
+// ---------- En afstemning
+function visAfstem(gid, aid) {
+  vis('vAfstem');
+  $('afTilbage').setAttribute('href', '#g/' + gid + '/spil');
+  if (af.aid !== aid) {
+    af.et = null; af.venter = {}; af.sendes = {}; af.lukKlar = false; af.foreslaa = false; af.valgRoert = false; af.bookerRoert = false;
+    $('afTiderListe').innerHTML = ''; K.besked($('afMsg'), ''); K.besked($('afStyrMsg'), ''); $('afPladser').value = '4'; $('afTilmeld').checked = true;
+  }
+  af.gid = gid; af.aid = aid;
+  if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.gruppe = null; tilstand.medlemmer = []; }
+  lytGruppe(gid, () => tegnAfstem());
+  const { fs, db } = FB;
+  lyt.push(fs.onSnapshot(fs.doc(db, 'grupper', gid, 'afstemninger', aid), (d) => {
+    if (!d.exists()) { K.besked($('afMsg'), t('afFindesIkke'), 'err'); $('afTitelH').textContent = ''; $('afTiderListe').innerHTML = ''; return; }
+    af.et = Object.assign({ id: d.id }, d.data());
+    tegnAfstem();
+  }, (err) => fejl($('afMsg'), err)));
+}
+/** Mit svar på en tid: det, jeg lige har trykket, hvis det ikke er gemt endnu, ellers det gemte. */
+function afMitSvar(a, tid) {
+  if (tid in af.venter) return af.venter[tid];
+  const s = (a.svar || {})[mig.uid];
+  return (s && s.tider && s.tider[tid]) || '';
+}
+function tegnAfstem() {
+  const a = af.et; if (!a || !mig) return;
+  const g = tilstand.gruppe;
+  const aaben = a.status === 'aaben';
+  const minRolleNu = minRolle();
+  const maaStyre = String(a.oprettetAf) === mig.uid || minRolleNu === 'admin';
+  $('afTitelH').textContent = a.titel;
+  const info = [t('afForeslog', { a: a.oprettetNavn || '', n: (a.tider || []).length })];
+  if (a.sted) info.push(a.sted);
+  if (dato(a.frist) && aaben) info.push(t('afSvarSenest', { tid: afTid(dato(a.frist)).toLowerCase() }));
+  $('afInfo').textContent = info.join(' · ') + (aaben ? '. ' + t('afTrykSvar') : '');
+  const { tal, bedst } = afOptael(a);
+  // Hvem er hvem: medlemslisten, og ellers navnet, der blev gemt med svaret
+  const navn = (pid) => navnPaa(pid) || ((a.svar || {})[pid] || {}).navn || '';
+  const ul = $('afTiderListe');
+  const fokus = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.af : '';
+  ul.innerHTML = '';
+  (a.tider || []).forEach((tid) => {
+    const d = dato(tid.start); if (!d) return;
+    // Optællingen med mit eget svar, som det står på knapperne lige nu
+    const x = { ja: tal[tid.id].ja.filter((p) => p !== mig.uid), maaske: tal[tid.id].maaske.filter((p) => p !== mig.uid) };
+    const mit = afMitSvar(a, tid.id);
+    if (mit === 'ja') x.ja.push(mig.uid);
+    if (mit === 'maaske') x.maaske.push(mig.uid);
+    const valgt = a.status === 'valgt' && a.valgt && a.valgt.tid === tid.id;
+    const li = K.el('li', { 'class': 'af-tid' + (bedst === tid.id && aaben ? ' bedst' : '') + (valgt ? ' valgt' : '') });
+    const r1 = K.el('div', { 'class': 'af-r1' });
+    r1.append(K.el('b', null, afTid(d)));
+    const tl = K.el('span', { 'class': 'af-tal' }); tl.append(K.el('strong', null, t('afJaN', { n: x.ja.length })));
+    if (x.maaske.length) tl.append(' · ' + t('afMaaskeN', { n: x.maaske.length }));
+    r1.append(tl); li.append(r1);
+    if (valgt) li.append(K.el('span', { 'class': 'af-flest' }, t('afValgtTid')));
+    else if (bedst === tid.id && aaben) li.append(K.el('span', { 'class': 'af-flest' }, t('afFlestKan')));
+    if (tid.af) li.append(K.el('span', { 'class': 'hint af-af' }, t('afForeslaaetAf', { a: tid.af })));
+    if (aaben) {
+      const sv = K.el('div', { 'class': 'af-svar', role: 'group', 'aria-label': t('afDitSvar', { tid: afTid(d) }) });
+      [['ja', 'afJa'], ['maaske', 'afMaaske'], ['nej', 'afNej']].forEach(([v, n]) => {
+        const b = K.el('button', { type: 'button', 'class': mit === v ? v : '', 'aria-pressed': String(mit === v), 'data-af': tid.id + '-' + v }, t(n));
+        b.addEventListener('click', () => afSvar(tid.id, mit === v ? '' : v));
+        sv.append(b);
+      });
+      li.append(sv);
+    }
+    const hvem = K.el('div', { 'class': 'af-hvem' });
+    x.ja.forEach((p) => { const av = avatar(p, navn(p)); av.setAttribute('title', fornavn(navn(p))); hvem.append(av); });
+    x.maaske.forEach((p) => { const av = avatar(p, navn(p)); av.classList.add('mm'); av.setAttribute('title', fornavn(navn(p)) + ' (' + t('afMaaske').toLowerCase() + ')'); hvem.append(av); });
+    if (x.ja.length || x.maaske.length) {
+      hvem.append(K.el('span', { 'class': 'sr' }, t('afHvemSr', { ja: x.ja.map((p) => fornavn(navn(p))).join(', ') || '-', mm: x.maaske.map((p) => fornavn(navn(p))).join(', ') || '-' })));
+      li.append(hvem);
+    }
+    ul.append(li);
+  });
+  if (fokus) { const f = ul.querySelector('[data-af="' + fokus + '"]'); if (f) f.focus(); }
+  // Hvem mangler at svare
+  const svarede = afSvarede(a).concat(Object.keys(af.venter).some((k) => af.venter[k]) ? [mig.uid] : []);
+  const mangler = tilstand.medlemmer.filter((m) => svarede.indexOf(m.id) < 0).map((m) => m.id === mig.uid ? t('dig') : fornavn(m.navn));
+  $('afMangler').textContent = aaben && mangler.length ? t('afManglerSvar', { navne: mangler.join(', ') }) : '';
+  // Status, når afstemningen er afgjort
+  const st = $('afStatus'); st.innerHTML = '';
+  if (a.status === 'valgt' && a.valgt) {
+    st.append(K.el('span', null, t('afErLagtUd') + ' '));
+    st.append(K.el('a', { href: '#g/' + af.gid + '/spil/' + a.valgt.sid }, t('afSeSpillet')));
+  } else if (a.status === 'lukket') st.append(K.el('span', null, t('afErLukket')));
+  st.classList.toggle('hidden', !st.textContent);
+  // Foreslå en tid mere
+  const kanForeslaa = aaben && (a.andre !== false || maaStyre) && (a.tider || []).length < 12;
+  $('afForeslaaDel').classList.toggle('hidden', !kanForeslaa);
+  $('afForeslaaForm').classList.toggle('hidden', !af.foreslaa);
+  $('afForeslaaKnap').classList.toggle('hidden', af.foreslaa);
+  // Læg en tid ud som spil, og luk
+  $('afStyr').classList.toggle('hidden', !(aaben && maaStyre));
+  if (aaben && maaStyre) {
+    const sel = $('afValg'); const foer = sel.value;
+    sel.innerHTML = '';
+    (a.tider || []).forEach((tid) => { const d = dato(tid.start); if (d) sel.append(K.el('option', { value: tid.id }, afTid(d) + ' · ' + t('afJaN', { n: tal[tid.id].ja.length }))); });
+    // Den tid, flest kan, er valgt, indtil man selv vælger en anden
+    sel.value = af.valgRoert && (a.tider || []).some((x) => x.id === foer) ? foer : (bedst || ((a.tider || [])[0] || {}).id || '');
+    const bk = $('afBooker'); const bf = af.bookerRoert ? bk.value : mig.uid;
+    bk.innerHTML = '';
+    tilstand.medlemmer.slice().sort((x, y) => x.navn.localeCompare(y.navn)).forEach((m) => bk.append(K.el('option', { value: m.id }, m.id === mig.uid ? medDig(m.navn) : m.navn)));
+    bk.append(K.el('option', { value: '' }, t('ingen')));
+    bk.value = bf;
+    $('afLuk').textContent = t(af.lukKlar ? 'afLukIgen' : 'afLuk');
+    $('afLuk').classList.toggle('fyldt', af.lukKlar);
+  }
+  if (g) $('afTilbage').textContent = '← ' + g.navn;
+}
+// Det sidste tryk gælder: der sendes højst ét kald pr. tid ad gangen. Trykker man igen, mens det kører,
+// huskes kun det seneste, og det sendes, når kaldet er færdigt (gennemgangen af afstemningen 14. oktober).
+function afSvar(tid, svar) {
+  af.venter[tid] = svar;
+  K.besked($('afMsg'), '');
+  tegnAfstem();
+  if (!af.sendes[tid]) afSend(af.gid, af.aid, tid);
+}
+async function afSend(gid, aid, tid) {
+  af.sendes[tid] = true;
+  let sendt;
+  try {
+    while (af.aid === aid && tid in af.venter && af.venter[tid] !== sendt) {
+      sendt = af.venter[tid];
+      await K.motor('grupper', 'afstemSvar', { gid, aid, tid, svar: sendt }, K.nyId());
+    }
+  } catch (err) {
+    if (af.aid === aid) fejl($('afMsg'), err);
+  } finally {
+    if (af.aid === aid) { af.sendes[tid] = false; delete af.venter[tid]; tegnAfstem(); }
+  }
+}
+$('afForeslaaKnap').addEventListener('click', () => {
+  af.foreslaa = true;
+  const d = new Date(Date.now() + 86400000);
+  $('afNyDato').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  if (!$('afNyKl').value) $('afNyKl').value = '19:00';
+  tegnAfstem(); $('afNyDato').focus();
+});
+$('afForeslaaFortryd').addEventListener('click', () => { af.foreslaa = false; tegnAfstem(); $('afForeslaaKnap').focus(); });
+$('afForeslaaForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const start = tilDato($('afNyDato').value, $('afNyKl').value);
+  if (!start) { K.besked($('afMsg'), t('mangerDato'), 'err'); return; }
+  const knap = $('afForeslaaSend'); knap.disabled = true;
+  try {
+    await K.motor('grupper', 'afstemForeslaa', { gid: af.gid, aid: af.aid, start: start.toISOString() }, K.nyId());
+    af.foreslaa = false; K.besked($('afMsg'), t('afTidTilfoejet'), 'okm'); tegnAfstem();
+  } catch (err) { fejl($('afMsg'), err); } finally { knap.disabled = false; }
+});
+$('afValg').addEventListener('change', () => { af.valgRoert = true; });
+$('afBooker').addEventListener('change', () => { af.bookerRoert = true; });
+$('afLaegUd').addEventListener('click', async () => {
+  const knap = $('afLaegUd'); knap.disabled = true;
+  K.besked($('afStyrMsg'), t('gemmer'));
+  try {
+    const r = await K.motor('grupper', 'afstemVaelg', {
+      gid: af.gid, aid: af.aid, tid: $('afValg').value, pladser: Math.max(1, Math.min(500, parseInt($('afPladser').value, 10) || 4)),
+      bookerAf: $('afBooker').value, tilmeld: $('afTilmeld').checked
+    }, K.nyId());
+    K.besked($('afStyrMsg'), '');
+    location.hash = 'g/' + af.gid + '/spil/' + r.sid;
+  } catch (err) { fejl($('afStyrMsg'), err); } finally { knap.disabled = false; }
+});
+// Luk kræver to tryk (farlige handlinger, Lars 12. oktober)
+$('afLuk').addEventListener('click', async () => {
+  if (!af.lukKlar) { af.lukKlar = true; tegnAfstem(); setTimeout(() => { if (af.lukKlar) { af.lukKlar = false; tegnAfstem(); } }, 6000); return; }
+  af.lukKlar = false;
+  const knap = $('afLuk'); knap.disabled = true;
+  try { await K.motor('grupper', 'afstemLuk', { gid: af.gid, aid: af.aid }, K.nyId()); location.hash = 'g/' + af.gid + '/spil'; }
+  catch (err) { fejl($('afStyrMsg'), err); } finally { knap.disabled = false; }
+});
+$('afNyKnap').addEventListener('click', () => { location.hash = 'g/' + tilstand.gruppe.id + '/afstemning/ny'; });
+
+function afSprog(aaben) {
+  if (aaben('vGruppe') && tilstand.fane === 'spil') tegnAfstemListe();
+  if (aaben('vAfstem')) tegnAfstem();
+  if (aaben('vAfstemNy')) [...$('afTider').querySelectorAll('.x')].forEach((b) => b.setAttribute('aria-label', t('afFjernTid')));
 }
 
 // ==================== Til sidst: sidens start (gennemgangen 14. oktober, trin 4)
