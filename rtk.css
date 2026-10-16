@@ -648,11 +648,11 @@ input.sr:focus-visible+.gb-op{outline:3px solid var(--pink);outline-offset:2px}
 .af-foreslaa{margin-top:10px}
 
 /* ---------- Ny afstemning, design B (16. oktober 2026): gruppens billede, ugestribe, tider pr. dag og en knap, der altid står nederst */
-.af-top{position:relative;border-radius:12px;overflow:hidden;margin:6px 0 18px;background:var(--teal);color:#FFFFFF}
-.af-top img{display:block;width:100%;height:150px;object-fit:cover;opacity:.55}
-.af-top .tx{position:absolute;left:16px;right:16px;bottom:14px}
-.af-top .kick{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#D7F05A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.af-top h1{color:#FFFFFF;margin:4px 0 0;font-size:28px}
+.af-hero{position:relative;border-radius:12px;overflow:hidden;margin:6px 0 18px;background:var(--teal);color:#FFFFFF}
+.af-hero img{display:block;width:100%;height:150px;object-fit:cover;opacity:.55}
+.af-hero .tx{position:absolute;left:16px;right:16px;bottom:14px}
+.af-hero .kick{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#D7F05A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.af-hero h1{color:#FFFFFF;margin:4px 0 0;font-size:28px}
 .af-trin{display:flex;align-items:center;gap:10px;margin:22px 0 8px;flex-wrap:wrap}
 .af-trin .nr{width:28px;height:28px;border-radius:999px;background:var(--pink);color:#FFFFFF;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;flex:0 0 28px}
 .af-trin h2{font-size:18px;margin:0}
@@ -709,4 +709,49 @@ html:has(#vAfstemNy:not(.hidden)){scroll-padding-bottom:120px}
   .af-pille .kl{font-size:15px}
   .af-pille em{font-size:11px;padding:2px 6px}
   .af-bund button{padding:12px 14px}
+}
+/* Ny version af siden (opdater.js, 16. oktober 2026) */
+.rtk-ny{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:1000;max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:var(--teal);color:#FFFFFF;box-shadow:0 8px 24px rgba(0,0,0,.25);font-size:15px}
+.rtk-ny span{flex:1;min-width:0}
+.rtk-ny button{background:var(--pink);border-color:var(--pink);color:#FFFFFF;border-radius:999px;min-height:44px;padding:8px 16px}
+.rtk-ny button.luk{background:transparent;border:1px solid rgba(255,255,255,.5);width:44px;padding:0;font-size:20px}
+.rtk-ny[hidden]{display:none}
+.rtk-ny-status{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Svarsiden for en afstemning i samme design som Ny afstemning (16. oktober 2026) */
+.af-info{display:flex;flex-wrap:wrap;gap:8px;margin:-4px 0 6px}
+.af-info span{font-size:13px;font-weight:700;border-radius:99px;padding:4px 10px;background:var(--soft)}
+.af-info span.pink{background:#FDE6EF;color:var(--pink)}
+.af-svarside .af-liste{margin:6px 0 0}
+.af-svarside .af-tid{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 12px}
+.af-svarside .af-tid.bedst,.af-svarside .af-tid.valgt{border:2px solid var(--ok)}
+.af-svarside .af-r1{display:flex;align-items:center;gap:12px}
+.af-kal{flex:0 0 52px;border-radius:10px;overflow:hidden;text-align:center;border:1px solid var(--line);background:#FFFFFF}
+.af-kal span{display:block;background:var(--teal);color:#D7F05A;font-size:11px;font-weight:800;letter-spacing:.06em;padding:3px 0;text-transform:uppercase}
+.af-kal b{display:block;font-size:22px;line-height:1.15;padding:3px 0 4px}
+.af-mid{flex:1;min-width:0}
+.af-mid .kl{display:block;font-size:18px;font-weight:800}
+.af-mid .lg{display:block;font-size:13px;color:var(--muted)}
+.af-svarside .af-tal{text-align:right;font-size:13px;color:var(--muted);white-space:nowrap}
+.af-svarside .af-tal b{display:block;font-size:20px;color:var(--ok);line-height:1.1}
+.af-svarside .af-flest{margin-top:8px}
+.af-bar{display:flex;height:6px;border-radius:99px;background:var(--soft);margin:10px 0 0;overflow:hidden}
+.af-bar i{display:block;height:100%;background:var(--ok)}
+.af-bar i.mm{background:#E8C66A}
+.af-svarside .af-svar button{border-radius:999px;border-width:1.5px}
+.af-svarside .af-svar button.ja{border-color:var(--ok);background:var(--ok);color:#FFFFFF}
+.af-mangler{border:2px dashed var(--line2);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--muted);margin:4px 0 0}
+.af-mangler b{color:var(--ink)}
+.af-svarside .af-styr{border-top:0;margin-top:8px;padding-top:0}
+.af-bedst{display:flex;align-items:center;gap:12px;border:2px solid var(--ok);border-radius:14px;padding:12px 14px;margin:0 0 4px;background:#FFFFFF}
+.af-bedst.tom{border-style:dashed;border-color:var(--line2)}
+.af-chip.farlig{border-color:var(--bad);color:var(--bad)}
+.af-chip.farlig.fyldt{background:var(--bad);color:#FFFFFF;border-style:solid}
+.af-svarside .af-bund .gr-knap{border-radius:999px}
+.af-pk-hint{margin:6px 0 0;font-size:13px}
+@media (max-width:360px){
+  .af-svarside .af-tal{white-space:normal;max-width:72px}
+  .af-kal{flex-basis:44px}
+  .af-kal b{font-size:19px}
+  .af-mid .kl{font-size:16px}
 }

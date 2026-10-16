@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="da">
 <head>
+<meta name="rtk-version" content="30f28316295b">
+<script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0B3D3A">
@@ -12,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css">
+<link rel="stylesheet" href="rtk.css?v=aecbe217ef02">
 </head>
 <body>
 <header class="top">
@@ -182,7 +184,7 @@
       <!-- Ny afstemning om tidspunkt (14. oktober 2026), design B fra 16. oktober: tryk de dage til, der kan passe -->
       <form id="vAfstemNy" class="hidden gr-form af-ny" novalidate>
         <a href="#" id="afNyTilbage" class="gr-tilbage" data-t="tilbageGruppe">&#8592; Tilbage</a>
-        <div class="af-top"><img id="afNyBillede" src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><div class="tx"><span class="kick" id="afNyKick"></span><h1 data-t="afNyH">Find en tid</h1></div></div>
+        <div class="af-hero"><img id="afNyBillede" src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><div class="tx"><span class="kick" id="afNyKick"></span><h1 data-t="afNyH">Find en tid</h1></div></div>
         <label for="afTitel" data-t="afTitelL">Hvad skal I?</label><input id="afTitel" maxlength="80" data-t-ph="afTitelPh">
         <div class="af-trin"><span class="nr" aria-hidden="true">1</span><h2 id="afUgeH" data-t="afUgeH">Tryk de dage, der kan passe</h2></div>
         <div id="afUge" class="af-uge" role="group" aria-labelledby="afUgeH"></div>
@@ -207,17 +209,18 @@
         <div class="af-bund"><div class="info"><b id="afAntal"></b><span id="afAntalHint"></span></div><button type="submit" id="afSend" class="ok" data-t="afSend">Send til gruppen</button></div>
       </form>
 
-      <!-- En afstemning -->
-      <div id="vAfstem" class="hidden">
+      <!-- En afstemning (svarsiden), i samme design som Ny afstemning fra 16. oktober -->
+      <div id="vAfstem" class="hidden af-svarside">
         <a href="#" id="afTilbage" class="gr-tilbage" data-t="tilbageGruppe">&#8592; Tilbage</a>
-        <h1 class="lille" id="afTitelH"></h1>
-        <p class="hint" id="afInfo"></p>
+        <div class="af-hero"><img id="afBillede" src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><div class="tx"><span class="kick" id="afKick"></span><h1 id="afTitelH"></h1></div></div>
+        <div id="afInfo" class="af-info"></div>
         <p id="afStatus" class="af-status hidden"></p>
+        <div id="afSvarTrin" class="af-trin"><span class="nr" aria-hidden="true">1</span><h2 data-t="afHvornaarH">Hvornår kan du?</h2><span class="hint" data-t="afTrykGemmes">tryk, det gemmes med det samme</span></div>
         <ul id="afTiderListe" class="af-liste"></ul>
-        <p class="hint" id="afMangler"></p>
+        <p id="afMangler" class="af-mangler hidden"></p>
         <div id="afMsg" class="msg" aria-live="polite"></div>
         <div id="afForeslaaDel" class="hidden">
-          <button type="button" id="afForeslaaKnap" class="ghost small" data-t="afForeslaa">+ Foreslå en anden tid</button>
+          <div class="af-chips"><button type="button" id="afForeslaaKnap" class="af-chip" data-t="afForeslaa">+ Foreslå en anden tid</button></div>
           <form id="afForeslaaForm" class="hidden af-foreslaa" novalidate>
             <div class="grid gr-tre">
               <div><label for="afNyDato" data-t="dato">Dato</label><input id="afNyDato" type="date"></div>
@@ -228,16 +231,20 @@
           </form>
         </div>
         <section id="afStyr" class="af-styr hidden" aria-labelledby="afStyrH">
-          <h2 id="afStyrH" data-t="afStyrH">Læg en tid ud som spil</h2>
-          <label for="afValg" data-t="afValgL">Tid</label><select id="afValg"></select>
-          <div class="grid gr-tre">
-            <div><label for="afPladser" data-t="pladser">Pladser</label><input id="afPladser" type="number" inputmode="numeric" min="1" max="500" value="4"></div>
-          </div>
-          <label for="afBooker" data-t="booker">Hvem booker banen i ForeningsLet?</label><select id="afBooker"></select>
-          <label class="gr-check"><input type="checkbox" id="afTilmeld" checked> <span data-t="afTilmeldL">Meld dem, der sagde ja, til spillet</span></label>
+          <div class="af-trin"><span class="nr" aria-hidden="true">2</span><h2 id="afStyrH" data-t="afStyrH">Læg en tid ud som spil</h2></div>
+          <div id="afBedst" class="af-bedst"></div>
+          <details id="afDetaljer" class="af-mere" open><summary data-t="afDetaljerS">Detaljer for spillet</summary><div class="ind">
+            <label for="afValg" data-t="afValgL">Tid</label><select id="afValg"></select>
+            <label for="afPladser" data-t="pladser">Pladser</label><input id="afPladser" type="number" inputmode="numeric" min="1" max="500" value="4">
+            <label for="afBooker" data-t="booker">Hvem booker banen i ForeningsLet?</label><select id="afBooker"></select>
+            <label class="gr-check"><input type="checkbox" id="afTilmeld" checked> <span data-t="afTilmeldL">Meld dem, der sagde ja, til spillet</span></label>
+          </div></details>
+          <div class="af-chips"><button type="button" id="afPaamind" class="af-chip" data-t="afPaamind" aria-describedby="afPaamindHint">Påmind dem, der mangler</button><button type="button" id="afLuk" class="af-chip farlig" data-t="afLuk">Luk afstemningen</button></div>
+          <p id="afPaamindHint" class="hint af-pk-hint" tabindex="-1"></p>
           <div id="afStyrMsg" class="msg" aria-live="polite"></div>
-          <div class="gr-knapper"><button type="button" id="afLaegUd" class="ok" data-t="afLaegUd">Læg spillet ud</button><button type="button" id="afLuk" class="ghost small gr-farlig" data-t="afLuk">Luk afstemningen</button></div>
+          <div id="afStyrPreview" class="af-preview"><span class="k" data-t="afPreviewK">Sådan ser gruppen det</span><b id="afStyrPrevTitel"></b><span class="hint" id="afStyrPrevInfo"></span></div>
         </section>
+        <div id="afSvarBund" class="af-bund"><div class="info"><b id="afBundTal"></b><span id="afBundHint"></span></div><a id="afTilGruppe" class="gr-knap ghost" href="#" data-t="afTilGruppe">Til gruppen</a><button type="button" id="afLaegUd" class="ok hidden" data-t="afLaegUd">Læg spillet ud</button></div>
       </div>
 
       <!-- Et spil -->
@@ -680,6 +687,10 @@ window.TEKSTER = {
     afEnTilDag: '+ En tid mere {dag}', afMereS: 'Mere: sted og svarfrist', afPreviewK: 'Sådan ser gruppen det', afNyForslag: '{n} forslag',
     afAntal: '{n} tider · {d} dage', afAntal1: '1 tid · 1 dag', afAntalDag1: '{n} tider · 1 dag', afIngenTider: 'Ingen tider endnu', afVaelgTo: 'Vælg mindst to', afFaarBesked: 'Gruppen får en notifikation',
     afMinTo: 'Foreslå mindst to tider', afMaks: 'Højst 12 tider', afDagFortid: 'Dagen er allerede gået', afDagAria: '{dag}, {n} tider valgt', afDagAria1: '{dag}, 1 tid valgt', afRetAria: 'Ret tiden {tid}',
+    afHvornaarH: 'Hvornår kan du?', afTrykGemmes: 'tryk, det gemmes med det samme', afKickSvar: 'afstemning', afDetaljerS: 'Detaljer for spillet', afTilGruppe: 'Til gruppen',
+    afPaamind: 'Påmind dem, der mangler', afPaamindt: '{n} har fået en påmindelse.', afPaamindetKl: 'Påmindet i dag kl. {kl}. Næste gang i morgen.', afFristGaaet: 'Svarfristen er gået.', afPaamindIngen: 'Alle har svaret.', afSvaretAf: 'Du har svaret på {a} af {b}', afIkkeSvaret: 'Du har ikke svaret endnu',
+    afGruppenSer: 'Gruppen kan se dine svar', afMeldesTil: '{n} meldes til', afMeldesTil0: 'Ingen meldes til', afStyrPrev: '{tid} · {p} pladser', afMeldtNavne: '{navne} er meldt til', afBedstInfo: 'Flest kan · {ja} ja', afBedstInfoMm: 'Flest kan · {ja} ja, {mm} måske', afIngenJa: 'Ingen har sagt ja endnu',
+    afDagLgd: '{dag} · {lgd}', afJaMm: 'ja · {n} måske', afJaKort: 'ja',
     afDagForLangt: 'Vælg en dag inden for et år', afErForbi: 'Tiden er gået', afTidForbi: 'Tiden {tid} er allerede gået. Ret eller fjern den.', afDublet: 'To af tiderne er ens', afFristForbi: 'Svarfristen er allerede gået',
     afStedL: 'Sted (valgfrit)', afFristL: 'Svar senest (valgfrit)', afFristKlL: 'Klokken', afAndreL: 'Andre må foreslå flere tider',
     afSend: 'Send til gruppen', afManglerTitel: 'Skriv, hvad I skal',
@@ -889,6 +900,10 @@ window.TEKSTER = {
     afEnTilDag: '+ Another time {dag}', afMereS: 'More: place and deadline', afPreviewK: 'What the group sees', afNyForslag: '{n} suggestions',
     afAntal: '{n} times · {d} days', afAntal1: '1 time · 1 day', afAntalDag1: '{n} times · 1 day', afIngenTider: 'No times yet', afVaelgTo: 'Choose at least two', afFaarBesked: 'The group gets a notification',
     afMinTo: 'Suggest at least two times', afMaks: 'At most 12 times', afDagFortid: 'That day has already passed', afDagAria: '{dag}, {n} times chosen', afDagAria1: '{dag}, 1 time chosen', afRetAria: 'Change the time {tid}',
+    afHvornaarH: 'When can you play?', afTrykGemmes: 'tap, it is saved straight away', afKickSvar: 'poll', afDetaljerS: 'Game details', afTilGruppe: 'To the group',
+    afPaamind: 'Remind those who have not answered', afPaamindt: '{n} got a reminder.', afPaamindetKl: 'Reminded today at {kl}. Next time tomorrow.', afFristGaaet: 'The answer deadline has passed.', afPaamindIngen: 'Everyone has answered.', afSvaretAf: 'You have answered {a} of {b}', afIkkeSvaret: 'You have not answered yet',
+    afGruppenSer: 'The group can see your answers', afMeldesTil: '{n} will be signed up', afMeldesTil0: 'Nobody will be signed up', afStyrPrev: '{tid} · {p} places', afMeldtNavne: '{navne} signed up', afBedstInfo: 'Most can · {ja} yes', afBedstInfoMm: 'Most can · {ja} yes, {mm} maybe', afIngenJa: 'Nobody has said yes yet',
+    afDagLgd: '{dag} · {lgd}', afJaMm: 'yes · {n} maybe', afJaKort: 'yes',
     afDagForLangt: 'Choose a day within a year', afErForbi: 'The time has passed', afTidForbi: 'The time {tid} has already passed. Change or remove it.', afDublet: 'Two of the times are the same', afFristForbi: 'The answer deadline has already passed',
     afStedL: 'Place (optional)', afFristL: 'Answer by (optional)', afFristKlL: 'Time', afAndreL: 'Others may suggest more times',
     afSend: 'Send to the group', afManglerTitel: 'Write what it is for',
@@ -905,10 +920,10 @@ window.TEKSTER = {
   }
 };
 </script>
-<script src="konfig.js"></script>
-<script src="konto.js"></script>
-<script src="sprog.js"></script>
-<script src="velkomst.js"></script>
+<script src="konfig.js?v=1301d6285ee2"></script>
+<script src="konto.js?v=3a96a06a8034"></script>
+<script src="sprog.js?v=1976d8c45489"></script>
+<script src="velkomst.js?v=02d869848285"></script>
 <script type="module">
 // Lavet af niveauer.py ud fra niveauer.md. Ret i niveauer.md, ikke her.
 const NIVEAUER = {"tennis": {"niveauer": [{"v": 1.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har begrænset erfaring med slagene og arbejder primært på at få bolden i spil.", "en": "You have limited experience with the strokes and are mainly working on getting the ball into play."}}, {"v": 2.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har brug for spilletid og har svært ved at finde det rigtige træfpunkt. Du kender endnu ikke de grundlæggende positioner i single og double.", "en": "You need court time and find it hard to judge where to meet the ball. You do not yet know the basic positions in singles and doubles."}}, {"v": 2.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du kan holde en duel i lavt tempo fra baglinjen med spillere på dit niveau og lærer at bedømme, hvor bolden er på vej hen.", "en": "You can keep a slow-paced rally going from the baseline with players at your level and are learning to judge where the ball is going."}}, {"v": 3.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du er ret stabil på bolde i middel tempo, men mangler præcision, når du vil styre retning, dybde og fart.", "en": "You are fairly consistent on medium-paced balls but lack precision when you try to control direction, depth and pace."}}, {"v": 3.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har stabile slag med retningskontrol på moderate bolde, men mangler dybde og variation. Lob, smash og flugtninger er stadig begrænsede.", "en": "You have consistent strokes with directional control on moderate balls but lack depth and variety. Lobs, smashes and volleys are still limited."}}, {"v": 4.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har stabile slag med retning og dybde på både forhånd og baghånd i moderat tempo og bruger lob, smash og flugtninger med succes.", "en": "You have dependable strokes with direction and depth on both forehand and backhand at moderate pace and use lobs, smashes and volleys with success."}}, {"v": 4.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du varierer fart og spin, dækker banen godt og lægger en kampplan ud fra styrker og svagheder. Du slår førsteserven med kraft og præcision.", "en": "You vary pace and spin, cover the court well and plan matches around strengths and weaknesses. You hit your first serve with power and accuracy."}}, {"v": 5.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du forudser slagene godt og vinder jævnligt point på korte bolde og med flugtninger. Du har dybde og spin på de fleste andenserver.", "en": "You anticipate shots well and regularly win points on short balls and at the net. You have depth and spin on most second serves."}}, {"v": 5.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Fart eller stabilitet er blevet dit store våben. Du kan skifte strategi og spillestil og slå sikre slag under pres.", "en": "Power or consistency has become your main weapon. You can change strategy and style of play and hit dependable shots under pressure."}}], "kilde": "det amerikanske tennisforbunds NTRP-skala (USTA, \"NTRP General Characteristics\"), oversat tæt.", "fodnote": {"da": "Skalaen er det amerikanske tennisforbunds NTRP. 6.0 er spillere med national rangering, 6.5 og 7.0 er verdensklasse.", "en": "The scale is the US Tennis Association's NTRP. 6.0 is nationally ranked players, 6.5 and 7.0 are world class."}}, "padel": {"niveauer": [{"v": 1.0, "navn": {"da": "Begynder", "en": "Beginner"}, "tekst": {"da": "Har ingen erfaring med padel.", "en": "No experience with padel."}}, {"v": 1.5, "navn": {"da": "Begynder", "en": "Beginner"}, "tekst": {"da": "Du har spillet få gange og kan reglerne. Du har endnu ikke lært at bruge glasset ordentligt og bruger det ikke, men kan så småt få nogle dueller i gang. Du mangler stadig kontrol i dit spil og har mangler i din basisteknik.", "en": "You have played a few times and know the rules. You have not yet learned to use the glass properly and do not use it, but you can start to get some rallies going. You still lack control in your game and have gaps in your basic technique."}}, {"v": 2.0, "navn": {"da": "Let øvet", "en": "Improver"}, "tekst": {"da": "Du spiller med nogen kontrol og bruger glasset oftere og oftere. Du har evt. erfaring fra anden ketchersport og har fordel af dette. Du kan have nogle gode kampe med forholdsvis lange dueller, når du møder nogen på eget niveau.", "en": "You play with some control and use the glass more and more. You may have experience from another racket sport and benefit from it. You can have some good matches with fairly long rallies against players at your own level."}}, {"v": 2.5, "navn": {"da": "Let øvet", "en": "Improver"}, "tekst": {"da": "Du er begyndt at spille med taktisk forståelse og kan bruge forskellige padelslag gennem kampen. Du spiller fint med i americanoer.", "en": "You have started to play with tactical understanding and can use different padel shots during a match. You keep up well in americanos."}}, {"v": 3.0, "navn": {"da": "Øvet", "en": "Intermediate"}, "tekst": {"da": "Du spiller regelmæssigt og med kontrol og sikkerhed i store dele af kampen. Dog har du stadig mange uprovokerede fejl i dit spil og spiller ofte for aggressivt.", "en": "You play regularly, with control and consistency for large parts of the match. You still make many unforced errors and often play too aggressively."}}, {"v": 3.5, "navn": {"da": "Øvet", "en": "Intermediate"}, "tekst": {"da": "Du spiller ugentligt og har færre uprovokerede fejl samt længere dueller. Du har forståelse for taktik og positionering på banen. Du kan bruge glasset og kontrollere farten i dine dueller. Du kan deltage i DPF 100-turneringer og spille 2. division i Lunar Ligaen.", "en": "You play weekly, make fewer unforced errors and have longer rallies. You understand tactics and positioning on court. You can use the glass and control the pace of your rallies. You can take part in DPF 100 tournaments and play in the 2nd division of the Lunar League."}}, {"v": 4.0, "navn": {"da": "Meget øvet", "en": "Advanced"}, "tekst": {"da": "Du spiller med stor sikkerhed og er på et godt niveau taktisk og teknisk. Du har evt. spillet flere DPF-turneringer. Du har niveau til DPF 200-turneringer og 1. division i Lunar Ligaen.", "en": "You play with great consistency and are at a good level tactically and technically. You may have played several DPF tournaments. You are at the level of DPF 200 tournaments and the 1st division of the Lunar League."}}, {"v": 4.5, "navn": {"da": "Meget øvet", "en": "Advanced"}, "tekst": {"da": "Du er seedet i DPF 200-turneringer eller spiller DPF 400-turneringer. Du har niveau til Elitedivisionen i Lunar Ligaen.", "en": "You are seeded in DPF 200 tournaments or play DPF 400 tournaments. You are at the level of the Elite Division of the Lunar League."}}, {"v": 5.0, "navn": {"da": "Elite", "en": "Elite"}, "tekst": {"da": "Du er seedet i DPF 400-turneringer og har niveau til Elitedivisionen i Lunar Ligaen.", "en": "You are seeded in DPF 400 tournaments and are at the level of the Elite Division of the Lunar League."}}, {"v": 5.5, "navn": {"da": "Elite", "en": "Elite"}, "tekst": {"da": "Landsholdsspillere.", "en": "National team players."}}], "kilde": "Padelracks beskrivelser af den danske padelskala (\"Den Nye Skala\"). Teksten er fra Lars 13. oktober 2026 kl. 12.27.", "fodnote": {"da": "Lavet af spillere og padelcentre til hele landet. Beskrivelserne er Padelracks. 6.0 og 7.0 er professionelle.", "en": "Made by players and padel centres for the whole country. The descriptions are Padelrack's. 6.0 and 7.0 are professionals."}}};
@@ -935,6 +950,8 @@ Object.assign(window.MOTOR_EN, {
   'Vælg en sluttid': 'Choose an end time',
   'Sluttiden skal ligge efter starttiden': 'The end time must be after the start time',
   'En tid kan højst vare 24 timer': 'A time can last at most 24 hours',
+  'Kun den, der startede afstemningen, og gruppeadministratorer kan påminde': 'Only the person who started the poll and group admins can send reminders',
+  'Gruppen er allerede påmindet i dag. Prøv igen i morgen.': 'The group has already been reminded today. Try again tomorrow.',
   'Skriv, hvad I skal': 'Write what it is for',
   'Foreslå mindst to tider': 'Suggest at least two times',
   'Foreslå mindst to forskellige tider': 'Suggest at least two different times',
@@ -4604,7 +4621,10 @@ function grStortBogstav(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) :
 function afOptael(a) {
   const tal = {};
   (a.tider || []).forEach((t) => { tal[t.id] = { ja: [], maaske: [], nej: [] }; });
+  // Kun nuværende medlemmer tælles, når medlemslisten er hentet (som motoren, der kun melder dem til)
+  const med = new Set((tilstand.medlemmer || []).map((m) => m.id));
   Object.keys(a.svar || {}).forEach((pid) => {
+    if (med.size && !med.has(pid)) return;
     const s = a.svar[pid] || {};
     Object.keys(s.tider || {}).forEach((tid) => { const v = s.tider[tid]; if (tal[tid] && tal[tid][v]) tal[tid][v].push(pid); });
   });
@@ -4653,6 +4673,14 @@ function tegnAfstemListe() {
 // plus valgte dage længere ude ("Anden dato"). En ny dag får 19.00-21.00 eller samme tid som den sidst tilføjede.
 af.ny = { gid: null, tider: [], aaben: null, n: 0, sidste: null, anden: false };
 const AF_MAKS = 12;
+// Siden henter ikke selv en ny udgave (opdater.js), mens man er i gang med en formular i Grupper. Så kommer bjælken "Opdater" i stedet.
+try {
+  Object.defineProperty(window, 'RTK_TRAVL', { configurable: true, get: () =>
+    [...document.querySelectorAll('form.gr-form, form.af-foreslaa')].some((f) => !f.classList.contains('hidden') && f.offsetParent !== null)
+    // Kladder i samtaler, der ikke er åbne lige nu (åbne grupper og spillerbørsen)
+    || (typeof ab !== 'undefined' && Object.keys(ab.kladde || {}).some((k) => String(ab.kladde[k] || '').trim()))
+    || (typeof sb !== 'undefined' && !!String(sb.kladde || '').trim()) });
+} catch (e) { /* ældre browser */ }
 const afKlOk = (v) => /^\d{2}:\d{2}$/.test(String(v || ''));
 const afDagNavn = (dag, fmt) => { const d = tilDato(dag, '12:00'); return d ? new Intl.DateTimeFormat(lokal(), fmt).format(d) : ''; };
 const afUgedag = (dag) => grStortBogstav(afDagNavn(dag, { weekday: 'long' }));
@@ -4891,12 +4919,18 @@ function tegnAfstem() {
   const aaben = a.status === 'aaben';
   const minRolleNu = minRolle();
   const maaStyre = String(a.oprettetAf) === mig.uid || minRolleNu === 'admin';
+  // Toppen: gruppens billede, gruppens navn og titlen (samme design som Ny afstemning, 16. oktober)
+  $('afBillede').src = (g && gbUrl(g.billede)) || 'billeder/grupper-top.jpg';
+  $('afKick').textContent = (g ? g.navn + ' · ' : '') + t('afKickSvar');
   $('afTitelH').textContent = a.titel;
-  const info = [t('afForeslog', { a: a.oprettetNavn || '', n: (a.tider || []).length })];
-  if (a.sted) info.push(a.sted);
-  if (dato(a.frist) && aaben) info.push(t('afSvarSenest', { tid: afTid(dato(a.frist)).toLowerCase() }));
-  $('afInfo').textContent = info.join(' · ') + (aaben ? '. ' + t('afTrykSvar') : '');
+  const info = $('afInfo'); info.innerHTML = '';
+  info.append(K.el('span', null, t('afForeslog', { a: a.oprettetNavn || '', n: (a.tider || []).length })));
+  if (a.sted) info.append(K.el('span', null, a.sted));
+  if (dato(a.frist) && aaben) info.append(K.el('span', { 'class': 'pink' }, grStortBogstav(t('afSvarSenest', { tid: afTid(dato(a.frist)).toLowerCase() }))));
+  $('afSvarTrin').classList.toggle('hidden', !aaben);
   const { tal, bedst } = afOptael(a);
+  const harMedl = tilstand.medlemmer.length > 0;
+  const antalMedl = Math.max(1, tilstand.medlemmer.length);
   // Hvem er hvem: medlemslisten, og ellers navnet, der blev gemt med svaret
   const navn = (pid) => navnPaa(pid) || ((a.svar || {})[pid] || {}).navn || '';
   const ul = $('afTiderListe');
@@ -4911,21 +4945,32 @@ function tegnAfstem() {
     if (mit === 'maaske') x.maaske.push(mig.uid);
     const valgt = a.status === 'valgt' && a.valgt && a.valgt.tid === tid.id;
     const li = K.el('li', { 'class': 'af-tid' + (bedst === tid.id && aaben ? ' bedst' : '') + (valgt ? ' valgt' : '') });
+    // Kalenderblad, tid og længde, og antal ja
     const r1 = K.el('div', { 'class': 'af-r1' });
-    const ov = K.el('b', null, afDag(d)); ov.append(K.el('small', null, afKlTekst(tid)));
-    r1.append(ov);
-    const tl = K.el('span', { 'class': 'af-tal' }); tl.append(K.el('strong', null, t('afJaN', { n: x.ja.length })));
-    if (x.maaske.length) tl.append(' · ' + t('afMaaskeN', { n: x.maaske.length }));
-    r1.append(tl); li.append(r1);
+    const dg = afDatoV(d);
+    const kal = K.el('span', { 'class': 'af-kal', 'aria-hidden': 'true' }); kal.append(K.el('span', null, afDagNavn(dg, { weekday: 'short' }).replace('.', '')), K.el('b', null, String(d.getDate())));
+    const mid = K.el('div', { 'class': 'af-mid' });
+    const b = afSlut(tid);
+    mid.append(K.el('b', { 'class': 'kl' }, kl(d) + (b ? '–' + kl(b) : '')));
+    mid.append(K.el('span', { 'class': 'lg' }, b ? t('afDagLgd', { dag: afUgedag(dg) + ' ' + afDatoKort(dg), lgd: afLaengde(b - d) }) : afUgedag(dg) + ' ' + afDatoKort(dg)));
+    mid.append(K.el('span', { 'class': 'sr' }, afTidHel(tid)));
+    const tl = K.el('span', { 'class': 'af-tal' });
+    tl.append(K.el('b', null, String(x.ja.length)), K.el('span', null, ' ' + (x.maaske.length ? t('afJaMm', { n: x.maaske.length }) : t('afJaKort'))));
+    r1.append(kal, mid, tl); li.append(r1);
     if (valgt) li.append(K.el('span', { 'class': 'af-flest' }, t('afValgtTid')));
     else if (bedst === tid.id && aaben) li.append(K.el('span', { 'class': 'af-flest' }, t('afFlestKan')));
     if (tid.af) li.append(K.el('span', { 'class': 'hint af-af' }, t('afForeslaaetAf', { a: tid.af })));
+    // Bjælke: ja og måske i forhold til gruppen
+    const bar = K.el('span', { 'class': 'af-bar', 'aria-hidden': 'true' });
+    const pct = (n) => harMedl ? Math.round(100 * Math.min(1, n / antalMedl)) : 0;
+    bar.append(K.el('i', { style: 'width:' + pct(x.ja.length) + '%' }), K.el('i', { 'class': 'mm', style: 'width:' + pct(x.maaske.length) + '%' }));
+    li.append(bar);
     if (aaben) {
       const sv = K.el('div', { 'class': 'af-svar', role: 'group', 'aria-label': t('afDitSvar', { tid: afTidHel(tid) }) });
       [['ja', 'afJa'], ['maaske', 'afMaaske'], ['nej', 'afNej']].forEach(([v, n]) => {
-        const b = K.el('button', { type: 'button', 'class': mit === v ? v : '', 'aria-pressed': String(mit === v), 'data-af': tid.id + '-' + v }, t(n));
-        b.addEventListener('click', () => afSvar(tid.id, mit === v ? '' : v));
-        sv.append(b);
+        const bt = K.el('button', { type: 'button', 'class': mit === v ? v : '', 'aria-pressed': String(mit === v), 'data-af': tid.id + '-' + v }, t(n));
+        bt.addEventListener('click', () => afSvar(tid.id, mit === v ? '' : v));
+        sv.append(bt);
       });
       li.append(sv);
     }
@@ -4942,7 +4987,9 @@ function tegnAfstem() {
   // Hvem mangler at svare
   const svarede = afSvarede(a).concat(Object.keys(af.venter).some((k) => af.venter[k]) ? [mig.uid] : []);
   const mangler = tilstand.medlemmer.filter((m) => svarede.indexOf(m.id) < 0).map((m) => m.id === mig.uid ? t('dig') : fornavn(m.navn));
-  $('afMangler').textContent = aaben && mangler.length ? t('afManglerSvar', { navne: mangler.join(', ') }) : '';
+  const mg = $('afMangler'); mg.innerHTML = '';
+  if (aaben && mangler.length) { const tx = t('afManglerSvar', { navne: '' }); mg.append(tx); mg.append(K.el('b', null, mangler.join(', '))); }
+  mg.classList.toggle('hidden', !mg.textContent);
   // Status, når afstemningen er afgjort
   const st = $('afStatus'); st.innerHTML = '';
   if (a.status === 'valgt' && a.valgt) {
@@ -4954,25 +5001,86 @@ function tegnAfstem() {
   const kanForeslaa = aaben && (a.andre !== false || maaStyre) && (a.tider || []).length < 12;
   $('afForeslaaDel').classList.toggle('hidden', !kanForeslaa);
   $('afForeslaaForm').classList.toggle('hidden', !af.foreslaa);
-  $('afForeslaaKnap').classList.toggle('hidden', af.foreslaa);
-  // Læg en tid ud som spil, og luk
-  $('afStyr').classList.toggle('hidden', !(aaben && maaStyre));
-  if (aaben && maaStyre) {
+  $('afForeslaaKnap').closest('.af-chips').classList.toggle('hidden', af.foreslaa);
+  // Læg en tid ud som spil, påmind og luk (den, der startede, og gruppeadministratorer)
+  const styr = aaben && maaStyre;
+  $('afStyr').classList.toggle('hidden', !styr);
+  if (styr) {
+    // Valglisterne bygges kun om, når indholdet ændrer sig, så en åben liste på iPhone ikke lukker, når der kommer et svar
     const sel = $('afValg'); const foer = sel.value;
-    sel.innerHTML = '';
-    (a.tider || []).forEach((tid) => { const d = dato(tid.start); if (d) sel.append(K.el('option', { value: tid.id }, afTidHel(tid) + ' · ' + t('afJaN', { n: tal[tid.id].ja.length }))); });
+    const valg = (a.tider || []).filter((tid) => dato(tid.start)).map((tid) => [tid.id, afTidHel(tid) + ' · ' + t('afJaN', { n: tal[tid.id].ja.length })]);
+    const vs = JSON.stringify(valg);
+    if (sel.dataset.s !== vs) { sel.innerHTML = ''; valg.forEach(([v, n]) => sel.append(K.el('option', { value: v }, n))); sel.dataset.s = vs; }
     // Den tid, flest kan, er valgt, indtil man selv vælger en anden
     sel.value = af.valgRoert && (a.tider || []).some((x) => x.id === foer) ? foer : (bedst || ((a.tider || [])[0] || {}).id || '');
     const bk = $('afBooker'); const bf = af.bookerRoert ? bk.value : mig.uid;
-    bk.innerHTML = '';
-    tilstand.medlemmer.slice().sort((x, y) => x.navn.localeCompare(y.navn)).forEach((m) => bk.append(K.el('option', { value: m.id }, m.id === mig.uid ? medDig(m.navn) : m.navn)));
-    bk.append(K.el('option', { value: '' }, t('ingen')));
+    const bv = tilstand.medlemmer.slice().sort((x, y) => x.navn.localeCompare(y.navn)).map((m) => [m.id, m.id === mig.uid ? medDig(m.navn) : m.navn]).concat([['', t('ingen')]]);
+    const bs = JSON.stringify(bv);
+    if (bk.dataset.s !== bs) { bk.innerHTML = ''; bv.forEach(([v, n]) => bk.append(K.el('option', { value: v }, n))); bk.dataset.s = bs; }
     bk.value = bf;
     $('afLuk').textContent = t(af.lukKlar ? 'afLukIgen' : 'afLuk');
     $('afLuk').classList.toggle('fyldt', af.lukKlar);
+    const pk = dato(a.paamindKnap), fr = dato(a.frist);
+    const brugt = pk && Date.now() - pk.getTime() < 20 * 3600000;
+    const forbi = fr && fr.getTime() < Date.now();
+    const ingen = harMedl && !mangler.filter((n) => n !== t('dig')).length;
+    const pkFokus = document.activeElement === $('afPaamind');
+    $('afPaamind').disabled = !!(brugt || forbi || ingen);
+    $('afPaamindHint').textContent = brugt ? t('afPaamindetKl', { kl: kl(pk) }) : forbi ? t('afFristGaaet') : ingen ? t('afPaamindIngen') : '';
+    if (pkFokus && $('afPaamind').disabled) $('afPaamindHint').focus();
+    afStyrVis();
+  }
+  // Bjælken nederst: for den, der styrer, "Læg spillet ud". For de andre, hvor mange tider man har svaret på.
+  const bund = $('afSvarBund');
+  bund.classList.toggle('hidden', !aaben);
+  $('afLaegUd').classList.toggle('hidden', !styr);
+  $('afTilGruppe').classList.toggle('hidden', styr);
+  $('afTilGruppe').setAttribute('href', '#g/' + af.gid + '/spil');
+  if (!styr) {
+    const mine = (a.tider || []).filter((x) => afMitSvar(a, x.id)).length;
+    $('afBundTal').textContent = mine ? t('afSvaretAf', { a: mine, b: (a.tider || []).length }) : t('afIkkeSvaret');
+    $('afBundHint').textContent = t('afGruppenSer');
   }
   if (g) $('afTilbage').textContent = '← ' + g.navn;
 }
+/** Den bedste tid, antal der meldes til, og forhåndsvisningen af spillet (for den, der styrer) */
+function afStyrVis() {
+  const a = af.et; if (!a) return;
+  const { tal, bedst } = afOptael(a);
+  const tid = (a.tider || []).find((x) => x.id === $('afValg').value);
+  const bd = $('afBedst'); bd.innerHTML = '';
+  const tb = (a.tider || []).find((x) => x.id === bedst);
+  if (tb) {
+    const d = dato(tb.start), dg = afDatoV(d), b = afSlut(tb);
+    const kal = K.el('span', { 'class': 'af-kal', 'aria-hidden': 'true' }); kal.append(K.el('span', null, afDagNavn(dg, { weekday: 'short' }).replace('.', '')), K.el('b', null, String(d.getDate())));
+    const mid = K.el('div', { 'class': 'af-mid' });
+    mid.append(K.el('b', { 'class': 'kl' }, kl(d) + (b ? '–' + kl(b) : '')));
+    const mm = tal[tb.id].maaske.length;
+    mid.append(K.el('span', { 'class': 'lg' }, mm ? t('afBedstInfoMm', { ja: tal[tb.id].ja.length, mm }) : t('afBedstInfo', { ja: tal[tb.id].ja.length })));
+    mid.append(K.el('span', { 'class': 'sr' }, afTidHel(tb)));
+    bd.append(kal, mid);
+  } else bd.append(K.el('span', { 'class': 'hint' }, t('afIngenJa')));
+  bd.classList.toggle('tom', !tb);
+  const ja = tid ? tal[tid.id].ja.filter((p) => tilstand.medlemmer.some((m) => m.id === p)) : [];
+  const n = $('afTilmeld').checked ? ja.length : 0;
+  $('afBundTal').textContent = n ? t('afMeldesTil', { n }) : t('afMeldesTil0');
+  $('afBundHint').textContent = t('afFaarBesked');
+  $('afStyrPrevTitel').textContent = a.titel;
+  const p = Math.max(1, Math.min(500, parseInt($('afPladser').value, 10) || 4));
+  const info = [tid ? t('afStyrPrev', { tid: afTidHel(tid), p }) : ''];
+  if (n) info.push(t('afMeldtNavne', { navne: ja.slice(0, Math.min(n, p)).map((x) => fornavn(navnPaa(x) || ((a.svar || {})[x] || {}).navn || '')).join(', ') }));
+  $('afStyrPrevInfo').textContent = info.filter(Boolean).join(' · ');
+}
+['afValg', 'afPladser', 'afTilmeld'].forEach((id) => $(id).addEventListener('input', afStyrVis));
+$('afTilmeld').addEventListener('change', afStyrVis);
+$('afPaamind').addEventListener('click', async () => {
+  const knap = $('afPaamind'); knap.disabled = true;
+  K.besked($('afStyrMsg'), t('gemmer'));
+  try {
+    const r = await K.motor('grupper', 'afstemPaamind', { gid: af.gid, aid: af.aid }, K.nyId());
+    K.besked($('afStyrMsg'), r.sendt ? t('afPaamindt', { n: r.sendt }) : t('afPaamindIngen'), 'okm');
+  } catch (err) { fejl($('afStyrMsg'), err); knap.disabled = false; }
+});
 // Det sidste tryk gælder: der sendes højst ét kald pr. tid ad gangen. Trykker man igen, mens det kører,
 // huskes kun det seneste, og det sendes, når kaldet er færdigt (gennemgangen af afstemningen 14. oktober).
 function afSvar(tid, svar) {
@@ -5023,7 +5131,7 @@ $('afForeslaaForm').addEventListener('submit', async (e) => {
     af.foreslaa = false; K.besked($('afMsg'), t('afTidTilfoejet'), 'okm'); tegnAfstem();
   } catch (err) { fejl($('afMsg'), err); } finally { knap.disabled = false; }
 });
-$('afValg').addEventListener('change', () => { af.valgRoert = true; });
+$('afValg').addEventListener('change', () => { af.valgRoert = true; afStyrVis(); });
 $('afBooker').addEventListener('change', () => { af.bookerRoert = true; });
 $('afLaegUd').addEventListener('click', async () => {
   const knap = $('afLaegUd'); knap.disabled = true;
@@ -5035,7 +5143,7 @@ $('afLaegUd').addEventListener('click', async () => {
     }, K.nyId());
     K.besked($('afStyrMsg'), '');
     location.hash = 'g/' + af.gid + '/spil/' + r.sid;
-  } catch (err) { fejl($('afStyrMsg'), err); } finally { knap.disabled = false; }
+  } catch (err) { fejl($('afStyrMsg'), err); $('afStyrMsg').scrollIntoView({ block: 'center' }); } finally { knap.disabled = false; }
 });
 // Luk kræver to tryk (farlige handlinger, Lars 12. oktober)
 $('afLuk').addEventListener('click', async () => {
