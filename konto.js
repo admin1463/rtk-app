@@ -132,7 +132,7 @@
     var send = el('button', { type: 'submit', style: 'width:100%;margin-top:12px', 'data-t': 'kSend' }, t('kSend'));
     f1.appendChild(send);
 
-    var f2 = el('form', { 'class': 'hidden', autocomplete: 'off', novalidate: '' });
+    var f2 = el('form', { 'class': 'hidden', novalidate: '' });
     var kLabel = el('label', { 'for': 'kKode' }, t('kKode'));
     f2.appendChild(kLabel);
     var kodeFelt = el('div', { 'class': 'big' });
