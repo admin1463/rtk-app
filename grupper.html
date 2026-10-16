@@ -179,24 +179,32 @@
         <div class="gr-knapper"><button type="submit" class="ok" data-t="opretSpil">Opret</button></div>
       </form>
 
-      <!-- Ny afstemning om tidspunkt (14. oktober 2026) -->
-      <form id="vAfstemNy" class="hidden gr-form" novalidate>
+      <!-- Ny afstemning om tidspunkt (14. oktober 2026), design B fra 16. oktober: tryk de dage til, der kan passe -->
+      <form id="vAfstemNy" class="hidden gr-form af-ny" novalidate>
         <a href="#" id="afNyTilbage" class="gr-tilbage" data-t="tilbageGruppe">&#8592; Tilbage</a>
-        <h1 class="lille" data-t="afNyH">Ny afstemning</h1>
-        <p class="hint" data-t="afNyTekst">Foreslå nogle tider. Gruppen svarer ja, måske eller nej, og du lægger den bedste ud som spil.</p>
+        <div class="af-top"><img id="afNyBillede" src="billeder/grupper-top.jpg" alt="" width="1600" height="440"><div class="tx"><span class="kick" id="afNyKick"></span><h1 data-t="afNyH">Find en tid</h1></div></div>
         <label for="afTitel" data-t="afTitelL">Hvad skal I?</label><input id="afTitel" maxlength="80" data-t-ph="afTitelPh">
-        <fieldset class="af-felt"><legend data-t="afTiderL">Forslag til tider (højst 12)</legend><div id="afTider"></div>
-          <button type="button" id="afFlere" class="ghost small" data-t="afFlere">+ Endnu en tid</button>
-          <p class="hint af-flere-hint" data-t="afFlereHint">En ny tid får samme længde som den forrige.</p></fieldset>
-        <label for="afSted" data-t="afStedL">Sted (valgfrit)</label><input id="afSted" maxlength="80" data-t-ph="stedPh">
-        <div class="grid gr-tre">
-          <div><label for="afFristDato" data-t="afFristL">Svar senest (valgfrit)</label><input id="afFristDato" type="date"></div>
-          <div><label for="afFristKl" data-t="afFristKlL">Klokken</label><input id="afFristKl" type="time" value="12:00"></div>
+        <div class="af-trin"><span class="nr" aria-hidden="true">1</span><h2 id="afUgeH" data-t="afUgeH">Tryk de dage, der kan passe</h2></div>
+        <div id="afUge" class="af-uge" role="group" aria-labelledby="afUgeH"></div>
+        <div id="afUgeMsg" class="msg" aria-live="polite"></div>
+        <div id="afAndenDel" class="af-anden hidden"><label for="afAndenDato" data-t="afAndenL">Anden dato</label><div class="af-anden-r"><input id="afAndenDato" type="date"><button type="button" id="afAndenTilfoej" class="ghost small" data-t="afTilfoejDag">Tilføj dagen</button></div></div>
+        <p id="afTom" class="af-tom" data-t="afTom">Tryk på en dag ovenfor. Hver dag får en tid fra 19.00 til 21.00, som du kan rette.</p>
+        <div id="afTiderDel" class="hidden">
+          <div class="af-trin"><span class="nr" aria-hidden="true">2</span><h2 data-t="afRetH">Ret tiderne</h2><span class="hint" data-t="afRetHint">tryk på en tid</span></div>
+          <div id="afTider"></div>
+          <div id="afMereDage" class="af-chips"></div>
         </div>
-        <label class="gr-check"><input type="checkbox" id="afAndre" checked> <span data-t="afAndreL">Andre må foreslå flere tider</span></label>
+        <details id="afMere" class="af-mere"><summary data-t="afMereS">Mere: sted og svarfrist</summary><div class="ind">
+          <label for="afSted" data-t="afStedL">Sted (valgfrit)</label><input id="afSted" maxlength="80" data-t-ph="stedPh">
+          <div class="grid gr-tre">
+            <div><label for="afFristDato" data-t="afFristL">Svar senest (valgfrit)</label><input id="afFristDato" type="date"></div>
+            <div><label for="afFristKl" data-t="afFristKlL">Klokken</label><input id="afFristKl" type="time" value="12:00"></div>
+          </div>
+          <label class="gr-check"><input type="checkbox" id="afAndre" checked> <span data-t="afAndreL">Andre må foreslå flere tider</span></label>
+        </div></details>
+        <div id="afPreview" class="af-preview hidden"><span class="k" data-t="afPreviewK">Sådan ser gruppen det</span><b id="afPrevTitel"></b><span class="hint" id="afPrevInfo"></span></div>
         <div id="afNyMsg" class="msg" aria-live="polite"></div>
-        <div class="gr-knapper"><button type="submit" id="afSend" class="ok" data-t="afSend">Send til gruppen</button></div>
-        <p class="hint" data-t="afSendHint">Gruppen får en notifikation, og der kommer en linje i chatten.</p>
+        <div class="af-bund"><div class="info"><b id="afAntal"></b><span id="afAntalHint"></span></div><button type="submit" id="afSend" class="ok" data-t="afSend">Send til gruppen</button></div>
       </form>
 
       <!-- En afstemning -->
@@ -665,11 +673,16 @@ window.TEKSTER = {
     prSaadan: 'Sådan ser andre dit kort', prSlet: 'Slet mit profilkort', prSletIgen: 'Tryk igen for at slette kortet og billederne', prSlettet: 'Dit profilkort og dine billeder er slettet.',
     prVisBillede: 'Vis billedet af {navn} i fuld skærm', prVisBilledeN: 'Vis billede {n} af {navn} i fuld skærm', prBillederAf: 'Billeder af {navn}', prBilledeAfN: 'Billede {n} af {af} fra {navn}', prNAf: '{n} af {af}',
     prLuk: 'Luk', prForrige: 'Forrige billede', prNaeste: 'Næste billede',
-    afNy: '+ Afstemning', afNyHint: 'Find en tid, der passer de fleste', afNyH: 'Ny afstemning',
-    afNyTekst: 'Foreslå nogle tider. Gruppen svarer ja, måske eller nej, og du lægger den bedste ud som spil.',
-    afTitelL: 'Hvad skal I?', afTitelPh: 'Fx Double i næste uge', afTiderL: 'Forslag til tider (højst 12)', afFlere: '+ Endnu en tid', afFjernTid: 'Fjern tiden',
+    afNy: '+ Afstemning', afNyHint: 'Find en tid, der passer de fleste', afNyH: 'Find en tid', afNyKick: 'ny afstemning',
+    afTitelL: 'Hvad skal I?', afTitelPh: 'Fx Double i næste uge', afFjernTid: 'Fjern tiden',
+    afUgeH: 'Tryk de dage, der kan passe', afIDag: 'i dag', afAnden: 'anden', afAndenDato: 'dato', afAndenAria: 'Vælg en anden dato', afAndenL: 'Anden dato', afTilfoejDag: 'Tilføj dagen',
+    afTom: 'Tryk på en dag ovenfor. Hver dag får en tid fra 19.00 til 21.00, som du kan rette.', afRetH: 'Ret tiderne', afRetHint: 'tryk på en tid',
+    afEnTilDag: '+ En tid mere {dag}', afMereS: 'Mere: sted og svarfrist', afPreviewK: 'Sådan ser gruppen det', afNyForslag: '{n} forslag',
+    afAntal: '{n} tider · {d} dage', afAntal1: '1 tid · 1 dag', afAntalDag1: '{n} tider · 1 dag', afIngenTider: 'Ingen tider endnu', afVaelgTo: 'Vælg mindst to', afFaarBesked: 'Gruppen får en notifikation',
+    afMinTo: 'Foreslå mindst to tider', afMaks: 'Højst 12 tider', afDagFortid: 'Dagen er allerede gået', afDagAria: '{dag}, {n} tider valgt', afDagAria1: '{dag}, 1 tid valgt', afRetAria: 'Ret tiden {tid}',
+    afDagForLangt: 'Vælg en dag inden for et år', afErForbi: 'Tiden er gået', afTidForbi: 'Tiden {tid} er allerede gået. Ret eller fjern den.', afDublet: 'To af tiderne er ens', afFristForbi: 'Svarfristen er allerede gået',
     afStedL: 'Sted (valgfrit)', afFristL: 'Svar senest (valgfrit)', afFristKlL: 'Klokken', afAndreL: 'Andre må foreslå flere tider',
-    afSend: 'Send til gruppen', afSendHint: 'Gruppen får en notifikation, og der kommer en linje i chatten.', afManglerTitel: 'Skriv, hvad I skal',
+    afSend: 'Send til gruppen', afManglerTitel: 'Skriv, hvad I skal',
     afKicker: 'Afstemning', afSvarSenest: 'svar senest {tid}', afStatus: '{n} forslag · {a} af {b} har svaret', afDuMangler: 'du mangler at svare',
     afForeslog: '{a} foreslog {n} tider', afTrykSvar: 'Tryk på dit svar, det gemmes med det samme', afJaN: '{n} ja', afMaaskeN: '{n} måske',
     afFlestKan: 'Flest kan', afValgtTid: 'Valgt', afForeslaaetAf: 'Foreslået af {a}', afDitSvar: 'Dit svar til {tid}', afJa: 'Ja', afMaaske: 'Måske', afNej: 'Nej',
@@ -677,9 +690,8 @@ window.TEKSTER = {
     afErLukket: 'Afstemningen er lukket.', afFindesIkke: 'Afstemningen findes ikke længere.', afForeslaa: '+ Foreslå en anden tid', afTilfoej: 'Tilføj tiden',
     afTidTilfoejet: 'Tiden er tilføjet.', afStyrH: 'Læg en tid ud som spil', afValgL: 'Tid', afTilmeldL: 'Meld dem, der sagde ja, til spillet',
     afLaegUd: 'Læg spillet ud', afLuk: 'Luk afstemningen', afLukIgen: 'Tryk igen for at lukke',
-    afFlereHint: 'En ny tid får samme længde som den forrige.', afTime1: '1 time', afTimer: '{n} timer', afMin: '{n} min.', afTimerMin: '{h} t. {m} min.',
+    afTime1: '1 time', afTimer: '{n} timer', afMin: '{n} min.', afTimerMin: '{h} t. {m} min.',
     afManglerSlut: 'Vælg en sluttid for hver tid', afForLang: 'En tid kan højst vare 24 timer', afEns: '"Til" skal være et andet klokkeslæt end "Fra"',
-    afTidNr: 'Tid {n}', afFjernTidNr: 'Fjern tid {n}',
     sys_afstemOpret: '{a} startede en afstemning: {titel}', sys_afstemValgt: '{a} valgte en tid og lagde {titel} ud som spil',
   },
   en: {
@@ -870,11 +882,16 @@ window.TEKSTER = {
     prSaadan: 'How others see your card', prSlet: 'Delete my profile card', prSletIgen: 'Tap again to delete the card and the photos', prSlettet: 'Your profile card and photos have been deleted.',
     prVisBillede: 'Show the photo of {navn} full screen', prVisBilledeN: 'Show photo {n} of {navn} full screen', prBillederAf: 'Photos of {navn}', prBilledeAfN: 'Photo {n} of {af} from {navn}', prNAf: '{n} of {af}',
     prLuk: 'Close', prForrige: 'Previous photo', prNaeste: 'Next photo',
-    afNy: '+ Poll', afNyHint: 'Find a time that suits most people', afNyH: 'New poll',
-    afNyTekst: 'Suggest a few times. The group answers yes, maybe or no, and you post the best one as a game.',
-    afTitelL: 'What is it for?', afTitelPh: 'E.g. Doubles next week', afTiderL: 'Suggested times (up to 12)', afFlere: '+ Another time', afFjernTid: 'Remove the time',
+    afNy: '+ Poll', afNyHint: 'Find a time that suits most people', afNyH: 'Find a time', afNyKick: 'new poll',
+    afTitelL: 'What is it for?', afTitelPh: 'E.g. Doubles next week', afFjernTid: 'Remove the time',
+    afUgeH: 'Tap the days that could work', afIDag: 'today', afAnden: 'other', afAndenDato: 'date', afAndenAria: 'Choose another date', afAndenL: 'Another date', afTilfoejDag: 'Add the day',
+    afTom: 'Tap a day above. Each day gets a time from 19.00 to 21.00, which you can change.', afRetH: 'Adjust the times', afRetHint: 'tap a time',
+    afEnTilDag: '+ Another time {dag}', afMereS: 'More: place and deadline', afPreviewK: 'What the group sees', afNyForslag: '{n} suggestions',
+    afAntal: '{n} times · {d} days', afAntal1: '1 time · 1 day', afAntalDag1: '{n} times · 1 day', afIngenTider: 'No times yet', afVaelgTo: 'Choose at least two', afFaarBesked: 'The group gets a notification',
+    afMinTo: 'Suggest at least two times', afMaks: 'At most 12 times', afDagFortid: 'That day has already passed', afDagAria: '{dag}, {n} times chosen', afDagAria1: '{dag}, 1 time chosen', afRetAria: 'Change the time {tid}',
+    afDagForLangt: 'Choose a day within a year', afErForbi: 'The time has passed', afTidForbi: 'The time {tid} has already passed. Change or remove it.', afDublet: 'Two of the times are the same', afFristForbi: 'The answer deadline has already passed',
     afStedL: 'Place (optional)', afFristL: 'Answer by (optional)', afFristKlL: 'Time', afAndreL: 'Others may suggest more times',
-    afSend: 'Send to the group', afSendHint: 'The group gets a notification, and a line appears in the chat.', afManglerTitel: 'Write what it is for',
+    afSend: 'Send to the group', afManglerTitel: 'Write what it is for',
     afKicker: 'Poll', afSvarSenest: 'answer by {tid}', afStatus: '{n} suggestions · {a} of {b} have answered', afDuMangler: 'you have not answered',
     afForeslog: '{a} suggested {n} times', afTrykSvar: 'Tap your answer, it is saved straight away', afJaN: '{n} yes', afMaaskeN: '{n} maybe',
     afFlestKan: 'Most can', afValgtTid: 'Chosen', afForeslaaetAf: 'Suggested by {a}', afDitSvar: 'Your answer for {tid}', afJa: 'Yes', afMaaske: 'Maybe', afNej: 'No',
@@ -882,9 +899,8 @@ window.TEKSTER = {
     afErLukket: 'The poll is closed.', afFindesIkke: 'The poll no longer exists.', afForeslaa: '+ Suggest another time', afTilfoej: 'Add the time',
     afTidTilfoejet: 'The time has been added.', afStyrH: 'Post a time as a game', afValgL: 'Time', afTilmeldL: 'Sign up those who said yes',
     afLaegUd: 'Post the game', afLuk: 'Close the poll', afLukIgen: 'Tap again to close',
-    afFlereHint: 'A new time gets the same length as the one before.', afTime1: '1 hour', afTimer: '{n} hours', afMin: '{n} min', afTimerMin: '{h} h {m} min',
+    afTime1: '1 hour', afTimer: '{n} hours', afMin: '{n} min', afTimerMin: '{h} h {m} min',
     afManglerSlut: 'Choose an end time for each time', afForLang: 'A time can last at most 24 hours', afEns: '"To" must be a different time from "From"',
-    afTidNr: 'Time {n}', afFjernTidNr: 'Remove time {n}',
     sys_afstemOpret: '{a} started a poll: {titel}', sys_afstemValgt: '{a} chose a time and posted {titel} as a game',
   }
 };
@@ -4532,6 +4548,7 @@ const af = { liste: [], et: null, gid: null, aid: null, venter: {}, sendes: {}, 
 function afRyd() {
   af.liste = []; af.et = null; af.gid = null; af.aid = null; af.venter = {}; af.sendes = {}; af.lukKlar = false; af.foreslaa = false; af.valgRoert = false; af.bookerRoert = false;
   ['afstemListe', 'afTiderListe', 'afTider'].forEach((id) => { const e = $(id); if (e) e.innerHTML = ''; });
+  if (af.ny) af.ny = { gid: null, tider: [], aaben: null, n: 0, sidste: null, anden: false };
 }
 
 const afDag = (d) => grStortBogstav(new Intl.DateTimeFormat(lokal(), { weekday: 'long', day: 'numeric', month: 'short' }).format(d));
@@ -4631,97 +4648,215 @@ function tegnAfstemListe() {
   });
 }
 
-// ---------- Ny afstemning
-let afRaekkeNr = 0;
-/** Én tid i formularen: dato, fra og til. Længden står under og følger med, når man retter. Standard er 2 timer. */
-function afNyRaekke(dagV, fraV, tilV) {
-  const n = ++afRaekkeNr;
-  const r = K.el('div', { 'class': 'af-raekke', role: 'group' });
-  const felt = (navn, type, vaerdi) => {
-    const boks = K.el('div');
-    boks.append(K.el('label', { 'for': 'af' + navn + n, 'data-t': navn === 'Dag' ? 'dato' : navn === 'Fra' ? 'fra' : 'til' }, t(navn === 'Dag' ? 'dato' : navn === 'Fra' ? 'fra' : 'til')));
-    const inp = K.el('input', { id: 'af' + navn + n, type, value: vaerdi, 'data-af-felt': navn.toLowerCase() });
-    boks.append(inp);
-    return [boks, inp];
+// ---------- Ny afstemning, design B (Lars 16. oktober kl. 10.27 til 10.32): tryk de dage til, der kan passe.
+// Tiderne holdes i af.ny.tider som { id, dag: 'åååå-mm-dd', fra: 'tt:mm', til: 'tt:mm' }. Striben viser 14 dage fra i dag
+// plus valgte dage længere ude ("Anden dato"). En ny dag får 19.00-21.00 eller samme tid som den sidst tilføjede.
+af.ny = { gid: null, tider: [], aaben: null, n: 0, sidste: null, anden: false };
+const AF_MAKS = 12;
+const afKlOk = (v) => /^\d{2}:\d{2}$/.test(String(v || ''));
+const afDagNavn = (dag, fmt) => { const d = tilDato(dag, '12:00'); return d ? new Intl.DateTimeFormat(lokal(), fmt).format(d) : ''; };
+const afUgedag = (dag) => grStortBogstav(afDagNavn(dag, { weekday: 'long' }));
+const afDatoKort = (dag) => afDagNavn(dag, { day: 'numeric', month: 'short' });
+const afDagLang = (dag) => grStortBogstav(afDagNavn(dag, { weekday: 'long', day: 'numeric', month: 'long' }));
+const afKlTxt = (v) => String(v || '').replace(':', '.');
+const afNyIdag = () => afDatoV(new Date());
+function afNyDage() {
+  const d = []; let dag = afNyIdag();
+  for (let i = 0; i < 14; i++) { d.push(dag); dag = afNaesteDag(dag); }
+  af.ny.tider.forEach((x) => { if (d.indexOf(x.dag) < 0) d.push(x.dag); });
+  return d.sort();
+}
+const afNyPaaDag = (dag) => af.ny.tider.filter((x) => x.dag === dag).sort((a, b) => a.fra.localeCompare(b.fra));
+function afNyTilfoej(dag, fra, til) {
+  if (af.ny.tider.length >= AF_MAKS) { K.besked($('afUgeMsg'), t('afMaks'), 'err'); return null; }
+  const x = { id: 'n' + (++af.ny.n), dag, fra, til };
+  af.ny.tider.push(x); af.ny.sidste = { fra, til };
+  K.besked($('afUgeMsg'), ''); K.besked($('afNyMsg'), '');
+  return x;
+}
+/** Tryk på en dag: ingen tider, så kommer der en. Har dagen tider, fjernes de. */
+function afNyDag(dag) {
+  K.besked($('afUgeMsg'), '');
+  if (afNyPaaDag(dag).length) {
+    af.ny.tider = af.ny.tider.filter((x) => x.dag !== dag);
+    if (af.ny.aaben && !af.ny.tider.some((x) => x.id === af.ny.aaben)) af.ny.aaben = null;
+  } else {
+    const s = af.ny.sidste || { fra: '19:00', til: '21:00' };
+    afNyTilfoej(dag, s.fra, s.til);
+  }
+  afNyTegn();
+  const b = $('afUge').querySelector('[data-dag="' + dag + '"]'); if (b) b.focus();
+}
+/** En tid, der allerede er begyndt (fx "i dag" kl. 19 efter kl. 19, eller et udkast fra i går) */
+function afNyForbi(x) { const d = tilDato(x.dag, x.fra); return !!d && d.getTime() < Date.now(); }
+function afNyMaksDag() { const d = new Date(); d.setDate(d.getDate() + 365); return afDatoV(d); }
+function afNyTop() {
+  const g = tilstand.gruppe;
+  $('afNyBillede').src = (g && gbUrl(g.billede)) || 'billeder/grupper-top.jpg';
+  $('afNyKick').textContent = (g ? g.navn + ' · ' : '') + t('afNyKick');
+  $('afNyTilbage').textContent = '\u2190 ' + (g ? g.navn : t('tilbageGruppe').replace(/^\W+\s*/, ''));
+}
+function afNyTegn() {
+  // Striben
+  const uge = $('afUge'); const iDag = afNyIdag(); const sl = uge.scrollLeft; const fuld = af.ny.tider.length >= AF_MAKS;
+  uge.innerHTML = '';
+  afNyDage().forEach((dag) => {
+    const n = afNyPaaDag(dag).length;
+    const navn = (dag === iDag ? grStortBogstav(t('afIDag')) + ', ' : '') + afDagLang(dag);
+    const b = K.el('button', { type: 'button', 'class': 'af-dag' + (n ? ' valgt' : ''), 'data-dag': dag, 'aria-pressed': String(!!n),
+      'aria-label': n ? t(n === 1 ? 'afDagAria1' : 'afDagAria', { dag: navn, n }) : navn });
+    if (!n && fuld) b.disabled = true;
+    b.append(K.el('span', null, dag === iDag ? t('afIDag') : afDagNavn(dag, { weekday: 'short' }).replace('.', '')), K.el('b', null, String(Number(dag.slice(8)))));
+    if (n) b.append(K.el('i', { 'class': 'prik', 'aria-hidden': 'true' }));
+    b.addEventListener('click', () => afNyDag(dag));
+    uge.append(b);
+  });
+  const an = K.el('button', { type: 'button', 'class': 'af-dag anden', 'aria-expanded': String(af.ny.anden), 'aria-controls': 'afAndenDel', 'aria-label': t('afAndenAria') });
+  an.append(K.el('span', null, t('afAnden')), K.el('b', { 'aria-hidden': 'true' }, '+'), K.el('small', null, t('afAndenDato')));
+  an.addEventListener('click', () => { af.ny.anden = !af.ny.anden; K.besked($('afUgeMsg'), ''); afNyTegn(); if (af.ny.anden) $('afAndenDato').focus(); else $('afUge').querySelector('.anden').focus(); });
+  uge.append(an);
+  uge.scrollLeft = sl;
+  $('afAndenDel').classList.toggle('hidden', !af.ny.anden);
+  $('afAndenDato').min = iDag; $('afAndenDato').max = afNyMaksDag();
+  // Tiderne, dag for dag
+  const har = af.ny.tider.length > 0;
+  $('afTom').classList.toggle('hidden', har);
+  $('afTiderDel').classList.toggle('hidden', !har);
+  const liste = $('afTider'); liste.innerHTML = '';
+  const dage = [...new Set(af.ny.tider.map((x) => x.dag))].sort();
+  dage.forEach((dag) => {
+    afNyPaaDag(dag).forEach((x, i) => {
+      const r = K.el('div', { 'class': 'af-ny-r' });
+      const d = K.el('div', { 'class': 'd' });
+      if (i === 0) { d.append(K.el('b', null, afUgedag(dag))); d.append(K.el('small', null, afDatoKort(dag))); }
+      const aaben = af.ny.aaben === x.id;
+      const forbi = afNyForbi(x);
+      const p = K.el('button', { type: 'button', 'class': 'af-pille' + (aaben ? ' aaben' : '') + (forbi ? ' forbi' : ''), 'aria-expanded': String(aaben), 'data-tid': x.id });
+      if (aaben) p.setAttribute('aria-controls', 'afRet-' + x.id);
+      p.append(K.el('span', { 'class': 'kl' }, afKlTxt(x.fra) + '–' + afKlTxt(x.til)), K.el('em', null, afNyLgdTxt(x)));
+      p.setAttribute('aria-label', t('afRetAria', { tid: afUgedag(dag) + ' ' + afDatoKort(dag) + ' ' + afKlTxt(x.fra) + '–' + afKlTxt(x.til) }) + (forbi ? '. ' + t('afErForbi') : ''));
+      p.addEventListener('click', () => { af.ny.aaben = aaben ? null : x.id; afNyTegn(); const f = aaben ? liste.querySelector('[data-tid="' + x.id + '"]') : $('afRetFra-' + x.id); if (f) f.focus(); });
+      r.append(d, p); liste.append(r);
+      if (aaben) liste.append(afNyRet(x));
+    });
+  });
+  // "+ En tid mere lørdag" for hver valgt dag
+  const md = $('afMereDage'); md.innerHTML = '';
+  dage.forEach((dag) => {
+    const b = K.el('button', { type: 'button', 'class': 'af-chip' }, t('afEnTilDag', { dag: afDagNavn(dag, { weekday: 'long' }) }));
+    b.disabled = af.ny.tider.length >= AF_MAKS;
+    b.addEventListener('click', () => {
+      const sid = afNyPaaDag(dag).pop(); const lgd = (sid && afKlOk(sid.fra) && afKlOk(sid.til) && afUrMin(sid.fra, sid.til)) || 120;
+      const fra = sid && afKlOk(sid.til) ? sid.til : '19:00';
+      // Går den sidste tid over midnat, starter den nye tid dagen efter
+      const nyDag = sid && afKlOk(sid.fra) && afKlOk(sid.til) && sid.til <= sid.fra ? afNaesteDag(dag) : dag;
+      const x = afNyTilfoej(nyDag, fra, afPlusMin(fra, lgd)); afNyTegn();
+      const f = x && liste.querySelector('[data-tid="' + x.id + '"]'); if (f) f.focus();
+    });
+    md.append(b);
+  });
+  afNyTal();
+}
+function afNyLgdTxt(x) { const ft = afFraTil(x.dag, x.fra, x.til); return ft && ft.slut ? afLaengde(ft.slut - ft.start) : ''; }
+/** Fra og til for én tid lige under den. Flyttes "Fra", flytter "Til" med (samme længde på uret). */
+function afNyRet(x) {
+  const r = K.el('div', { 'class': 'af-ret', id: 'afRet-' + x.id });
+  const felt = (navn, id, v) => { const b = K.el('div'); b.append(K.el('label', { 'for': id }, t(navn))); const i = K.el('input', { id, type: 'time', value: v }); b.append(i); return [b, i]; };
+  const [bf, fra] = felt('fra', 'afRetFra-' + x.id, x.fra);
+  const [bt, til] = felt('til', 'afRetTil-' + x.id, x.til);
+  let lgd = afUrMin(x.fra, x.til) || 120;
+  const opdater = (e) => {
+    if (afKlOk(fra.value)) x.fra = fra.value;
+    if (afKlOk(til.value)) x.til = til.value;
+    if (e && e.type === 'change' && afKlOk(x.fra) && afKlOk(x.til)) af.ny.sidste = { fra: x.fra, til: x.til };
+    const p = $('afTider').querySelector('[data-tid="' + x.id + '"]');
+    if (p) { p.querySelector('.kl').textContent = afKlTxt(x.fra) + '–' + afKlTxt(x.til); p.querySelector('em').textContent = afNyLgdTxt(x); }
+    afNyTal();
   };
-  const [bDag, dag] = felt('Dag', 'date', dagV);
-  const [bFra, fra] = felt('Fra', 'time', fraV || '19:00');
-  const [bTil, til] = felt('Til', 'time', tilV || afPlusMin(fraV || '19:00', 120));
-  const x = K.el('button', { type: 'button', 'class': 'x' }, '×');
-  x.addEventListener('click', () => { r.remove(); afTaelRaekker(); });
-  const top = K.el('div', { 'class': 'af-raekke-top' }); top.append(bDag, x);
-  const tre = K.el('div', { 'class': 'af-raekke-tid' }); tre.append(bFra, bTil);
-  const l = K.el('span', { 'class': 'af-laengde' });
-  r.append(top, tre, l);
-  // Flyttes "Fra", flytter "Til" med, så længden på uret bliver den samme. Længden huskes, også hvis "Fra" tømmes undervejs.
-  let lgd = afUrMin(fra.value, til.value) || 120;
-  fra.addEventListener('change', () => { if (fra.value) til.value = afPlusMin(fra.value, lgd); afRaekkeLaengde(r); });
-  til.addEventListener('change', () => { const m = afUrMin(fra.value, til.value); if (m) lgd = m; afRaekkeLaengde(r); });
-  dag.addEventListener('change', () => afRaekkeLaengde(r));
-  [dag, fra, til].forEach((e) => e.addEventListener('input', () => afRaekkeLaengde(r)));
-  afRaekkeLaengde(r);
+  fra.addEventListener('change', (e) => { if (afKlOk(fra.value)) til.value = afPlusMin(fra.value, lgd); opdater(e); });
+  til.addEventListener('change', (e) => { const m = afUrMin(fra.value, til.value); if (m) lgd = m; opdater(e); });
+  [fra, til].forEach((i) => i.addEventListener('input', opdater));
+  const fj = K.el('button', { type: 'button', 'class': 'fjern' }, t('afFjernTid'));
+  fj.addEventListener('click', () => {
+    af.ny.tider = af.ny.tider.filter((y) => y.id !== x.id); af.ny.aaben = null; afNyTegn();
+    const b = $('afUge').querySelector('[data-dag="' + x.dag + '"]'); if (b) b.focus();
+  });
+  r.append(bf, bt, fj);
   return r;
 }
-function afRaekkeVaerdi(r) {
-  const v = (f) => (r.querySelector('[data-af-felt="' + f + '"]') || {}).value || '';
-  return afFraTil(v('dag'), v('fra'), v('til'));
+/** Antal nederst og forhåndsvisningen af det, gruppen ser */
+function afNyTal() {
+  const n = af.ny.tider.length, d = new Set(af.ny.tider.map((x) => x.dag)).size;
+  $('afAntal').textContent = !n ? t('afIngenTider') : n === 1 ? t('afAntal1') : d === 1 ? t('afAntalDag1', { n }) : t('afAntal', { n, d });
+  $('afAntalHint').textContent = n >= 2 ? t('afFaarBesked') : t('afVaelgTo');
+  $('afSend').classList.toggle('svag', n < 2);
+  $('afPreview').classList.toggle('hidden', !n);
+  $('afPrevTitel').textContent = $('afTitel').value.trim() || t('afTitelPh');
+  const info = [t('afNyForslag', { n })];
+  if ($('afSted').value.trim()) info.push($('afSted').value.trim());
+  const starter = af.ny.tider.map((x) => tilDato(x.dag, x.fra)).filter(Boolean).sort((a, b) => a - b);
+  let frist = $('afFristDato').value ? tilDato($('afFristDato').value, $('afFristKl').value || '12:00') : null;
+  if (!frist) frist = starter[0] || null;
+  else if (starter.length && frist > starter[starter.length - 1]) frist = starter[starter.length - 1];
+  if (frist) info.push(t('afSvarSenest', { tid: afTid(frist).toLowerCase() }));
+  $('afPrevInfo').textContent = info.join(' · ');
 }
-function afRaekkeLaengde(r) {
-  const ft = afRaekkeVaerdi(r);
-  r.querySelector('.af-laengde').textContent = ft && ft.slut ? afLaengde(ft.slut - ft.start) : '';
-}
-function afTaelRaekker() {
-  const n = $('afTider').children.length;
-  // Hver række har et navn ("Tid 2"), så en skærmlæser kan skelne dem
-  [...$('afTider').children].forEach((r, i) => {
-    r.setAttribute('aria-label', t('afTidNr', { n: i + 1 }));
-    r.querySelector('.x').setAttribute('aria-label', t('afFjernTidNr', { n: i + 1 }));
-    afRaekkeLaengde(r);
-  });
-  $('afFlere').disabled = n >= 12;
-  [...$('afTider').querySelectorAll('.x')].forEach((b) => { b.disabled = n <= 2; });
+['afTitel', 'afSted', 'afFristDato', 'afFristKl'].forEach((id) => $(id).addEventListener('input', afNyTal));
+// En fejlbesked forsvinder, når man retter (fx skriver en titel)
+['afTitel', 'afFristDato', 'afFristKl'].forEach((id) => $(id).addEventListener('input', () => K.besked($('afNyMsg'), '')));
+function afNyNulstil(gid) {
+  af.ny = { gid, tider: [], aaben: null, n: 0, sidste: null, anden: false };
+  K.besked($('afUgeMsg'), '');
+  $('afTitel').value = ''; $('afSted').value = ''; $('afFristDato').value = ''; $('afFristKl').value = '12:00'; $('afAndre').checked = true;
+  $('afAndenDato').value = ''; $('afMere').open = false; $('afUge').scrollLeft = 0;
 }
 function visAfstemNy(gid) {
   vis('vAfstemNy');
   $('afNyTilbage').setAttribute('href', '#g/' + gid + '/spil');
   K.besked($('afNyMsg'), '');
   if (!tilstand.gruppe || tilstand.gruppe.id !== gid) { tilstand.gruppe = null; tilstand.medlemmer = []; }
-  lytGruppe(gid, () => {});
-  if (af.gid !== gid || !$('afTider').children.length) {
-    af.gid = gid;
-    $('afTitel').value = ''; $('afSted').value = ''; $('afFristDato').value = ''; $('afFristKl').value = '12:00'; $('afAndre').checked = true;
-    $('afTider').innerHTML = '';
-    // Tre forslag at rette i: i overmorgen og de to næste dage kl. 19
-    let dag = afDatoV(new Date());
-    for (let i = 1; i <= 4; i++) { dag = afNaesteDag(dag); if (i >= 2) $('afTider').append(afNyRaekke(dag, '19:00', '21:00')); }
-  }
-  afTaelRaekker();
-  $('afTitel').focus();
+  lytGruppe(gid, () => { afNyTop(); afNyTal(); });
+  af.gid = gid;
+  if (af.ny.gid !== gid) afNyNulstil(gid);
+  afNyTop(); afNyTegn();
+  // På en telefon åbner tastaturet ikke af sig selv, så striben kan ses
+  if (window.matchMedia && window.matchMedia('(min-width: 700px)').matches) $('afTitel').focus();
 }
-$('afFlere').addEventListener('click', () => {
-  const sidste = [...$('afTider').children].pop();
-  // Dagen efter den sidste (efter kalenderen), samme fra og til
-  const v = (f) => sidste ? (sidste.querySelector('[data-af-felt="' + f + '"]') || {}).value || '' : '';
-  const dag = v('dag') ? afNaesteDag(v('dag')) : afNaesteDag(afNaesteDag(afDatoV(new Date())));
-  $('afTider').append(afNyRaekke(dag, v('fra') || '19:00', v('til') || '')); afTaelRaekker();
+$('afAndenTilfoej').addEventListener('click', () => {
+  const dag = $('afAndenDato').value;
+  if (!tilDato(dag, '12:00')) { K.besked($('afUgeMsg'), t('mangerDato'), 'err'); $('afAndenDato').focus(); return; }
+  if (dag < afNyIdag()) { K.besked($('afUgeMsg'), t('afDagFortid'), 'err'); $('afAndenDato').focus(); return; }
+  if (dag > afNyMaksDag()) { K.besked($('afUgeMsg'), t('afDagForLangt'), 'err'); $('afAndenDato').focus(); return; }
+  if (!afNyPaaDag(dag).length) { const s = af.ny.sidste || { fra: '19:00', til: '21:00' }; if (!afNyTilfoej(dag, s.fra, s.til)) { $('afAndenDato').focus(); return; } }
+  af.ny.anden = false; $('afAndenDato').value = ''; afNyTegn();
+  const b = $('afUge').querySelector('[data-dag="' + dag + '"]'); if (b) { b.scrollIntoView({ block: 'nearest', inline: 'nearest' }); b.focus(); }
 });
 $('vAfstemNy').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const gid = af.gid; if (!gid) return;
+  const gid = af.ny.gid; if (!gid) return;
   const titel = $('afTitel').value.trim();
   if (!titel) { K.besked($('afNyMsg'), t('afManglerTitel'), 'err'); $('afTitel').focus(); return; }
-  const tider = [...$('afTider').children].map(afRaekkeVaerdi);
+  if (af.ny.tider.length < 2) { K.besked($('afNyMsg'), t('afMinTo'), 'err'); return; }
+  const tider = af.ny.tider.map((x) => afFraTil(x.dag, x.fra, x.til));
   if (tider.some((d) => !d)) { K.besked($('afNyMsg'), t('mangerDato'), 'err'); return; }
   if (tider.some((d) => d.ens)) { K.besked($('afNyMsg'), t('afEns'), 'err'); return; }
   if (tider.some((d) => !d.slut)) { K.besked($('afNyMsg'), t('afManglerSlut'), 'err'); return; }
   if (tider.some((d) => d.slut - d.start > 24 * 3600000)) { K.besked($('afNyMsg'), t('afForLang'), 'err'); return; }
+  const forbi = af.ny.tider.find(afNyForbi);
+  if (forbi) { K.besked($('afNyMsg'), t('afTidForbi', { tid: afUgedag(forbi.dag) + ' ' + afDatoKort(forbi.dag) + ' ' + afKlTxt(forbi.fra) }), 'err'); return; }
+  const nogler = tider.map((d) => d.start.getTime() + '-' + d.slut.getTime());
+  if (new Set(nogler).size < nogler.length) { K.besked($('afNyMsg'), t('afDublet'), 'err'); return; }
   let frist = null;
-  if ($('afFristDato').value) { frist = tilDato($('afFristDato').value, $('afFristKl').value || '12:00'); if (!frist) { K.besked($('afNyMsg'), t('mangerDato'), 'err'); return; } }
+  if ($('afFristDato').value) {
+    frist = tilDato($('afFristDato').value, $('afFristKl').value || '12:00');
+    if (!frist) { K.besked($('afNyMsg'), t('mangerDato'), 'err'); return; }
+    if (frist < new Date()) { K.besked($('afNyMsg'), t('afFristForbi'), 'err'); return; }
+  }
   const knap = $('afSend'); knap.disabled = true;
   K.besked($('afNyMsg'), t('gemmer'));
   try {
     const r = await K.motor('grupper', 'afstemOpret', { gid, titel, sted: $('afSted').value.trim(), tider: tider.map((d) => ({ start: d.start.toISOString(), slut: d.slut.toISOString() })), frist: frist ? frist.toISOString() : '', andre: $('afAndre').checked }, K.nyId());
-    $('afTider').innerHTML = '';
+    afNyNulstil(null);
     location.hash = 'g/' + gid + '/afstemning/' + r.id;
   } catch (err) { fejl($('afNyMsg'), err); } finally { knap.disabled = false; }
 });
@@ -4916,7 +5051,10 @@ function afSprog(aaben) {
   if (aaben('vGruppe') && tilstand.fane === 'spil') tegnAfstemListe();
   if (aaben('vAfstem')) tegnAfstem();
   if (aaben('vAfstemNy')) {
-    afTaelRaekker();
+    const a = document.activeElement || {};
+    const hvor = a.dataset && a.dataset.dag ? '[data-dag="' + a.dataset.dag + '"]' : a.dataset && a.dataset.tid ? '[data-tid="' + a.dataset.tid + '"]' : a.id ? '#' + a.id : '';
+    afNyTop(); afNyTegn();
+    const f = hvor && document.querySelector('#vAfstemNy ' + hvor); if (f && f !== a) f.focus();
   }
 }
 

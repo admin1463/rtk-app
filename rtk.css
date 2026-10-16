@@ -642,20 +642,71 @@ input.sr:focus-visible+.gb-op{outline:3px solid var(--pink);outline-offset:2px}
 .af-hvem{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;align-items:center}
 .af-hvem .gr-av{width:26px;height:26px;font-size:11px}
 .af-hvem .gr-av.mm{opacity:.45}
-.af-felt{border:0;padding:0;margin:14px 0 0;min-width:0}
-.af-felt legend{font-size:14px;font-weight:500;padding:0;margin:0 0 6px}
-/* Én tid med dato, fra og til (15. oktober 2026) */
-.af-raekke{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 10px;background:#FFFFFF}
-.af-raekke label{font-size:13px;margin:0 0 4px}
-.af-raekke input{margin:0;width:100%;min-width:0}
-.af-raekke-top{display:flex;gap:8px;align-items:flex-end}
-.af-raekke-top>div{flex:1;min-width:0}
-.af-raekke-tid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.af-raekke-tid>div{min-width:0}
-.af-raekke .x{flex:0 0 44px;min-height:44px;padding:0;border:1px solid var(--line2);background:#FFFFFF;border-radius:8px;font-size:20px;color:inherit}
-.af-laengde{display:block;font-size:13px;color:var(--muted);margin-top:6px;min-height:1.2em}
-.af-flere-hint{font-size:13px;margin:6px 0 0}
 .af-r1 small{display:block;font-weight:400;font-size:14px;color:var(--muted);margin-top:2px}
 .af-styr{border-top:1px solid var(--line);margin-top:22px;padding-top:6px}
 .af-status{border:2px solid var(--ok);border-radius:8px;padding:12px 14px;background:var(--okbg);margin:12px 0}
 .af-foreslaa{margin-top:10px}
+
+/* ---------- Ny afstemning, design B (16. oktober 2026): gruppens billede, ugestribe, tider pr. dag og en knap, der altid står nederst */
+.af-top{position:relative;border-radius:12px;overflow:hidden;margin:6px 0 18px;background:var(--teal);color:#FFFFFF}
+.af-top img{display:block;width:100%;height:150px;object-fit:cover;opacity:.55}
+.af-top .tx{position:absolute;left:16px;right:16px;bottom:14px}
+.af-top .kick{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#D7F05A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.af-top h1{color:#FFFFFF;margin:4px 0 0;font-size:28px}
+.af-trin{display:flex;align-items:center;gap:10px;margin:22px 0 8px;flex-wrap:wrap}
+.af-trin .nr{width:28px;height:28px;border-radius:999px;background:var(--pink);color:#FFFFFF;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;flex:0 0 28px}
+.af-trin h2{font-size:18px;margin:0}
+.af-trin .hint{margin:0;font-size:14px}
+.af-uge{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 6px;margin:0 -2px 6px;-webkit-overflow-scrolling:touch}
+.af-dag{flex:0 0 48px;min-height:0;scroll-snap-align:start;text-align:center;border:1.5px solid var(--line2);border-radius:12px;padding:6px 0;background:#FFFFFF;color:inherit;font-weight:400;white-space:normal}
+.af-dag span{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase}
+.af-dag b{display:block;font-size:19px}
+.af-dag .prik{display:block;width:6px;height:6px;border-radius:9px;background:var(--pink);margin:3px auto 0}
+.af-dag.valgt{background:var(--teal);border-color:var(--teal);color:#FFFFFF}
+.af-dag.valgt span{color:#D7F05A}
+.af-dag.anden{flex-basis:64px;border-style:dashed;border-color:var(--pink);color:var(--pink)}
+.af-dag.anden span,.af-dag.anden small{color:var(--pink)}
+.af-dag.anden small{display:block;font-size:10px;font-weight:700}
+.af-anden{margin:4px 0 8px}
+.af-anden-r{display:flex;gap:8px;align-items:center}
+.af-anden-r input{flex:1;min-width:0;margin:0}
+.af-tom{border:2px dashed var(--line2);border-radius:12px;padding:16px;text-align:center;color:var(--muted);font-size:14px;margin:4px 0 8px}
+.af-ny-r{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.af-ny-r .d{flex:0 0 88px;min-width:0}
+.af-ny-r .d b{display:block}
+.af-ny-r .d small{display:block;color:var(--muted);font-size:13px}
+.af-pille{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--soft);border:2px solid transparent;border-radius:999px;padding:8px 6px 8px 14px;min-height:46px;font-weight:700;color:inherit;text-align:left}
+.af-pille .kl{font-size:17px}
+.af-pille em{font-style:normal;font-size:12px;font-weight:700;color:var(--ok);background:#FFFFFF;border-radius:99px;padding:3px 8px;white-space:nowrap}
+.af-pille.aaben{background:#FFFFFF;border-color:var(--pink)}
+.af-ret{margin:8px 0 6px;padding:10px 12px;border-radius:12px;background:var(--soft);display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.af-ret>div{min-width:0}
+.af-ret label{font-size:12px;margin:0 0 2px}
+.af-ret input{margin:0;min-height:44px}
+.af-ret .fjern{grid-column:1/-1;justify-self:start;border:1px solid var(--line2);border-radius:8px;min-height:40px;padding:6px 12px;font-size:14px;font-weight:600;background:#FFFFFF}
+.af-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.af-chip{min-height:40px;padding:6px 12px;border:1.5px dashed var(--pink);border-radius:999px;background:#FFFFFF;font-size:14px;font-weight:700;color:var(--pink);white-space:normal}
+.af-chip:disabled{opacity:.45}
+details.af-mere{border:1px solid var(--line);border-radius:12px;margin:16px 0 0;background:#FFFFFF}
+details.af-mere summary{padding:14px 16px;font-weight:700;cursor:pointer;min-height:48px}
+details.af-mere .ind{padding:0 16px 14px}
+.af-preview{border:2px solid var(--pink);border-radius:12px;padding:12px 14px;margin:16px 0 0;background:#FFFFFF}
+.af-preview .k{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--pink)}
+.af-preview b{display:block;font-size:17px;margin:4px 0 2px;overflow-wrap:anywhere}
+.af-preview .hint{display:block;margin:0}
+.af-bund{position:sticky;bottom:0;z-index:5;margin:18px calc(-1 * var(--pad)) 0;padding:12px var(--pad) calc(14px + env(safe-area-inset-bottom));background:#FFFFFF;border-top:1px solid var(--line);box-shadow:0 -6px 16px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px}
+.af-bund .info{flex:1;min-width:0;font-size:13px;color:var(--muted)}
+.af-bund .info b{display:block;font-size:15px;color:var(--ink)}
+.af-bund button{background:var(--pink);color:#FFFFFF;border-color:var(--pink);border-radius:999px;padding:12px 20px}
+.af-bund button.svag{opacity:.5}
+.af-pille.forbi{border-color:var(--bad);background:var(--badbg)}
+.af-dag:disabled{opacity:.4}
+/* Felter, der får fokus, må ikke gemme sig under knappen nederst (gennemgangen af design B) */
+html:has(#vAfstemNy:not(.hidden)){scroll-padding-bottom:120px}
+@media (max-width:360px){
+  .af-ny-r .d{flex-basis:70px}
+  .af-pille{padding-left:10px}
+  .af-pille .kl{font-size:15px}
+  .af-pille em{font-size:11px;padding:2px 6px}
+  .af-bund button{padding:12px 14px}
+}
