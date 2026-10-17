@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="c8b1b001bcde">
+<script src="/opdater.js?v=2222ad998c00" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Arbejdstøj og udstyr · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css?v=9b83e1a7e1c8">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Arbejdstøj og udstyr</b><span>Personale og frivillige</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+
+  <div id="omraade" class="hidden tt">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div id="vis"></div>
+  </div>
+  </div>
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script src="../konfig.js?v=1301d6285ee2"></script>
+<script>
+// Arbejdstøj og udstyr (personale/arbejdstoej.html). Bygges ind af arbejdstoej.py. 16. oktober 2026.
+// Trænerens kurv, hele katalogsiden, sko og størrelse, og for administratorerne kontoen, varerne, personerne,
+// nye tildelinger, godkendelse og ordren til Carsten. Mockup: kilder/mockup/arbejdstoej_mockup.py.
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const kr = (n) => String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' kr.';
+const BIL = '../billeder/toej/';
+const MD = ['jan.', 'feb.', 'mar.', 'apr.', 'maj', 'jun.', 'jul.', 'aug.', 'sep.', 'okt.', 'nov.', 'dec.'];
+const UGE = ['søn.', 'man.', 'tir.', 'ons.', 'tor.', 'fre.', 'lør.'];
+const dagTekst = (iso) => { if (!iso) return ''; const d = new Date(String(iso).slice(0, 10) + 'T12:00:00'); return UGE[d.getDay()] + ' ' + d.getDate() + '. ' + MD[d.getMonth()]; };
+const tidTekst = (s) => { if (!s) return ''; const d = new Date(String(s).replace(' ', 'T')); return dagTekst(String(s).slice(0, 10)) + ' kl. ' + String(d.getHours()).padStart(2, '0') + '.' + String(d.getMinutes()).padStart(2, '0'); };
+const STATUS = { aaben: ['I gang', 'n'], sendt: ['Venter på godkendelse', 'v'], godkendt: ['Godkendt', 'ok'], bestilt: ['Bestilt', 'ok'], leveret: ['Kan hentes', 'ok'], udleveret: ['Modtaget', 'ok'], bortfaldet: ['Bortfaldet', 'n'], annulleret: ['Annulleret', 'n'] };
+const KAT_NAVN = { primaer: 'Primære trænere', time: 'Timetrænere', oevrig: 'Øvrige' };
+
+let token = hent('rtk.token') || '';
+let person = null;
+const S = { start: null, adm: null, varerAdm: null, kladde: {}, gemmer: {}, venter: {}, str: {}, kat: 'toej', model: hent('rtk.toej.model') || 'alle', cm: '', fejl: '' };
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+
+async function motor(modul, handling, data, id) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: id || '' }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  const svar = await res.json();
+  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  return svar.data;
+}
+function logUd(udloebet) {
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null);
+  location.replace(udloebet ? './?til=arbejdstoej.html&igen=1' : './');
+}
+$('logud').addEventListener('click', () => logUd(false));
+function besked(el, t, s) { if (!el) return; el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+window.RTK_TRAVL = false;
+
+// ------------------------------------------------------------ data
+const vareMap = () => { const m = {}; (S.start ? S.start.varer : []).forEach((v) => { m[v.id] = v; }); if (S.varerAdm) S.varerAdm.varer.forEach((v) => { m[v.id] = m[v.id] || v; }); return m; };
+const tildeling = (tid) => (S.start ? S.start.tildelinger.find((t) => t.id === tid) : null);
+const laaste = (t) => t.linjer.filter((l) => l.status === 'bestilt' || l.status === 'leveret');
+function kladde(t) {
+  if (!S.kladde[t.id]) S.kladde[t.id] = t.linjer.filter((l) => l.status === 'valgt').map((l) => ({ v: l.v, s: l.s, n: l.n }));
+  return S.kladde[t.id];
+}
+function valgtSum(t) {
+  const vm = vareMap();
+  return laaste(t).reduce((a, l) => a + l.pris * l.n, 0) + kladde(t).reduce((a, l) => a + (vm[l.v] ? vm[l.v].pris * l.n : 0), 0);
+}
+function antalI(t, vid, s) { const l = kladde(t).find((x) => x.v === vid && x.s === s); return l ? l.n : 0; }
+/** Den størrelse, knapperne arbejder på: den valgte, den eneste eller den, der allerede ligger i kurven */
+function strFor(t, v) { if (S.str[v.id]) return S.str[v.id]; if (v.str.length === 1) return v.str[0]; const l = kladde(t).find((x) => x.v === v.id); return l ? l.s : ''; }
+function antalVare(t, vid) { return kladde(t).filter((x) => x.v === vid).reduce((a, l) => a + l.n, 0); }
+/** Pakken: hvilke pladser er fyldt, og må varen lægges i? */
+function pakkePladser(t) {
+  const vm = vareMap();
+  const brugt = t.pakke.pladser.map(() => 0);
+  laaste(t).concat(kladde(t)).forEach((l) => { const v = vm[l.v]; if (!v) return; for (let i = 0; i < l.n; i++) { const j = t.pakke.pladser.findIndex((p, x) => !brugt[x] && p.slags.indexOf(v.slags) >= 0); if (j >= 0) brugt[j] = 1; } });
+  return brugt;
+}
+function kanTilfoeje(t, v) {
+  if (t.type === 'pakke') { const b = pakkePladser(t); return t.pakke.pladser.some((p, i) => !b[i] && p.slags.indexOf(v.slags) >= 0); }
+  return valgtSum(t) + v.pris <= t.beloeb;
+}
+
+// ------------------------------------------------------------ gem kurven (det sidste tryk gælder)
+function aendr(t, vid, s, delta) {
+  const k = kladde(t);
+  let l = k.find((x) => x.v === vid && x.s === s);
+  if (!l) { l = { v: vid, s, n: 0 }; k.push(l); }
+  l.n = Math.max(0, Math.min(10, l.n + delta));
+  S.kladde[t.id] = k.filter((x) => x.n > 0);
+  S.venter[t.id] = true;
+  tegn();
+  gemKurv(t.id);
+}
+async function gemKurv(tid) {
+  if (S.gemmer[tid]) return;
+  S.gemmer[tid] = true;
+  while (S.venter[tid]) {
+    S.venter[tid] = false;
+    try {
+      const ny = await motor('toej', 'kurv', { tid, linjer: S.kladde[tid] }, nyId());
+      opdaterT(ny);
+      if (!S.venter[tid]) S.kladde[tid] = null;
+      S.fejl = '';
+    } catch (err) {
+      S.fejl = err.message; S.kladde[tid] = null; S.venter[tid] = false;
+      try { await hentStart(); } catch (e) {}
+    }
+  }
+  S.gemmer[tid] = false;
+  tegn();
+}
+function opdaterT(ny) {
+  const i = S.start.tildelinger.findIndex((t) => t.id === ny.id);
+  if (i >= 0) S.start.tildelinger[i] = ny;
+}
+async function hentStart() { S.start = await motor('toej', 'start'); }
+async function hentAdm() { S.adm = await motor('toej', 'oversigt'); }
+
+// ------------------------------------------------------------ fælles stumper
+const hero = (kick, h) => '<div class="af-hero"><img src="../billeder/felt-fordele.jpg" alt=""><div class="tx"><span class="kick">' + esc(kick) + '</span><h1>' + esc(h) + '</h1></div></div>';
+const trin = (nr, h, hint) => '<div class="af-trin"><span class="nr">' + nr + '</span><h2>' + esc(h) + '</h2>' + (hint ? '<span class="hint">' + esc(hint) + '</span>' : '') + '</div>';
+const chip = (t, valgt, attr, kl) => '<button type="button" class="af-chip' + (valgt ? ' valgt' : '') + (kl ? ' ' + kl : '') + '"' + (valgt === null ? '' : ' aria-pressed="' + !!valgt + '"') + ' ' + (attr || '') + '>' + t + '</button>';
+const info = (t) => '<span class="af-chip info">' + t + '</span>';
+const prik = (farve) => (/sodalite/i.test(farve) ? '<i class="tt-prik" aria-hidden="true"></i>' : '');
+const bund = (b, lille, knap, attr) => '<div class="af-bund"><div class="info"><b>' + b + '</b>' + (lille || '') + '</div>' + (knap ? '<button type="button" ' + (attr || '') + '>' + knap + '</button>' : '') + '</div>';
+const tilbage = (href, t) => '<a class="gr-tilbage" href="' + href + '">&#8592; ' + esc(t) + '</a>';
+function vis(html) {
+  // En kvittering fra handlingen før (fx efter en ny tildeling) vises øverst på næste skærm
+  if (S.flash && S.flashH === location.hash) html = '<div class="msg okm" role="status">' + esc(S.flash) + '</div>' + html;
+  $('vis').innerHTML = html;
+}
+
+// ------------------------------------------------------------ træneren
+function vStart() {
+  const ts = S.start.tildelinger;
+  let h = hero('Fra klubben', 'Arbejdstøj og udstyr');
+  if (S.start.admin) {
+    const venter = S.adm ? S.adm.tildelinger.filter((t) => t.status === 'sendt').length : 0;
+    h += '<div class="af-chips">' + chip('Kontoen', null, 'data-gaa="#konto"') + chip('Til godkendelse' + (venter ? ' (' + venter + ')' : ''), null, 'data-gaa="#godkend"') +
+      chip('Personer', null, 'data-gaa="#personer"') + chip('Varerne', null, 'data-gaa="#varer"') + chip('+ Ny tildeling', null, 'data-gaa="#giv"') + '</div>';
+  }
+  if (!ts.length) {
+    h += '<div class="gr-tom tt-tom"><b>Du har ingen tildeling lige nu</b><span>Når klubben giver dig arbejdstøj, får du en sms, og så kan du vælge her.</span></div>';
+    return vis(h);
+  }
+  h += trin(1, 'Dine tildelinger');
+  ts.forEach((t) => {
+    const st = STATUS[t.status] || [t.status, 'n'];
+    const hvad = t.type === 'pakke' ? t.pakke.navn : kr(t.beloeb) + ' at vælge for';
+    const link = t.status === 'aaben' ? '#t/' + t.id : '#kurv/' + t.id;
+    h += '<a class="tt-tr" href="' + link + '"><div class="tt-mid"><b>' + esc(hvad) + '</b><span>' +
+      (t.status === 'aaben' ? 'Frist ' + esc(dagTekst(t.forlaenget || t.frist)) + (t.linjer.length ? ' · valgt ' + kr(valgtSum(t)) : '') : 'Valgt ' + kr(t.valgt)) +
+      '</span></div><span class="tt-st ' + st[1] + '">' + esc(st[0]) + '</span></a>';
+  });
+  vis(h);
+}
+
+function vareKort(t, v, i) {
+  const n = antalVare(t, v.id);
+  const valgt = strFor(t, v);
+  const sko = v.slags === 'sko';
+  const tabel = sko ? S.start.sko[v.model === 'dame' ? 'dame' : 'herre'] : null;
+  const strKnapper = v.str.map((s) => {
+    const nI = antalI(t, v.id, s);
+    let lbl = esc(s);
+    if (sko) { const j = tabel.uk.indexOf(s); lbl = 'UK ' + esc(s.replace('.', ',')) + '<span>EU ' + esc(j >= 0 ? tabel.eu[j] : '') + '</span>'; }
+    return '<button type="button" class="' + (s === valgt ? 'valgt' : '') + (sko ? ' sko' : '') + '" aria-pressed="' + (s === valgt) + '" data-str="' + esc(s) + '" data-v="' + esc(v.id) + '" aria-label="Størrelse ' + esc(sko ? 'UK ' + s : s) + (nI ? ', ' + nI + ' valgt' : '') + '">' + lbl + (nI ? '<em>' + nI + '</em>' : '') + '</button>';
+  }).join('');
+  const kan = kanTilfoeje(t, v);
+  const nValgt = valgt ? antalI(t, v.id, valgt) : 0;
+  return '<div class="tt-vare' + (n ? ' i' : '') + '" id="v' + i + '"><div class="tt-bil">' + (v.bil ? '<img src="' + BIL + esc(v.bil) + '" alt="" loading="lazy">' : '') + '</div>' +
+    '<div class="tt-mid"><b>' + esc(v.navn) + '</b><span>' + prik(v.farve) + esc(v.farve) + ' · ' + esc(v.model) + '</span>' +
+    (v.side ? '<a class="tt-kat-l" href="#side/' + v.side + '/' + encodeURIComponent(v.id) + '">Se hele siden</a>' : '') + '</div>' +
+    '<div class="tt-pris">' + kr(v.pris) + '</div>' +
+    '<div class="tt-step">' + (nValgt ? '<button type="button" class="tt-minus" data-minus="' + esc(v.id) + '" aria-label="Fjern en ' + esc(v.navn) + ' i ' + esc(valgt) + '">−</button><output aria-live="polite">' + nValgt + '</output>' : '') +
+    '<button type="button" class="tt-plus' + (nValgt ? ' fyldt' : '') + '" data-plus="' + esc(v.id) + '"' + (kan ? '' : ' disabled') + ' aria-label="Læg en ' + esc(v.navn) + ' i kurven">+</button></div>' +
+    '<div class="tt-str" role="group" aria-label="Størrelse">' + strKnapper + '</div></div>';
+}
+
+function skoGuide() {
+  const m = S.model === 'dame' ? 'dame' : 'herre';
+  const tab = S.start.sko[m];
+  const cm = Number(String(S.cm).replace(',', '.'));
+  let forslag = '';
+  if (cm >= 15 && cm <= 35) {
+    const j = tab.cm.findIndex((c) => c >= cm - 0.001);
+    forslag = j < 0 ? 'Din fod er længere end Babolats tabel. Prøv skoen hos Racketlife.' : 'UK ' + tab.uk[j].replace('.', ',') + ' · EU ' + tab.eu[j];
+  }
+  return '<details class="af-mere tt-guide"' + (S.cm ? ' open' : '') + '><summary>Find din størrelse</summary><div class="ind">' +
+    '<label for="cm">Mål din fod i cm (' + (m === 'dame' ? 'dame' : 'herre') + ')</label><input id="cm" inputmode="decimal" value="' + esc(S.cm) + '" placeholder="fx 27,0">' +
+    (forslag ? '<div class="af-preview" style="margin-top:10px"><span class="k">Forslag efter Babolats tabel</span><b>' + esc(forslag) + '</b><span class="hint">Ligger du mellem to, så tag den største.</span></div>' : '') +
+    '<p class="hint" style="margin:10px 0 0"><b>Sådan måler du:</b> stil dig på et stykke papir med hælen mod en væg, om aftenen og med den strømpe, du spiller i. Sæt et mærke ved den længste tå, og mål fra væggen. Mål begge fødder, og brug den længste.</p>' +
+    '<div class="card tt-tabel">' + tab.uk.map((u, j) => '<div class="tt-post"><div>UK ' + esc(u.replace('.', ',')) + '<span>EU ' + esc(tab.eu[j]) + '</span></div><b>' + String(tab.cm[j]).replace('.', ',') + ' cm</b></div>').join('') + '</div>' +
+    '<p class="hint">Babolats tabel, katalog 2027 side 59. <a href="#side/59">Se siden</a></p></div></details>' +
+    '<div class="tt-regel"><b>Prøv skoen først.</b> Sko kan ikke byttes, ligesom tøjet. Prøv modellen og størrelsen hos Racketlife, <a href="https://maps.google.com/?q=%C3%85boulevard+15,+1960+Frederiksberg" target="_blank" rel="noopener">Åboulevard 15, 1960 Frederiksberg</a>, før du vælger. Har du en Babolat-sko i forvejen, så vælg samme størrelse. Til brede fødder findes Jet Mach 4 og Propulse Storm i en wide-udgave.</div>';
+}
+
+function vVaelg(tid) {
+  const t = tildeling(tid);
+  if (!t) return vIkke();
+  if (t.status !== 'aaben') { location.replace('#kurv/' + tid); return; }
+  window.RTK_TRAVL = true;
+  const varer = S.start.varer.filter((v) => v.til !== false);
+  const pakke = t.type === 'pakke';
+  let h = tilbage('#', 'Dine tildelinger') + hero('Din tildeling · fra klubben', pakke ? 'Dit arbejdstøj' : 'Vælg dit arbejdstøj');
+  h += '<div class="af-chips">' + info(pakke ? esc(t.pakke.navn) : kr(t.beloeb) + ' at vælge for') + info('Frist ' + esc(dagTekst(t.forlaenget || t.frist))) + '</div>';
+  if (t.besked) h += '<div class="tt-regel ny" role="status">' + esc(t.besked) + '</div>';
+  if (S.fejl) h += '<div class="tt-regel fejl" role="alert">' + esc(S.fejl) + '</div>';
+  h += '<div class="tt-regel"><b>Størrelsen skal passe</b>, tøjet kan ikke byttes. Prøv prøvesættet ved pro shoppen.</div>';
+  // Kategorier: tøj, sko og tilbehør, eller pakkens pladser
+  let kats;
+  if (pakke) kats = t.pakke.pladser.map((p, i) => ({ id: 'p' + i, navn: p.titel, fn: (v) => p.slags.indexOf(v.slags) >= 0 }));
+  else kats = [{ id: 'toej', navn: 'Tøj', fn: (v) => v.slags !== 'sko' && v.gruppe !== 'tilbehoer' }, { id: 'sko', navn: 'Sko', fn: (v) => v.slags === 'sko' }, { id: 'tilbehoer', navn: 'Tilbehør', fn: (v) => v.gruppe === 'tilbehoer' }];
+  kats = kats.filter((k) => varer.some(k.fn));
+  if (!kats.find((k) => k.id === S.kat)) S.kat = kats.length ? kats[0].id : '';
+  const kat = kats.find((k) => k.id === S.kat);
+  h += trin(1, pakke ? 'Vælg størrelse' : 'Vælg varer', pakke ? 'klubben giver en T-shirt og en hættetrøje eller jakke' : 'priserne er Babolats listepriser');
+  h += '<div class="tt-kat" role="group" aria-label="Kategori">' + kats.map((k) => '<button type="button" data-kat="' + k.id + '" aria-pressed="' + (k.id === S.kat) + '" class="' + (k.id === S.kat ? 'valgt' : '') + '">' + esc(k.navn) + '</button>').join('') + '</div>';
+  h += '<div class="tt-kat tt-model" role="group" aria-label="Model">' + [['alle', 'Alle'], ['herre', 'Herre'], ['dame', 'Dame']].map((m) => '<button type="button" data-model="' + m[0] + '" aria-pressed="' + (S.model === m[0]) + '" class="' + (S.model === m[0] ? 'valgt' : '') + '">' + m[1] + '</button>').join('') + '</div>';
+  if (S.kat === 'sko') h += skoGuide();
+  const liste = varer.filter((v) => kat && kat.fn(v) && (S.model === 'alle' || v.model === S.model || v.model === 'unisex'));
+  h += liste.length ? liste.map((v, i) => vareKort(t, v, i)).join('') : '<p class="hint">Ingen varer her. Prøv en anden model.</p>';
+  const sum = valgtSum(t);
+  if (pakke) {
+    const b = pakkePladser(t);
+    const mangler = t.pakke.pladser.filter((p, i) => !b[i]).map((p) => p.titel.toLowerCase());
+    h += bund(mangler.length ? 'Mangler: ' + esc(mangler.join(' og ')) : 'Alt er valgt', 'Leveres samlet til klubben', 'Se din kurv', 'data-gaa="#kurv/' + t.id + '"');
+  } else {
+    h += bund(kr(t.beloeb - sum) + ' tilbage', kr(sum) + ' valgt af ' + kr(t.beloeb), 'Se din kurv', 'data-gaa="#kurv/' + t.id + '"');
+  }
+  vis(h);
+}
+
+function vKurv(tid) {
+  const t = tildeling(tid);
+  if (!t) return vIkke();
+  const vm = vareMap();
+  const pakke = t.type === 'pakke';
+  const linjer = laaste(t).concat(t.status === 'aaben' ? kladde(t).map((l) => ({ v: l.v, s: l.s, n: l.n, status: 'valgt', navn: vm[l.v] ? vm[l.v].navn + ' · ' + vm[l.v].farve : l.v, pris: vm[l.v] ? vm[l.v].pris : 0 })) : t.linjer);
+  const sum = linjer.filter((l) => l.status !== 'mangler').reduce((a, l) => a + l.pris * l.n, 0);
+  window.RTK_TRAVL = t.status === 'aaben';
+  let h = tilbage(t.status === 'aaben' ? '#t/' + t.id : '#', t.status === 'aaben' ? 'Tilbage til varerne' : 'Dine tildelinger') + hero('Din tildeling · fra klubben', 'Din kurv');
+  if (S.fejl) h += '<div class="tt-regel fejl" role="alert">' + esc(S.fejl) + '</div>';
+  const st = STATUS[t.status] || [t.status, 'n'];
+  if (t.status === 'aaben') h += trin(2, 'Tjek og send', 'du kan rette indtil fristen');
+  else h += '<div class="af-chips">' + info(esc(st[0])) + (t.sendt ? info('Sendt ' + esc(tidTekst(t.sendt))) : '') + '</div>';
+  if (!pakke) {
+    const pct = Math.min(100, t.beloeb ? sum / t.beloeb * 100 : 0);
+    h += '<div class="tt-saldo"><div class="lg">Valgt</div><div class="stor">' + kr(sum) + ' <span>af ' + kr(t.beloeb).replace(' kr.', '') + '</span></div><div class="tt-maal"><i style="width:' + pct.toFixed(1) + '%"></i></div>' +
+      '<div class="lg">' + kr(t.beloeb - sum) + ' tilbage. Bruger du ikke hele beløbet, går resten tabt.</div></div>';
+  }
+  if (!linjer.length) h += '<p class="hint">Kurven er tom.</p>';
+  linjer.forEach((l) => {
+    const v = vm[l.v];
+    const sko = v && v.slags === 'sko';
+    h += '<div class="tt-post' + (l.status === 'mangler' ? ' streg' : '') + '"><div>' + (l.n > 1 ? l.n + ' × ' : '') + esc(v ? v.navn : l.navn) + '<span>' + (v ? prik(v.farve) + esc(v.farve) + ' · ' : '') + esc(sko ? 'UK ' + l.s.replace('.', ',') : l.s) +
+      (v && v.til === false && l.status === 'valgt' ? ' · kan ikke vælges længere, fjern den' : l.status === 'mangler' ? ' · ikke på lager' : l.status === 'bestilt' ? ' · bestilt' : l.status === 'leveret' ? ' · leveret' : '') + '</span></div><b>' + kr(l.pris * l.n) + '</b>' +
+      (t.status === 'aaben' && l.status === 'valgt' ? '<button type="button" class="tt-fjern" data-fjern="' + esc(l.v) + '|' + esc(l.s) + '" aria-label="Fjern ' + esc(v ? v.navn : '') + '">×</button>' : '') + '</div>';
+  });
+  if (t.status === 'aaben') {
+    h += '<div class="tt-regel ny"><b>Størrelsen skal passe.</b> Tøjet trykkes, før du får det, og kan ikke byttes. Prøv størrelsen på prøvesættet ved pro shoppen, før du sender.</div>';
+    h += '<div class="tt-regel"><b>Arbejdstøj:</b> tøjet er til træning og klubbens arrangementer.</div>';
+    h += '<details class="af-mere"><summary>Levering</summary><div class="ind"><p class="hint" style="margin:0">Alt leveres samlet til klubben. Du får en sms, når det kan hentes, og bekræfter her, at du har fået det.</p></div></details>';
+    h += '<div class="af-preview"><span class="k">Sådan ser klubben det</span><b>' + esc(S.start.mig.navn) + ' · ' + linjer.reduce((a, l) => a + l.n, 0) + ' varer · ' + kr(sum) + '</b><span class="hint">Venter på godkendelse, når du har sendt</span></div>';
+    h += '<div id="kurvMsg" class="msg" aria-live="polite"></div>';
+    h += bund(linjer.reduce((a, l) => a + l.n, 0) + ' varer · ' + kr(sum), pakke ? '' : kr(t.beloeb - sum) + ' tilbage', 'Send mit valg', 'id="send"' + (S.gemmer[t.id] || S.venter[t.id] ? ' class="svag"' : ''));
+  } else if (t.status === 'sendt') {
+    h += '<div class="tt-regel">Dit valg venter på godkendelse. Du kan stadig rette det indtil fristen, ' + esc(dagTekst(t.forlaenget || t.frist)) + '.</div><div id="kurvMsg" class="msg" aria-live="polite"></div>' + bund('Sendt', 'Venter på godkendelse', 'Ret mit valg', 'id="fortryd"');
+  } else if (t.status === 'leveret') {
+    h += '<div class="tt-regel ny"><b>Dit arbejdstøj kan hentes i klubben.</b> Bekræft, når du har fået det.</div><div id="kurvMsg" class="msg" aria-live="polite"></div>' + bund('Kan hentes', 'Leveret ' + esc(tidTekst(t.leveret)), 'Jeg har fået det', 'id="modtaget"');
+  } else if (t.status === 'udleveret') {
+    h += '<div class="tt-regel">Du bekræftede ' + esc(tidTekst(t.udleveret)) + ', at du har fået dit arbejdstøj.</div>';
+  } else if (t.status === 'bortfaldet') {
+    h += '<div class="tt-regel">Fristen er udløbet, og tildelingen er bortfaldet.</div>';
+  } else {
+    h += '<div class="tt-regel">' + (t.status === 'godkendt' ? 'Dit valg er godkendt og kommer med i næste bestilling.' : 'Dit valg er bestilt. Du får en sms, når det kan hentes.') + '</div>';
+  }
+  vis(h);
+}
+
+function vSide(n, vid) {
+  let v = null;
+  try { v = vid ? vareMap()[decodeURIComponent(vid)] : null; } catch (e) {}
+  if (!/^\d+$/.test(String(n))) return vIkke();
+  let h = '<a class="gr-tilbage" href="javascript:history.back()">&#8592; Tilbage til varerne</a>' +
+    '<div class="tt-fuld"><span class="k">Babolat katalog 2027 · side ' + esc(n) + '</span>' + (v ? '<h2>' + esc(v.navn) + '</h2>' : '') +
+    '<img src="' + BIL + 'side-' + esc(n) + '.jpg" alt="Babolats katalog side ' + esc(n) + '">' +
+    '<p>Knib for at zoome.' + (v ? ' Fotoet viser varen i én farve. Du får den i den farve, der står på varen: ' + prik(v.farve) + esc(v.farve.toLowerCase()) + '.' : '') + '</p>' +
+    '<div class="af-chips"><a class="af-chip lys" href="' + esc((S.start ? S.start.katalog : '') + n) + '" target="_blank" rel="noopener">Åbn Babolats katalog ↗</a></div></div>';
+  vis(h);
+}
+function vIkke() { vis(tilbage('#', 'Arbejdstøj og udstyr') + '<p class="hint">Tildelingen findes ikke.</p>'); }
+
+// ------------------------------------------------------------ administratorerne
+function vKonto() {
+  const o = S.adm, k = o.konto;
+  const pct = (x) => Math.max(0, Math.min(100, x / k.ramme * 100)).toFixed(1);
+  let h = tilbage('#', 'Arbejdstøj og udstyr') + hero('Sports Group · Babolat', 'Kontoen');
+  h += '<div class="tt-saldo"><div class="lg">Tilbage at bruge til ' + esc(dagTekst(k.slut).replace(/^\S+ /, '')) + ' 2028</div><div class="stor">' + kr(k.tilbage) + '</div>' +
+    '<div class="tt-maal"><i class="t" style="width:' + pct(k.trukket) + '%"></i><i class="b" style="width:' + pct(k.bestilt) + '%"></i><i class="r" style="width:' + pct(k.valgt) + '%"></i></div>' +
+    '<div class="tt-leg"><span><i class="t"></i>Trukket ' + kr(k.trukket) + '</span><span><i class="b"></i>Bestilt ' + kr(k.bestilt) + '</span><span><i class="r"></i>Valgt, ikke bestilt ' + kr(k.valgt) + '</span></div>' +
+    (k.lovet ? '<div class="lg" style="margin-top:6px">Givet, men ikke valgt endnu: ' + kr(k.lovet) + '</div>' : '') + '</div>';
+  h += trin(1, 'Plan for kontoen', kr(k.ramme) + ' i alt');
+  h += '<div class="card tt-liste">' + o.plan.map((p) => '<div class="tt-post"><div>' + esc(p.navn) + '<span>Plan ' + kr(p.plan) + '</span></div><b>' + kr(p.brugt) + '</b></div>').join('') + '</div>';
+  h += trin(2, 'Tildelinger og træk');
+  const vigtige = o.tildelinger.filter((t) => ['aaben', 'sendt', 'godkendt', 'bestilt', 'leveret'].indexOf(t.status) >= 0);
+  vigtige.forEach((t) => { const st = STATUS[t.status]; h += '<a class="tt-tr" href="#godkend"><div class="tt-mid"><b>' + esc(t.navn) + ' · ' + (t.type === 'pakke' ? esc(t.pakke.navn) : kr(t.beloeb)) + '</b><span>' + (t.status === 'aaben' ? 'Frist ' + esc(dagTekst(t.forlaenget || t.frist)) + (t.valgt ? ' · har valgt ' + kr(t.valgt) : '') : 'Valgt ' + kr(t.valgt)) + (t.betaler !== 'konto' ? ' · ' + esc(o.betalere[t.betaler]) : '') + '</span></div><span class="tt-st ' + st[1] + '">' + esc(st[0]) + '</span></a>'; });
+  o.traek.slice(0, 10).forEach((r) => { h += '<div class="tt-tr"><div class="tt-mid"><b>' + esc(r.beskrivelse || r.bilag) + '</b><span>' + esc(dagTekst(r.tid)) + ' · ' + esc(r.bilag) + '</span></div><span class="tt-st ok">Trukket ' + kr(r.beloeb) + '</span></div>'; });
+  if (!vigtige.length && !o.traek.length) h += '<p class="hint">Ingen tildelinger eller træk endnu.</p>';
+  h += '<div class="af-chips">' + chip('Personer (' + o.personer.length + ')', null, 'data-gaa="#personer"') + chip('+ Ny tildeling', null, 'data-gaa="#giv"') + chip('Varerne', null, 'data-gaa="#varer"') + chip('Hent som regneark', null, 'id="csv"') + '</div>';
+  h += '<p class="hint">Andre træk på kontoen, fx boldvogne, og Carstens saldo lægges ind af Claude.</p>';
+  h += bund(kr(k.tilbage) + ' tilbage', k.carsten ? 'Carstens saldo ' + esc(dagTekst(k.carsten.dato)) + ': ' + kr(k.carsten.saldo) : 'Ingen opgørelse fra Carsten endnu', 'Til godkendelse', 'data-gaa="#godkend"');
+  vis(h);
+}
+
+function vGodkend() {
+  const o = S.adm;
+  let h = tilbage('#konto', 'Kontoen') + hero('Kontoen · valg og ordre', 'Til godkendelse');
+  h += '<div id="admMsg" class="msg" aria-live="polite"></div>';
+  h += trin(1, 'Valg fra trænerne', 'hver godkendes for sig');
+  const ts = o.tildelinger.filter((t) => ['aaben', 'sendt', 'godkendt', 'bestilt'].indexOf(t.status) >= 0);
+  if (!ts.length) h += '<p class="hint">Ingen valg lige nu.</p>';
+  ts.forEach((t) => {
+    const st = STATUS[t.status];
+    const p = o.personer.find((x) => x.pid === t.pid);
+    const skat = p && t.betaler !== 'sg' ? (p.loen === 'ulønnet' ? ' · ulønnet, højst ' + kr(p.ulonnetLoft) + ' om året' : ' · sko og kasket ca. ' + kr(p.arbejd) + ' af ' + kr(p.graense) + ' i ' + p.skatAar) : '';
+    h += '<details class="af-mere tt-valg"' + (t.status === 'sendt' ? ' open' : '') + '><summary><span class="tt-mid"><b>' + esc(t.navn) + '</b><span>' + t.linjer.reduce((a, l) => a + (l.status === 'mangler' ? 0 : l.n), 0) + ' varer · ' + kr(t.valgt) + (t.type === 'pakke' ? '' : ' af ' + kr(t.beloeb)) + (t.betaler === 'sg' ? ' · Sports Group betaler' : '') + esc(skat) + '</span></span><span class="tt-st ' + st[1] + '">' + esc(t.status === 'sendt' ? 'Venter på dig' : st[0]) + '</span></summary><div class="ind">';
+    t.linjer.forEach((l) => {
+      h += '<div class="tt-post' + (l.status === 'mangler' ? ' streg' : '') + '"><div>' + l.n + ' × ' + esc(l.navn) + '<span>Str. ' + esc(l.s) + (l.status !== 'valgt' ? ' · ' + esc(l.status === 'mangler' ? 'ikke på lager' : l.status) : '') + '</span></div><b>' + kr(l.pris * l.n) + '</b>' +
+        (['valgt', 'bestilt'].indexOf(l.status) >= 0 && t.status !== 'aaben' ? '<button type="button" class="af-chip lille farlig" data-mangler="' + t.id + ':' + l.raekke + '">Ikke på lager</button>' : '') + '</div>';
+    });
+    if (t.status === 'sendt') h += '<div class="af-chips">' + chip('Godkend', null, 'data-godkend="' + t.id + '"', 'fyldt') + chip('Send tilbage', null, 'data-afvis="' + t.id + '"') + '</div>' +
+      '<div class="tt-afvis hidden" id="afv' + t.id + '"><label for="afvt' + t.id + '">Hvad skal rettes?</label><input id="afvt' + t.id + '" maxlength="300"><div class="af-chips">' + chip('Send tilbage med beskeden', null, 'data-afvissend="' + t.id + '"') + '</div></div>';
+    if (t.grund) h += '<p class="hint">Grund: ' + esc(t.grund) + '</p>';
+    h += '</div></details>';
+  });
+  const godk = o.tildelinger.filter((t) => t.status === 'godkendt');
+  const sum = godk.reduce((a, t) => a + t.linjer.filter((l) => l.status === 'valgt').reduce((x, l) => x + l.pris * l.n, 0), 0);
+  h += trin(2, 'Ordren til Carsten', 'med de godkendte valg, når du vil');
+  h += '<div id="ordreUd"></div>';
+  o.ordrer.forEach((r) => {
+    h += '<details class="af-mere"><summary><span class="tt-mid"><b>Ordre ' + esc(r.id) + '</b><span>' + esc(tidTekst(r.tid)) + ' · kontoen ' + kr(r.konto) + (r.sg ? ' · Sports Group ' + kr(r.sg) : '') + '</span></span><span class="tt-st ' + (r.status === 'leveret' ? 'ok' : 'v') + '">' + (r.status === 'leveret' ? 'Leveret' : 'Bestilt') + '</span></summary><div class="ind">' +
+      '<pre class="tt-mail">' + esc(r.tekst) + '</pre><div class="af-chips">' + chip('Kopiér mailen', null, 'data-kopi="' + r.id + '"') +
+      (r.status !== 'leveret' ? chip('Leveret til klubben', null, 'data-lever="' + r.id + '"', 'farlig') : '') + '</div>' +
+      (r.status !== 'leveret' ? '<p class="hint">Leveret skriver trækket på kontoen og sender sms til trænerne om afhentning. Tryk to gange.</p>' : '') + '</div></details>';
+  });
+  h += '<div class="tt-regel">Tryk hos Racketlife, før tøjet udleveres: <b>klublogo på alt tøj og "Træner" bag på overdelene</b>. Trænerne ser det ikke.</div>';
+  h += bund(godk.length ? kr(sum) + ' i ' + godk.length + ' godkendte valg' : 'Ingen godkendte valg', godk.length ? 'Ordren laves af alle godkendte valg' : '', 'Lav ordren', 'id="ordre"' + (godk.length ? '' : ' class="svag" disabled'));
+  vis(h);
+}
+
+function vPersoner() {
+  const o = S.adm;
+  let h = tilbage('#konto', 'Kontoen') + hero('Kontoen · overblik', 'Personer');
+  ['primaer', 'time', 'oevrig'].forEach((k, i) => {
+    const ps = o.personer.filter((p) => p.kategori === k);
+    const kat = o.kategorier.find((x) => x.id === k);
+    const f = kat && kat.forslag ? (kat.forslag.type === 'frit' ? 'forslag ' + kr(kat.forslag.beloeb) + ' frit valg' : 'forslag ' + (o.pakker.find((p) => p.id === kat.forslag.pakke) || {}).navn) : 'intet forslag';
+    h += trin(i + 1, KAT_NAVN[k], ps.length + ' · ' + f);
+    ps.forEach((p) => {
+      const ini = p.navn.replace(/^Test /, '').split(' ').map((x) => x[0]).join('').slice(0, 2).toUpperCase();
+      const skat = p.betaler === 'sg' ? 'Sports Group betaler' : p.loen === 'ulønnet' ? 'Ulønnet · højst ' + kr(p.ulonnetLoft) + ' om året (§ 7 M)' : 'Lønnet · sko og kasket ca. ' + kr(p.arbejd) + ' af ' + kr(p.graense) + ' i ' + p.skatAar;
+      h += '<a class="tt-tr" href="#giv/' + esc(p.pid) + '"><span class="gr-av" style="background:#0F2537">' + esc(ini) + '</span><div class="tt-mid"><b>' + esc(p.navn) + '</b><span>' + esc(skat) + ' · ' + p.tildelinger + ' tildeling' + (p.tildelinger === 1 ? '' : 'er') + (p.valgt ? ' · valgt ' + kr(p.valgt) : '') + '</span></div>' +
+        (p.betaler === 'sg' ? '<span class="tt-st v">Uden for kontoen</span>' : p.sidste ? '<span class="tt-st ' + (STATUS[p.sidste] || ['', 'n'])[1] + '">' + esc((STATUS[p.sidste] || [p.sidste])[0]) + '</span>' : '') + '</a>';
+    });
+    if (!ps.length) h += '<p class="hint">Ingen.</p>';
+  });
+  h += '<div class="tt-regel">Nye personer, ny kategori, løn og stop klares af Claude og Lars i koden. Siden viser kun overblikket.</div>';
+  h += bund(o.personer.length + ' personer', 'Sko og kasket regnes pr. person pr. kalenderår', '+ Ny tildeling', 'data-gaa="#giv"');
+  vis(h);
+}
+
+const giv = { pids: [], type: 'frit', pakke: 'time', betaler: '', beloeb: '', frist: '', grund: '' };
+function vGiv(forvalgt) {
+  const o = S.adm;
+  if (forvalgt && giv.pids.indexOf(forvalgt) < 0) { giv.pids = [forvalgt]; giv.beloeb = ''; giv.betaler = ''; }
+  const valgte = o.personer.filter((p) => giv.pids.indexOf(p.pid) >= 0);
+  const forste = valgte[0];
+  const kat = forste ? o.kategorier.find((k) => k.id === forste.kategori) : null;
+  if (forste && giv.beloeb === '' && kat && kat.forslag) { giv.type = kat.forslag.type; if (kat.forslag.beloeb) giv.beloeb = String(kat.forslag.beloeb); if (kat.forslag.pakke) giv.pakke = kat.forslag.pakke; }
+  if (!giv.betaler && forste) giv.betaler = forste.betaler || 'konto';
+  if (!giv.frist) { const d = new Date(Date.now() + 21 * 86400000); giv.frist = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  window.RTK_TRAVL = giv.pids.length > 0;
+  let h = tilbage('#konto', 'Kontoen') + hero('Kontoen · ny tildeling', 'Giv arbejdstøj');
+  h += trin(1, 'Hvem', 'vælger du flere, får hver sin egen tildeling');
+  h += '<div class="af-chips" role="group" aria-label="Hvem">' + o.personer.map((p) => chip(esc(p.navn.replace(/^Test /, '')) + (giv.pids.indexOf(p.pid) >= 0 ? ' ✓' : ''), giv.pids.indexOf(p.pid) >= 0, 'data-pid="' + esc(p.pid) + '"')).join('') +
+    chip('Alle primære', null, 'data-alle="primaer"') + chip('Alle timetrænere', null, 'data-alle="time"') + '</div>';
+  h += trin(2, 'Hvad');
+  h += '<div class="af-chips" role="group" aria-label="Type">' + chip('Frit valg for et beløb', giv.type === 'frit', 'data-type="frit"') + chip('Fast pakke, kun størrelse', giv.type === 'pakke', 'data-type="pakke"') + '</div>';
+  h += '<p class="tt-lbl" id="betL">Hvem betaler</p><div class="af-chips" role="group" aria-labelledby="betL">' + Object.keys(o.betalere).map((b) => chip(esc(o.betalere[b]), giv.betaler === b, 'data-betaler="' + b + '"')).join('') + '</div>';
+  if (giv.type === 'frit') {
+    h += '<label for="beloeb">Beløb i listepris inkl. moms</label><input id="beloeb" inputmode="numeric" value="' + esc(giv.beloeb) + '">';
+    if (kat && kat.forslag && kat.forslag.beloeb) h += '<p class="hint" style="margin:4px 0 0">Forslag for ' + esc(kat.navn.toLowerCase()) + ': ' + kr(kat.forslag.beloeb) + '. Ret det frit.</p>';
+  } else {
+    const pk = o.pakker.find((p) => p.id === giv.pakke) || o.pakker[0];
+    h += '<p class="hint">' + esc(pk.navn) + ': højst ' + kr(pk.beloeb) + ' pr. person.</p>';
+  }
+  h += '<label for="frist">Svar senest</label><input id="frist" type="date" value="' + esc(giv.frist) + '">';
+  h += '<p class="hint" style="margin:4px 0 0">Sms og notifikation nu og hver uge, til der er bestilt. Ny sms dagen før fristen. Er der ikke bestilt, forlænges fristen kort, og så bortfalder tildelingen. Ubrugt beløb går tabt.</p>';
+  h += '<details class="af-mere"><summary>Mere: grund</summary><div class="ind"><label for="grund">Grund (kun for administratorer)</label><input id="grund" maxlength="200" value="' + esc(giv.grund) + '"></div></details>';
+  const beloebTekst = giv.type === 'frit' ? kr(Number(String(giv.beloeb).replace(/\./g, '')) || 0) : (o.pakker.find((p) => p.id === giv.pakke) || {}).navn;
+  if (forste) h += '<div class="af-preview"><span class="k">Sådan ser ' + esc(forste.navn.replace(/^Test /, '').split(' ')[0]) + ' det</span><b>' + (giv.type === 'frit' ? 'Du kan vælge arbejdstøj for ' + esc(beloebTekst) : 'Du kan vælge ' + esc(String(beloebTekst).toLowerCase())) + '</b><span class="hint">Frist ' + esc(dagTekst(giv.frist)) + '</span></div>';
+  h += '<div id="givMsg" class="msg" aria-live="polite"></div>';
+  const ialt = giv.type === 'frit' ? (Number(String(giv.beloeb).replace(/\./g, '')) || 0) * giv.pids.length : 0;
+  h += bund(giv.betaler === 'konto' ? (ialt ? kr(ialt) + ' fra kontoen' : giv.pids.length + ' valgt') : esc(o.betalere[giv.betaler] || ''), giv.betaler === 'konto' ? kr(o.konto.tilbage - o.konto.lovet - ialt) + ' tilbage bagefter, når de givne er brugt' : 'Rører ikke kontoen', 'Giv tildelingen', 'id="givKnap"' + (giv.pids.length ? '' : ' class="svag" disabled'));
+  vis(h);
+}
+
+async function vVarer() {
+  if (!S.varerAdm) { vis(tilbage('#konto', 'Kontoen') + '<p class="hint">Henter …</p>'); try { S.varerAdm = await motor('toej', 'varer'); } catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; } }
+  const a = S.varerAdm;
+  const tilAntal = a.varer.filter((v) => v.til).length;
+  let h = tilbage('#konto', 'Kontoen') + hero('Kontoen · prislisten FW26', 'Varerne');
+  h += '<div class="af-chips">' + info(tilAntal + ' af ' + a.varer.length + ' slået til') + '</div>';
+  h += trin(1, 'Grupper', 'slå en hel gruppe til eller fra');
+  a.grupper.forEach((g) => {
+    const vs = a.varer.filter((v) => v.gruppe === g.id);
+    const n = vs.filter((v) => v.til).length;
+    h += '<div class="tt-gruppe-r"><button type="button" role="switch" class="vippe" aria-checked="' + (n > 0) + '" aria-label="' + esc(g.navn) + ' til eller fra" data-gruppe="' + g.id + '" data-til="' + (n > 0 ? 'nej' : 'ja') + '"></button><details class="af-mere tt-gruppe"><summary><span class="tt-mid"><b>' + esc(g.navn) + '</b><span>' + n + ' af ' + vs.length + '</span></span></summary><div class="ind">' +
+      vs.map((v) => '<div class="tt-post"><div>' + esc(v.navn) + ' · ' + esc(v.model) + '<span>' + prik(v.farve) + esc(v.farve) + ' · ' + kr(v.pris) + ' · ' + (v.skat === 'logo' ? 'arbejdstøj med logo' : 'arbejdsrelateret') + '</span></div><button type="button" role="switch" class="vippe" aria-checked="' + v.til + '" aria-label="' + esc(v.navn + ' ' + v.farve + ' ' + v.model) + '" data-vare="' + esc(v.id) + '"></button></div>').join('') + '</div></details></div>';
+  });
+  a.laaste.forEach((g) => { h += '<div class="tt-tr"><div class="tt-mid"><b>' + esc(g.navn) + '</b><span>' + esc(g.grund) + '</span></div><span class="tt-st n">Låst</span><button type="button" role="switch" class="vippe laast" aria-checked="false" disabled aria-label="' + esc(g.navn) + ' er låst"></button></div>'; });
+  h += '<p class="hint">Badminton og pickleball er ikke med på listen. Nye varer lægges ind af Claude.</p>';
+  h += '<div id="varMsg" class="msg" aria-live="polite"></div>';
+  h += bund(tilAntal + ' varer kan vælges', 'Ændringer gælder fra nu, også i kurve, der ikke er sendt', 'Færdig', 'data-gaa="#konto"');
+  vis(h);
+}
+
+// ------------------------------------------------------------ ruter og hændelser
+async function rute() {
+  const h = location.hash.replace(/^#/, '');
+  const [navn, a, b] = h.split('/');
+  window.RTK_TRAVL = false;
+  if (S.flashH !== location.hash) S.flash = '';
+  const admin = ['konto', 'godkend', 'personer', 'giv', 'varer'].indexOf(navn) >= 0;
+  if (admin && !S.start.admin) { location.replace('#'); return; }
+  if (admin && !S.adm) { vis('<p class="hint">Henter …</p>'); try { await hentAdm(); } catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; } }
+  else if (admin || !navn) friskOp(h, admin);
+  if (navn !== 't' && navn !== 'kurv') S.fejl = '';
+  if (navn === 't') vVaelg(a);
+  else if (navn === 'kurv') vKurv(a);
+  else if (navn === 'side') vSide(a, b);
+  else if (navn === 'konto') vKonto();
+  else if (navn === 'godkend') vGodkend();
+  else if (navn === 'personer') vPersoner();
+  else if (navn === 'giv') vGiv(a);
+  else if (navn === 'varer') vVarer();
+  else vStart();
+  if (navn !== 'side') window.scrollTo(0, 0);
+}
+/** Vis det, vi har, med det samme, og hent det nye bagefter. Tegner kun igen, hvis man stadig er på samme skærm. */
+let friskNr = 0;
+function friskOp(h, admin) {
+  const nr = ++friskNr;
+  (admin ? hentAdm() : hentStart()).then(() => {
+    if (nr !== friskNr || location.hash.replace(/^#/, '') !== h) return;
+    if (document.activeElement && document.activeElement.closest && document.activeElement.closest('#vis') && document.activeElement.tagName === 'INPUT') return;
+    tegn();
+  }).catch(() => {});
+}
+function tegn() {
+  const y = window.scrollY;
+  const aabne = [...document.querySelectorAll('#vis details')].map((d) => d.open);
+  const navn = location.hash.replace(/^#/, '').split('/')[0];
+  const fokus = document.activeElement && document.activeElement.id;
+  if (navn === 't') vVaelg(location.hash.split('/')[1]);
+  else if (navn === 'kurv') vKurv(location.hash.split('/')[1]);
+  else if (navn === 'giv') vGiv();
+  else if (navn === 'konto') vKonto();
+  else if (navn === 'godkend') vGodkend();
+  else if (navn === 'personer') vPersoner();
+  else if (navn === 'varer') vVarer();
+  else vStart();
+  const ds = document.querySelectorAll('#vis details');
+  if (ds.length === aabne.length) ds.forEach((d, i) => { if (aabne[i]) d.open = true; });
+  window.scrollTo(0, y);
+  if (fokus && $(fokus)) { const el = $(fokus); el.focus(); if (el.setSelectionRange && el.type !== 'date' && el.type !== 'number') { try { el.setSelectionRange(el.value.length, el.value.length); } catch (e) {} } }
+}
+window.addEventListener('hashchange', rute);
+
+const toBekraeft = {};
+function toTryk(knap, noegle, tekst) {
+  if (toBekraeft[noegle] && Date.now() - toBekraeft[noegle] < 6000) { delete toBekraeft[noegle]; return true; }
+  toBekraeft[noegle] = Date.now(); knap.classList.add('fyldt'); knap.dataset.foer = knap.textContent; knap.textContent = tekst;
+  setTimeout(() => { if (toBekraeft[noegle]) { delete toBekraeft[noegle]; knap.classList.remove('fyldt'); knap.textContent = knap.dataset.foer; } }, 6000);
+  return false;
+}
+
+$('vis').addEventListener('input', (e) => {
+  if (e.target.id === 'cm') { S.cm = e.target.value; tegnGuide(); }
+  if (e.target.id === 'beloeb') { giv.beloeb = e.target.value; tegn(); }
+  if (e.target.id === 'grund') giv.grund = e.target.value;
+});
+$('vis').addEventListener('change', (e) => { if (e.target.id === 'frist') { giv.frist = e.target.value; tegn(); } });
+function tegnGuide() {
+  const g = document.querySelector('.tt-guide');
+  if (!g) return;
+  const tmp = document.createElement('div'); tmp.innerHTML = skoGuide();
+  const ny = tmp.querySelector('.af-preview');
+  const gl = g.querySelector('.af-preview');
+  if (gl) gl.remove();
+  if (ny) g.querySelector('#cm').after(ny);
+}
+
+$('vis').addEventListener('click', async (e) => {
+  const el = e.target.closest('button, a[data-gaa]');
+  if (!el) return;
+  const d = el.dataset;
+  if (d.gaa) { e.preventDefault(); location.hash = d.gaa; return; }
+  const tid = location.hash.split('/')[1];
+  const t = tildeling(tid);
+  if (d.kat) { S.kat = d.kat; return tegn(); }
+  if (d.model) { S.model = d.model; gem('rtk.toej.model', d.model); return tegn(); }
+  if (d.str) { S.str[d.v] = d.str; return tegn(); }
+  if (d.plus && t) {
+    const v = vareMap()[d.plus];
+    const s = strFor(t, v);
+    if (!s) { S.fejl = 'Vælg en størrelse til ' + v.navn + ' først.'; return tegn(); }
+    S.fejl = '';
+    if (!kanTilfoeje(t, v)) { S.fejl = t.type === 'pakke' ? 'Pakken er fyldt. Fjern noget først.' : 'Der er ikke penge nok tilbage til ' + v.navn + '.'; return tegn(); }
+    return aendr(t, v.id, s, 1);
+  }
+  if (d.minus && t) { const v = vareMap()[d.minus]; const s = strFor(t, v); if (!s) return; return aendr(t, v.id, s, -1); }
+  if (d.fjern && t) { const [v, s] = d.fjern.split('|'); return aendr(t, v, s, -antalI(t, v, s)); }
+  if (el.id === 'send' && t) {
+    if (S.gemmer[t.id] || S.venter[t.id]) { besked($('kurvMsg'), 'Gemmer stadig …'); return; }
+    el.disabled = true; besked($('kurvMsg'), 'Sender …');
+    try { opdaterT(await motor('toej', 'send', { tid: t.id }, nyId())); S.kladde[t.id] = null; window.RTK_TRAVL = false; tegn(); }
+    catch (err) { besked($('kurvMsg'), err.message, 'err'); el.disabled = false; }
+    return;
+  }
+  if (el.id === 'fortryd' && t) {
+    el.disabled = true;
+    try { opdaterT(await motor('toej', 'fortryd', { tid: t.id }, nyId())); location.hash = '#t/' + t.id; }
+    catch (err) { besked($('kurvMsg'), err.message, 'err'); el.disabled = false; }
+    return;
+  }
+  if (el.id === 'modtaget' && t) {
+    el.disabled = true;
+    try { opdaterT(await motor('toej', 'modtaget', { tid: t.id }, nyId())); tegn(); }
+    catch (err) { besked($('kurvMsg'), err.message, 'err'); el.disabled = false; }
+    return;
+  }
+  // Administratorerne
+  if (d.godkend) {
+    el.disabled = true;
+    try { const r = await motor('toej', 'godkend', { tid: d.godkend }, nyId()); await hentAdm(); tegn(); if (r.advarsel) besked($('admMsg'), r.advarsel, 'err'); else besked($('admMsg'), 'Godkendt.', 'okm'); }
+    catch (err) { besked($('admMsg'), err.message, 'err'); el.disabled = false; }
+    return;
+  }
+  if (d.afvis) { $('afv' + d.afvis).classList.remove('hidden'); $('afvt' + d.afvis).focus(); return; }
+  if (d.afvissend) {
+    el.disabled = true;
+    try { await motor('toej', 'afvis', { tid: d.afvissend, tekst: $('afvt' + d.afvissend).value }, nyId()); await hentAdm(); tegn(); besked($('admMsg'), 'Sendt tilbage med en sms.', 'okm'); }
+    catch (err) { besked($('admMsg'), err.message, 'err'); el.disabled = false; }
+    return;
+  }
+  if (d.mangler) {
+    if (!toTryk(el, 'm' + d.mangler, 'Tryk igen: ikke på lager')) return;
+    const [tt, r] = d.mangler.split(':');
+    try { await motor('toej', 'mangler', { tid: tt, raekke: Number(r) }, nyId()); await hentAdm(); tegn(); besked($('admMsg'), 'Træneren har fået en sms og kan vælge noget andet.', 'okm'); }
+    catch (err) { besked($('admMsg'), err.message, 'err'); }
+    return;
+  }
+  if (el.id === 'ordre') {
+    el.disabled = true;
+    try {
+      const r = await motor('toej', 'ordre', {}, nyId()); await hentAdm(); tegn();
+      $('ordreUd').innerHTML = '<div class="af-preview"><span class="k">Mailen til Carsten</span><b>Ordre ' + esc(r.id) + ' · kontoen ' + kr(r.konto) + (r.sg ? ' · Sports Group ' + kr(r.sg) : '') + '</b><pre class="tt-mail">' + esc(r.tekst) + '</pre>' +
+        '<div class="af-chips">' + chip('Kopiér mailen', null, 'data-kopi="' + r.id + '"') + (r.til ? '<a class="af-chip" href="mailto:' + encodeURIComponent(r.til) + '?subject=' + encodeURIComponent('RTK trænertøj, ordre ' + r.id) + (r.kopi ? '&cc=' + encodeURIComponent(r.kopi) : '') + '&body=' + encodeURIComponent(r.tekst) + '">Åbn i mail</a>' : '') + '</div>' +
+        (r.fragtfri ? '' : '<span class="hint">Ordren er under 2.500 kr. ekskl. moms, så der kommer fragt. Fragt trækkes ikke på kontoen.</span>') + '</div>';
+    } catch (err) { besked($('admMsg'), err.message, 'err'); el.disabled = false; }
+    return;
+  }
+  if (d.kopi) {
+    const r = S.adm.ordrer.find((x) => x.id === d.kopi);
+    try { await navigator.clipboard.writeText(r.tekst); el.textContent = 'Kopieret'; } catch (err) { el.textContent = 'Markér teksten og kopiér'; }
+    return;
+  }
+  if (d.lever) {
+    if (!toTryk(el, 'l' + d.lever, 'Tryk igen: leveret')) return;
+    try { const r = await motor('toej', 'lever', { ordre: d.lever }, nyId()); await hentAdm(); tegn(); besked($('admMsg'), 'Leveret. ' + kr(r.konto) + ' er trukket på kontoen, og ' + r.personer.length + ' har fået sms om afhentning.', 'okm'); }
+    catch (err) { besked($('admMsg'), err.message, 'err'); }
+    return;
+  }
+  if (el.id === 'csv') { hentCsv(); return; }
+  if (d.pid) { const i = giv.pids.indexOf(d.pid); if (i >= 0) giv.pids.splice(i, 1); else giv.pids.push(d.pid); if (giv.pids.length === 1) { giv.beloeb = ''; giv.betaler = ''; } return tegn(); }
+  if (d.alle) { giv.pids = S.adm.personer.filter((p) => p.kategori === d.alle).map((p) => p.pid); giv.beloeb = ''; giv.betaler = ''; return tegn(); }
+  if (d.type) { giv.type = d.type; return tegn(); }
+  if (d.betaler) { giv.betaler = d.betaler; return tegn(); }
+  if (el.id === 'givKnap') {
+    el.disabled = true; besked($('givMsg'), 'Giver …');
+    try {
+      const r = await motor('toej', 'giv', { pids: giv.pids, type: giv.type, pakke: giv.pakke, betaler: giv.betaler, beloeb: giv.beloeb, frist: giv.frist, grund: giv.grund }, nyId());
+      Object.assign(giv, { pids: [], beloeb: '', betaler: '', grund: '' });
+      await hentAdm(); await hentStart();
+      S.flash = r.tildelinger.length + ' tildeling' + (r.tildelinger.length > 1 ? 'er' : '') + ' givet. Sms og notifikation er sendt.';
+      S.flashH = '#konto'; location.hash = '#konto';
+    } catch (err) { besked($('givMsg'), err.message, 'err'); el.disabled = false; }
+    return;
+  }
+  if (d.vare || d.gruppe) {
+    // Kontakten skifter med det samme og gemmer bagefter
+    const til = d.vare ? el.getAttribute('aria-checked') !== 'true' : d.til === 'ja';
+    el.setAttribute('aria-checked', String(til));
+    e.preventDefault();
+    try {
+      const r = await motor('toej', 'vareTil', d.vare ? { id: d.vare, til } : { gruppe: d.gruppe, til }, nyId());
+      S.varerAdm = await motor('toej', 'varer'); await hentStart(); tegn(); besked($('varMsg'), r.slaaetTil + ' varer kan vælges nu.', 'okm');
+    } catch (err) { el.setAttribute('aria-checked', String(!til)); besked($('varMsg'), err.message, 'err'); }
+  }
+});
+
+function hentCsv() {
+  const o = S.adm;
+  const r = [['Tildeling', 'Navn', 'Type', 'Beløb', 'Betaler', 'Status', 'Valgt', 'Frist', 'Godkendt']].concat(o.tildelinger.map((t) => [t.id, t.navn, t.type, t.beloeb, t.betaler, t.status, t.valgt, t.frist, t.godkendt]))
+    .concat([[], ['Træk', 'Bilag', 'Beskrivelse', 'Beløb', 'Ordre']]).concat(o.traek.map((x) => [x.tid, x.bilag, x.beskrivelse, x.beloeb, x.ordre]));
+  const csv = '﻿' + r.map((l) => l.map((c) => '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'RTK_konto_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
+}
+
+// ------------------------------------------------------------ start
+async function start() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn;
+  try { await hentStart(); if (S.start.admin) hentAdm().then(() => { if (!location.hash) tegn(); }).catch(() => {}); }
+  catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; }
+  rute();
+}
+if (!token) location.replace('./?til=arbejdstoej.html');
+else motor('kerne', 'mig').then((p) => { person = p; start(); }).catch(() => {});
+</script>
+<script src="../velkomst.js?v=02d869848285"></script>
+</body>
+</html>
