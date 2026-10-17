@@ -772,13 +772,13 @@ a.af-chip{display:inline-flex;align-items:center;text-decoration:none}
 .tt-vare.i{border:2px solid var(--pink)}
 .tt-bil{flex:0 0 58px;height:58px;border-radius:10px;background:var(--soft);display:flex;align-items:center;justify-content:center}
 .tt-bil img{width:100%;height:100%;object-fit:contain;border-radius:10px;background:#FFFFFF}
-.tt-mid{flex:1;min-width:0}
+.tt-mid{flex:1 1 140px;min-width:0}
 .tt-mid b{display:block;font-size:15px}
 .tt-mid span{display:block;font-size:13px;color:var(--muted)}
 .tt-prik{display:inline-block;width:10px;height:10px;border-radius:99px;background:#22408F;margin-right:5px;vertical-align:-1px}
 .tt-kat-l{display:inline-block;font-size:13px;font-weight:700;color:var(--pink);margin-top:3px;text-decoration:underline;min-height:24px}
-.tt-pris{font-weight:800;font-size:15px;white-space:nowrap}
-.tt-step{display:flex;align-items:center;gap:6px}
+.tt-pris{font-weight:800;font-size:15px;white-space:nowrap;margin-left:auto}
+.tt-step{display:flex;align-items:center;gap:6px;margin-left:auto}
 .tt-step output{min-width:20px;text-align:center;font-weight:800}
 .tt-plus,.tt-minus{flex:0 0 44px;width:44px;height:44px;min-height:0;padding:0;border-radius:999px;border:1.5px solid var(--pink);background:#FFFFFF;color:var(--pink);font-size:22px;font-weight:800;line-height:1}
 .tt-plus.fyldt{background:var(--pink);color:#FFFFFF}
@@ -836,6 +836,11 @@ details.af-mere.tt-valg summary::-webkit-details-marker,details.af-mere.tt-grupp
 .tt-gruppe-r{position:relative}
 .tt-gruppe-r>.vippe{position:absolute;right:16px;top:22px;z-index:1}
 .tt-gruppe-r details.af-mere summary{padding-right:92px}
+.tt-som{position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:10px;background:#0F2537;color:#FFFFFF;margin:0 calc(-1 * var(--pad)) 12px;padding:10px var(--pad)}
+.tt-som b{display:block;font-size:14px}
+.tt-som span{display:block;font-size:12px;color:#C9D6D4}
+.tt-som .x{margin-left:auto;flex:0 0 auto;background:#FFFFFF;color:#0F2537;border:0;border-radius:999px;padding:8px 14px;min-height:40px;font-weight:700;font-size:13px}
+.tt-som-r{margin:-4px 0 12px}
 @media (max-width:520px){
   .tt-str{flex-basis:100%;max-width:100%;margin-left:0}
   .tt-saldo .stor{font-size:26px}
