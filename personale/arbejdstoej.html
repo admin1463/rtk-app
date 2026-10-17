@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="c8b1b001bcde">
+<meta name="rtk-version" content="38badcfadd3c">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=9b83e1a7e1c8">
+<link rel="stylesheet" href="../rtk.css?v=9230a5ebf908">
 </head>
 <body>
 <header class="top">
@@ -81,7 +81,7 @@ const KAT_NAVN = { primaer: 'Primære trænere', time: 'Timetrænere', oevrig: '
 
 let token = hent('rtk.token') || '';
 let person = null;
-const S = { start: null, adm: null, varerAdm: null, kladde: {}, gemmer: {}, venter: {}, str: {}, kat: 'toej', model: hent('rtk.toej.model') || 'alle', cm: '', fejl: '' };
+const S = { som: null, start: null, adm: null, varerAdm: null, kladde: {}, gemmer: {}, venter: {}, str: {}, kat: 'toej', model: hent('rtk.toej.model') || 'alle', cm: '', fejl: '' };
 if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
 
 async function motor(modul, handling, data, id) {
@@ -136,6 +136,7 @@ function aendr(t, vid, s, delta) {
   if (!l) { l = { v: vid, s, n: 0 }; k.push(l); }
   l.n = Math.max(0, Math.min(10, l.n + delta));
   S.kladde[t.id] = k.filter((x) => x.n > 0);
+  if (S.som) { tegn(); return; } // Se som træner: kurven lever kun her og gemmes ikke
   S.venter[t.id] = true;
   tegn();
   gemKurv(t.id);
@@ -146,12 +147,12 @@ async function gemKurv(tid) {
   while (S.venter[tid]) {
     S.venter[tid] = false;
     try {
-      const ny = await motor('toej', 'kurv', { tid, linjer: S.kladde[tid] }, nyId());
-      opdaterT(ny);
-      if (!S.venter[tid]) S.kladde[tid] = null;
+      const ny = await motor('toej', 'kurv', { tid, linjer: egneKladder()[tid] || [] }, nyId());
+      if (!S.som) opdaterT(ny);
+      if (!S.venter[tid]) egneKladder()[tid] = null;
       S.fejl = '';
     } catch (err) {
-      S.fejl = err.message; S.kladde[tid] = null; S.venter[tid] = false;
+      S.fejl = err.message; egneKladder()[tid] = null; S.venter[tid] = false;
       try { await hentStart(); } catch (e) {}
     }
   }
@@ -162,7 +163,9 @@ function opdaterT(ny) {
   const i = S.start.tildelinger.findIndex((t) => t.id === ny.id);
   if (i >= 0) S.start.tildelinger[i] = ny;
 }
-async function hentStart() { S.start = await motor('toej', 'start'); }
+// Under "Se som træner" må et svar, der kommer sent, ikke overskrive trænerens data: det gemmes til, når man lukker
+async function hentStart() { const s = await motor('toej', 'start'); if (S.som) S.som.egen = s; else S.start = s; }
+const egneKladder = () => (S.som ? S.egenKladde || {} : S.kladde);
 async function hentAdm() { S.adm = await motor('toej', 'oversigt'); }
 
 // ------------------------------------------------------------ fælles stumper
@@ -176,6 +179,7 @@ const tilbage = (href, t) => '<a class="gr-tilbage" href="' + href + '">&#8592; 
 function vis(html) {
   // En kvittering fra handlingen før (fx efter en ny tildeling) vises øverst på næste skærm
   if (S.flash && S.flashH === location.hash) html = '<div class="msg okm" role="status">' + esc(S.flash) + '</div>' + html;
+  if (S.som) html = '<div class="tt-som"><div><b>' + esc(S.som.titel) + '</b><span>' + esc(S.som.under) + '</span></div><button type="button" class="x" id="somLuk" aria-label="Luk forhåndsvisningen">Luk</button></div>' + html;
   $('vis').innerHTML = html;
 }
 
@@ -215,13 +219,13 @@ function vareKort(t, v, i) {
     if (sko) { const j = tabel.uk.indexOf(s); lbl = 'UK ' + esc(s.replace('.', ',')) + '<span>EU ' + esc(j >= 0 ? tabel.eu[j] : '') + '</span>'; }
     return '<button type="button" class="' + (s === valgt ? 'valgt' : '') + (sko ? ' sko' : '') + '" aria-pressed="' + (s === valgt) + '" data-str="' + esc(s) + '" data-v="' + esc(v.id) + '" aria-label="Størrelse ' + esc(sko ? 'UK ' + s : s) + (nI ? ', ' + nI + ' valgt' : '') + '">' + lbl + (nI ? '<em>' + nI + '</em>' : '') + '</button>';
   }).join('');
-  const kan = kanTilfoeje(t, v);
+  const kan = kanTilfoeje(t, v) && !(S.som && S.som.laes);
   const nValgt = valgt ? antalI(t, v.id, valgt) : 0;
   return '<div class="tt-vare' + (n ? ' i' : '') + '" id="v' + i + '"><div class="tt-bil">' + (v.bil ? '<img src="' + BIL + esc(v.bil) + '" alt="" loading="lazy">' : '') + '</div>' +
     '<div class="tt-mid"><b>' + esc(v.navn) + '</b><span>' + prik(v.farve) + esc(v.farve) + ' · ' + esc(v.model) + '</span>' +
     (v.side ? '<a class="tt-kat-l" href="#side/' + v.side + '/' + encodeURIComponent(v.id) + '">Se hele siden</a>' : '') + '</div>' +
     '<div class="tt-pris">' + kr(v.pris) + '</div>' +
-    '<div class="tt-step">' + (nValgt ? '<button type="button" class="tt-minus" data-minus="' + esc(v.id) + '" aria-label="Fjern en ' + esc(v.navn) + ' i ' + esc(valgt) + '">−</button><output aria-live="polite">' + nValgt + '</output>' : '') +
+    '<div class="tt-step">' + (nValgt && !(S.som && S.som.laes) ? '<button type="button" class="tt-minus" data-minus="' + esc(v.id) + '" aria-label="Fjern en ' + esc(v.navn) + ' i ' + esc(valgt) + '">−</button><output aria-live="polite">' + nValgt + '</output>' : '') +
     '<button type="button" class="tt-plus' + (nValgt ? ' fyldt' : '') + '" data-plus="' + esc(v.id) + '"' + (kan ? '' : ' disabled') + ' aria-label="Læg en ' + esc(v.navn) + ' i kurven">+</button></div>' +
     '<div class="tt-str" role="group" aria-label="Størrelse">' + strKnapper + '</div></div>';
 }
@@ -247,11 +251,11 @@ function skoGuide() {
 function vVaelg(tid) {
   const t = tildeling(tid);
   if (!t) return vIkke();
-  if (t.status !== 'aaben') { location.replace('#kurv/' + tid); return; }
+  if (t.status !== 'aaben' && !(S.som && S.som.laes)) { location.replace('#kurv/' + tid); return; }
   window.RTK_TRAVL = true;
   const varer = S.start.varer.filter((v) => v.til !== false);
   const pakke = t.type === 'pakke';
-  let h = tilbage('#', 'Dine tildelinger') + hero('Din tildeling · fra klubben', pakke ? 'Dit arbejdstøj' : 'Vælg dit arbejdstøj');
+  let h = (S.som ? tilbage('#kurv/' + t.id, 'Kurven') : tilbage('#', 'Dine tildelinger')) + hero('Din tildeling · fra klubben', pakke ? 'Dit arbejdstøj' : 'Vælg dit arbejdstøj');
   h += '<div class="af-chips">' + info(pakke ? esc(t.pakke.navn) : kr(t.beloeb) + ' at vælge for') + info('Frist ' + esc(dagTekst(t.forlaenget || t.frist))) + '</div>';
   if (t.besked) h += '<div class="tt-regel ny" role="status">' + esc(t.besked) + '</div>';
   if (S.fejl) h += '<div class="tt-regel fejl" role="alert">' + esc(S.fejl) + '</div>';
@@ -288,11 +292,11 @@ function vKurv(tid) {
   const linjer = laaste(t).concat(t.status === 'aaben' ? kladde(t).map((l) => ({ v: l.v, s: l.s, n: l.n, status: 'valgt', navn: vm[l.v] ? vm[l.v].navn + ' · ' + vm[l.v].farve : l.v, pris: vm[l.v] ? vm[l.v].pris : 0 })) : t.linjer);
   const sum = linjer.filter((l) => l.status !== 'mangler').reduce((a, l) => a + l.pris * l.n, 0);
   window.RTK_TRAVL = t.status === 'aaben';
-  let h = tilbage(t.status === 'aaben' ? '#t/' + t.id : '#', t.status === 'aaben' ? 'Tilbage til varerne' : 'Dine tildelinger') + hero('Din tildeling · fra klubben', 'Din kurv');
+  let h = tilbage(t.status === 'aaben' || S.som ? '#t/' + t.id : '#', t.status === 'aaben' || S.som ? 'Tilbage til varerne' : 'Dine tildelinger') + hero('Din tildeling · fra klubben', 'Din kurv');
   if (S.fejl) h += '<div class="tt-regel fejl" role="alert">' + esc(S.fejl) + '</div>';
   const st = STATUS[t.status] || [t.status, 'n'];
-  if (t.status === 'aaben') h += trin(2, 'Tjek og send', 'du kan rette indtil fristen');
-  else h += '<div class="af-chips">' + info(esc(st[0])) + (t.sendt ? info('Sendt ' + esc(tidTekst(t.sendt))) : '') + '</div>';
+  if (t.status === 'aaben' && !S.som) h += trin(2, 'Tjek og send', 'du kan rette indtil fristen');
+  else if (t.status !== 'aaben' || S.som) h += '<div class="af-chips">' + info(esc(st[0])) + (t.sendt ? info('Sendt ' + esc(tidTekst(t.sendt))) : '') + '</div>';
   if (!pakke) {
     const pct = Math.min(100, t.beloeb ? sum / t.beloeb * 100 : 0);
     h += '<div class="tt-saldo"><div class="lg">Valgt</div><div class="stor">' + kr(sum) + ' <span>af ' + kr(t.beloeb).replace(' kr.', '') + '</span></div><div class="tt-maal"><i style="width:' + pct.toFixed(1) + '%"></i></div>' +
@@ -304,8 +308,13 @@ function vKurv(tid) {
     const sko = v && v.slags === 'sko';
     h += '<div class="tt-post' + (l.status === 'mangler' ? ' streg' : '') + '"><div>' + (l.n > 1 ? l.n + ' × ' : '') + esc(v ? v.navn : l.navn) + '<span>' + (v ? prik(v.farve) + esc(v.farve) + ' · ' : '') + esc(sko ? 'UK ' + l.s.replace('.', ',') : l.s) +
       (v && v.til === false && l.status === 'valgt' ? ' · kan ikke vælges længere, fjern den' : l.status === 'mangler' ? ' · ikke på lager' : l.status === 'bestilt' ? ' · bestilt' : l.status === 'leveret' ? ' · leveret' : '') + '</span></div><b>' + kr(l.pris * l.n) + '</b>' +
-      (t.status === 'aaben' && l.status === 'valgt' ? '<button type="button" class="tt-fjern" data-fjern="' + esc(l.v) + '|' + esc(l.s) + '" aria-label="Fjern ' + esc(v ? v.navn : '') + '">×</button>' : '') + '</div>';
+      (t.status === 'aaben' && l.status === 'valgt' && !(S.som && S.som.laes) ? '<button type="button" class="tt-fjern" data-fjern="' + esc(l.v) + '|' + esc(l.s) + '" aria-label="Fjern ' + esc(v ? v.navn : '') + '">×</button>' : '') + '</div>';
   });
+  if (S.som) {
+    h += '<div class="af-chips">' + chip(S.som.laes ? 'Se varerne, ' + esc(S.som.fornavn) + ' kan vælge' : 'Tilbage til varerne', null, 'data-gaa="#t/' + t.id + '"') + '</div>';
+    h += bund(esc(STATUS[t.status] ? STATUS[t.status][0] : t.status), S.som.laes ? 'Kun visning' : 'Forhåndsvisning, intet gemmes', '', '');
+    return vis(h);
+  }
   if (t.status === 'aaben') {
     h += '<div class="tt-regel ny"><b>Størrelsen skal passe.</b> Tøjet trykkes, før du får det, og kan ikke byttes. Prøv størrelsen på prøvesættet ved pro shoppen, før du sender.</div>';
     h += '<div class="tt-regel"><b>Arbejdstøj:</b> tøjet er til træning og klubbens arrangementer.</div>';
@@ -338,7 +347,22 @@ function vSide(n, vid) {
     '<div class="af-chips"><a class="af-chip lys" href="' + esc((S.start ? S.start.katalog : '') + n) + '" target="_blank" rel="noopener">Åbn Babolats katalog ↗</a></div></div>';
   vis(h);
 }
-function vIkke() { vis(tilbage('#', 'Arbejdstøj og udstyr') + '<p class="hint">Tildelingen findes ikke.</p>'); }
+const fornavn = (n) => String(n || '').replace(/^Test /, '').split(' ').filter((x) => !/^(Træner|Opstrenger|Cheftræner)$/.test(x))[0] || String(n || '');
+/** Se som træner (Lars 17. oktober kl. 05.07). laes = trænerens rigtige skærm, kun visning. Ellers en forhåndsvisning, der ikke gemmes. */
+function somStart(start, laes, tilbage) {
+  if (!S.som) S.egenStart = S.start;
+  const fn = start.mig.fornavn || fornavn(start.mig.navn);
+  S.som = { laes, tilbage, fornavn: fn, titel: laes ? 'Sådan ser ' + fn + ' det lige nu' : 'Forhåndsvisning · sådan ser ' + fn + ' det', under: laes ? 'Kun visning. Du kan ikke ændre valget herfra' : 'Intet gemmes, og der sendes ingen sms' };
+  if (!S.egenKladde) S.egenKladde = S.kladde;
+  S.start = start; S.kladde = {}; S.str = {}; S.fejl = '';
+}
+function somLuk(gaa) {
+  if (!S.som) return;
+  const tilbage = S.som.tilbage;
+  S.start = S.som.egen || S.egenStart; S.som = null; S.egenStart = null; S.kladde = S.egenKladde || {}; S.egenKladde = null; S.str = {}; S.fejl = '';
+  if (gaa) location.replace(tilbage);
+}
+function vIkke() { if (location.hash !== '#' && location.hash !== '') { location.replace('#'); return; } vis(tilbage('#', 'Arbejdstøj og udstyr') + '<p class="hint">Tildelingen findes ikke.</p>'); }
 
 // ------------------------------------------------------------ administratorerne
 function vKonto() {
@@ -378,7 +402,8 @@ function vGodkend() {
       h += '<div class="tt-post' + (l.status === 'mangler' ? ' streg' : '') + '"><div>' + l.n + ' × ' + esc(l.navn) + '<span>Str. ' + esc(l.s) + (l.status !== 'valgt' ? ' · ' + esc(l.status === 'mangler' ? 'ikke på lager' : l.status) : '') + '</span></div><b>' + kr(l.pris * l.n) + '</b>' +
         (['valgt', 'bestilt'].indexOf(l.status) >= 0 && t.status !== 'aaben' ? '<button type="button" class="af-chip lille farlig" data-mangler="' + t.id + ':' + l.raekke + '">Ikke på lager</button>' : '') + '</div>';
     });
-    if (t.status === 'sendt') h += '<div class="af-chips">' + chip('Godkend', null, 'data-godkend="' + t.id + '"', 'fyldt') + chip('Send tilbage', null, 'data-afvis="' + t.id + '"') + '</div>' +
+    h += '<div class="af-chips">' + chip('Se ' + esc(fornavn(t.navn)) + 's skærm', null, 'data-som="' + t.id + '"') + (t.status === 'sendt' ? chip('Godkend', null, 'data-godkend="' + t.id + '"', 'fyldt') + chip('Send tilbage', null, 'data-afvis="' + t.id + '"') : '') + '</div>';
+    if (t.status === 'sendt') h +=
       '<div class="tt-afvis hidden" id="afv' + t.id + '"><label for="afvt' + t.id + '">Hvad skal rettes?</label><input id="afvt' + t.id + '" maxlength="300"><div class="af-chips">' + chip('Send tilbage med beskeden', null, 'data-afvissend="' + t.id + '"') + '</div></div>';
     if (t.grund) h += '<p class="hint">Grund: ' + esc(t.grund) + '</p>';
     h += '</div></details>';
@@ -410,7 +435,8 @@ function vPersoner() {
       const ini = p.navn.replace(/^Test /, '').split(' ').map((x) => x[0]).join('').slice(0, 2).toUpperCase();
       const skat = p.betaler === 'sg' ? 'Sports Group betaler' : p.loen === 'ulønnet' ? 'Ulønnet · højst ' + kr(p.ulonnetLoft) + ' om året (§ 7 M)' : 'Lønnet · sko og kasket ca. ' + kr(p.arbejd) + ' af ' + kr(p.graense) + ' i ' + p.skatAar;
       h += '<a class="tt-tr" href="#giv/' + esc(p.pid) + '"><span class="gr-av" style="background:#0F2537">' + esc(ini) + '</span><div class="tt-mid"><b>' + esc(p.navn) + '</b><span>' + esc(skat) + ' · ' + p.tildelinger + ' tildeling' + (p.tildelinger === 1 ? '' : 'er') + (p.valgt ? ' · valgt ' + kr(p.valgt) : '') + '</span></div>' +
-        (p.betaler === 'sg' ? '<span class="tt-st v">Uden for kontoen</span>' : p.sidste ? '<span class="tt-st ' + (STATUS[p.sidste] || ['', 'n'])[1] + '">' + esc((STATUS[p.sidste] || [p.sidste])[0]) + '</span>' : '') + '</a>';
+        (p.betaler === 'sg' ? '<span class="tt-st v">Uden for kontoen</span>' : p.sidste ? '<span class="tt-st ' + (STATUS[p.sidste] || ['', 'n'])[1] + '">' + esc((STATUS[p.sidste] || [p.sidste])[0]) + '</span>' : '') + '</a>' +
+        (p.sidsteId ? '<div class="af-chips tt-som-r">' + chip('Se ' + esc(fornavn(p.navn)) + 's skærm', null, 'data-som="' + esc(p.sidsteId) + '"') + '</div>' : '');
     });
     if (!ps.length) h += '<p class="hint">Ingen.</p>';
   });
@@ -422,11 +448,12 @@ function vPersoner() {
 const giv = { pids: [], type: 'frit', pakke: 'time', betaler: '', beloeb: '', frist: '', grund: '' };
 function vGiv(forvalgt) {
   const o = S.adm;
-  if (forvalgt && giv.pids.indexOf(forvalgt) < 0) { giv.pids = [forvalgt]; giv.beloeb = ''; giv.betaler = ''; }
+  if (forvalgt && giv.pids.indexOf(forvalgt) < 0) { giv.pids = [forvalgt]; giv.beloeb = ''; giv.betaler = ''; giv.forslagFor = ''; }
   const valgte = o.personer.filter((p) => giv.pids.indexOf(p.pid) >= 0);
   const forste = valgte[0];
   const kat = forste ? o.kategorier.find((k) => k.id === forste.kategori) : null;
-  if (forste && giv.beloeb === '' && kat && kat.forslag) { giv.type = kat.forslag.type; if (kat.forslag.beloeb) giv.beloeb = String(kat.forslag.beloeb); if (kat.forslag.pakke) giv.pakke = kat.forslag.pakke; }
+  // Kategoriens forslag sættes én gang, når den første person vælges. Bagefter kan type og beløb rettes frit.
+  if (forste && giv.forslagFor !== forste.pid) { giv.forslagFor = forste.pid; if (kat && kat.forslag) { giv.type = kat.forslag.type; if (kat.forslag.beloeb) giv.beloeb = String(kat.forslag.beloeb); if (kat.forslag.pakke) giv.pakke = kat.forslag.pakke; } }
   if (!giv.betaler && forste) giv.betaler = forste.betaler || 'konto';
   if (!giv.frist) { const d = new Date(Date.now() + 21 * 86400000); giv.frist = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   window.RTK_TRAVL = giv.pids.length > 0;
@@ -448,7 +475,7 @@ function vGiv(forvalgt) {
   h += '<p class="hint" style="margin:4px 0 0">Sms og notifikation nu og hver uge, til der er bestilt. Ny sms dagen før fristen. Er der ikke bestilt, forlænges fristen kort, og så bortfalder tildelingen. Ubrugt beløb går tabt.</p>';
   h += '<details class="af-mere"><summary>Mere: grund</summary><div class="ind"><label for="grund">Grund (kun for administratorer)</label><input id="grund" maxlength="200" value="' + esc(giv.grund) + '"></div></details>';
   const beloebTekst = giv.type === 'frit' ? kr(Number(String(giv.beloeb).replace(/\./g, '')) || 0) : (o.pakker.find((p) => p.id === giv.pakke) || {}).navn;
-  if (forste) h += '<div class="af-preview"><span class="k">Sådan ser ' + esc(forste.navn.replace(/^Test /, '').split(' ')[0]) + ' det</span><b>' + (giv.type === 'frit' ? 'Du kan vælge arbejdstøj for ' + esc(beloebTekst) : 'Du kan vælge ' + esc(String(beloebTekst).toLowerCase())) + '</b><span class="hint">Frist ' + esc(dagTekst(giv.frist)) + '</span></div>';
+  if (forste) h += '<div class="af-preview"><span class="k">Sådan ser ' + esc(forste.navn.replace(/^Test /, '').split(' ')[0]) + ' det</span><b>' + (giv.type === 'frit' ? 'Du kan vælge arbejdstøj for ' + esc(beloebTekst) : 'Du kan vælge ' + esc(String(beloebTekst).toLowerCase())) + '</b><span class="hint">Frist ' + esc(dagTekst(giv.frist)) + '</span><div class="af-chips">' + chip('Se hele ' + esc(fornavn(forste.navn)) + 's skærm', null, 'data-somgiv="1"', 'fyldt') + '</div><span class="hint">Med de varer, der er slået til lige nu. Intet gemmes, og der sendes ingen sms.</span></div>';
   h += '<div id="givMsg" class="msg" aria-live="polite"></div>';
   const ialt = giv.type === 'frit' ? (Number(String(giv.beloeb).replace(/\./g, '')) || 0) * giv.pids.length : 0;
   h += bund(giv.betaler === 'konto' ? (ialt ? kr(ialt) + ' fra kontoen' : giv.pids.length + ' valgt') : esc(o.betalere[giv.betaler] || ''), giv.betaler === 'konto' ? kr(o.konto.tilbage - o.konto.lovet - ialt) + ' tilbage bagefter, når de givne er brugt' : 'Rører ikke kontoen', 'Giv tildelingen', 'id="givKnap"' + (giv.pids.length ? '' : ' class="svag" disabled'));
@@ -461,6 +488,7 @@ async function vVarer() {
   const tilAntal = a.varer.filter((v) => v.til).length;
   let h = tilbage('#konto', 'Kontoen') + hero('Kontoen · prislisten FW26', 'Varerne');
   h += '<div class="af-chips">' + info(tilAntal + ' af ' + a.varer.length + ' slået til') + '</div>';
+  h += '<div class="af-preview"><span class="k">Se som træner</span><b>Sådan ser trænerne varerne lige nu</b><div class="af-chips">' + chip('Frit valg for 8.500 kr.', null, 'data-somvis="frit"', 'fyldt') + chip('Pakken til timetrænere', null, 'data-somvis="pakke"') + '</div><span class="hint">Med de varer, der er slået til. Intet gemmes.</span></div>';
   h += trin(1, 'Grupper', 'slå en hel gruppe til eller fra');
   a.grupper.forEach((g) => {
     const vs = a.varer.filter((v) => v.gruppe === g.id);
@@ -482,6 +510,7 @@ async function rute() {
   window.RTK_TRAVL = false;
   if (S.flashH !== location.hash) S.flash = '';
   const admin = ['konto', 'godkend', 'personer', 'giv', 'varer'].indexOf(navn) >= 0;
+  if (S.som && ['t', 'kurv', 'side'].indexOf(navn) < 0) { somLuk(false); }
   if (admin && !S.start.admin) { location.replace('#'); return; }
   if (admin && !S.adm) { vis('<p class="hint">Henter …</p>'); try { await hentAdm(); } catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; } }
   else if (admin || !navn) friskOp(h, admin);
@@ -514,6 +543,7 @@ function tegn() {
   const fokus = document.activeElement && document.activeElement.id;
   if (navn === 't') vVaelg(location.hash.split('/')[1]);
   else if (navn === 'kurv') vKurv(location.hash.split('/')[1]);
+  else if (navn === 'side') { const p = location.hash.split('/'); vSide(p[1], p[2]); }
   else if (navn === 'giv') vGiv();
   else if (navn === 'konto') vKonto();
   else if (navn === 'godkend') vGodkend();
@@ -571,6 +601,8 @@ $('vis').addEventListener('click', async (e) => {
   }
   if (d.minus && t) { const v = vareMap()[d.minus]; const s = strFor(t, v); if (!s) return; return aendr(t, v.id, s, -1); }
   if (d.fjern && t) { const [v, s] = d.fjern.split('|'); return aendr(t, v, s, -antalI(t, v, s)); }
+  if (el.id === 'somLuk') { somLuk(true); return; }
+  if (S.som && (el.id === 'send' || el.id === 'fortryd' || el.id === 'modtaget')) return;
   if (el.id === 'send' && t) {
     if (S.gemmer[t.id] || S.venter[t.id]) { besked($('kurvMsg'), 'Gemmer stadig …'); return; }
     el.disabled = true; besked($('kurvMsg'), 'Sender …');
@@ -591,6 +623,23 @@ $('vis').addEventListener('click', async (e) => {
     return;
   }
   // Administratorerne
+  if (d.som) {
+    el.disabled = true;
+    try { const s = await motor('toej', 'som', { tid: d.som }); somStart(s, true, location.hash || '#'); location.hash = '#kurv/' + d.som; }
+    catch (err) { besked($('admMsg'), err.message, 'err'); el.disabled = false; }
+    return;
+  }
+  if (d.somgiv || d.somvis) {
+    const o = S.adm;
+    const pakke = d.somvis ? d.somvis === 'pakke' : giv.type === 'pakke';
+    const pk = o.pakker.find((p) => p.id === (d.somvis ? 'time' : giv.pakke)) || o.pakker[0];
+    const forste = d.somgiv ? o.personer.find((p) => p.pid === giv.pids[0]) : null;
+    const beloeb = pakke ? pk.beloeb : d.somvis ? 8500 : (Number(String(giv.beloeb).replace(/\./g, '')) || 0);
+    const t = { id: 'VIS', type: pakke ? 'pakke' : 'frit', pakke: pakke ? { id: pk.id, navn: pk.navn, pladser: pk.pladser } : null, beloeb, status: 'aaben', frist: d.somgiv ? giv.frist : '', forlaenget: '', linjer: [], valgt: 0, besked: '' };
+    somStart({ mig: forste ? { navn: forste.navn } : { navn: 'En træner', fornavn: 'en træner' }, admin: false, tildelinger: [t], varer: S.start.varer.filter((v) => v.til !== false), sko: S.start.sko, katalog: S.start.katalog }, false, location.hash || '#');
+    location.hash = '#t/VIS';
+    return;
+  }
   if (d.godkend) {
     el.disabled = true;
     try { const r = await motor('toej', 'godkend', { tid: d.godkend }, nyId()); await hentAdm(); tegn(); if (r.advarsel) besked($('admMsg'), r.advarsel, 'err'); else besked($('admMsg'), 'Godkendt.', 'okm'); }
@@ -633,15 +682,15 @@ $('vis').addEventListener('click', async (e) => {
     return;
   }
   if (el.id === 'csv') { hentCsv(); return; }
-  if (d.pid) { const i = giv.pids.indexOf(d.pid); if (i >= 0) giv.pids.splice(i, 1); else giv.pids.push(d.pid); if (giv.pids.length === 1) { giv.beloeb = ''; giv.betaler = ''; } return tegn(); }
-  if (d.alle) { giv.pids = S.adm.personer.filter((p) => p.kategori === d.alle).map((p) => p.pid); giv.beloeb = ''; giv.betaler = ''; return tegn(); }
+  if (d.pid) { const i = giv.pids.indexOf(d.pid); if (i >= 0) giv.pids.splice(i, 1); else giv.pids.push(d.pid); if (giv.pids.length === 1) { giv.beloeb = ''; giv.betaler = ''; giv.forslagFor = ''; } return tegn(); }
+  if (d.alle) { giv.pids = S.adm.personer.filter((p) => p.kategori === d.alle).map((p) => p.pid); giv.beloeb = ''; giv.betaler = ''; giv.forslagFor = ''; return tegn(); }
   if (d.type) { giv.type = d.type; return tegn(); }
   if (d.betaler) { giv.betaler = d.betaler; return tegn(); }
   if (el.id === 'givKnap') {
     el.disabled = true; besked($('givMsg'), 'Giver …');
     try {
       const r = await motor('toej', 'giv', { pids: giv.pids, type: giv.type, pakke: giv.pakke, betaler: giv.betaler, beloeb: giv.beloeb, frist: giv.frist, grund: giv.grund }, nyId());
-      Object.assign(giv, { pids: [], beloeb: '', betaler: '', grund: '' });
+      Object.assign(giv, { pids: [], beloeb: '', betaler: '', grund: '', forslagFor: '' });
       await hentAdm(); await hentStart();
       S.flash = r.tildelinger.length + ' tildeling' + (r.tildelinger.length > 1 ? 'er' : '') + ' givet. Sms og notifikation er sendt.';
       S.flashH = '#konto'; location.hash = '#konto';
