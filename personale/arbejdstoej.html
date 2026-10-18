@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="9487ff52e660">
+<meta name="rtk-version" content="b289ff975597">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -251,6 +251,7 @@ function vareKort(t, v, i) {
     '<div class="tt-str" role="group" aria-label="Størrelse">' + strKnapper + '</div></div>';
 }
 
+const SKO_NOTE = '<div class="tt-regel"><b>Sko: farve og størrelse kan ikke garanteres.</b> Babolat har ikke altid alle farver og størrelser på lager.</div>'; // Lars 18. oktober kl. 17.36
 function skoGuide() {
   const m = S.model === 'dame' ? 'dame' : 'herre';
   const tab = S.start.sko[m];
@@ -289,6 +290,7 @@ function vVaelg(tid) {
   h += '<div class="tt-kat tt-model" role="group" aria-label="Model">' + [['alle', 'Alle'], ['herre', 'Herre'], ['dame', 'Dame']].map((m) => '<button type="button" data-model="' + m[0] + '" aria-pressed="' + (S.model === m[0]) + '" class="' + (S.model === m[0] ? 'valgt' : '') + '">' + m[1] + '</button>').join('') + '</div>';
   if (S.kat === 'sko') h += skoGuide();
   const liste = varer.filter((v) => kat && kat.fn(v) && (S.model === 'alle' || v.model === S.model || v.model === 'unisex'));
+  if (liste.some((v) => v.slags === 'sko')) h += SKO_NOTE;
   h += liste.length ? liste.map((v, i) => vareKort(t, v, i)).join('') : '<p class="hint">Ingen varer her. Prøv en anden model.</p>';
   const sum = valgtSum(t);
   h += bund(kr(t.beloeb - sum) + ' tilbage', kr(sum) + ' valgt af ' + kr(t.beloeb), 'Se din kurv', 'data-gaa="#kurv/' + t.id + '"');
@@ -311,6 +313,7 @@ function vKurv(tid) {
   h += '<div class="tt-saldo"><div class="lg">Valgt</div><div class="stor">' + kr(sum) + ' <span>af ' + kr(t.beloeb).replace(' kr.', '') + '</span></div><div class="tt-maal"><i style="width:' + pct.toFixed(1) + '%"></i></div>' +
     '<div class="lg">' + kr(t.beloeb - sum) + ' tilbage. Bruger du ikke hele beløbet, går resten tabt.</div></div>';
   if (!linjer.length) h += '<p class="hint">Kurven er tom.</p>';
+  if (linjer.some((l) => vm[l.v] && vm[l.v].slags === 'sko')) h += SKO_NOTE;
   linjer.forEach((l) => {
     const v = vm[l.v];
     const sko = v && v.slags === 'sko';
@@ -730,16 +733,48 @@ $('vis').addEventListener('click', async (e) => {
     return;
   }
   if (d.vare || d.gruppe) {
-    // Kontakten skifter med det samme og gemmer bagefter
-    const til = d.vare ? el.getAttribute('aria-checked') !== 'true' : d.til === 'ja';
-    el.setAttribute('aria-checked', String(til));
+    // Kontakten og tallene skifter med det samme ud fra siden selv. Klik lægges i kø, og kun det seneste for hver kontakt
+    // gemmes, ét ad gangen. Før ventede hvert klik på tre kald, og hurtige klik løb over hinanden (Lars 18. oktober)
     e.preventDefault();
-    try {
-      const r = await motor('toej', 'vareTil', d.vare ? { id: d.vare, til } : { gruppe: d.gruppe, til }, nyId());
-      S.varerAdm = await motor('toej', 'varer'); await hentStart(); tegn(); besked($('varMsg'), r.slaaetTil + ' varer kan vælges nu.', 'okm');
-    } catch (err) { el.setAttribute('aria-checked', String(!til)); besked($('varMsg'), err.message, 'err'); }
+    const a = S.varerAdm;
+    if (!a) return;
+    const til = d.vare ? !(a.varer.find((v) => v.id === d.vare) || {}).til : !a.varer.some((v) => v.gruppe === d.gruppe && v.til);
+    const op = d.vare ? { id: d.vare, til } : { gruppe: d.gruppe, til };
+    varLokalt(op);
+    const k = d.vare ? 'v:' + d.vare : 'g:' + d.gruppe;
+    S.varKoe = (S.varKoe || []).filter((x) => x.k !== k);
+    S.varKoe.push({ k, op });
+    S.varGen = (S.varGen || 0) + 1;
+    tegn(); besked($('varMsg'), 'Gemmer …');
+    varKoer();
   }
 });
+
+function varLokalt(op) {
+  S.varerAdm.varer.forEach((v) => { if (op.id ? v.id === op.id : v.gruppe === op.gruppe) v.til = op.til; });
+}
+async function varKoer() {
+  if (S.varIgang) return;
+  S.varIgang = true;
+  let fejl = null;
+  try {
+    while (S.varKoe && S.varKoe.length) {
+      const x = S.varKoe.shift();
+      try { await motor('toej', 'vareTil', x.op, nyId()); } catch (err) { fejl = err; }
+    }
+  } finally { S.varIgang = false; }
+  // Alt er gemt: hent den rigtige status én gang. Er der klikket imens, venter vi på den næste runde
+  const gen = S.varGen;
+  try {
+    const ny = await motor('toej', 'varer');
+    if (gen !== S.varGen || S.varIgang) return;
+    S.varerAdm = ny;
+    await hentStart();
+  } catch (err) { fejl = fejl || err; }
+  if (gen !== S.varGen || S.varIgang) return;
+  if (location.hash.replace(/^#/, '').split('/')[0] === 'varer') tegn();
+  besked($('varMsg'), fejl ? fejl.message : S.varerAdm.varer.filter((v) => v.til).length + ' varer kan vælges nu.', fejl ? 'err' : 'okm');
+}
 
 function hentCsv() {
   const o = S.adm;
