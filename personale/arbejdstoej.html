@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="900d7b3507ce">
+<meta name="rtk-version" content="9487ff52e660">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -411,7 +411,7 @@ function vGodkend() {
   ts.forEach((t) => {
     const st = STATUS[t.status];
     const p = o.personer.find((x) => x.pid === t.pid);
-    const skat = p && t.betaler !== 'sg' ? (p.loen === 'ulønnet' ? ' · ulønnet, højst ' + kr(p.ulonnetLoft) + ' om året' : ' · sko og kasket ca. ' + kr(p.arbejd) + ' af ' + kr(p.graense) + ' i ' + p.skatAar) : '';
+    const skat = p && t.betaler !== 'sg' ? (p.loen === 'ulønnet' ? ' · ulønnet, højst ' + kr(p.ulonnetLoft) + ' om året' : ' · ca. ' + kr(p.samlet) + ' af ' + kr(p.graense) + ' i ' + p.skatAar) : '';
     h += '<details class="af-mere tt-valg"' + (t.status === 'sendt' ? ' open' : '') + '><summary><span class="tt-mid"><b>' + esc(t.navn) + '</b><span>' + t.linjer.reduce((a, l) => a + (l.status === 'mangler' ? 0 : l.n), 0) + ' varer · ' + kr(t.valgt) + ' af ' + kr(t.beloeb) + ' · ' + esc((o.betalere[t.betaler] || '').toLowerCase()) + esc(skat) + '</span></span><span class="tt-st ' + st[1] + '">' + esc(t.status === 'sendt' ? 'Venter på dig' : st[0]) + '</span></summary><div class="ind">';
     t.linjer.forEach((l) => {
       h += '<div class="tt-post' + (l.status === 'mangler' ? ' streg' : '') + '"><div>' + l.n + ' × ' + esc(l.navn) + '<span>Str. ' + esc(l.s) + (l.status !== 'valgt' ? ' · ' + esc(l.status === 'mangler' ? 'ikke på lager' : l.status) : '') + (l.kan === false ? ' · <b>kan ikke vælges længere</b>' : '') + '</span></div><b>' + kr(l.pris * l.n) + '</b>' +
@@ -456,7 +456,7 @@ function vPersoner() {
   });
   if (!o.personer.length) h += '<p class="hint">Ingen endnu.</p>';
   h += '<div class="tt-regel">Nye personer, løn og stop klares af Claude og Lars i koden. Siden viser kun overblikket.</div>';
-  h += bund(o.personer.length + ' personer', 'Sko og kasket regnes pr. person pr. kalenderår', '+ Ny tildeling', 'data-gaa="#giv"');
+  h += bund(o.personer.length + ' personer', 'Tøj, sko og kasket regnes sammen pr. person pr. kalenderår', '+ Ny tildeling', 'data-gaa="#giv"');
   vis(h);
 }
 

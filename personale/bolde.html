@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="441a727f6004">
+<meta name="rtk-version" content="de92d39e758e">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -171,12 +171,15 @@ const valgt = { sted: hent('rtk.bold.sted') || '', bold: hent('rtk.bold.bold') |
 if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
 function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
 
+// Ved en netværksfejl beholdes registrerings-id'et, så et nyt forsøg ikke gemmer to gange, hvis det første nåede frem (skalatesten 17. oktober)
+const netFejl = () => Object.assign(new Error('Ingen forbindelse. Tjek net og prøv igen.'), { net: true });
 async function motor(modul, handling, data, id) {
   let res;
   try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: id || '' }) }); }
-  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
-  const svar = await res.json();
-  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  catch (e) { throw netFejl(); }
+  let svar;
+  try { svar = await res.json(); } catch (e) { throw netFejl(); }
+  if (!svar.ok) { if (svar.login) logUd(true); throw Object.assign(new Error(svar.fejl || 'Noget gik galt'), { net: !!svar.igang }); }
   return svar.data;
 }
 
@@ -236,7 +239,7 @@ $('tagKnap').addEventListener('click', async () => {
     tagId = nyId(); besked($('tagMsg'), '');
     $('kvit').innerHTML = '<div class="kvit' + (r.advarsel ? ' adv' : '') + '"><span>Registreret: ' + r.antal + ' ' + esc(enhedTekst(r.antal)) + ' ' + esc(r.bold) + '. ' + (r.advarsel ? esc(r.advarsel) : 'Tilbage på ' + esc(r.sted) + ': ' + r.tilbage + '.') + '</span></div>';
     valgt.antal = 1; tegnTag(); hentMine();
-  } catch (err) { besked($('tagMsg'), err.message, 'err'); tagId = nyId(); }
+  } catch (err) { besked($('tagMsg'), err.message, 'err'); if (!err.net) tagId = nyId(); }
   knap.disabled = false;
 });
 
@@ -313,7 +316,7 @@ $('optForm').addEventListener('submit', async (e) => {
     const r = await motor('bold', 'optael', { sted: optSted, linjer }, optId); optId = nyId();
     besked($('optMsg'), 'Optællingen er gemt.', 'okm');
     $('optUd').innerHTML = '<table><tr><th>Bold</th><th class="n">Talt</th><th class="n">Bogført</th><th class="n">Forskel</th></tr>' + r.map((x) => '<tr><td>' + esc(x.bold) + '</td><td class="n">' + x.talt + '</td><td class="n">' + x.beregnet + '</td><td class="n' + (x.forskel < 0 ? ' minus' : '') + '">' + (x.forskel > 0 ? '+' : '') + x.forskel + '</td></tr>').join('') + '</table>';
-  } catch (err) { besked($('optMsg'), err.message, 'err'); optId = nyId(); }
+  } catch (err) { besked($('optMsg'), err.message, 'err'); if (!err.net) optId = nyId(); }
 });
 
 // ---------------- modtag og flyt
@@ -328,12 +331,12 @@ let indId = nyId(), flytId = nyId();
 $('indForm').addEventListener('submit', async (e) => {
   e.preventDefault(); besked($('indMsg'), 'Gemmer …');
   try { await motor('bold', 'ind', { sted: $('iSted').value, bold: $('iBold').value, antal: $('iAntal').value, note: $('iNote').value }, indId); indId = nyId(); besked($('indMsg'), 'Modtaget.', 'okm'); $('iAntal').value = ''; $('iNote').value = ''; }
-  catch (err) { besked($('indMsg'), err.message, 'err'); indId = nyId(); }
+  catch (err) { besked($('indMsg'), err.message, 'err'); if (!err.net) indId = nyId(); }
 });
 $('flytForm').addEventListener('submit', async (e) => {
   e.preventDefault(); besked($('flytMsg'), 'Gemmer …');
   try { await motor('bold', 'flyt', { fra: $('fFra').value, til: $('fTil').value, bold: $('fBold').value, antal: $('fAntal').value }, flytId); flytId = nyId(); besked($('flytMsg'), 'Flyttet.', 'okm'); $('fAntal').value = ''; }
-  catch (err) { besked($('flytMsg'), err.message, 'err'); flytId = nyId(); }
+  catch (err) { besked($('flytMsg'), err.message, 'err'); if (!err.net) flytId = nyId(); }
 });
 
 // ---------------- bestilling

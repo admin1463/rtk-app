@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="0aea5724f27a">
+<meta name="rtk-version" content="3637cf8ac6c6">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -171,18 +171,21 @@ function datoTekst(d) {
 function kort(d) { return d ? d.slice(8, 10) + '/' + d.slice(5, 7) : ''; }
 
 /** Ét kald til motoren. Registrerings-id holdes fast, til kaldet lykkes, så et nyt tryk ikke gemmer to gange. */
+// Ved en netværksfejl beholdes registrerings-id'et, så et nyt forsøg ikke gemmer to gange, hvis det første nåede frem (skalatesten 17. oktober)
+const netFejl = () => Object.assign(new Error('Ingen forbindelse. Tjek net og prøv igen.'), { net: true });
 async function motor(modul, handling, data, id) {
   const krop = { modul, handling, data: data || {}, token, id: id || '' };
   let res;
   try {
     res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(krop) });
   } catch (e) {
-    throw new Error('Ingen forbindelse. Tjek net og prøv igen.');
+    throw netFejl();
   }
-  const svar = await res.json();
+  let svar;
+  try { svar = await res.json(); } catch (e) { throw netFejl(); }
   if (!svar.ok) {
     if (svar.login) { logUd(true); }
-    throw new Error(svar.fejl || 'Noget gik galt');
+    throw Object.assign(new Error(svar.fejl || 'Noget gik galt'), { net: !!svar.igang });
   }
   return svar.data;
 }
@@ -262,19 +265,21 @@ $('toemForm').addEventListener('submit', async (e) => {
     besked($('toemMsg'), 'Nr. ' + r.nr + ' modtaget. Klar senest ' + datoTekst(r.klarSenest) + '.', 'okm');
     modtaget.unshift(r.nr); $('toemListe').textContent = 'Registreret nu: ' + modtaget.join(', ');
     $('tNr').value = ''; $('tNote').value = ''; $('tNr').focus();
-  } catch (err) { besked($('toemMsg'), err.message, 'err'); toemId = nyId(); $('tNr').select(); }
+  } catch (err) { besked($('toemMsg'), err.message, 'err'); if (!err.net) toemId = nyId(); $('tNr').select(); }
 });
 
 // ---- Meld klar
+// Navnene kommer fra arket og skrives som tekst, ikke som HTML (skalatesten 17. oktober)
+const escO = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 function fyldValg() {
   if (!valg) return;
-  $('mType').innerHTML = '<option value="">Vælg</option>' + valg.typer.map((t) => '<option>' + t + '</option>').join('');
-  $('mMm').innerHTML = '<option value="">Vælg</option>' + valg.tykkelser.map((t) => '<option>' + t + '</option>').join('');
-  $('iStreng').innerHTML = valg.strenge.map((t) => '<option>' + t + '</option>').join('');
+  $('mType').innerHTML = '<option value="">Vælg</option>' + valg.typer.map((t) => '<option>' + escO(t) + '</option>').join('');
+  $('mMm').innerHTML = '<option value="">Vælg</option>' + valg.tykkelser.map((t) => '<option>' + escO(t) + '</option>').join('');
+  $('iStreng').innerHTML = valg.strenge.map((t) => '<option>' + escO(t) + '</option>').join('');
 }
 $('mType').addEventListener('change', () => {
   const liste = $('mType').value === 'Hybrid' ? valg.hybrider : valg.strenge;
-  $('mStreng').innerHTML = '<option value="">Vælg</option>' + liste.map((s) => '<option>' + s + '</option>').join('');
+  $('mStreng').innerHTML = '<option value="">Vælg</option>' + liste.map((s) => '<option>' + escO(s) + '</option>').join('');
 });
 function aabnKlar(r) {
   vaelgFane('klar');
@@ -299,7 +304,7 @@ $('klarForm').addEventListener('submit', async (e) => {
     const t = r.taeller;
     besked($('klarMsg'), 'Nr. ' + r.nr + ' er klar. Måneden: ' + t.udenTimer + ' uden timer' + (t.tilNaesteTrin ? ', ' + t.tilNaesteTrin + ' til ' + t.naesteSats + ' kr' : '') + '.', 'okm');
     $('mNr').value = ''; $('mKg').value = ''; $('mNote').value = '';
-  } catch (err) { besked($('klarMsg'), err.message, 'err'); klarId = nyId(); }
+  } catch (err) { besked($('klarMsg'), err.message, 'err'); if (!err.net) klarId = nyId(); }
   knap.disabled = false;
 });
 
@@ -334,7 +339,7 @@ $('indForm').addEventListener('submit', async (e) => {
   try {
     visLager(await motor('opstrengning', 'strengeInd', { streng: $('iStreng').value, ruller: $('iAntal').value, note: $('iNote').value }, indId));
     indId = nyId(); besked($('indMsg'), 'Registreret.', 'okm'); $('iAntal').value = ''; $('iNote').value = '';
-  } catch (err) { besked($('indMsg'), err.message, 'err'); indId = nyId(); }
+  } catch (err) { besked($('indMsg'), err.message, 'err'); if (!err.net) indId = nyId(); }
 });
 
 // ---- Start
