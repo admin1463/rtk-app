@@ -38,6 +38,7 @@
     'Forkert kode. Prøv igen.': 'Wrong code. Please try again.',
     'Kontoen er ikke aktiv. Skriv til kontakt@roskildetennisklub.dk.': 'The account is not active. Please write to kontakt@roskildetennisklub.dk.',
     'Systemet er optaget. Prøv igen om et øjeblik.': 'The system is busy. Please try again in a moment.',
+    'Det bliver stadig gemt. Vent et øjeblik, og prøv igen.': 'It is still being saved. Please wait a moment and try again.',
     'Dine forældre bestemmer, hvordan beskederne kommer, indtil du fylder 18.': 'Your parents decide how messages are sent until you turn 18.',
     'Vælg notifikation, sms eller mail': 'Choose notification, text message or email',
     'Vi har ingen mail til dig. Skriv til klubben, hvis den skal på.': 'We have no email address for you. Write to the club if it should be added.',
