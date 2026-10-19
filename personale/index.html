@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="ee7268b590ae">
+<meta name="rtk-version" content="6babd1b6441f">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -125,7 +125,7 @@ const FELTER = [
   { afsnit: 'arbejde', navn: (p) => harRolle(p, ANSVARLIG) ? 'Boldregnskab' : 'Tag bolde', side: 'bolde.html', ikon: 'bold', roller: ['traener', 'cheftraener', 'boldansvarlig'],
     tekst: (p) => harRolle(p, ANSVARLIG) ? 'Tag bolde, lager, forbrug, optælling og bestilling.' : 'Tag bolde til træning, og se lageret.' },
   // Arbejdstøj og udstyr fra kontoen hos Sports Group (Lars 16. oktober kl. 20.58). Alle med en rolle kan få en tildeling.
-  { afsnit: 'arbejde', navn: 'Mit arbejdstøj', side: 'arbejdstoej.html', ikon: 'toej', roller: ['opstrenger', 'traener', 'kaptajn', 'cheftraener', 'boldansvarlig', 'bogholder', 'koordinator'],
+  { afsnit: 'arbejde', navn: 'Mit arbejdstøj', side: 'arbejdstoej.html', ikon: 'toej', roller: ['opstrenger', 'traener', 'kaptajn', 'cheftraener', 'boldansvarlig', 'bogholder', 'koordinator', 'oevrige'],
     tekst: () => 'Vælg dit arbejdstøj, når klubben giver dig en tildeling.' },
   { afsnit: 'arbejde', navn: 'Opstrengere', side: 'opstrengning.html', ikon: 'ketsjer', roller: ['opstrenger'],
     tekst: () => 'Kø, tøm skabet, meld klar, måneden og strengelager.' },

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="864a706dc951">
+<meta name="rtk-version" content="71448f9f9ff5">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -74,8 +74,8 @@ const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())
 let token = hent('rtk.token') || '';
 let person = null;
 const S = { liste: null, filter: 'alle', sog: '', en: Object.create(null), msg: '', ids: Object.create(null) };
-const NAVNE = { admin: 'Administrator', opstrenger: 'Opstrenger', traener: 'Træner', kaptajn: 'Holdkaptajn', cheftraener: 'Cheftræner', boldansvarlig: 'Boldansvarlig', bogholder: 'Bogholder', koordinator: 'Koordinator' };
-const FILTRE = [['alle', 'Alle'], ['traener', 'Trænere'], ['opstrenger', 'Opstrengere'], ['admin', 'Administration'], ['tidligere', 'Tidligere']];
+const NAVNE = { admin: 'Administrator', opstrenger: 'Opstrenger', traener: 'Træner', kaptajn: 'Holdkaptajn', cheftraener: 'Cheftræner', boldansvarlig: 'Boldansvarlig', bogholder: 'Bogholder', koordinator: 'Koordinator', oevrige: 'Øvrige' };
+const FILTRE = [['alle', 'Alle'], ['traener', 'Trænere'], ['opstrenger', 'Opstrengere'], ['oevrige', 'Øvrige'], ['admin', 'Administration'], ['tidligere', 'Tidligere']];
 const FARVER = ['#0F2537', '#0B3D3A', '#5B2A86', '#8A3B12'];
 const STATUS = { tt: ['Mangler', 'v'], aaben: ['Åben', 'v'], sendt: ['Sendt', 'v'], godkendt: ['Godkendt', 'ok'], bestilt: ['Bestilt', 'ok'], leveret: ['Leveret', 'ok'], modtaget: ['Modtaget', 'ok'], bortfaldet: ['Bortfaldet', 'po-graa'] };
 
