@@ -852,3 +852,19 @@ details.af-mere.tt-valg summary::-webkit-details-marker,details.af-mere.tt-grupp
 .pa-afsnit.admin{padding-top:24px;border-top:2px solid var(--teal)}
 .pa-titel{margin:4px 0 0;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
 .pa-under{margin:6px 0 0;font-size:14px;color:#4a5a5a}
+
+/* Personer og roller under Administration (Lars 19. oktober 2026) */
+.po-sog{width:100%;min-height:46px;font-size:16px;padding:10px 14px;border:1.5px solid var(--line2);border-radius:12px;margin:2px 0 4px;box-sizing:border-box}
+.po-fakta{border:1px solid var(--line);border-radius:14px;background:#FFFFFF;margin:0 0 12px}
+.po-fakta>div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);font-size:15px;min-height:28px}
+.po-fakta>div:first-child{border-top:0}
+.po-fakta>div>span{color:var(--muted);min-width:0}
+.po-fakta>div>b{text-align:right;min-width:0;overflow-wrap:anywhere}
+.po-h{margin:18px 0 8px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.po-note{font-size:14px;color:var(--muted);margin:8px 0 14px}
+.po-fare{border:2px solid var(--bad);border-radius:14px;padding:14px;background:#FFF5F5;margin:6px 0 12px}
+.po-fare>b{color:var(--bad);font-size:17px}
+.po-fare ul{margin:8px 0 0 18px;padding:0;font-size:15px}
+.po-fare li{margin:4px 0}
+.tt-tr.po-tidl{opacity:.7}
+.tt-st.po-graa{background:#ECECEC;color:#4A4A4A}
