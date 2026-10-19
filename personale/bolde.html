@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="de92d39e758e">
+<meta name="rtk-version" content="ab2d5365acc8">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=9230a5ebf908">
+<link rel="stylesheet" href="../rtk.css?v=63bc6d70a3b8">
 </head>
 <body>
 <header class="top">
@@ -186,7 +186,7 @@ async function motor(modul, handling, data, id) {
 function logUd(udloebet) {
   if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
   token = ''; person = null; gem('rtk.token', null);
-  location.replace(udloebet ? './?til=bolde.html&igen=1' : './');
+  location.replace(udloebet ? './?til=' + encodeURIComponent('bolde.html' + location.hash) + '&igen=1' : './');
 }
 $('logud').addEventListener('click', () => logUd(false));
 
@@ -199,7 +199,9 @@ async function start() {
   try { valg = await motor('bold', 'valg'); } catch (err) { besked($('tagMsg'), err.message, 'err'); return; }
   if (valg.steder.indexOf(valgt.sted) < 0) valgt.sted = valg.steder[0] || '';
   if (!valg.bolde.some((b) => b.bold === valgt.bold)) valgt.bold = (valg.bolde[0] || {}).bold || '';
-  vaelgFane('tag'); tegnTag(); fyldSelects(); hentMine();
+  // Fra Administration på personalesiden åbnes fx bolde.html#forbrug (19. oktober). Kun faner, man har adgang til.
+  const h = location.hash.slice(1), fb = document.querySelector('#faner button[data-fane="' + h.replace(/[^a-z]/g, '') + '"]');
+  vaelgFane(fb && !fb.classList.contains('hidden') ? fb.dataset.fane : 'tag'); tegnTag(); fyldSelects(); hentMine();
 }
 
 // ---------------- tag bolde
@@ -358,7 +360,7 @@ async function hentBestil() {
 }
 
 // ---------------- start
-if (!token) location.replace('./?til=bolde.html');
+if (!token) location.replace('./?til=' + encodeURIComponent('bolde.html' + location.hash));
 else motor('kerne', 'mig').then((p) => { person = p; start(); }).catch(() => {});
 </script>
 <script src="../velkomst.js?v=02d869848285"></script>

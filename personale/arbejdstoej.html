@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="b289ff975597">
+<meta name="rtk-version" content="9c41c8735d13">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=9230a5ebf908">
+<link rel="stylesheet" href="../rtk.css?v=63bc6d70a3b8">
 </head>
 <body>
 <header class="top">
@@ -95,7 +95,7 @@ async function motor(modul, handling, data, id) {
 function logUd(udloebet) {
   if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
   token = ''; person = null; gem('rtk.token', null);
-  location.replace(udloebet ? './?til=arbejdstoej.html&igen=1' : './');
+  location.replace(udloebet ? './?til=' + encodeURIComponent('arbejdstoej.html' + location.hash) + '&igen=1' : './');
 }
 $('logud').addEventListener('click', () => logUd(false));
 function besked(el, t, s) { if (!el) return; el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
@@ -794,7 +794,7 @@ async function start() {
   catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; }
   rute();
 }
-if (!token) location.replace('./?til=arbejdstoej.html');
+if (!token) location.replace('./?til=' + encodeURIComponent('arbejdstoej.html' + location.hash));
 else motor('kerne', 'mig').then((p) => { person = p; start(); }).catch(() => {});
 </script>
 <script src="../velkomst.js?v=02d869848285"></script>

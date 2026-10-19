@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="1c3195fcd88b">
+<meta name="rtk-version" content="6eec6a09e11a">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=9230a5ebf908">
+<link rel="stylesheet" href="../rtk.css?v=63bc6d70a3b8">
 </head>
 <body>
 <header class="top">
@@ -73,7 +73,7 @@
 
     <div id="omraade" class="hidden">
       <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
-      <div class="tiles" id="felter" style="padding-top:0"></div>
+      <div id="felter"></div>
       <p class="hint hidden" id="ingen">Der er ikke noget til din rolle her endnu. Kontakt Lars eller Henrik, hvis du mener, du burde have adgang.</p>
     </div>
   </div>
@@ -107,6 +107,7 @@ const URL_MOTOR = window.RTK_KONFIG.motor;
 
 // Ikoner i felterne: stregtegninger i mørkeblå.
 const IKON = {
+  personer: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><rect x="5" y="9" width="34" height="26" rx="3"/><circle cx="15" cy="20" r="4"/><path d="M9 31c0-4 3-6 6-6s6 2 6 6"/><line x1="25" y1="18" x2="34" y2="18"/><line x1="25" y1="23" x2="34" y2="23"/><line x1="25" y1="28" x2="31" y2="28"/></svg>',
   bold: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="22" cy="22" r="15"/><path d="M10 12c6 5 6 15 0 20"/><path d="M34 12c-6 5-6 15 0 20"/></svg>',
   drift: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><path d="M6 32a16 16 0 0 1 32 0"/><line x1="22" y1="32" x2="31" y2="20" stroke-width="2.5"/><circle cx="22" cy="32" r="2.5"/><line x1="6" y1="38" x2="38" y2="38"/></svg>',
   grupper: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="15" cy="15" r="6"/><circle cx="31" cy="17" r="5"/><path d="M4 37c0-7 5-11 11-11s11 4 11 11"/><path d="M27 26c1-.6 2.4-1 4-1 5 0 9 3.5 9 10"/></svg>',
@@ -115,23 +116,34 @@ const IKON = {
   ketsjer: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><ellipse cx="17" cy="16" rx="11" ry="13"/><line x1="9" y1="10" x2="25" y2="10"/><line x1="7" y1="16" x2="27" y2="16"/><line x1="9" y1="22" x2="25" y2="22"/><line x1="12" y1="4" x2="12" y2="28"/><line x1="17" y1="3" x2="17" y2="29"/><line x1="22" y1="4" x2="22" y2="28"/><line x1="24" y1="27" x2="38" y2="41" stroke-width="3"/></svg>'
 };
 
-// Felterne på personalesiden. Man ser kun dem, ens roller giver adgang til. Motoren tjekker rollerne igen på hvert kald.
+// Felterne på personalesiden i to afsnit (Lars 19. oktober kl. 10.05 til 10.20, mockup godkendt samme formiddag).
+// "Dit arbejde": det, man bruger i sit arbejde, efter ens roller. "Administration": nederst, kun for klubbens administratorer
+// (Lars og Henrik, senere formanden). Trænere og frivillige ser slet ikke afsnittet. Motoren tjekker rollerne igen på hvert kald.
+// En person med flere roller ser felterne for alle sine roller. Boldregnskabet er som før for cheftræner og boldansvarlig (Lars 19. oktober).
+const ANSVARLIG = ['admin', 'cheftraener', 'boldansvarlig'];
 const FELTER = [
-  { navn: 'Boldregnskab', side: 'bolde.html', ikon: 'bold', roller: ['admin', 'traener', 'cheftraener', 'boldansvarlig'],
-    tekst: (p) => harRolle(p, ['admin', 'cheftraener', 'boldansvarlig']) ? 'Tag bolde, lager, forbrug, optælling og bestilling.' : 'Tag bolde til træning, og se lageret.' },
+  { afsnit: 'arbejde', navn: (p) => harRolle(p, ANSVARLIG) ? 'Boldregnskab' : 'Tag bolde', side: 'bolde.html', ikon: 'bold', roller: ['traener', 'cheftraener', 'boldansvarlig'],
+    tekst: (p) => harRolle(p, ANSVARLIG) ? 'Tag bolde, lager, forbrug, optælling og bestilling.' : 'Tag bolde til træning, og se lageret.' },
   // Arbejdstøj og udstyr fra kontoen hos Sports Group (Lars 16. oktober kl. 20.58). Alle med en rolle kan få en tildeling.
-  { navn: 'Arbejdstøj og udstyr', side: 'arbejdstoej.html', ikon: 'toej', roller: ['admin', 'opstrenger', 'traener', 'kaptajn', 'cheftraener', 'boldansvarlig', 'bogholder', 'koordinator'],
-    tekst: (p) => harRolle(p, ['admin']) ? 'Vælg dit arbejdstøj. Kontoen hos Sports Group, tildelinger og godkendelse.' : 'Vælg dit arbejdstøj, når klubben giver dig en tildeling.' },
-  // Pladsholder (Lars 14. oktober kl. 21.43): trænerne registrerer deltagerne ved hver holdtræning, også nye.
-  { navn: 'Deltagerregistrering', snart: true, ikon: 'liste', roller: ['admin', 'traener', 'cheftraener'],
-    tekst: () => 'Registrér deltagerne ved hver holdtræning, også nye spillere.' },
-  { navn: 'Opstrengere', side: 'opstrengning.html', ikon: 'ketsjer', roller: ['admin', 'opstrenger'],
+  { afsnit: 'arbejde', navn: 'Mit arbejdstøj', side: 'arbejdstoej.html', ikon: 'toej', roller: ['opstrenger', 'traener', 'kaptajn', 'cheftraener', 'boldansvarlig', 'bogholder', 'koordinator'],
+    tekst: () => 'Vælg dit arbejdstøj, når klubben giver dig en tildeling.' },
+  { afsnit: 'arbejde', navn: 'Opstrengere', side: 'opstrengning.html', ikon: 'ketsjer', roller: ['opstrenger'],
     tekst: () => 'Kø, tøm skabet, meld klar, måneden og strengelager.' },
-  { navn: 'Drift og forbrug', side: 'drift.html', ikon: 'drift', roller: ['admin'],
-    tekst: () => 'Sms og mail i dag, de sidste 30 dage, saldo og alarmer.' },
-  { navn: 'Grupper i klubben', side: 'grupper.html', ikon: 'grupper', roller: ['admin'],
-    tekst: () => 'Alle grupper med medlemmer, og hvor ofte de spiller. Ikke chat og betalinger.' }
+  // Pladsholder (Lars 14. oktober kl. 21.43): trænerne registrerer deltagerne ved hver holdtræning, også nye.
+  { afsnit: 'arbejde', navn: 'Deltagerregistrering', snart: true, ikon: 'liste', roller: ['traener', 'cheftraener'],
+    tekst: () => 'Registrér deltagerne ved hver holdtræning, også nye spillere.' },
+  { afsnit: 'admin', navn: 'Arbejdstøj: tildelinger og konto', side: 'arbejdstoej.html#konto', ikon: 'toej', roller: ['admin'],
+    tekst: () => 'Kontoen hos Sports Group, nye tildelinger, godkendelse og bestilling hos Carsten.' },
+  { afsnit: 'admin', navn: 'Bolde: lager, forbrug og bestilling', side: 'bolde.html#forbrug', ikon: 'bold', roller: ['admin'],
+    tekst: () => 'Forbrug pr. træner og hold, optælling og svind, bestillingsforslag.' },
+  { afsnit: 'admin', navn: 'Personer og roller', snart: true, ikon: 'personer', roller: ['admin'],
+    tekst: () => 'Medarbejdere og frivillige med roller, mobil og hvem der er stoppet.' },
+  { afsnit: 'admin', navn: 'Grupper i klubben', side: 'grupper.html', ikon: 'grupper', roller: ['admin'],
+    tekst: () => 'Alle grupper med medlemmer, og hvor ofte de spiller. Ikke chat og betalinger.' },
+  { afsnit: 'admin', navn: 'Drift og forbrug', side: 'drift.html', ikon: 'drift', roller: ['admin'],
+    tekst: () => 'Sms og mail i dag, de sidste 30 dage, saldo og alarmer.' }
 ];
+const AFSNIT = [['arbejde', 'Dit arbejde', ''], ['admin', 'Administration', 'Kun for klubbens administratorer. Trænere og frivillige ser ikke dette afsnit.']];
 
 const $ = (id) => document.getElementById(id);
 const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
@@ -142,7 +154,10 @@ const harRolle = (p, roller) => !!p && (p.roller || []).some((r) => r === 'admin
 let enhed = hent('rtk.enhed'); if (!enhed) { enhed = nyId(); gem('rtk.enhed', enhed); }
 let token = hent('rtk.token') || '';
 const qs = new URLSearchParams(location.search);
-let til = FELTER.map((f) => f.side).indexOf(qs.get('til')) >= 0 ? qs.get('til') : '';
+const SIDER = FELTER.map((f) => f.side).filter(Boolean);
+const tilQ = qs.get('til') || '';
+let til = SIDER.indexOf(tilQ) >= 0 ? tilQ : (SIDER.indexOf(tilQ.split('#')[0]) >= 0 ? tilQ.split('#')[0] : '');
+const navnPaa = (f, p) => (typeof f.navn === 'function' ? f.navn(p) : f.navn);
 
 function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
 
@@ -212,25 +227,40 @@ $('brugPin').addEventListener('click', () => { visTrin('pin'); besked($('loginMs
 
 function visFelter(p) {
   // Kom man fra en underside uden at være logget ind, går man direkte tilbage dertil.
-  const felt = FELTER.find((f) => f.side === til);
-  if (felt && harRolle(p, felt.roller)) { location.replace(til); return; }
+  const kan = (s) => FELTER.some((f) => f.side === s && harRolle(p, f.roller));
+  if (til && kan(til)) { location.replace(til); return; }
+  if (til && kan(til.split('#')[0])) { location.replace(til.split('#')[0]); return; }
   $('loginKort').classList.add('hidden'); $('omraade').classList.remove('hidden');
   $('hvem').textContent = 'Logget ind som ' + p.navn;
   const mine = FELTER.filter((f) => harRolle(p, f.roller));
+  const toAfsnit = mine.some((f) => f.afsnit === 'admin');
   $('felter').innerHTML = '';
-  mine.forEach((f) => {
-    // Et felt, der kommer snart, er gråt og kan ikke trykkes på, ligesom på medlemssiden
-    const a = document.createElement(f.snart ? 'div' : 'a'); a.className = 'tile';
-    if (f.snart) a.setAttribute('aria-disabled', 'true'); else a.href = f.side;
-    a.insertAdjacentHTML('afterbegin', IKON[f.ikon]);
-    if (f.snart) a.querySelector('svg').style.opacity = '.45';
-    const tk = document.createElement('span'); tk.className = 'tk';
-    const b = document.createElement('b'); b.textContent = f.navn;
-    const s = document.createElement('span'); s.className = 'tekst'; s.textContent = f.tekst(p);
-    tk.append(b, s);
-    if (f.snart) { const sn = document.createElement('span'); sn.className = 'snart'; sn.textContent = 'Kommer snart'; tk.append(sn); a.append(tk); $('felter').append(a); return; }
-    const aabn = document.createElement('span'); aabn.className = 'aabn'; aabn.innerHTML = '<span class="ord">Åbn</span> &#8594;';
-    a.append(tk, aabn); $('felter').append(a);
+  AFSNIT.forEach(([id, titel, under]) => {
+    const fs = mine.filter((f) => f.afsnit === id);
+    if (!fs.length) return;
+    const sek = document.createElement('section'); sek.className = 'pa-afsnit' + (id === 'admin' ? ' admin' : '');
+    // Overskrifterne vises kun, når der er to afsnit. Trænere og frivillige ser bare deres felter.
+    if (toAfsnit) {
+      const h = document.createElement('h2'); h.className = 'pa-titel'; h.id = 'afsnit-' + id; h.textContent = titel; sek.append(h);
+      sek.setAttribute('aria-labelledby', h.id);
+      if (under) { const u = document.createElement('p'); u.className = 'pa-under'; u.textContent = under; sek.append(u); }
+    }
+    const g = document.createElement('div'); g.className = 'tiles pa-tiles';
+    fs.forEach((f) => {
+      // Et felt, der kommer snart, er gråt og kan ikke trykkes på, ligesom på medlemssiden
+      const a = document.createElement(f.snart ? 'div' : 'a'); a.className = 'tile';
+      if (f.snart) a.setAttribute('aria-disabled', 'true'); else a.href = f.side;
+      a.insertAdjacentHTML('afterbegin', IKON[f.ikon]);
+      if (f.snart) a.querySelector('svg').style.opacity = '.45';
+      const tk = document.createElement('span'); tk.className = 'tk';
+      const b = document.createElement('b'); b.textContent = navnPaa(f, p);
+      const s = document.createElement('span'); s.className = 'tekst'; s.textContent = f.tekst(p);
+      tk.append(b, s);
+      if (f.snart) { const sn = document.createElement('span'); sn.className = 'snart'; sn.textContent = 'Kommer snart'; tk.append(sn); a.append(tk); g.append(a); return; }
+      const aabn = document.createElement('span'); aabn.className = 'aabn'; aabn.innerHTML = '<span class="ord">Åbn</span> &#8594;';
+      a.append(tk, aabn); g.append(a);
+    });
+    sek.append(g); $('felter').append(sek);
   });
   $('ingen').classList.toggle('hidden', mine.some((f) => !f.snart));
 }
