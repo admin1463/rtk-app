@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="e3d3b00f8b89">
+<meta name="rtk-version" content="e2159b881bae">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=f7f49d1bcd71">
+<link rel="stylesheet" href="../rtk.css?v=b31103dc6cbc">
 </head>
 <body>
 <header class="top">
@@ -29,98 +29,94 @@
 
 <main class="side">
   <div class="monster lav" aria-hidden="true"></div>
-  <div class="wrap indhold">
+  <div class="wrap indhold smal">
   <div id="testBanner" class="card neutral hidden" style="padding:10px 14px;font-size:14px">Testmiljø med opdigtede data.</div>
 
-  <!-- ===================== OPSTRENGERE ===================== -->
-  <section>
-    <div id="omraade" class="hidden">
-      <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
-      <div class="tabs" role="tablist">
-        <button role="tab" data-fane="koe" aria-selected="true">Kø</button>
-        <button role="tab" data-fane="toem" aria-selected="false">Tøm skabet</button>
-        <button role="tab" data-fane="klar" aria-selected="false">Meld klar</button>
-        <button role="tab" data-fane="taeller" aria-selected="false">Måneden</button>
-        <button role="tab" data-fane="strenge" aria-selected="false">Strenge</button>
-      </div>
-
-      <!-- Kø -->
-      <div class="card fane" id="fane-koe">
-        <div class="stats">
-          <div class="stat"><b id="sModtaget">·</b><span>i skabet</span></div>
-          <div class="stat"><b id="sOver">·</b><span>over frist</span></div>
-          <div class="stat"><b id="sKlar">·</b><span>klar</span></div>
-        </div>
-        <div class="row" style="align-items:center;justify-content:space-between">
-          <h2 style="margin:0">Køen</h2>
-          <div style="flex:0"><button class="ghost small" id="opdater" type="button">Opdatér</button></div>
-        </div>
-        <div id="koeListe" style="margin-top:10px"></div>
-        <div id="koeMsg" class="msg" aria-live="polite"></div>
-      </div>
-
-      <!-- Tøm skabet -->
-      <div class="card fane hidden" id="fane-toem">
-        <h2>Tøm skabet</h2>
-        <form id="toemForm" class="row big" autocomplete="off">
-          <input id="tNr" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Nr." aria-label="Nummer på ordresedlen">
-          <button type="submit" style="flex:0 0 auto">Modtaget</button>
-        </form>
-        <div class="grid" style="margin-top:10px">
-          <div><label for="tDato">Afleveret</label><input id="tDato" type="date"></div>
-          <div><label for="tNote">Note</label><input id="tNote" maxlength="300"></div>
-        </div>
-        <div id="toemMsg" class="msg" aria-live="polite"></div>
-        <div id="toemListe" class="done-list"></div>
-        <p class="hint">Skriv nummeret på hver seddel og tryk Modtaget. Fristen på tre hverdage regnes ud fra afleveringsdatoen, som er i dag, medmindre du vælger en anden.</p>
-      </div>
-
-      <!-- Meld klar -->
-      <div class="card fane hidden" id="fane-klar">
-        <h2>Meld klar</h2>
-        <form id="klarForm" class="grid" autocomplete="off">
-          <div><label for="mNr">Nummer</label><input id="mNr" inputmode="numeric" maxlength="6" required></div>
-          <div><label for="mType">Type</label><select id="mType" required><option value="">Vælg</option></select></div>
-          <div class="full"><label for="mStreng">Streng</label><select id="mStreng" required><option value="">Vælg type først</option></select></div>
-          <div><label for="mKg">Hårdhed kg</label><input id="mKg" inputmode="decimal" placeholder="fx 23" required></div>
-          <div><label for="mMm">Tykkelse mm</label><select id="mMm" required><option value="">Vælg</option></select></div>
-          <div><label for="mTimer">På timer</label><select id="mTimer" required><option value="">Vælg</option><option>Nej</option><option>Ja</option></select></div>
-          <div><label for="mNote">Note</label><input id="mNote" maxlength="300"></div>
-          <div class="full"><button type="submit" class="ok" style="width:100%">Meld klar</button></div>
-        </form>
-        <div id="klarMsg" class="msg" aria-live="polite"></div>
-        <p class="hint">Dine initialer sættes på af sig selv. Strengen trækkes fra lageret, 1/16 rulle, eller 1/32 af hver ved hybrid.</p>
-      </div>
-
-      <!-- Måneden -->
-      <div class="card fane hidden" id="fane-taeller">
-        <h2 id="tTitel">Måneden</h2>
-        <div class="stats">
-          <div class="stat"><b id="tUden">·</b><span>uden timer</span></div>
-          <div class="stat"><b id="tPaa">·</b><span>på timer</span></div>
-          <div class="stat"><b id="tSats">·</b><span>kr. pr. stk. nu</span></div>
-        </div>
-        <div class="meter" aria-hidden="true"><i id="tMeter" style="width:0"></i></div>
-        <div id="tNaeste" class="hint" style="margin-top:4px"></div>
-        <div id="tPr" style="margin-top:12px"></div>
-        <p class="hint">Trappen gælder for alle opstrengere samlet: 65 kr. til nr. 20, 75 kr. fra nr. 21 til 40 og 85 kr. derover. På timer er 50 kr.</p>
-      </div>
-
-      <!-- Strenge -->
-      <div class="card fane hidden" id="fane-strenge">
-        <h2>Strengelager</h2>
-        <div id="lagerListe"></div>
-        <h2 style="margin-top:18px">Ruller ind</h2>
-        <form id="indForm" class="grid" autocomplete="off">
-          <div><label for="iStreng">Streng</label><select id="iStreng" required></select></div>
-          <div><label for="iAntal">Antal ruller</label><input id="iAntal" inputmode="decimal" placeholder="1" required></div>
-          <div class="full"><label for="iNote">Note, fx faktura</label><input id="iNote" maxlength="200"></div>
-          <div class="full"><button type="submit" style="width:100%">Registrér ruller</button></div>
-        </form>
-        <div id="indMsg" class="msg" aria-live="polite"></div>
-      </div>
+  <!-- Opstrengere i nyt design (Lars 19. oktober kl. 21.18 til 21.33, mockup godkendt 21.33). Kode fra strengeskemaet, Andet, sms og fem ruller -->
+  <div id="omraade" class="hidden tt">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div class="af-hero"><img src="../billeder/felt-opstrengning.jpg" alt=""><div class="tx"><span class="kick">Opstrengere</span><h1 id="fTitel">Skabet</h1></div></div>
+    <div class="tt-kat" role="tablist" aria-label="Opstrengning">
+      <button type="button" role="tab" data-fane="koe" aria-selected="true">Skabet</button>
+      <button type="button" role="tab" data-fane="klar" aria-selected="false">Meld klar</button>
+      <button type="button" role="tab" data-fane="taeller" aria-selected="false">Måneden</button>
+      <button type="button" role="tab" data-fane="strenge" aria-selected="false">Strenge</button>
     </div>
-  </section>
+
+    <!-- Skabet -->
+    <div class="fane" id="fane-koe" role="tabpanel">
+      <div class="os-stat">
+        <div><b id="sModtaget">·</b><span>i køen</span></div>
+        <div><b id="sOver">·</b><span>over frist</span></div>
+        <div><b id="sKlar">·</b><span>klar i skabet</span></div>
+      </div>
+      <form id="toemForm" class="os-linje" autocomplete="off">
+        <label for="tNr" class="sr">Nummer fra sedlen</label>
+        <input id="tNr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Nr. fra sedlen">
+        <button type="submit" class="af-chip fyldt">Modtaget</button>
+      </form>
+      <details class="af-mere" style="margin-top:8px"><summary>Afleveret en anden dag eller en note</summary><div class="ind">
+        <label for="tDato" class="os-lbl" style="margin-top:0">Afleveret</label><input id="tDato" class="os-felt" type="date">
+        <label for="tNote" class="os-lbl">Note</label><input id="tNote" class="os-felt" maxlength="300">
+      </div></details>
+      <div id="toemMsg" class="msg" aria-live="polite"></div>
+      <div id="koeListe" style="margin-top:6px"></div>
+      <div id="koeMsg" class="msg" aria-live="polite"></div>
+    </div>
+
+    <!-- Meld klar -->
+    <div class="fane hidden" id="fane-klar" role="tabpanel">
+      <form id="klarForm" autocomplete="off">
+        <label for="mNr" class="os-lbl" style="margin-top:0">Nummer</label>
+        <input id="mNr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" required>
+        <b class="os-lbl" id="kodeLbl">Kode fra sedlen</b>
+        <div class="os-vaelg" id="koder" role="group" aria-labelledby="kodeLbl"></div>
+        <div id="kodeInfo"></div>
+        <div id="andet" class="os-boks hidden">
+          <label for="aLangs" class="os-lbl" style="margin-top:0">Langs</label><select id="aLangs" class="os-felt"></select>
+          <label for="aTvaers" class="os-lbl">Tværs</label><select id="aTvaers" class="os-felt"></select>
+          <b class="os-lbl" id="prisLbl">Pris betalt</b>
+          <div class="tt-kat" id="priser" role="group" aria-labelledby="prisLbl"></div>
+          <p class="po-note" style="margin:6px 0 0">Tykkelsen følger rullen. Andet end strengene på lager kan ikke vælges.</p>
+        </div>
+        <b class="os-lbl" id="kgLbl">Hårdhed</b>
+        <div class="os-kg" role="group" aria-labelledby="kgLbl"><button type="button" id="kgNed" aria-label="0,5 kg mindre">−</button><output id="kg" aria-live="polite">· kg</output><button type="button" id="kgOp" aria-label="0,5 kg mere">+</button></div>
+        <p class="po-note" id="kgNote" style="margin:0 0 4px">Vælg koden først.</p>
+        <label for="mNote" class="os-lbl" id="noteLbl">Note (valgfri)</label>
+        <input id="mNote" class="os-felt" maxlength="300" placeholder="Fx ny grip, knækket streng i rammen">
+        <button type="submit" class="af-chip fyldt os-stor" id="klarKnap" style="margin-top:14px">Meld klar</button>
+        <div id="klarMsg" class="msg" aria-live="polite"></div>
+        <p class="po-note" id="traek"></p>
+      </form>
+      <div class="af-chips"><a class="af-chip info" href="strengeskema.pdf" target="_blank" rel="noopener">Strengeskema (PDF)</a></div>
+    </div>
+
+    <!-- Måneden -->
+    <div class="fane hidden" id="fane-taeller" role="tabpanel">
+      <h2 class="po-h" id="tTitel" style="margin-top:0">Måneden</h2>
+      <div class="os-stat">
+        <div><b id="tIalt">·</b><span>opstrengninger</span></div>
+        <div><b id="tSats">·</b><span>kr. pr. stk. nu</span></div>
+        <div><b id="tTil">·</b><span id="tTilTekst">til næste trin</span></div>
+      </div>
+      <div class="os-bar" aria-hidden="true"><i id="tMeter" style="width:0"></i></div>
+      <div id="tPr" style="margin-top:12px"></div>
+      <p class="po-note">Trappen gælder for alle opstrengere samlet: 65 kr. til nr. 20, 75 kr. fra nr. 21 til 40 og 85 kr. derover.</p>
+    </div>
+
+    <!-- Strenge -->
+    <div class="fane hidden" id="fane-strenge" role="tabpanel">
+      <div id="lagerListe"></div>
+      <h2 class="po-h">Ny rulle</h2>
+      <form id="indForm" autocomplete="off">
+        <div class="os-linje"><label for="iStreng" class="sr">Streng</label><select id="iStreng" class="os-felt" required></select><button type="submit" class="af-chip fyldt">+1 rulle</button></div>
+        <label for="iNote" class="os-lbl">Note, fx faktura (valgfri)</label><input id="iNote" class="os-felt" maxlength="200">
+      </form>
+      <div id="indMsg" class="msg" aria-live="polite"></div>
+      <p class="po-note">Under 5 opstrengninger tilbage på en rulle får administratorerne en mail. Én rulle på 200 m er 16 opstrengninger.</p>
+      <div class="af-chips"><a class="af-chip info" href="strengeskema.pdf" target="_blank" rel="noopener">Strengeskema (PDF)</a></div>
+    </div>
+  </div>
   </div>
   <div class="wrap partnere">
     <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
@@ -191,6 +187,8 @@ async function motor(modul, handling, data, id) {
 }
 
 // ===================== OPSTRENGERE =====================
+const esc = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const kg = (x) => String(x).replace('.', ',') + ' kg';
 function logUd(udloebet) {
   if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
   token = ''; person = null; gem('rtk.token', null);
@@ -198,63 +196,70 @@ function logUd(udloebet) {
 }
 $('logud').addEventListener('click', () => logUd(false));
 
+const TITLER = { koe: 'Skabet', klar: 'Meld klar', taeller: 'Måneden', strenge: 'Strenge' };
 async function visOmraade() {
   $('omraade').classList.remove('hidden');
   $('hvem').textContent = 'Logget ind som ' + person.navn + (person.initialer ? ' (' + person.initialer + ')' : '');
   $('tDato').value = new Date().toISOString().slice(0, 10);
   vaelgFane('koe');
-  try { valg = await motor('opstrengning', 'valg'); fyldValg(); } catch (e) {}
+  try { valg = await motor('opstrengning', 'valg'); fyldValg(); } catch (e) { besked($('klarMsg'), e.message, 'err'); }
 }
 
 function vaelgFane(navn) {
-  document.querySelectorAll('.tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.fane === navn)));
+  document.querySelectorAll('[data-fane]').forEach((b) => { b.setAttribute('aria-selected', String(b.dataset.fane === navn)); b.classList.toggle('valgt', b.dataset.fane === navn); });
   document.querySelectorAll('.fane').forEach((f) => f.classList.toggle('hidden', f.id !== 'fane-' + navn));
+  $('fTitel').textContent = TITLER[navn];
   if (navn === 'koe') hentKoe();
   if (navn === 'taeller') hentTaeller();
   if (navn === 'strenge') hentLager();
-  if (navn === 'toem') setTimeout(() => $('tNr').focus(), 50);
 }
-document.querySelector('.tabs').addEventListener('click', (e) => { const b = e.target.closest('button[data-fane]'); if (b) vaelgFane(b.dataset.fane); });
+document.querySelector('.tt-kat[role=tablist]').addEventListener('click', (e) => { const b = e.target.closest('button[data-fane]'); if (b) vaelgFane(b.dataset.fane); });
 
-// ---- Kø
+// ---- Skabet
+function raekke(r) {
+  // En række i køen er selv knappen til Meld klar (som i mockuppen). En klar ketsjer har knappen Hentet
+  const klar = r.status === 'Klar';
+  const el = document.createElement(klar ? 'div' : 'button'); el.className = 'tt-tr' + (klar ? '' : ' os-knap');
+  let st = '', cls = '', b1, b2;
+  if (klar) { b1 = (r.kode || r.type || 'Klar') + (r.haardhed ? ' · ' + kg(r.haardhed) : ''); b2 = 'Klar ' + kort(r.klarDato) + ' · ' + r.initialer + (r.smsSendt ? ' · sms sendt' : r.smsFejl ? ' · sms ikke sendt' : ''); }
+  else {
+    if (r.eftersyn) { st = 'Eftersyn'; cls = 'bad'; b1 = 'Problemer med opstrengningen'; b2 = r.note; }
+    else if (r.overFrist) { st = 'Over frist'; cls = 'bad'; b1 = 'Frist ' + kort(r.klarSenest); b2 = 'Afleveret ' + kort(r.afleveret); }
+    else if (r.senestIdag) { st = 'I dag'; cls = 'v'; b1 = 'Frist i dag'; b2 = 'Afleveret ' + kort(r.afleveret); }
+    else { st = 'Modtaget'; cls = 'n'; b1 = 'Frist ' + kort(r.klarSenest); b2 = 'Afleveret ' + kort(r.afleveret); }
+    if (r.sms) b2 += ' · vil have sms';
+    el.type = 'button'; el.setAttribute('aria-label', 'Meld nr. ' + r.nr + ' klar. ' + b1 + '. ' + b2 + '. ' + st);
+    el.addEventListener('click', () => aabnKlar(r));
+  }
+  el.innerHTML = '<span class="os-k nr">' + esc(r.nr) + '</span><div class="tt-mid"><b>' + esc(b1) + '</b><span>' + esc(b2) + '</span></div>' + (st ? '<span class="tt-st ' + cls + '">' + esc(st) + '</span>' : '');
+  if (klar) {
+    const knap = document.createElement('button'); knap.type = 'button'; knap.className = 'af-chip lille info';
+    knap.textContent = 'Hentet'; knap.setAttribute('aria-label', 'Hentet nr. ' + r.nr);
+    knap.addEventListener('click', () => hentet(r.nr, knap));
+    el.append(knap);
+  }
+  return el;
+}
 async function hentKoe() {
-  const boks = $('koeListe'); boks.textContent = 'Henter …'; besked($('koeMsg'), '');
+  const boks = $('koeListe'); if (!boks.childElementCount) boks.textContent = 'Henter …'; besked($('koeMsg'), '');
   try {
     const k = await motor('opstrengning', 'koe');
     $('sModtaget').textContent = k.antal.modtaget; $('sOver').textContent = k.antal.overFrist; $('sKlar').textContent = k.antal.klar;
+    $('sOver').style.color = k.antal.overFrist ? 'var(--bad)' : '';
     boks.innerHTML = '';
-    if (!k.raekker.length) { boks.textContent = 'Skabet er tomt.'; return; }
-    const t = document.createElement('table');
-    t.innerHTML = '<tr><th>Nr</th><th>Status</th><th>Frist</th><th class="hide-sm">Type</th><th></th></tr>';
-    k.raekker.forEach((r) => {
-      const tr = document.createElement('tr');
-      const nr = document.createElement('td'); nr.textContent = r.nr; nr.style.fontWeight = '600';
-      const st = document.createElement('td'); const pill = document.createElement('span');
-      pill.className = 'pill ' + (r.eftersyn ? 'Eftersyn' : r.status); pill.textContent = r.eftersyn ? 'Eftersyn' : r.status; st.append(pill);
-      const fr = document.createElement('td'); fr.textContent = r.status === 'Klar' ? 'klar ' + kort(r.klarDato) : kort(r.klarSenest);
-      if (r.overFrist) fr.className = 'over'; else if (r.senestIdag) { fr.className = 'idag'; fr.textContent = 'i dag'; }
-      const ty = document.createElement('td'); ty.className = 'hide-sm'; ty.textContent = r.type;
-      const kn = document.createElement('td'); kn.style.textAlign = 'right';
-      const b = document.createElement('button'); b.type = 'button'; b.className = 'small ' + (r.status === 'Klar' ? 'ghost' : 'ok');
-      b.textContent = r.status === 'Klar' ? 'Hentet' : 'Meld klar';
-      b.addEventListener('click', () => r.status === 'Klar' ? hentet(r.nr, b) : aabnKlar(r));
-      kn.append(b);
-      tr.append(nr, st, fr, ty, kn); t.append(tr);
-    });
-    boks.append(t);
+    const ko = k.raekker.filter((r) => r.status !== 'Klar'), kl = k.raekker.filter((r) => r.status === 'Klar');
+    if (!k.raekker.length) { boks.innerHTML = '<p class="po-note">Skabet er tomt.</p>'; return; }
+    if (ko.length) { const p = document.createElement('p'); p.className = 'po-note'; p.style.margin = '4px 0 8px'; p.textContent = 'Tryk på et nummer for at melde det klar.'; boks.append(p); }
+    ko.forEach((r) => boks.append(raekke(r)));
+    if (kl.length) { const h = document.createElement('h2'); h.className = 'po-h'; h.textContent = 'Klar i skabet'; boks.append(h); kl.forEach((r) => boks.append(raekke(r))); }
   } catch (err) { boks.textContent = ''; besked($('koeMsg'), err.message, 'err'); }
 }
-$('opdater').addEventListener('click', hentKoe);
-
 async function hentet(nr, knap) {
   knap.disabled = true;
   try { await motor('opstrengning', 'hentet', { nr }, nyId()); hentKoe(); }
   catch (err) { besked($('koeMsg'), err.message, 'err'); knap.disabled = false; }
 }
-
-// ---- Tøm skabet
 let toemId = nyId();
-const modtaget = [];
 $('toemForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const nr = $('tNr').value.trim(); if (!nr) return;
@@ -263,47 +268,78 @@ $('toemForm').addEventListener('submit', async (e) => {
     const r = await motor('opstrengning', 'registrer', { nr, afleveret: $('tDato').value, note: $('tNote').value }, toemId);
     toemId = nyId();
     besked($('toemMsg'), 'Nr. ' + r.nr + ' modtaget. Klar senest ' + datoTekst(r.klarSenest) + '.', 'okm');
-    modtaget.unshift(r.nr); $('toemListe').textContent = 'Registreret nu: ' + modtaget.join(', ');
     $('tNr').value = ''; $('tNote').value = ''; $('tNr').focus();
+    hentKoe();
   } catch (err) { besked($('toemMsg'), err.message, 'err'); if (!err.net) toemId = nyId(); $('tNr').select(); }
 });
 
-// ---- Meld klar
-// Navnene kommer fra arket og skrives som tekst, ikke som HTML (skalatesten 17. oktober)
-const escO = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// ---- Meld klar: kode fra sedlen eller Andet. Hårdheden starter ved den vejledende og rettes i halve kg
+const K = { kode: '', kg: null, pris: null };
 function fyldValg() {
   if (!valg) return;
-  $('mType').innerHTML = '<option value="">Vælg</option>' + valg.typer.map((t) => '<option>' + escO(t) + '</option>').join('');
-  $('mMm').innerHTML = '<option value="">Vælg</option>' + valg.tykkelser.map((t) => '<option>' + escO(t) + '</option>').join('');
-  $('iStreng').innerHTML = valg.strenge.map((t) => '<option>' + escO(t) + '</option>').join('');
+  $('koder').innerHTML = Object.keys(valg.koder).map((k) => '<button type="button" data-kode="' + esc(k) + '" aria-pressed="false" aria-label="' + esc(k + ', ' + valg.koder[k].pris + ' kr.') + '">' + esc(k) + '<span>' + valg.koder[k].pris + ' kr.</span></button>').join('') +
+    '<button type="button" class="os-andet" data-kode="Andet" aria-pressed="false" aria-label="Andet, skriv selv, kun strenge på lager">Andet<span>skriv selv, kun strenge på lager</span></button>';
+  const opt = valg.strenge.map((t) => '<option>' + esc(t) + '</option>').join('');
+  $('aLangs').innerHTML = '<option value="">Vælg</option>' + opt; $('aTvaers').innerHTML = '<option value="">Vælg</option>' + opt; $('iStreng').innerHTML = opt;
+  $('priser').innerHTML = valg.priser.map((p) => '<button type="button" data-pris="' + p + '" aria-pressed="false">' + p + ' kr.</button>').join('');
 }
-$('mType').addEventListener('change', () => {
-  const liste = $('mType').value === 'Hybrid' ? valg.hybrider : valg.strenge;
-  $('mStreng').innerHTML = '<option value="">Vælg</option>' + liste.map((s) => '<option>' + escO(s) + '</option>').join('');
+function strenge() {
+  if (K.kode === 'Andet') return $('aLangs').value && $('aTvaers').value ? [$('aLangs').value, $('aTvaers').value] : [];
+  const k = valg && valg.koder[K.kode]; return k ? [k.langs, k.tvaers] : [];
+}
+function visKode() {
+  $('koder').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.kode === K.kode)));
+  $('priser').querySelectorAll('button').forEach((b) => { const v = Number(b.dataset.pris) === K.pris; b.setAttribute('aria-pressed', String(v)); b.classList.toggle('valgt', v); });
+  $('andet').classList.toggle('hidden', K.kode !== 'Andet');
+  $('noteLbl').textContent = K.kode === 'Andet' ? 'Hvorfor (skal udfyldes)' : 'Note (valgfri)';
+  const k = valg && valg.koder[K.kode];
+  $('kodeInfo').innerHTML = k ? '<div class="os-boks"><b>' + esc(K.kode + ' ' + k.type) + '</b><div class="po-note" style="margin:4px 0 0">' +
+    esc(k.langs === k.tvaers ? k.langs + ' · 1 stykke á 12 m' : k.langs + ' langs · ' + k.tvaers + ' tværs · 2 stykker á 6 m') + ' · Ingen forstrækning</div></div>' : '';
+  $('kg').textContent = K.kg === null ? 'Vælg' : kg(K.kg);
+  $('kgNote').textContent = !K.kode ? 'Vælg koden først.' : k ? 'Vejledende for ' + K.kode + '. Står der noget andet på sedlen, så ret det.' : 'Skriv hårdheden fra sedlen.';
+  const s = strenge();
+  $('traek').textContent = !s.length ? '' : s[0] === s[1] ? 'Trækkes fra lageret: 1 opstrengning ' + s[0] + '.' : 'Trækkes fra lageret: ½ opstrengning ' + s[0] + ' og ½ ' + s[1] + '.';
+  const nr = $('mNr').value.trim();
+  $('klarKnap').textContent = nr ? 'Meld nr. ' + nr.padStart(4, '0') + ' klar' : 'Meld klar';
+}
+$('koder').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-kode]'); if (!b) return;
+  if (K.kode !== b.dataset.kode) klarId = nyId();
+  K.kode = b.dataset.kode;
+  const k = valg.koder[K.kode];
+  K.kg = k ? k.kg : null;
+  visKode();
 });
+$('priser').addEventListener('click', (e) => { const b = e.target.closest('button[data-pris]'); if (b) { K.pris = Number(b.dataset.pris); visKode(); } });
+// Ved Andet starter hårdheden tom. Første tryk giver 24 kg, så opstrengeren selv vælger (gennemgangen 19. oktober)
+$('kgNed').addEventListener('click', () => { if (!K.kode) return; if (K.kg === null) K.kg = 24; else if (K.kg > 15) K.kg -= 0.5; visKode(); });
+$('kgOp').addEventListener('click', () => { if (!K.kode) return; if (K.kg === null) K.kg = 24; else if (K.kg < 35) K.kg += 0.5; visKode(); });
+['aLangs', 'aTvaers'].forEach((id) => $(id).addEventListener('change', visKode));
+$('mNr').addEventListener('input', () => { klarId = nyId(); visKode(); });
 function aabnKlar(r) {
   vaelgFane('klar');
   $('mNr').value = r.nr;
-  if (r.type) { $('mType').value = r.type; $('mType').dispatchEvent(new Event('change')); }
-  if (r.streng) $('mStreng').value = r.streng;
-  $('mNote').value = r.eftersyn ? r.note : '';
+  K.kode = ''; K.kg = null; K.pris = null; klarId = nyId();
+  $('mNote').value = '';
   besked($('klarMsg'), r.eftersyn ? 'Eftersyn: ' + r.note : '');
-  setTimeout(() => $(r.type ? 'mKg' : 'mType').focus(), 50);
+  visKode();
+  setTimeout(() => { const b = $('koder').querySelector('button'); if (b) b.focus(); }, 50);
 }
 let klarId = nyId();
 $('klarForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const knap = $('klarForm').querySelector('button[type=submit]'); knap.disabled = true;
+  if (!K.kode) { besked($('klarMsg'), 'Vælg koden fra sedlen', 'err'); return; }
+  if (K.kg === null) { besked($('klarMsg'), 'Vælg hårdheden', 'err'); return; }
+  const knap = $('klarKnap'); knap.disabled = true;
   besked($('klarMsg'), 'Gemmer …');
+  const d = { nr: $('mNr').value, kode: K.kode, haardhed: K.kg, note: $('mNote').value };
+  if (K.kode === 'Andet') Object.assign(d, { langs: $('aLangs').value, tvaers: $('aTvaers').value, pris: K.pris });
   try {
-    const r = await motor('opstrengning', 'meldKlar', {
-      nr: $('mNr').value, type: $('mType').value, streng: $('mStreng').value, haardhed: $('mKg').value,
-      tykkelse: $('mMm').value, paaTimer: $('mTimer').value, note: $('mNote').value
-    }, klarId);
+    const r = await motor('opstrengning', 'meldKlar', d, klarId);
     klarId = nyId();
     const t = r.taeller;
-    besked($('klarMsg'), 'Nr. ' + r.nr + ' er klar. Måneden: ' + t.udenTimer + ' uden timer' + (t.tilNaesteTrin ? ', ' + t.tilNaesteTrin + ' til ' + t.naesteSats + ' kr' : '') + '.', 'okm');
-    $('mNr').value = ''; $('mKg').value = ''; $('mNote').value = '';
+    besked($('klarMsg'), 'Nr. ' + r.nr + ' er klar' + (r.sms ? ', og medlemmet har fået en sms' : '') + '. Måneden: ' + t.udenTimer + (t.tilNaesteTrin ? ', ' + t.tilNaesteTrin + ' til ' + t.naesteSats + ' kr.' : '') + '.', 'okm');
+    $('mNr').value = ''; $('mNote').value = ''; K.kode = ''; K.kg = null; K.pris = null; visKode();
   } catch (err) { besked($('klarMsg'), err.message, 'err'); if (!err.net) klarId = nyId(); }
   knap.disabled = false;
 });
@@ -314,31 +350,36 @@ async function hentTaeller() {
     const t = await motor('opstrengning', 'taeller');
     const [y, m] = t.maaned.split('-').map(Number);
     $('tTitel').textContent = new Date(y, m - 1, 1).toLocaleDateString('da-DK', { month: 'long', year: 'numeric' }).replace(/^./, (c) => c.toUpperCase());
-    $('tUden').textContent = t.udenTimer; $('tPaa').textContent = t.paaTimer; $('tSats').textContent = t.satsNu;
+    $('tIalt').textContent = t.udenTimer; $('tSats').textContent = t.satsNu;
+    $('tTil').textContent = t.tilNaesteTrin ? t.tilNaesteTrin : '·';
+    $('tTilTekst').textContent = t.tilNaesteTrin ? 'til ' + t.naesteSats + ' kr.' : 'øverste trin';
     const maal = t.tilNaesteTrin ? t.udenTimer + t.tilNaesteTrin : Math.max(t.udenTimer, 1);
     $('tMeter').style.width = Math.min(100, Math.round(100 * t.udenTimer / maal)) + '%';
-    $('tNaeste').textContent = t.tilNaesteTrin ? t.tilNaesteTrin + ' opstrengninger til ' + t.naesteSats + ' kr. pr. stk.' : 'Øverste trin er nået.';
     const pr = Object.entries(t.prOpstrenger);
-    $('tPr').innerHTML = pr.length ? '<table><tr><th>Opstrenger</th><th>Antal</th></tr>' + pr.map(([k, v]) => '<tr><td>' + k.replace(/</g, '') + '</td><td>' + v + '</td></tr>').join('') + '</table>' : '';
-  } catch (err) { $('tNaeste').textContent = err.message; }
+    $('tPr').innerHTML = pr.map(([k, v]) => '<div class="tt-tr"><span class="os-k">' + esc(k) + '</span><div class="tt-mid"><b>' + v + (v === 1 ? ' opstrengning' : ' opstrengninger') + '</b></div></div>').join('');
+  } catch (err) { $('tPr').innerHTML = '<p class="msg err">' + esc(err.message) + '</p>'; }
 }
 
 // ---- Strenge
 async function hentLager() {
-  const boks = $('lagerListe'); boks.textContent = 'Henter …';
+  const boks = $('lagerListe'); if (!boks.childElementCount) boks.textContent = 'Henter …';
   try { visLager(await motor('opstrengning', 'strengelager')); } catch (err) { boks.textContent = err.message; }
 }
 function visLager(l) {
-  $('lagerListe').innerHTML = '<table><tr><th>Streng</th><th>Ruller</th><th>Opstr.</th><th></th></tr>' + l.map((s) =>
-    '<tr><td>' + s.streng.replace(/</g, '') + '</td><td>' + String(s.ruller).replace('.', ',') + '</td><td>' + s.opstrengninger + '</td><td>' + (s.bestil ? '<span class="pill Eftersyn">bestil</span>' : '') + '</td></tr>').join('') + '</table>';
+  $('lagerListe').innerHTML = l.map((s) => {
+    const pct = Math.max(0, Math.min(100, Math.round(s.ruller * 100)));
+    return '<div class="os-boks"><div style="display:flex;justify-content:space-between;gap:10px"><b>' + esc(s.streng) + '</b><span class="tt-st ' + (s.bestil ? 'bad' : 'ok') + '">' +
+      (s.bestil ? 'Bestil' : s.opstrengninger + ' tilbage') + '</span></div><div class="os-bar" aria-hidden="true"><i class="' + (s.bestil ? 'lav' : '') + '" style="width:' + Math.min(100, pct) + '%"></i></div>' +
+      '<div class="po-note" style="margin:0">' + String(s.ruller).replace('.', ',') + (s.ruller === 1 ? ' rulle' : ' ruller') + ' · cirka ' + s.opstrengninger + ' opstrengninger · ' + s.meter + ' m</div></div>';
+  }).join('');
 }
 let indId = nyId();
 $('indForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   besked($('indMsg'), 'Gemmer …');
   try {
-    visLager(await motor('opstrengning', 'strengeInd', { streng: $('iStreng').value, ruller: $('iAntal').value, note: $('iNote').value }, indId));
-    indId = nyId(); besked($('indMsg'), 'Registreret.', 'okm'); $('iAntal').value = ''; $('iNote').value = '';
+    visLager(await motor('opstrengning', 'strengeInd', { streng: $('iStreng').value, ruller: 1, note: $('iNote').value }, indId));
+    indId = nyId(); besked($('indMsg'), 'En rulle ' + $('iStreng').value + ' er lagt på lager.', 'okm'); $('iNote').value = '';
   } catch (err) { besked($('indMsg'), err.message, 'err'); if (!err.net) indId = nyId(); }
 });
 
