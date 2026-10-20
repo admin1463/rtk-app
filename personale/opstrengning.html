@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="a4858058f3c3">
+<meta name="rtk-version" content="130d880cc2c4">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=c8648d1e771e">
+<link rel="stylesheet" href="../rtk.css?v=6f4501ee138d">
 </head>
 <body>
 <header class="top">
@@ -50,25 +50,33 @@
       <!-- Tjek af skabet og numre fra telefonen (Lars 20. oktober kl. 08.48 til 08.52) -->
       <div id="tjekBoks" class="sk-tjek"><div><b id="tjekH">Sidste tjek af afleveringsskabet</b><span id="tjekTekst">Henter …</span></div><button type="button" class="af-chip fyldt" id="tjekKnap">Skabet er tjekket</button></div>
       <div id="tjekMsg" class="msg" aria-live="polite"></div>
-      <h2 class="po-h">Numre trukket af medlemmer</h2>
-      <p class="po-note" style="margin:0 0 6px">Tryk Modtaget ved de numre, der ligger i afleveringsskabet. Så kommer de i køen under Meld klar. Resten er numre, der ikke er brugt endnu.</p>
+      <h2 class="po-h">Ketsjernumre trukket af medlemmer</h2>
+      <p class="po-note" style="margin:0 0 6px">Tryk Modtaget ved de ketsjernumre, der ligger i afleveringsskabet. Så kommer de i køen under Meld klar. Resten er ketsjernumre, der ikke er brugt endnu.</p>
       <div id="numreListe" class="sk-liste"><p class="po-note" style="margin:10px 14px">Henter …</p></div>
-      <p class="po-note">Et nummer på en seddel, som ikke står i listen, kan modtages her. Note og billeder kommer med, uanset hvor du trykker Modtaget.</p>
+      <p class="po-note">Et ketsjernummer på en seddel, som ikke står i listen, kan modtages her. Note og billeder kommer med, uanset hvor du trykker Modtaget.</p>
       <form id="toemForm" class="os-linje" autocomplete="off">
-        <label for="tNr" class="sr">Nummer fra sedlen</label>
-        <input id="tNr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Nr. fra sedlen">
+        <label for="tNr" class="sr">Ketsjernummer fra sedlen</label>
+        <input id="tNr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Ketsjernummer fra sedlen">
         <button type="submit" class="af-chip fyldt">Modtaget</button>
       </form>
       <details class="af-mere" id="tMere" style="margin-top:8px"><summary>Afleveret en anden dag, en note eller billeder</summary><div class="ind">
-        <label for="tDato" class="os-lbl" style="margin-top:0">Afleveret en anden dag (ellers fra nummeret)</label><input id="tDato" class="os-felt" type="date">
+        <label for="tDato" class="os-lbl" style="margin-top:0">Afleveret en anden dag (ellers fra ketsjernummeret)</label><input id="tDato" class="os-felt" type="date">
         <label for="tNote" class="os-lbl">Note</label><input id="tNote" class="os-felt" maxlength="300">
         <b class="os-lbl" id="tBilLbl">Billeder (højst 3)</b>
         <div class="os-fotos" id="tFotos" role="group" aria-labelledby="tBilLbl"></div>
         <p class="po-note" style="margin:4px 0 0">Kun opstrengere og administratorer ser billederne. De slettes 90 dage efter, at ketsjeren er hentet.</p>
       </div></details>
       <div id="toemMsg" class="msg" aria-live="polite"></div>
+      <!-- QR-koden til afleveringsskabet med den hemmelige del. Kun administratorer (Lars 20. oktober kl. 16.43) -->
+      <details class="af-mere hidden" id="qrMere" style="margin-top:8px"><summary>QR-kode til afleveringsskabet</summary><div class="ind">
+        <p class="po-note" style="margin-top:0">Print koden og sæt den på afleveringsskabet. Kun den giver ketsjernumre. Slipper den ud, så skift den og print en ny. Den gamle holder op med at virke med det samme.</p>
+        <div id="qrBillede" class="qr-billede"></div>
+        <p class="po-note" id="qrAdr" style="word-break:break-all"></p>
+        <div class="af-chips"><a class="af-chip info hidden" id="qrHent" download="RTK_QR_afleveringsskab.svg" href="#">Hent som billede</a><button type="button" class="af-chip info" id="qrSkift">Skift koden</button></div>
+        <div id="qrMsg" class="msg" aria-live="polite"></div>
+      </div></details>
       <details class="af-mere" id="tjekMere" style="margin-top:14px"><summary>Tjek af afleveringsskabet</summary><div class="ind">
-        <p class="po-note" style="margin-top:0">Afleveringsskabet tjekkes mindst hver anden hverdag. Tryk Skabet er tjekket, når du har modtaget ketsjerne. Ligger et trukket nummer der stadig ikke to hverdage efter, uden at skabet er tjekket, får administratorerne besked.</p>
+        <p class="po-note" style="margin-top:0">Afleveringsskabet tjekkes mindst hver anden hverdag. Tryk Skabet er tjekket, når du har modtaget ketsjerne. Ligger et trukket ketsjernummer der stadig ikke to hverdage efter, uden at skabet er tjekket, får administratorerne besked.</p>
         <div id="tjekListe" class="sk-liste"></div>
       </div></details>
     </div>
@@ -85,7 +93,7 @@
       <div id="koeMsg" class="msg" aria-live="polite"></div>
       <h2 class="po-h" id="klarH">Meld klar</h2>
       <form id="klarForm" autocomplete="off" aria-labelledby="klarH">
-        <label for="mNr" class="os-lbl" style="margin-top:0">Nummer</label>
+        <label for="mNr" class="os-lbl" style="margin-top:0">Ketsjernummer</label>
         <input id="mNr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" required>
         <div id="fraModt"></div>
         <b class="os-lbl" id="kodeLbl">Opstrengningstype fra sedlen</b>
@@ -233,6 +241,7 @@ $('logud').addEventListener('click', () => logUd(false));
 const TITLER = { koe: 'Aflevering', klar: 'Meld klar', hent: 'Afhentning', taeller: 'Måneden', strenge: 'Strenge' };
 async function visOmraade() {
   $('omraade').classList.remove('hidden');
+  $('qrMere').classList.toggle('hidden', (person.roller || []).indexOf('admin') < 0);
   $('hvem').textContent = 'Logget ind som ' + person.navn + (person.initialer ? ' (' + person.initialer + ')' : '');
   vaelgFane('koe');
   try { valg = await motor('opstrengning', 'valg'); fyldValg(); } catch (e) { besked($('klarMsg'), e.message, 'err'); }
@@ -306,7 +315,7 @@ async function hentKoe() {
     KOE = {}; k.raekker.forEach((r) => { KOE[r.nr] = r; });
     visModt();
     boks.innerHTML = '';
-    if (ko.length) { const p = document.createElement('p'); p.className = 'po-note'; p.style.margin = '0 0 8px'; p.textContent = 'Eftersyn først, derefter efter frist. Tryk på et nummer for at melde det klar.'; boks.append(p); }
+    if (ko.length) { const p = document.createElement('p'); p.className = 'po-note'; p.style.margin = '0 0 8px'; p.textContent = 'Eftersyn først, derefter efter frist. Tryk på et ketsjernummer for at melde det klar.'; boks.append(p); }
     else boks.innerHTML = '<p class="po-note">Køen er tom.</p>';
     ko.forEach((r) => boks.append(raekke(r)));
     hb.innerHTML = '';
@@ -333,7 +342,7 @@ $('toemForm').addEventListener('submit', async (e) => {
     if (r.spoerg) {
       // Ikke trukket fra telefonen: måske læst forkert. Andet tryk med samme nummer gemmer (Lars 20. oktober kl. 08.40)
       ukendtNr = n4;
-      besked($('toemMsg'), 'Nr. ' + r.nr + ' er ikke trukket fra telefonen. Tjek sedlen. Er nummeret rigtigt, så tryk Modtaget igen.', 'err');
+      besked($('toemMsg'), 'Nr. ' + r.nr + ' er ikke trukket fra telefonen. Tjek sedlen. Er ketsjernummeret rigtigt, så tryk Modtaget igen.', 'err');
       $('tNr').focus(); return;
     }
     ukendtNr = '';
@@ -365,12 +374,12 @@ function visNumre() {
   const boks = $('numreListe'); const x = NUMRE;
   if (!x) return;
   boks.innerHTML = '';
-  if (!x.numre.length) { boks.innerHTML = '<p class="po-note" style="margin:10px 14px">Ingen numre de sidste 30 dage.</p>'; }
+  if (!x.numre.length) { boks.innerHTML = '<p class="po-note" style="margin:10px 14px">Ingen ketsjernumre de sidste 30 dage.</p>'; }
   const vis = alleNumre ? x.numre : x.numre.slice(0, 8);
   vis.forEach((n) => boks.append(nummerRaekke(n)));
   if (x.numre.length > 8) {
     const m = document.createElement('button'); m.type = 'button'; m.className = 'sk-mere';
-    m.textContent = alleNumre ? 'Vis færre numre' : 'Vis ældre numre (' + (x.numre.length - 8) + ')';
+    m.textContent = alleNumre ? 'Vis færre ketsjernumre' : 'Vis ældre ketsjernumre (' + (x.numre.length - 8) + ')';
     m.setAttribute('aria-expanded', String(alleNumre));
     m.addEventListener('click', () => { alleNumre = !alleNumre; visNumre(); boks.querySelector('.sk-mere').focus(); });
     boks.append(m);
@@ -378,7 +387,7 @@ function visNumre() {
   const s = x.sidste;
   $('tjekBoks').classList.toggle('gammel', !!x.gammel);
   $('tjekH').textContent = x.gammel ? 'Afleveringsskabet er ikke tjekket i ' + x.hverdage + ' hverdage' : 'Sidste tjek af afleveringsskabet';
-  $('tjekTekst').textContent = (s ? (x.gammel ? 'Sidst ' : '') + tidTekst(s.tid) + (s.initialer ? ' · ' + s.initialer : '') : 'Ikke tjekket endnu') + (x.gammel && x.siden ? ' · ' + x.siden + (x.siden === 1 ? ' nummer' : ' numre') + ' trukket siden' : '');
+  $('tjekTekst').textContent = (s ? (x.gammel ? 'Sidst ' : '') + tidTekst(s.tid) + (s.initialer ? ' · ' + s.initialer : '') : 'Ikke tjekket endnu') + (x.gammel && x.siden ? ' · ' + x.siden + (x.siden === 1 ? ' ketsjernummer' : ' ketsjernumre') + ' trukket siden' : '');
   $('tjekListe').innerHTML = x.tjek.length ? x.tjek.map((t) => '<div class="sk-r"><span class="tid">' + esc(tidTekst(t.tid)) + '<small>' + esc((t.navn || t.initialer || '') + ' · ' + t.antal + ' modtaget') + '</small></span></div>').join('') : '<p class="po-note" style="margin:10px 14px">Ingen tjek de sidste 30 dage.</p>';
 }
 async function hentNumre() {
@@ -395,6 +404,37 @@ $('tjekKnap').addEventListener('click', async () => {
     hentNumre();
   } catch (err) { besked($('tjekMsg'), err.message, 'err'); if (!err.net) tjekId = nyId(); }
   k.disabled = false;
+});
+
+// ---- QR-koden til afleveringsskabet (kun administratorer)
+let qrLib = null, qrSkiftKlar = false, qrId = nyId();
+function qrScript() {
+  if (!qrLib) qrLib = new Promise((ok, nej) => { const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'; sc.onload = () => ok(window.qrcode); sc.onerror = () => { qrLib = null; nej(new Error('QR-koden kunne ikke tegnes. Tjek forbindelsen.')); }; document.head.append(sc); });
+  return qrLib;
+}
+async function visQr(kode) {
+  const url = location.origin + location.pathname.replace(/personale\/[^/]*$/, '') + 'opstrengning.html#nummer-' + kode;
+  $('qrAdr').textContent = url;
+  try {
+    const qrcode = await qrScript();
+    const q = qrcode(0, 'M'); q.addData(url); q.make();
+    const svg = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+    $('qrBillede').innerHTML = svg;
+    const sv = $('qrBillede').querySelector('svg'); if (sv) { sv.setAttribute('role', 'img'); sv.setAttribute('aria-label', 'QR-kode til afleveringsskabet'); }
+    $('qrHent').href = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); $('qrHent').classList.remove('hidden');
+  } catch (err) { besked($('qrMsg'), err.message, 'err'); }
+}
+$('qrMere').addEventListener('toggle', async () => {
+  if (!$('qrMere').open || $('qrAdr').textContent) return;
+  try { visQr((await motor('opstrengning', 'qr')).kode); } catch (err) { besked($('qrMsg'), err.message, 'err'); }
+});
+$('qrSkift').addEventListener('click', async () => {
+  // To tryk, så koden på skabet ikke skiftes ved et uheld
+  if (!qrSkiftKlar) { qrSkiftKlar = true; besked($('qrMsg'), 'Den gamle QR-kode holder op med at virke med det samme. Tryk Skift koden igen for at skifte.', 'err'); return; }
+  qrSkiftKlar = false; $('qrSkift').disabled = true; besked($('qrMsg'), 'Skifter …');
+  try { const r = await motor('opstrengning', 'qrNy', {}, qrId); qrId = nyId(); await visQr(r.kode); besked($('qrMsg'), 'Koden er skiftet. Print den nye, og sæt den på afleveringsskabet.', 'okm'); }
+  catch (err) { besked($('qrMsg'), err.message, 'err'); if (!err.net) qrId = nyId(); }
+  $('qrSkift').disabled = false;
 });
 
 // ---- Meld klar: kode fra sedlen eller Andet. Hårdheden starter ved den vejledende og rettes i halve kg
