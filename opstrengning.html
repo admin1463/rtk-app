@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="787f71c7725b">
+<meta name="rtk-version" content="4bfb7f7b1aff">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=b31103dc6cbc">
+<link rel="stylesheet" href="rtk.css?v=c8648d1e771e">
 </head>
 <body>
 <header class="top">
@@ -37,26 +37,28 @@
   <div class="monster lav" aria-hidden="true"></div>
   <div class="wrap indhold smal">
 
-    <div class="af-hero"><img src="billeder/felt-opstrengning.jpg" alt=""><div class="tx"><span class="kick" data-t="sideTitel">Opstrengning</span><h1 data-t="klarSpm">Er min ketsjer klar?</h1></div></div>
-    <section>
+    <div class="af-hero"><img src="billeder/felt-opstrengning.jpg" alt=""><div class="tx"><span class="kick" data-t="sideTitel">Opstrengning</span><h1 id="heroH" data-t="klarSpm">Er min ketsjer klar?</h1></div></div>
+    <!-- Et nyt nummer fra QR-koden på skabet: opstrengning.html#nummer (Lars 20. oktober kl. 08.24 til 08.52) -->
+    <section id="nummerVis" class="hidden" aria-live="polite"></section>
+    <section id="opslagVis">
       <form id="opslagForm" class="os-linje" autocomplete="off">
-        <label for="nr" class="sr" data-t="nrLabel">Nummer fra din kvittering</label>
+        <label for="nr" class="sr" data-t="nrLabel">Dit ketsjernummer</label>
         <input id="nr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="0147">
         <button type="submit" class="af-chip fyldt" data-t="seStatus">Se status</button>
       </form>
       <div id="opslagSvar" aria-live="polite"></div>
       <form id="smsBoks" class="os-boks hidden" aria-live="polite" autocomplete="on"></form>
-      <p class="hint" data-t="opslagHint">Skriv nummeret fra din kvittering. Ketsjeren er klar senest tre hverdage efter aflevering og ligger i afhentningsskabet.</p>
+      <p class="hint" data-t="opslagHint">Skriv dit ketsjernummer. Ketsjeren er klar senest tre hverdage efter aflevering og ligger i afhentningsskabet.</p>
       <div class="af-chips"><a class="af-chip info" href="#priser" data-t="seListe">Se strenge og priser</a><a class="af-chip info" href="#skriv" data-t="skrivTil">Skriv til opstrengeren</a></div>
     </section>
 
     <section class="afsnit" id="priser">
       <h2 data-t="priser">Strenge og priser</h2>
-      <p class="po-note" data-t="koderIntro">Skriv koden på ordresedlen, når du afleverer ketsjeren. Ved tvivl: B1 er et godt sted at starte, og K1 er skånsom for armen.</p>
+      <p class="po-note" data-t="koderIntro">Skriv opstrengningstypen på sedlen, når du afleverer ketsjeren. Ved tvivl: B1 er et godt sted at starte, og K1 er skånsom for armen.</p>
       <div id="koder"></div>
-      <div class="os-boks"><b data-t="haardH">Hårdhed</b><p class="po-note" style="margin:4px 0 0" data-t="haardT">Skriv hårdheden i kg på sedlen. Ellers bruger vi den, der står ved koden. Mere kontrol: 1 til 2 kg højere. Mere fart: 1 til 2 kg lavere.</p></div>
-      <p class="po-note" data-t="koderNote">Juniorer under 14 år vælger B1 eller K1. Vi strenger kun med strengene på lager, også selv om du har dine egne med. Karaktererne sammenligner koderne indbyrdes. Priser inkl. moms.</p>
-      <p class="hint" data-t="betaling">Betaling med MobilePay ved aflevering. Skriv nummeret fra sedlen i beskeden.</p>
+      <div class="os-boks"><b data-t="haardH">Hårdhed</b><p class="po-note" style="margin:4px 0 0" data-t="haardT">Skriv hårdheden i kg på sedlen. Ellers bruger vi den, der står ved typen. Mere kontrol: 1 til 2 kg højere. Mere fart: 1 til 2 kg lavere.</p></div>
+      <p class="po-note" data-t="koderNote">Juniorer under 14 år vælger B1 eller K1. Vi strenger kun med strengene på lager, også selv om du har dine egne med. Karaktererne sammenligner typerne indbyrdes. Priser inkl. moms.</p>
+      <p class="hint" data-t="betaling">Betal med MobilePay-koden på afleveringsskabet. Vælg den samme opstrengningstype, og skriv ketsjernummeret i beskeden.</p>
     </section>
 
     <section class="afsnit" id="skriv">
@@ -107,56 +109,74 @@ window.TEKSTER = {
   da: {
     titel: 'Opstrengning · Mit RTK', sideTitel: 'Opstrengning', side: 'Medlemssiden', tilForsiden: 'Til forsiden',
     klubLink: 'Roskilde Tennis Klubs hjemmeside (åbner i ny fane)', racketlifeLink: 'Racketlife (åbner i ny fane)',
-    klarSpm: 'Er min ketsjer klar?', nrLabel: 'Nummer fra din kvittering', seStatus: 'Se status',
-    opslagHint: 'Skriv nummeret fra din kvittering. Ketsjeren er klar senest tre hverdage efter aflevering og ligger i afhentningsskabet.',
+    klarSpm: 'Er min ketsjer klar?', nrLabel: 'Dit ketsjernummer', seStatus: 'Se status',
+    opslagHint: 'Skriv dit ketsjernummer. Ketsjeren er klar senest tre hverdage efter aflevering og ligger i afhentningsskabet.',
     skrivTil: 'Skriv til opstrengeren', emne: 'Hvad drejer det sig om?', gSpm: 'Spørgsmål', gGlemt: 'Glemt nummer', gIkke: 'Problemer med opstrengningen', gAndet: 'Andet',
     kNr: 'Nummer, hvis du har det', kMobil: 'Dit mobilnummer', kBesked: 'Besked', send: 'Send besked',
     kontaktHint: 'Beskeden går som sms til den opstrenger, der har vagten, med dit nummer, så du kan få svar.',
     priser: 'Strenge og priser', seListe: 'Se strenge og priser',
-    koderIntro: 'Skriv koden på ordresedlen, når du afleverer ketsjeren. Ved tvivl: B1 er et godt sted at starte, og K1 er skånsom for armen.',
-    haardH: 'Hårdhed', haardT: 'Skriv hårdheden i kg på sedlen. Ellers bruger vi den, der står ved koden. Mere kontrol: 1 til 2 kg højere. Mere fart: 1 til 2 kg lavere.',
-    koderNote: 'Juniorer under 14 år vælger B1 eller K1. Vi strenger kun med strengene på lager, også selv om du har dine egne med. Karaktererne sammenligner koderne indbyrdes. Priser inkl. moms.',
+    koderIntro: 'Skriv opstrengningstypen på sedlen, når du afleverer ketsjeren. Ved tvivl: B1 er et godt sted at starte, og K1 er skånsom for armen.',
+    haardH: 'Hårdhed', haardT: 'Skriv hårdheden i kg på sedlen. Ellers bruger vi den, der står ved typen. Mere kontrol: 1 til 2 kg højere. Mere fart: 1 til 2 kg lavere.',
+    koderNote: 'Juniorer under 14 år vælger B1 eller K1. Vi strenger kun med strengene på lager, også selv om du har dine egne med. Karaktererne sammenligner typerne indbyrdes. Priser inkl. moms.',
     tBasis: 'Basis', tHybrid: 'Hybrid', tSpin: 'Spin og kontrol', tKomfort: 'Komfort',
     kKomfort: 'Komfort', kKontrol: 'Kontrol', kSpin: 'Spin', kFart: 'Fart', kHold: 'Holdbarhed', fra14: 'Fra 14 år', langs: 'langs', tvaers: 'tværs', af5: '{n} af 5',
     hB1: 'Juniorer, begyndere og motionister', hH1: 'Kontrol og spin med lidt komfort', hH2: 'Som H1, holder længere', hS1: 'Ambitiøse spillere, kontrol og spin',
     hS2: 'Som S1, holder længere', hS3: 'Polyester med mere fart', hK1: 'Ømme arme og tennisalbue. Mest skånsom', hK2: 'Skånsom for armen, mere kontrol til hårde slag',
     smsH: 'Send mig en sms, når den er klar', smsMobil: 'Dit mobilnummer', smsGem: 'Gem', smsNote: 'Du får én sms, når ketsjeren ligger i afhentningsskabet. Nummeret bruges kun til det og slettes, når ketsjeren er hentet.',
     smsOk: 'Du får en sms, når den er klar.', smsFortryd: 'Fortryd', smsFjernet: 'Du får ikke en sms. Se status her i stedet.', gemmer: 'Gemmer …',
-    betaling: 'Betaling med MobilePay ved aflevering. Skriv nummeret fra sedlen i beskeden.',
+    betaling: 'Betal med MobilePay-koden på afleveringsskabet. Vælg den samme opstrengningstype, og skriv ketsjernummeret i beskeden.',
     partnere: 'Officielle partnere', test: 'Testversion. Data er opdigtede.', privatliv: 'Privatliv',
     henter: 'Henter …', sender: 'Sender …',
     ikkeReg: 'Nr. {nr} er ikke registreret endnu', ikkeRegTekst: 'Ketsjerne registreres, når skabet tømmes. Prøv igen senere, eller skriv til opstrengeren herunder.',
     erKlar: 'Nr. {nr} er klar til afhentning', erKlarTekst: 'Strenget {dato}. Den ligger i afhentningsskabet.',
     erHentet: 'Nr. {nr} er hentet', erHentetTekst: 'God fornøjelse med de nye strenge.',
     erModtaget: 'Nr. {nr} er modtaget', erModtagetTekst: 'Afleveret {afl}. Klar senest {frist}.',
-    tak: 'Tak. Beskeden er sendt til {til}.', opstrengeren: 'opstrengeren'
+    tak: 'Tak. Beskeden er sendt til {til}.', opstrengeren: 'opstrengeren',
+    ditNr: 'Dit ketsjernummer', ditNrLbl: 'Dit nummer', trukket: 'Trukket {dato} kl. {kl}', henterNr: 'Henter dit nummer …', provIgen: 'Prøv igen',
+    t1: 'Udfyld en seddel fra skabet', t1t: 'Skriv nummeret, opstrengningstypen (fx B1) og evt. hårdhed i kg.',
+    t2: 'Betal med MobilePay', t2t: 'Scan MobilePay-koden på skabet. Vælg den samme opstrengningstype, skriv nummeret i beskeden, og betal.',
+    t3: 'Læg ketsjeren i skabet', t3t: 'Med sedlen sat fast med en elastik. Den er klar senest {dato}, 3 hverdage efter.',
+    besked: 'Besked:', kopier: 'Kopiér', kopieret: 'Kopieret', kopierNr: 'Kopiér nummeret {nr}',
+    skaermbillede: 'Tag et skærmbillede, så du har nummeret. Du kan altid se status og bede om en sms, når den er klar.',
+    erTrukket: 'Nr. {nr} er trukket', erTrukketTekst: 'Når ketsjeren er afleveret, er den klar senest 3 hverdage efter.',
+    smsNoteTr: 'Du får én sms, når ketsjeren ligger i afhentningsskabet. Nummeret bruges kun til det og slettes, når ketsjeren er hentet, eller efter 14 dage, hvis den ikke bliver afleveret.',
+    smsAndenTlf: 'Du kan bede om en sms på den telefon, der trak nummeret, eller når ketsjeren er modtaget.'
   },
   en: {
     titel: 'Racket stringing · Mit RTK', sideTitel: 'Racket stringing', side: 'Members’ area', tilForsiden: 'To the front page',
     klubLink: 'Roskilde Tennis Klub website (opens in a new tab)', racketlifeLink: 'Racketlife (opens in a new tab)',
-    klarSpm: 'Is my racket ready?', nrLabel: 'Number on your receipt', seStatus: 'Check status',
-    opslagHint: 'Enter the number on your receipt. Your racket is ready no later than three working days after drop-off and will be in the collection locker.',
+    klarSpm: 'Is my racket ready?', nrLabel: 'Your racket number', seStatus: 'Check status',
+    opslagHint: 'Enter your racket number. Your racket is ready no later than three working days after drop-off and will be in the collection locker.',
     skrivTil: 'Message the stringer', emne: 'What is it about?', gSpm: 'Question', gGlemt: 'Forgot my number', gIkke: 'Stringing issues', gAndet: 'Other',
     kNr: 'Number, if you have it', kMobil: 'Your mobile number', kBesked: 'Message', send: 'Send message',
     kontaktHint: 'Your message is sent as a text to the stringer on duty, with your number, so they can reply.',
     priser: 'Strings and prices', seListe: 'See strings and prices',
-    koderIntro: 'Write the code on the order slip when you drop off your racket. Not sure? B1 is a good place to start, and K1 is gentle on the arm.',
-    haardH: 'Tension', haardT: 'Write the tension in kg on the slip. Otherwise we use the one shown for the code. More control: 1 to 2 kg higher. More power: 1 to 2 kg lower.',
-    koderNote: 'Juniors under 14 choose B1 or K1. We only string with the strings in stock, even if you bring your own. The ratings compare the codes with each other. Prices include VAT.',
+    koderIntro: 'Write the stringing type on the slip when you drop off your racket. Not sure? B1 is a good place to start, and K1 is gentle on the arm.',
+    haardH: 'Tension', haardT: 'Write the tension in kg on the slip. Otherwise we use the one shown for the type. More control: 1 to 2 kg higher. More power: 1 to 2 kg lower.',
+    koderNote: 'Juniors under 14 choose B1 or K1. We only string with the strings in stock, even if you bring your own. The ratings compare the types with each other. Prices include VAT.',
     tBasis: 'Basic', tHybrid: 'Hybrid', tSpin: 'Spin and control', tKomfort: 'Comfort',
     kKomfort: 'Comfort', kKontrol: 'Control', kSpin: 'Spin', kFart: 'Power', kHold: 'Durability', fra14: 'From age 14', langs: 'mains', tvaers: 'crosses', af5: '{n} of 5',
     hB1: 'Juniors, beginners and recreational players', hH1: 'Control and spin with some comfort', hH2: 'Like H1, lasts longer', hS1: 'Ambitious players, control and spin',
     hS2: 'Like S1, lasts longer', hS3: 'Polyester with more power', hK1: 'Sore arms and tennis elbow. The gentlest', hK2: 'Gentle on the arm, more control for hard shots',
     smsH: 'Text me when it is ready', smsMobil: 'Your mobile number', smsGem: 'Save', smsNote: 'You get one text message when your racket is in the collection locker. The number is only used for that and is deleted when the racket has been collected.',
     smsOk: 'You will get a text message when it is ready.', smsFortryd: 'Undo', smsFjernet: 'You will not get a text message. Check the status here instead.', gemmer: 'Saving …',
-    betaling: 'Pay with MobilePay when you drop off your racket. Put the number from the slip in the payment note.',
+    betaling: 'Pay with the MobilePay code on the drop-off locker. Choose the same stringing type, and put your racket number in the payment note.',
     partnere: 'Official partners', test: 'Test version. All data is fictitious.', privatliv: 'Privacy',
     henter: 'Loading …', sender: 'Sending …',
     ikkeReg: 'No. {nr} has not been registered yet', ikkeRegTekst: 'Rackets are registered when the drop-off locker is emptied. Please try again later, or message the stringer below.',
     erKlar: 'No. {nr} is ready for collection', erKlarTekst: 'Strung on {dato}. It is in the collection locker.',
     erHentet: 'No. {nr} has been collected', erHentetTekst: 'Enjoy your new strings.',
     erModtaget: 'No. {nr} has been received', erModtagetTekst: 'Dropped off on {afl}. Ready no later than {frist}.',
-    tak: 'Thank you. Your message has been sent to {til}.', opstrengeren: 'the stringer'
+    tak: 'Thank you. Your message has been sent to {til}.', opstrengeren: 'the stringer',
+    ditNr: 'Your racket number', ditNrLbl: 'Your number', trukket: 'Issued {dato} at {kl}', henterNr: 'Getting your number …', provIgen: 'Try again',
+    t1: 'Fill in a slip from the locker', t1t: 'Write the number, the stringing type (e.g. B1) and, if you like, the tension in kg.',
+    t2: 'Pay with MobilePay', t2t: 'Scan the MobilePay code on the locker. Choose the same stringing type, put the number in the payment note, and pay.',
+    t3: 'Put the racket in the locker', t3t: 'With the slip attached with a rubber band. It will be ready no later than {dato}, 3 working days later.',
+    besked: 'Note:', kopier: 'Copy', kopieret: 'Copied', kopierNr: 'Copy the number {nr}',
+    skaermbillede: 'Take a screenshot so you have the number. You can always check the status and ask for a text message when it is ready.',
+    erTrukket: 'No. {nr} has been issued', erTrukketTekst: 'Once the racket has been dropped off, it will be ready no later than 3 working days later.',
+    smsNoteTr: 'You get one text message when your racket is in the collection locker. The number is only used for that and is deleted when the racket has been collected, or after 14 days if it is never dropped off.',
+    smsAndenTlf: 'You can ask for a text message on the phone that issued the number, or once the racket has been received.'
   }
 };
 /* Motorens beskeder på dansk, oversat til engelsk på medlemssiden. */
@@ -175,6 +195,10 @@ window.MOTOR_EN = {
   'Det bliver stadig gemt. Vent et øjeblik, og prøv igen.': 'It is still being saved. Please wait a moment and try again.',
   'Du har prøvet mange gange. Prøv igen om en time.': 'You have tried many times. Please try again in an hour.',
   'Opstrengeren har fået mange beskeder lige nu. Prøv igen om et minut.': 'The stringer has received many messages just now. Please try again in a minute.',
+  'Der er trukket mange numre lige nu. Prøv igen om et minut.': 'Many numbers have been issued just now. Please try again in a minute.',
+  'Der er trukket mange numre i dag. Skriv nummeret fra en seddel i skabet, eller skriv til opstrengeren.': 'Many numbers have been issued today. Use the number on a slip in the locker, or message the stringer.',
+  'Der er ingen ledige numre lige nu. Skriv til opstrengeren.': 'There are no free numbers right now. Please message the stringer.',
+  'Bed om sms på den telefon, der trak nummeret, eller når ketsjeren er modtaget.': 'Ask for a text message on the phone that issued the number, or once the racket has been received.',
   'Du har skrevet mange gange til opstrengeren. Prøv igen om en time, eller skriv til kontakt@roskildetennisklub.dk.': 'You have written to the stringer many times. Please try again in an hour, or write to kontakt@roskildetennisklub.dk.'
 };
 </script>
@@ -261,6 +285,8 @@ function visSvar() {
     ud.className = 'result neutral'; b.textContent = t('ikkeReg', { nr: s.nr }); p.textContent = t('ikkeRegTekst');
   } else if (s.status === 'Klar') {
     ud.className = 'result klar'; b.textContent = t('erKlar', { nr: s.nr }); p.textContent = t('erKlarTekst', { dato: datoTekst(s.klarDato) });
+  } else if (s.status === 'Trukket') {
+    ud.className = 'result vent'; b.textContent = t('erTrukket', { nr: s.nr }); p.textContent = t('erTrukketTekst');
   } else if (s.status === 'Hentet') {
     ud.className = 'result neutral'; b.textContent = t('erHentet', { nr: s.nr }); p.textContent = t('erHentetTekst');
   } else {
@@ -275,18 +301,23 @@ let smsMobil = '', smsMsg = '', smsId = nyId();
 function visSms() {
   const boks = $('smsBoks');
   const s = sidsteSvar && sidsteSvar.s;
-  if (!s || !s.fundet || s.status !== 'Modtaget') { boks.classList.add('hidden'); return; }
+  if (!s || !s.fundet || (s.status !== 'Modtaget' && s.status !== 'Trukket')) { boks.classList.add('hidden'); return; }
   boks.classList.remove('hidden');
+  const note = s.status === 'Trukket' ? 'smsNoteTr' : 'smsNote';
+  if (s.status === 'Trukket' && !s.sms && !noegleFor(s.nr)) {
+    boks.innerHTML = '<b>' + esc(t('smsH')) + '</b><p class="po-note" style="margin:4px 0 0">' + esc(t('smsAndenTlf')) + '</p>';
+    return;
+  }
   if (s.sms) {
     boks.innerHTML = '<div class="os-vippe"><b id="smsStatus" tabindex="-1">' + esc(t('smsOk')) + '</b>' + (smsMobil ? '<button type="button" class="af-chip lille info" id="smsFortryd">' + esc(t('smsFortryd')) + '</button>' : '') + '</div>' +
-      '<p class="po-note" style="margin:6px 0 0">' + esc(t('smsNote')) + '</p>';
+      '<p class="po-note" style="margin:6px 0 0">' + esc(t(note)) + '</p>';
     if (smsMobil) $('smsFortryd').addEventListener('click', () => gemSms(false));
     if (fokusSms) { fokusSms = false; $('smsStatus').focus(); }
     return;
   }
   boks.innerHTML = '<b>' + esc(t('smsH')) + '</b><label for="smsNr" class="os-lbl">' + esc(t('smsMobil')) + '</label>' +
     '<div class="os-linje"><input id="smsNr" class="os-felt" type="tel" inputmode="tel" autocomplete="tel" value="' + esc(smsMobil) + '"><button type="button" class="af-chip fyldt" id="smsGem">' + esc(t('smsGem')) + '</button></div>' +
-    '<div id="smsMsg" class="msg" aria-live="polite"></div><p class="po-note" style="margin:8px 0 0">' + esc(t('smsNote')) + '</p>';
+    '<div id="smsMsg" class="msg" aria-live="polite"></div><p class="po-note" style="margin:8px 0 0">' + esc(t(note)) + '</p>';
   if (smsMsg) besked($('smsMsg'), smsMsg.tekst, smsMsg.slags);
   $('smsGem').type = 'submit';
   if (fokusSms) { fokusSms = false; $('smsNr').focus(); }
@@ -299,7 +330,7 @@ async function gemSms(til) {
   const knap = $(til ? 'smsGem' : 'smsFortryd'); knap.disabled = true;
   if ($('smsMsg')) besked($('smsMsg'), t('gemmer'));
   try {
-    const r = await motor('opstrengning', 'sms', { nr: s.nr, mobil, til }, smsId);
+    const r = await motor('opstrengning', 'sms', { nr: s.nr, mobil, til, noegle: noegleFor(s.nr) }, smsId);
     smsId = nyId(); smsMobil = til ? mobil : ''; smsMsg = til ? '' : { tekst: t('smsFjernet'), slags: '' };
     if (r.status === 'Klar') { $('opslagForm').requestSubmit(); return; }
     s.sms = !!r.sms; fokusSms = true; visSms();
@@ -348,11 +379,72 @@ $('kontaktForm').addEventListener('submit', async (e) => {
   knap.disabled = false;
 });
 
-document.addEventListener('sprog', () => { visSvar(); visKontakt(); visKoder(); });
+// ---- Nyt nummer fra QR-koden på skabet. Hver scanning giver et nyt nummer (Lars 20. oktober kl. 08.29)
+let nummer = null, nummerId = nyId();
+// Koden fra motoren bevises, når der bestilles sms til et trukket nummer. Huskes på telefonen i 14 dage
+const NOEGLER = {};
+function noeglerLaes() { try { return JSON.parse(localStorage.getItem('rtk.opsNoegler') || '{}') || {}; } catch (e) { return {}; } }
+function noegleFor(nr) { return NOEGLER[nr] || (noeglerLaes()[nr] || {}).k || ''; }
+function noegleGem(nr, k) {
+  NOEGLER[nr] = k;
+  try {
+    const m = noeglerLaes(); const graense = Date.now() - 14 * 86400000;
+    Object.keys(m).forEach((x) => { if (!m[x] || m[x].t < graense) delete m[x]; });
+    m[nr] = { k, t: Date.now() };
+    localStorage.setItem('rtk.opsNoegler', JSON.stringify(m));
+  } catch (e) { /* uden lager huskes koden kun, mens siden er åben */ }
+}
+function kl(tid) { return String(tid || '').slice(11, 16).replace(':', S.sprog === 'en' ? ':' : '.'); }
+function visTilstand(nyt) {
+  $('nummerVis').classList.toggle('hidden', !nyt);
+  $('opslagVis').classList.toggle('hidden', !!nyt);
+  $('heroH').setAttribute('data-t', nyt ? 'ditNr' : 'klarSpm');
+  $('heroH').textContent = t(nyt ? 'ditNr' : 'klarSpm');
+}
+function visNummer() {
+  const boks = $('nummerVis');
+  if (!nummer) { boks.innerHTML = '<p class="msg">' + esc(t('henterNr')) + '</p>'; return; }
+  if (nummer.fejl) {
+    boks.innerHTML = '<div class="result fejl">' + esc(fejlTekst(nummer.fejl)) + '</div><button type="button" class="af-chip fyldt os-stor" id="nrIgen" style="margin-top:12px">' + esc(t('provIgen')) + '</button>';
+    $('nrIgen').addEventListener('click', hentNummer);
+    return;
+  }
+  const n = nummer.nr;
+  boks.innerHTML = '<div class="nr-stor"><div class="lbl">' + esc(t('ditNrLbl')) + '</div><div class="tal" id="nrTal">' + esc(n) + '</div>' +
+    '<div class="tid">' + esc(t('trukket', { dato: datoTekst(nummer.trukket.slice(0, 10)), kl: kl(nummer.trukket) })) + '</div></div>' +
+    '<ol class="nr-trin">' +
+    '<li><span class="n" aria-hidden="true">1</span><div><b>' + esc(t('t1')) + '</b><span>' + esc(t('t1t')) + '</span></div></li>' +
+    '<li><span class="n" aria-hidden="true">2</span><div><b>' + esc(t('t2')) + '</b><span>' + esc(t('t2t')) + '</span>' +
+    '<div class="nr-mp"><span>' + esc(t('besked')) + '</span><code>' + esc(n) + '</code><button type="button" class="af-chip lille info" id="nrKopier" aria-label="' + esc(t('kopierNr', { nr: n })) + '">' + esc(t('kopier')) + '</button></div></div></li>' +
+    '<li><span class="n" aria-hidden="true">3</span><div><b>' + esc(t('t3')) + '</b><span>' + esc(t('t3t', { dato: datoTekst(nummer.klarSenest) })) + '</span></div></li>' +
+    '</ol><p class="po-note">' + esc(t('skaermbillede')) + '</p>' +
+    '<div class="af-chips"><button type="button" class="af-chip info" id="nrStatus">' + esc(t('klarSpm')) + '</button><a class="af-chip info" href="#priser">' + esc(t('seListe')) + '</a></div>';
+  $('nrKopier').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(n); $('nrKopier').textContent = t('kopieret'); } catch (e) { /* uden adgang til udklipsholderen står nummeret stadig synligt */ }
+  });
+  $('nrStatus').addEventListener('click', () => { visTilstand(false); $('nr').value = n; $('opslagForm').requestSubmit(); $('nr').focus(); });
+}
+async function hentNummer() {
+  nummer = null; visNummer();
+  // Samme id ved "Prøv igen", så et kald, der nåede frem, ikke trækker et nummer mere
+  try { nummer = await motor('opstrengning', 'nytNummer', {}, nummerId); nummerId = nyId(); if (nummer.noegle) noegleGem(nummer.nr, nummer.noegle); }
+  catch (err) { nummer = { fejl: err.message }; }
+  visNummer();
+  const tal = $('nrTal'); if (tal) { tal.setAttribute('tabindex', '-1'); tal.focus(); }
+}
+
+document.addEventListener('sprog', () => { visSvar(); visKontakt(); visKoder(); if (!$('nummerVis').classList.contains('hidden')) visNummer(); });
 
 // ---- Start
 // Gamle links til opstrengernes del går nu til personalesiden.
 if (location.hash === '#opstrenger') location.replace('personale/opstrengning.html');
+// QR-koden på skabet. Mærket fjernes fra adressen, så en genindlæsning eller et link, der deles, ikke trækker et nummer mere
+function nummerFraQr() {
+  if (location.hash !== '#nummer') return;
+  history.replaceState(null, '', location.pathname + location.search); visTilstand(true); nummerId = nyId(); hentNummer(); window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', nummerFraQr);
+nummerFraQr();
 const qs = new URLSearchParams(location.search);
 if (qs.get('nr')) { $('nr').value = qs.get('nr'); $('opslagForm').requestSubmit(); }
 </script>

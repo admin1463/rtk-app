@@ -908,3 +908,51 @@ details.af-mere.tt-valg summary::-webkit-details-marker,details.af-mere.tt-grupp
 .os-stor{width:100%;justify-content:center;min-height:52px;font-size:16px}
 .tt-st.bad{background:var(--badbg);color:var(--bad)}
 .tt-tr.os-knap{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;min-height:0}
+/* Billeder af ketsjeren hos opstrengerne (20. oktober) */
+.os-fotos{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+.os-foto{position:relative;width:84px;height:84px}
+.os-foto .vis{width:100%;height:100%;min-height:0;padding:0;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#EEF2F3;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.os-foto img{width:100%;height:100%;object-fit:cover;display:block}
+.os-foto .x{position:absolute;top:2px;right:2px;width:32px;height:32px;min-height:0;white-space:normal;border-radius:99px;border:0;background:rgba(0,0,0,.62);color:#FFFFFF;font-size:17px;line-height:32px;text-align:center;padding:0;cursor:pointer}
+.os-hent{color:var(--muted);font-weight:700}
+.os-tilf{width:84px;height:84px;min-height:0;white-space:normal;border-radius:10px;border:1.5px dashed var(--line2);background:#FFFFFF;color:var(--teal);font-weight:700;font-size:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding:0}
+.os-tilf svg{width:26px;height:26px}
+.os-kam{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;color:var(--teal);margin:0 6px 0 0;vertical-align:middle}
+.os-kam svg{width:14px;height:14px}
+.os-kam.knap{border:1px solid var(--line2);border-radius:99px;background:#FFFFFF;padding:4px 8px;min-height:30px;cursor:pointer}
+.os-lys{position:fixed;inset:0;background:rgba(8,20,20,.94);display:flex;flex-direction:column;z-index:60;color:#FFFFFF}
+.os-lys.hidden{display:none}
+.os-lys .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:calc(14px + env(safe-area-inset-top)) 16px 14px}
+.os-lys .top button{min-height:44px;border-radius:99px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#FFFFFF;font-weight:700;padding:0 18px;font-size:15px}
+.os-lys .bil{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:0 12px}
+.os-lys .bil img{max-width:100%;max-height:100%;border-radius:8px}
+.os-lys .bund{display:flex;justify-content:space-between;align-items:center;padding:14px 16px calc(20px + env(safe-area-inset-bottom));font-size:14px;min-height:48px}
+.os-lys .bund button{width:48px;height:48px;border-radius:99px;border:0;background:rgba(255,255,255,.14);color:#FFFFFF;font-size:22px}
+.os-lys .bund button.os-skjult{visibility:hidden}
+/* Ketsjernummer fra QR-koden på skabet (20. oktober) */
+.nr-stor{border:2px solid var(--teal);border-radius:16px;background:#FFFFFF;text-align:center;padding:18px 14px 16px;margin:4px 0 14px}
+.nr-stor .lbl{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+.nr-stor .tal{font-size:76px;font-weight:900;line-height:1;letter-spacing:.04em;color:var(--ink);margin:6px 0 4px;outline:none}
+.nr-stor .tid{font-size:14px;color:var(--muted)}
+.nr-trin{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-direction:column;gap:10px}
+.nr-trin li{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#FFFFFF}
+.nr-trin .n{flex:0 0 32px;height:32px;border-radius:99px;background:var(--pink);color:#FFFFFF;font-weight:800;display:flex;align-items:center;justify-content:center}
+.nr-trin b{display:block;font-size:16px}
+.nr-trin span{font-size:14.5px;line-height:1.4}
+.nr-mp{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;background:var(--soft);border-radius:8px;padding:6px 6px 6px 10px;font-size:14px}
+.nr-mp code{font-weight:800;font-size:16px;font-family:inherit}
+/* Tjek af skabet og trukne numre hos opstrengerne (20. oktober) */
+.sk-tjek{display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px solid var(--teal);border-radius:14px;padding:12px 14px;background:#FFFFFF;margin:0 0 8px}
+.sk-tjek b{display:block;font-size:16px}
+.sk-tjek span{font-size:14px;color:var(--muted)}
+.sk-tjek .af-chip{flex:0 0 auto;min-height:46px;white-space:normal;text-align:center}
+.sk-tjek.gammel{border-color:var(--bad);background:var(--badbg)}
+.sk-tjek.gammel span{color:var(--bad)}
+.sk-liste{border:1px solid var(--line);border-radius:14px;background:#FFFFFF;overflow:hidden;margin:6px 0 12px}
+.sk-r{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);min-height:48px}
+.sk-r:first-child{border-top:0}
+.sk-r .nr{font-weight:800;font-size:17px;min-width:52px}
+.sk-r .tid{flex:1;min-width:0;font-size:14.5px}
+.sk-r .tid small{display:block;color:var(--muted);font-size:13px}
+.sk-r.graa .nr,.sk-r.graa .tid{color:var(--muted)}
+.sk-mere{display:block;width:100%;text-align:center;padding:10px;min-height:44px;font-weight:700;font-size:14px;color:var(--teal);border:0;border-top:1px solid var(--line);border-radius:0;background:#FFFFFF}
