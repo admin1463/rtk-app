@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="6faed81e73ab">
+<script src="/opdater.js?v=2222ad998c00" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Strengeskema · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css?v=b31103dc6cbc">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Strengeskema</b><span>Opstrengere</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold">
+  <a class="gr-tilbage" href="opstrengning.html">&#8592; Opstrengere</a>
+  <div class="card">
+    <p class="hint" style="margin:0">Knib med to fingre for at zoome.</p>
+    <div class="af-chips" style="margin-top:10px"><a class="af-chip info" id="hent" href="strengeskema.pdf" download="RTK_strengeskema.pdf">Hent som PDF (til print)</a></div>
+  </div>
+  <p class="msg" id="status" role="status">Henter strengeskemaet …</p>
+  <div id="sider" class="ss-sider"></div>
+  <a class="gr-tilbage" href="opstrengning.html">&#8592; Opstrengere</a>
+  </div>
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+<style>
+.ss-sider{margin-top:14px}
+.ss-sider canvas{display:block;width:100%;height:auto;margin:0 0 14px;background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+// Strengeskemaet vises som en side i app'en, så der altid er en vej tilbage (Lars 20. oktober kl. 07.15)
+(async function () {
+  const st = document.getElementById('status');
+  // Fra hjemmeskærmen åbner en PDF uden tilbageknap, så hent-linket vises kun i browseren
+  if (window.navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches)) document.getElementById('hent').parentNode.remove();
+  const sider = document.getElementById('sider');
+  try {
+    if (!window.pdfjsLib) throw new Error('pdf.js mangler');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const pdf = await pdfjsLib.getDocument('strengeskema.pdf').promise;
+    const bredde = Math.min(sider.clientWidth || 360, 900);
+    const tæthed = Math.min(3, Math.max(2, window.devicePixelRatio || 1));
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const side = await pdf.getPage(i);
+      const vp = side.getViewport({ scale: tæthed * bredde / side.getViewport({ scale: 1 }).width });
+      const c = document.createElement('canvas');
+      c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+      c.setAttribute('role', 'img');
+      c.setAttribute('aria-label', 'Strengeskema side ' + i + ' af ' + pdf.numPages);
+      sider.appendChild(c);
+      await side.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+    }
+    st.remove();
+  } catch (e) {
+    st.textContent = 'Skemaet kunne ikke vises lige nu. Tjek forbindelsen og prøv igen.';
+  }
+})();
+</script>
+</body>
+</html>
