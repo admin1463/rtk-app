@@ -956,3 +956,6 @@ details.af-mere.tt-valg summary::-webkit-details-marker,details.af-mere.tt-grupp
 .sk-r .tid small{display:block;color:var(--muted);font-size:13px}
 .sk-r.graa .nr,.sk-r.graa .tid{color:var(--muted)}
 .sk-mere{display:block;width:100%;text-align:center;padding:10px;min-height:44px;font-weight:700;font-size:14px;color:var(--teal);border:0;border-top:1px solid var(--line);border-radius:0;background:#FFFFFF}
+/* QR-koden til afleveringsskabet (20. oktober) */
+.qr-billede{max-width:260px;background:#FFFFFF;border:1px solid var(--line);border-radius:12px;padding:10px}
+.qr-billede svg{display:block;width:100%;height:auto}
