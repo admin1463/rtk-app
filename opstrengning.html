@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="02a15e3f7519">
+<meta name="rtk-version" content="9d36d3bcbe63">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=f7f49d1bcd71">
+<link rel="stylesheet" href="rtk.css?v=b31103dc6cbc">
 </head>
 <body>
 <header class="top">
@@ -37,18 +37,29 @@
   <div class="monster lav" aria-hidden="true"></div>
   <div class="wrap indhold smal">
 
+    <div class="af-hero"><img src="billeder/felt-opstrengning.jpg" alt=""><div class="tx"><span class="kick" data-t="sideTitel">Opstrengning</span><h1 data-t="klarSpm">Er min ketsjer klar?</h1></div></div>
     <section>
-      <h1 class="lille" data-t="klarSpm">Er min ketsjer klar?</h1>
-      <form id="opslagForm" class="row big" autocomplete="off" style="margin-top:14px">
+      <form id="opslagForm" class="os-linje" autocomplete="off">
         <label for="nr" class="sr" data-t="nrLabel">Nummer fra din kvittering</label>
-        <input id="nr" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="0147">
-        <button type="submit" style="flex:0 0 auto" data-t="seStatus">Se status</button>
+        <input id="nr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="0147">
+        <button type="submit" class="af-chip fyldt" data-t="seStatus">Se status</button>
       </form>
       <div id="opslagSvar" aria-live="polite"></div>
+      <form id="smsBoks" class="os-boks hidden" aria-live="polite" autocomplete="on"></form>
       <p class="hint" data-t="opslagHint">Skriv nummeret fra din kvittering. Ketsjeren er klar senest tre hverdage efter aflevering og ligger i afhentningsskabet.</p>
+      <div class="af-chips"><a class="af-chip info" href="#priser" data-t="seListe">Se strenge og priser</a><a class="af-chip info" href="#skriv" data-t="skrivTil">Skriv til opstrengeren</a></div>
     </section>
 
-    <section class="afsnit">
+    <section class="afsnit" id="priser">
+      <h2 data-t="priser">Strenge og priser</h2>
+      <p class="po-note" data-t="koderIntro">Skriv koden på ordresedlen, når du afleverer ketsjeren. Ved tvivl: B1 er et godt sted at starte, og K1 er skånsom for armen.</p>
+      <div id="koder"></div>
+      <div class="os-boks"><b data-t="haardH">Hårdhed</b><p class="po-note" style="margin:4px 0 0" data-t="haardT">Skriv hårdheden i kg på sedlen. Ellers bruger vi den, der står ved koden. Mere kontrol: 1 til 2 kg højere. Mere fart: 1 til 2 kg lavere.</p></div>
+      <p class="po-note" data-t="koderNote">Juniorer under 14 år vælger B1 eller K1. Vi strenger kun med strengene på lager, også selv om du har dine egne med. Karaktererne sammenligner koderne indbyrdes. Priser inkl. moms.</p>
+      <p class="hint" data-t="betaling">Betaling med MobilePay ved aflevering. Skriv nummeret fra sedlen i beskeden.</p>
+    </section>
+
+    <section class="afsnit" id="skriv">
       <h2 data-t="skrivTil">Skriv til opstrengeren</h2>
       <form id="kontaktForm" autocomplete="on">
         <label id="emneLabel" data-t="emne">Hvad drejer det sig om?</label>
@@ -67,18 +78,6 @@
         <div id="kontaktMsg" class="msg" aria-live="polite"></div>
         <p class="hint" data-t="kontaktHint">Beskeden går som sms til den opstrenger, der har vagten, med dit nummer, så du kan få svar.</p>
       </form>
-    </section>
-
-    <section class="afsnit">
-      <h2 data-t="priser">Priser</h2>
-      <table>
-        <tr><th data-t="thType">Type</th><th data-t="thStrenge">Strenge</th><th class="n" data-t="thPris">Pris</th></tr>
-        <tr><td><b>Basis</b></td><td>Syn Gut</td><td class="n">195 kr.</td></tr>
-        <tr><td><b>Hybrid</b></td><td data-t="rpmSyn">RPM og Syn Gut</td><td class="n">215 kr.</td></tr>
-        <tr><td><b>Spin</b></td><td data-t="rpmSerie">RPM-serien</td><td class="n">225 kr.</td></tr>
-        <tr><td><b data-t="komfort">Komfort</b></td><td>Addixion+</td><td class="n">245 kr.</td></tr>
-      </table>
-      <p class="hint" data-t="betaling">Betaling med MobilePay ved aflevering. Skriv nummeret fra sedlen i beskeden.</p>
     </section>
   </div>
 
@@ -113,7 +112,16 @@ window.TEKSTER = {
     skrivTil: 'Skriv til opstrengeren', emne: 'Hvad drejer det sig om?', gSpm: 'Spørgsmål', gGlemt: 'Glemt nummer', gIkke: 'Problemer med opstrengningen', gAndet: 'Andet',
     kNr: 'Nummer, hvis du har det', kMobil: 'Dit mobilnummer', kBesked: 'Besked', send: 'Send besked',
     kontaktHint: 'Beskeden går som sms til den opstrenger, der har vagten, med dit nummer, så du kan få svar.',
-    priser: 'Priser', thType: 'Type', thStrenge: 'Strenge', thPris: 'Pris', rpmSyn: 'RPM og Syn Gut', rpmSerie: 'RPM-serien', komfort: 'Komfort',
+    priser: 'Strenge og priser', seListe: 'Se strenge og priser',
+    koderIntro: 'Skriv koden på ordresedlen, når du afleverer ketsjeren. Ved tvivl: B1 er et godt sted at starte, og K1 er skånsom for armen.',
+    haardH: 'Hårdhed', haardT: 'Skriv hårdheden i kg på sedlen. Ellers bruger vi den, der står ved koden. Mere kontrol: 1 til 2 kg højere. Mere fart: 1 til 2 kg lavere.',
+    koderNote: 'Juniorer under 14 år vælger B1 eller K1. Vi strenger kun med strengene på lager, også selv om du har dine egne med. Karaktererne sammenligner koderne indbyrdes. Priser inkl. moms.',
+    tBasis: 'Basis', tHybrid: 'Hybrid', tSpin: 'Spin og kontrol', tKomfort: 'Komfort',
+    kKomfort: 'Komfort', kKontrol: 'Kontrol', kSpin: 'Spin', kFart: 'Fart', kHold: 'Holdbarhed', fra14: 'Fra 14 år', langs: 'langs', tvaers: 'tværs', af5: '{n} af 5',
+    hB1: 'Juniorer, begyndere og motionister', hH1: 'Kontrol og spin med lidt komfort', hH2: 'Som H1, holder længere', hS1: 'Ambitiøse spillere, kontrol og spin',
+    hS2: 'Som S1, holder længere', hS3: 'Polyester med mere fart', hK1: 'Ømme arme og tennisalbue. Mest skånsom', hK2: 'Skånsom for armen, mere kontrol til hårde slag',
+    smsH: 'Send mig en sms, når den er klar', smsMobil: 'Dit mobilnummer', smsGem: 'Gem', smsNote: 'Du får én sms, når ketsjeren ligger i afhentningsskabet. Nummeret bruges kun til det og slettes, når ketsjeren er hentet.',
+    smsOk: 'Du får en sms, når den er klar.', smsFortryd: 'Fortryd', smsFjernet: 'Du får ikke en sms. Se status her i stedet.', gemmer: 'Gemmer …',
     betaling: 'Betaling med MobilePay ved aflevering. Skriv nummeret fra sedlen i beskeden.',
     partnere: 'Officielle partnere', test: 'Testversion. Data er opdigtede.', privatliv: 'Privatliv',
     henter: 'Henter …', sender: 'Sender …',
@@ -131,7 +139,16 @@ window.TEKSTER = {
     skrivTil: 'Message the stringer', emne: 'What is it about?', gSpm: 'Question', gGlemt: 'Forgot my number', gIkke: 'Stringing issues', gAndet: 'Other',
     kNr: 'Number, if you have it', kMobil: 'Your mobile number', kBesked: 'Message', send: 'Send message',
     kontaktHint: 'Your message is sent as a text to the stringer on duty, with your number, so they can reply.',
-    priser: 'Prices', thType: 'Type', thStrenge: 'Strings', thPris: 'Price', rpmSyn: 'RPM and Syn Gut', rpmSerie: 'RPM range', komfort: 'Comfort',
+    priser: 'Strings and prices', seListe: 'See strings and prices',
+    koderIntro: 'Write the code on the order slip when you drop off your racket. Not sure? B1 is a good place to start, and K1 is gentle on the arm.',
+    haardH: 'Tension', haardT: 'Write the tension in kg on the slip. Otherwise we use the one shown for the code. More control: 1 to 2 kg higher. More power: 1 to 2 kg lower.',
+    koderNote: 'Juniors under 14 choose B1 or K1. We only string with the strings in stock, even if you bring your own. The ratings compare the codes with each other. Prices include VAT.',
+    tBasis: 'Basic', tHybrid: 'Hybrid', tSpin: 'Spin and control', tKomfort: 'Comfort',
+    kKomfort: 'Comfort', kKontrol: 'Control', kSpin: 'Spin', kFart: 'Power', kHold: 'Durability', fra14: 'From age 14', langs: 'mains', tvaers: 'crosses', af5: '{n} of 5',
+    hB1: 'Juniors, beginners and recreational players', hH1: 'Control and spin with some comfort', hH2: 'Like H1, lasts longer', hS1: 'Ambitious players, control and spin',
+    hS2: 'Like S1, lasts longer', hS3: 'Polyester with more power', hK1: 'Sore arms and tennis elbow. The gentlest', hK2: 'Gentle on the arm, more control for hard shots',
+    smsH: 'Text me when it is ready', smsMobil: 'Your mobile number', smsGem: 'Save', smsNote: 'You get one text message when your racket is in the collection locker. The number is only used for that and is deleted when the racket has been collected.',
+    smsOk: 'You will get a text message when it is ready.', smsFortryd: 'Undo', smsFjernet: 'You will not get a text message. Check the status here instead.', gemmer: 'Saving …',
     betaling: 'Pay with MobilePay when you drop off your racket. Put the number from the slip in the payment note.',
     partnere: 'Official partners', test: 'Test version. All data is fictitious.', privatliv: 'Privacy',
     henter: 'Loading …', sender: 'Sending …',
@@ -153,6 +170,10 @@ window.MOTOR_EN = {
   'Systemet er optaget. Prøv igen om et øjeblik.': 'The system is busy. Please try again in a moment.',
   'Ugyldig forespørgsel': 'Invalid request',
   'Ukendt handling': 'Unknown request',
+  'Skriv dit mobilnummer': 'Please enter your mobile number',
+  'Skriv et dansk mobilnummer med 8 cifre': 'Please enter a Danish mobile number with 8 digits',
+  'Det bliver stadig gemt. Vent et øjeblik, og prøv igen.': 'It is still being saved. Please wait a moment and try again.',
+  'Du har prøvet mange gange. Prøv igen om en time.': 'You have tried many times. Please try again in an hour.',
   'Du har skrevet mange gange til opstrengeren. Prøv igen om en time, eller skriv til kontakt@roskildetennisklub.dk.': 'You have written to the stringer many times. Please try again in an hour, or write to kontakt@roskildetennisklub.dk.'
 };
 </script>
@@ -168,7 +189,42 @@ const $ = (id) => document.getElementById(id);
 const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
 const S = window.RTK_SPROG;
 const t = (k, v) => String(S.t(k)).replace(/\{(\w+)\}/g, (m, n) => (v && v[n] !== undefined ? v[n] : m));
-const fejlTekst = (m) => (S.sprog === 'en' && window.MOTOR_EN[m]) ? window.MOTOR_EN[m] : m;
+const fejlTekst = (m) => {
+  if (S.sprog !== 'en') return m;
+  const x = /^Nr\. (\d+) er ikke registreret endnu/.exec(m);
+  if (x) return 'No. ' + x[1] + ' has not been registered yet. Please try again when the drop-off locker has been emptied.';
+  const y = /^Der er allerede bedt om en sms for nr\. (\d+)/.exec(m);
+  if (y) return 'A text message has already been requested for no. ' + y[1] + '. Message the stringer if that was not you.';
+  return window.MOTOR_EN[m] || m;
+};
+const esc = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+// Strengeskemaet fra 1. november 2026. Skal stemme med OPS_KODER i motoren (test/opstrengning.test.js tjekker det).
+// kar: komfort, kontrol, spin, fart, holdbarhed fra 1 til 5
+const KODER = [
+  { kode: 'B1', type: 'tBasis', pris: 195, langs: 'Syn Gut 1,30', tvaers: 'Syn Gut 1,30', kg: 25, kar: [3, 2, 1, 3, 3], fra14: false },
+  { kode: 'H1', type: 'tHybrid', pris: 215, langs: 'RPM Blast 1,25', tvaers: 'Syn Gut 1,30', kg: 23, kar: [2, 4, 3, 3, 3], fra14: false },
+  { kode: 'H2', type: 'tHybrid', pris: 215, langs: 'RPM Blast 1,30', tvaers: 'Syn Gut 1,30', kg: 23, kar: [2, 4, 3, 3, 4], fra14: false },
+  { kode: 'S1', type: 'tSpin', pris: 225, langs: 'RPM Blast 1,25', tvaers: 'RPM Blast 1,25', kg: 23, kar: [1, 5, 5, 2, 4], fra14: true },
+  { kode: 'S2', type: 'tSpin', pris: 225, langs: 'RPM Blast 1,30', tvaers: 'RPM Blast 1,30', kg: 23, kar: [1, 5, 4, 2, 5], fra14: true },
+  { kode: 'S3', type: 'tSpin', pris: 225, langs: 'RPM Power 1,30', tvaers: 'RPM Power 1,30', kg: 23, kar: [2, 3, 4, 4, 4], fra14: true },
+  { kode: 'K1', type: 'tKomfort', pris: 245, langs: 'Addixion+ 1,30', tvaers: 'Addixion+ 1,30', kg: 25, kar: [5, 2, 2, 5, 2], fra14: false },
+  { kode: 'K2', type: 'tKomfort', pris: 245, langs: 'Addixion+ 1,30', tvaers: 'RPM Blast 1,25', kg: 24, kar: [4, 3, 3, 4, 3], fra14: false }
+];
+function visKoder() {
+  const kar = ['kKomfort', 'kKontrol', 'kSpin', 'kFart', 'kHold'];
+  const prik = (n) => '<span class="os-pr" role="img" aria-label="' + esc(t('af5', { n })) + '">' + [0, 1, 2, 3, 4].map((i) => i < n ? '<i class="p"></i>' : '<i></i>').join('') + '</span>';
+  let h = '', sidste = '';
+  KODER.forEach((k) => {
+    if (k.type !== sidste) { sidste = k.type; h += '<h3 class="os-type">' + esc(t(k.type)) + ' · ' + k.pris + ' kr.</h3>'; }
+    const st = k.langs === k.tvaers ? k.langs : k.langs + ' ' + t('langs') + ' · ' + k.tvaers + ' ' + t('tvaers');
+    h += '<div class="os-kode"><span class="os-k" aria-hidden="true">' + k.kode + '</span><div class="os-mid"><b><span class="sr">' + k.kode + ': </span>' + esc(t('h' + k.kode)) + '</b>' +
+      '<div class="st">' + esc(st) + ' · ' + k.kg + ' kg</div><div class="os-kar">' + kar.map((x, i) => '<span>' + esc(t(x)) + '</span>' + prik(k.kar[i])).join('') + '</div>' +
+      (k.fra14 ? '<span class="os-tag">' + esc(t('fra14')) + '</span>' : '') + '</div><span class="os-pris">' + k.pris + ' kr.</span></div>';
+  });
+  $('koder').innerHTML = h;
+}
+visKoder();
 
 function besked(el, tekst, slags) { el.textContent = tekst || ''; el.className = 'msg' + (slags ? ' ' + slags : ''); }
 function datoTekst(d) {
@@ -210,6 +266,43 @@ function visSvar() {
     ud.className = 'result vent'; b.textContent = t('erModtaget', { nr: s.nr }); p.textContent = t('erModtagetTekst', { afl: datoTekst(s.afleveret), frist: datoTekst(s.klarSenest) });
   }
   ud.append(b, p);
+  visSms();
+}
+
+// ---- Sms, når den er klar (Lars 19. oktober kl. 21.18). Kun mens ketsjeren er modtaget og ikke klar.
+let smsMobil = '', smsMsg = '', smsId = nyId();
+function visSms() {
+  const boks = $('smsBoks');
+  const s = sidsteSvar && sidsteSvar.s;
+  if (!s || !s.fundet || s.status !== 'Modtaget') { boks.classList.add('hidden'); return; }
+  boks.classList.remove('hidden');
+  if (s.sms) {
+    boks.innerHTML = '<div class="os-vippe"><b id="smsStatus" tabindex="-1">' + esc(t('smsOk')) + '</b>' + (smsMobil ? '<button type="button" class="af-chip lille info" id="smsFortryd">' + esc(t('smsFortryd')) + '</button>' : '') + '</div>' +
+      '<p class="po-note" style="margin:6px 0 0">' + esc(t('smsNote')) + '</p>';
+    if (smsMobil) $('smsFortryd').addEventListener('click', () => gemSms(false));
+    if (fokusSms) { fokusSms = false; $('smsStatus').focus(); }
+    return;
+  }
+  boks.innerHTML = '<b>' + esc(t('smsH')) + '</b><label for="smsNr" class="os-lbl">' + esc(t('smsMobil')) + '</label>' +
+    '<div class="os-linje"><input id="smsNr" class="os-felt" type="tel" inputmode="tel" autocomplete="tel" value="' + esc(smsMobil) + '"><button type="button" class="af-chip fyldt" id="smsGem">' + esc(t('smsGem')) + '</button></div>' +
+    '<div id="smsMsg" class="msg" aria-live="polite"></div><p class="po-note" style="margin:8px 0 0">' + esc(t('smsNote')) + '</p>';
+  if (smsMsg) besked($('smsMsg'), smsMsg.tekst, smsMsg.slags);
+  $('smsGem').type = 'submit';
+  if (fokusSms) { fokusSms = false; $('smsNr').focus(); }
+}
+$('smsBoks').addEventListener('submit', (e) => { e.preventDefault(); if ($('smsNr')) gemSms(true); });
+let fokusSms = false;
+async function gemSms(til) {
+  const s = sidsteSvar.s;
+  const mobil = til ? $('smsNr').value.trim() : smsMobil;
+  const knap = $(til ? 'smsGem' : 'smsFortryd'); knap.disabled = true;
+  if ($('smsMsg')) besked($('smsMsg'), t('gemmer'));
+  try {
+    const r = await motor('opstrengning', 'sms', { nr: s.nr, mobil, til }, smsId);
+    smsId = nyId(); smsMobil = til ? mobil : ''; smsMsg = til ? '' : { tekst: t('smsFjernet'), slags: '' };
+    if (r.status === 'Klar') { $('opslagForm').requestSubmit(); return; }
+    s.sms = !!r.sms; fokusSms = true; visSms();
+  } catch (err) { smsId = nyId(); smsMsg = { tekst: fejlTekst(err.message), slags: 'err' }; fokusSms = true; visSms(); }
 }
 $('opslagForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -217,6 +310,8 @@ $('opslagForm').addEventListener('submit', async (e) => {
   const nr = $('nr').value.trim();
   if (!nr) return;
   ud.className = 'result neutral'; ud.textContent = t('henter');
+  if (!sidsteSvar || !sidsteSvar.s || sidsteSvar.s.nr !== nr.padStart(4, '0')) smsMobil = '';
+  smsMsg = ''; $('smsBoks').classList.add('hidden');
   try { sidsteSvar = { s: await motor('opstrengning', 'opslag', { nr }) }; }
   catch (err) { sidsteSvar = { fejl: err.message }; }
   visSvar();
@@ -252,7 +347,7 @@ $('kontaktForm').addEventListener('submit', async (e) => {
   knap.disabled = false;
 });
 
-document.addEventListener('sprog', () => { visSvar(); visKontakt(); });
+document.addEventListener('sprog', () => { visSvar(); visKontakt(); visKoder(); });
 
 // ---- Start
 // Gamle links til opstrengernes del går nu til personalesiden.
