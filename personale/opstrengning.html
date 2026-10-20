@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="c4783d9425cc">
+<meta name="rtk-version" content="a4858058f3c3">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=b31103dc6cbc">
+<link rel="stylesheet" href="../rtk.css?v=c8648d1e771e">
 </head>
 <body>
 <header class="top">
@@ -35,41 +35,60 @@
   <!-- Opstrengere i nyt design (Lars 19. oktober kl. 21.18 til 21.33, mockup godkendt 21.33). Kode fra strengeskemaet, Andet, sms og fem ruller -->
   <div id="omraade" class="hidden tt">
     <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
-    <div class="af-hero"><img src="../billeder/felt-opstrengning.jpg" alt=""><div class="tx"><span class="kick">Opstrengere</span><h1 id="fTitel">Skabet</h1></div></div>
+    <div class="af-hero"><img src="../billeder/felt-opstrengning.jpg" alt=""><div class="tx"><span class="kick">Opstrengere</span><h1 id="fTitel">Aflevering</h1></div></div>
     <div class="tt-kat" role="tablist" aria-label="Opstrengning">
-      <button type="button" role="tab" data-fane="koe" aria-selected="true">Skabet</button>
+      <!-- To skabe: aflevering og afhentning (Lars 20. oktober kl. 15.22 til 15.26). Hver fane har én opgave -->
+      <button type="button" role="tab" data-fane="koe" aria-selected="true">Aflevering</button>
       <button type="button" role="tab" data-fane="klar" aria-selected="false">Meld klar</button>
+      <button type="button" role="tab" data-fane="hent" aria-selected="false">Afhentning</button>
       <button type="button" role="tab" data-fane="taeller" aria-selected="false">Måneden</button>
       <button type="button" role="tab" data-fane="strenge" aria-selected="false">Strenge</button>
     </div>
 
-    <!-- Skabet -->
+    <!-- Aflevering: afleveringsskabet -->
     <div class="fane" id="fane-koe" role="tabpanel">
-      <div class="os-stat">
-        <div><b id="sModtaget">·</b><span>i køen</span></div>
-        <div><b id="sOver">·</b><span>over frist</span></div>
-        <div><b id="sKlar">·</b><span>klar i skabet</span></div>
-      </div>
+      <!-- Tjek af skabet og numre fra telefonen (Lars 20. oktober kl. 08.48 til 08.52) -->
+      <div id="tjekBoks" class="sk-tjek"><div><b id="tjekH">Sidste tjek af afleveringsskabet</b><span id="tjekTekst">Henter …</span></div><button type="button" class="af-chip fyldt" id="tjekKnap">Skabet er tjekket</button></div>
+      <div id="tjekMsg" class="msg" aria-live="polite"></div>
+      <h2 class="po-h">Numre trukket af medlemmer</h2>
+      <p class="po-note" style="margin:0 0 6px">Tryk Modtaget ved de numre, der ligger i afleveringsskabet. Så kommer de i køen under Meld klar. Resten er numre, der ikke er brugt endnu.</p>
+      <div id="numreListe" class="sk-liste"><p class="po-note" style="margin:10px 14px">Henter …</p></div>
+      <p class="po-note">Et nummer på en seddel, som ikke står i listen, kan modtages her. Note og billeder kommer med, uanset hvor du trykker Modtaget.</p>
       <form id="toemForm" class="os-linje" autocomplete="off">
         <label for="tNr" class="sr">Nummer fra sedlen</label>
         <input id="tNr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Nr. fra sedlen">
         <button type="submit" class="af-chip fyldt">Modtaget</button>
       </form>
-      <details class="af-mere" style="margin-top:8px"><summary>Afleveret en anden dag eller en note</summary><div class="ind">
-        <label for="tDato" class="os-lbl" style="margin-top:0">Afleveret</label><input id="tDato" class="os-felt" type="date">
+      <details class="af-mere" id="tMere" style="margin-top:8px"><summary>Afleveret en anden dag, en note eller billeder</summary><div class="ind">
+        <label for="tDato" class="os-lbl" style="margin-top:0">Afleveret en anden dag (ellers fra nummeret)</label><input id="tDato" class="os-felt" type="date">
         <label for="tNote" class="os-lbl">Note</label><input id="tNote" class="os-felt" maxlength="300">
+        <b class="os-lbl" id="tBilLbl">Billeder (højst 3)</b>
+        <div class="os-fotos" id="tFotos" role="group" aria-labelledby="tBilLbl"></div>
+        <p class="po-note" style="margin:4px 0 0">Kun opstrengere og administratorer ser billederne. De slettes 90 dage efter, at ketsjeren er hentet.</p>
       </div></details>
       <div id="toemMsg" class="msg" aria-live="polite"></div>
-      <div id="koeListe" style="margin-top:6px"></div>
-      <div id="koeMsg" class="msg" aria-live="polite"></div>
+      <details class="af-mere" id="tjekMere" style="margin-top:14px"><summary>Tjek af afleveringsskabet</summary><div class="ind">
+        <p class="po-note" style="margin-top:0">Afleveringsskabet tjekkes mindst hver anden hverdag. Tryk Skabet er tjekket, når du har modtaget ketsjerne. Ligger et trukket nummer der stadig ikke to hverdage efter, uden at skabet er tjekket, får administratorerne besked.</p>
+        <div id="tjekListe" class="sk-liste"></div>
+      </div></details>
     </div>
 
     <!-- Meld klar -->
     <div class="fane hidden" id="fane-klar" role="tabpanel">
-      <form id="klarForm" autocomplete="off">
+      <div class="os-stat">
+        <div><b id="sModtaget">·</b><span>i køen</span></div>
+        <div><b id="sOver">·</b><span>over frist</span></div>
+        <div><b id="sIdag">·</b><span>frist i dag</span></div>
+      </div>
+      <h2 class="po-h">Køen</h2>
+      <div id="koeListe"></div>
+      <div id="koeMsg" class="msg" aria-live="polite"></div>
+      <h2 class="po-h" id="klarH">Meld klar</h2>
+      <form id="klarForm" autocomplete="off" aria-labelledby="klarH">
         <label for="mNr" class="os-lbl" style="margin-top:0">Nummer</label>
         <input id="mNr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" required>
-        <b class="os-lbl" id="kodeLbl">Kode fra sedlen</b>
+        <div id="fraModt"></div>
+        <b class="os-lbl" id="kodeLbl">Opstrengningstype fra sedlen</b>
         <div class="os-vaelg" id="koder" role="group" aria-labelledby="kodeLbl"></div>
         <div id="kodeInfo"></div>
         <div id="andet" class="os-boks hidden">
@@ -81,9 +100,11 @@
         </div>
         <b class="os-lbl" id="kgLbl">Hårdhed</b>
         <div class="os-kg" role="group" aria-labelledby="kgLbl"><button type="button" id="kgNed" aria-label="0,5 kg mindre">−</button><output id="kg" aria-live="polite">· kg</output><button type="button" id="kgOp" aria-label="0,5 kg mere">+</button></div>
-        <p class="po-note" id="kgNote" style="margin:0 0 4px">Vælg koden først.</p>
+        <p class="po-note" id="kgNote" style="margin:0 0 4px">Vælg typen først.</p>
         <label for="mNote" class="os-lbl" id="noteLbl">Note (valgfri)</label>
         <input id="mNote" class="os-felt" maxlength="300" placeholder="Fx ny grip, knækket streng i rammen">
+        <b class="os-lbl" id="mBilLbl">Billeder (højst 3)</b>
+        <div class="os-fotos" id="mFotos" role="group" aria-labelledby="mBilLbl"></div>
         <button type="submit" class="af-chip fyldt os-stor" id="klarKnap" style="margin-top:14px">Meld klar</button>
         <div id="klarMsg" class="msg" aria-live="polite"></div>
         <p class="po-note" id="traek"></p>
@@ -92,6 +113,17 @@
     </div>
 
     <!-- Måneden -->
+    <!-- Afhentning: afhentningsskabet, som ikke er låst -->
+    <div class="fane hidden" id="fane-hent" role="tabpanel">
+      <div class="os-stat">
+        <div><b id="sKlar">·</b><span>klar i afhentningsskabet</span></div>
+        <div><b id="sGammel">·</b><span>over 14 dage</span></div>
+      </div>
+      <p class="po-note" style="margin:0 0 8px">Tryk Hentet, når ketsjeren ikke længere ligger i afhentningsskabet.</p>
+      <div id="hentListe"></div>
+      <div id="hentMsg" class="msg" aria-live="polite"></div>
+    </div>
+
     <div class="fane hidden" id="fane-taeller" role="tabpanel">
       <h2 class="po-h" id="tTitel" style="margin-top:0">Måneden</h2>
       <div class="os-stat">
@@ -107,12 +139,7 @@
     <!-- Strenge -->
     <div class="fane hidden" id="fane-strenge" role="tabpanel">
       <div id="lagerListe"></div>
-      <h2 class="po-h">Ny rulle</h2>
-      <form id="indForm" autocomplete="off">
-        <div class="os-linje"><label for="iStreng" class="sr">Streng</label><select id="iStreng" class="os-felt" required></select><button type="submit" class="af-chip fyldt">+1 rulle</button></div>
-        <label for="iNote" class="os-lbl">Note, fx faktura (valgfri)</label><input id="iNote" class="os-felt" maxlength="200">
-      </form>
-      <div id="indMsg" class="msg" aria-live="polite"></div>
+      <!-- "Ny rulle" er taget ud for nu (Lars 20. oktober kl. 15.31). Ruller lægges ind af en administrator i fanen Strenge i arket -->
       <p class="po-note">Under 5 opstrengninger tilbage på en rulle får administratorerne en mail. Én rulle på 200 m er 16 opstrengninger.</p>
       <div class="af-chips"><a class="af-chip info" href="strengeskema.html">Strengeskema</a></div>
     </div>
@@ -124,6 +151,13 @@
     <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
   </div>
 </main>
+
+<input type="file" id="filVaelg" accept="image/*" multiple class="hidden" tabindex="-1" aria-hidden="true">
+<div id="lys" class="os-lys hidden" role="dialog" aria-modal="true" aria-labelledby="lysTitel">
+  <div class="top"><span id="lysTitel"></span><button type="button" id="lysLuk">Luk</button></div>
+  <div class="bil"><img id="lysImg" alt=""></div>
+  <div class="bund"><button type="button" id="lysForr" aria-label="Forrige billede">‹</button><span id="lysTal" aria-live="polite"></span><button type="button" id="lysNaeste" aria-label="Næste billede">›</button></div>
+</div>
 
 <footer class="bund">
   <div class="wrap">
@@ -196,11 +230,10 @@ function logUd(udloebet) {
 }
 $('logud').addEventListener('click', () => logUd(false));
 
-const TITLER = { koe: 'Skabet', klar: 'Meld klar', taeller: 'Måneden', strenge: 'Strenge' };
+const TITLER = { koe: 'Aflevering', klar: 'Meld klar', hent: 'Afhentning', taeller: 'Måneden', strenge: 'Strenge' };
 async function visOmraade() {
   $('omraade').classList.remove('hidden');
   $('hvem').textContent = 'Logget ind som ' + person.navn + (person.initialer ? ' (' + person.initialer + ')' : '');
-  $('tDato').value = new Date().toISOString().slice(0, 10);
   vaelgFane('koe');
   try { valg = await motor('opstrengning', 'valg'); fyldValg(); } catch (e) { besked($('klarMsg'), e.message, 'err'); }
 }
@@ -209,7 +242,8 @@ function vaelgFane(navn) {
   document.querySelectorAll('[data-fane]').forEach((b) => { b.setAttribute('aria-selected', String(b.dataset.fane === navn)); b.classList.toggle('valgt', b.dataset.fane === navn); });
   document.querySelectorAll('.fane').forEach((f) => f.classList.toggle('hidden', f.id !== 'fane-' + navn));
   $('fTitel').textContent = TITLER[navn];
-  if (navn === 'koe') hentKoe();
+  if (navn === 'koe') hentNumre();
+  if (navn === 'klar' || navn === 'hent') hentKoe();
   if (navn === 'taeller') hentTaeller();
   if (navn === 'strenge') hentLager();
 }
@@ -221,7 +255,11 @@ function raekke(r) {
   const klar = r.status === 'Klar';
   const el = document.createElement(klar ? 'div' : 'button'); el.className = 'tt-tr' + (klar ? '' : ' os-knap');
   let st = '', cls = '', b1, b2;
-  if (klar) { b1 = (r.kode || r.type || 'Klar') + (r.haardhed ? ' · ' + kg(r.haardhed) : ''); b2 = 'Klar ' + kort(r.klarDato) + ' · ' + r.initialer + (r.smsSendt ? ' · sms sendt' : r.smsFejl ? ' · sms ikke sendt' : ''); }
+  if (klar) {
+    b1 = (r.kode || r.type || 'Klar') + (r.haardhed ? ' · ' + kg(r.haardhed) : ''); b2 = 'Klar ' + kort(r.klarDato) + ' · ' + r.initialer + (r.smsSendt ? ' · sms sendt' : r.smsFejl ? ' · sms ikke sendt' : '');
+    // Har ligget i afhentningsskabet i over 14 dage
+    if (r.gammel) { st = 'Gammel'; cls = 'bad'; b2 += ' · ' + r.dage + ' dage i skabet'; }
+  }
   else {
     if (r.eftersyn) { st = 'Eftersyn'; cls = 'bad'; b1 = 'Problemer med opstrengningen'; b2 = r.note; }
     else if (r.overFrist) { st = 'Over frist'; cls = 'bad'; b1 = 'Frist ' + kort(r.klarSenest); b2 = 'Afleveret ' + kort(r.afleveret); }
@@ -231,7 +269,16 @@ function raekke(r) {
     el.type = 'button'; el.setAttribute('aria-label', 'Meld nr. ' + r.nr + ' klar. ' + b1 + '. ' + b2 + '. ' + st);
     el.addEventListener('click', () => aabnKlar(r));
   }
-  el.innerHTML = '<span class="os-k nr">' + esc(r.nr) + '</span><div class="tt-mid"><b>' + esc(b1) + '</b><span>' + esc(b2) + '</span></div>' + (st ? '<span class="tt-st ' + cls + '">' + esc(st) + '</span>' : '');
+  const nb = (r.billeder || []).length;
+  if (!klar && nb) el.setAttribute('aria-label', el.getAttribute('aria-label') + ' ' + nb + (nb === 1 ? ' billede.' : ' billeder.'));
+  el.innerHTML = '<span class="os-k nr">' + esc(r.nr) + '</span><div class="tt-mid"><b>' + esc(b1) + '</b><span>' + (nb && !klar ? '<span class="os-kam">' + KAM + nb + '</span>' : '') + esc(b2) + '</span></div>' + (st ? '<span class="tt-st ' + cls + '">' + esc(st) + '</span>' : '');
+  if (klar && nb) {
+    // En klar ketsjer: billederne kan ses fra kameraet, fx hvis medlemmet spørger ved afhentningen
+    const k = document.createElement('button'); k.type = 'button'; k.className = 'os-kam knap';
+    k.innerHTML = KAM + nb; k.setAttribute('aria-label', 'Se ' + nb + (nb === 1 ? ' billede' : ' billeder') + ' af nr. ' + r.nr);
+    k.addEventListener('click', () => lysAabn(r.billeder.map((b) => ({ id: b.id, tekst: (b.trin === 'K' ? 'Meldt klar ' : 'Modtaget ') + kortTid(b.tid) })), 0, 'Nr. ' + r.nr, k));
+    el.querySelector('.tt-mid span').prepend(k);
+  }
   if (klar) {
     const knap = document.createElement('button'); knap.type = 'button'; knap.className = 'af-chip lille info';
     knap.textContent = 'Hentet'; knap.setAttribute('aria-label', 'Hentet nr. ' + r.nr);
@@ -240,37 +287,114 @@ function raekke(r) {
   }
   return el;
 }
+// Køen hører til Meld klar, og det, der er klar, til Afhentning (to skabe, Lars 20. oktober kl. 15.24)
+const GAMMEL_DAGE = 14;
 async function hentKoe() {
-  const boks = $('koeListe'); if (!boks.childElementCount) boks.textContent = 'Henter …'; besked($('koeMsg'), '');
+  const boks = $('koeListe'), hb = $('hentListe');
+  if (!boks.childElementCount) boks.textContent = 'Henter …';
+  if (!hb.childElementCount) hb.textContent = 'Henter …';
+  besked($('koeMsg'), ''); besked($('hentMsg'), '');
   try {
     const k = await motor('opstrengning', 'koe');
-    $('sModtaget').textContent = k.antal.modtaget; $('sOver').textContent = k.antal.overFrist; $('sKlar').textContent = k.antal.klar;
-    $('sOver').style.color = k.antal.overFrist ? 'var(--bad)' : '';
-    boks.innerHTML = '';
+    const idag = new Date(); idag.setHours(0, 0, 0, 0);
     const ko = k.raekker.filter((r) => r.status !== 'Klar'), kl = k.raekker.filter((r) => r.status === 'Klar');
-    if (!k.raekker.length) { boks.innerHTML = '<p class="po-note">Skabet er tomt.</p>'; return; }
-    if (ko.length) { const p = document.createElement('p'); p.className = 'po-note'; p.style.margin = '4px 0 8px'; p.textContent = 'Tryk på et nummer for at melde det klar.'; boks.append(p); }
+    kl.forEach((r) => { const [y, m, d] = String(r.klarDato || '').split('-').map(Number); r.dage = y ? Math.round((idag - new Date(y, m - 1, d)) / 86400000) : 0; r.gammel = r.dage > GAMMEL_DAGE; });
+    $('sModtaget').textContent = k.antal.modtaget; $('sOver').textContent = k.antal.overFrist; $('sIdag').textContent = ko.filter((r) => r.senestIdag).length;
+    $('sOver').style.color = k.antal.overFrist ? 'var(--bad)' : '';
+    $('sKlar').textContent = kl.length; $('sGammel').textContent = kl.filter((r) => r.gammel).length;
+    $('sGammel').style.color = kl.some((r) => r.gammel) ? 'var(--bad)' : '';
+    KOE = {}; k.raekker.forEach((r) => { KOE[r.nr] = r; });
+    visModt();
+    boks.innerHTML = '';
+    if (ko.length) { const p = document.createElement('p'); p.className = 'po-note'; p.style.margin = '0 0 8px'; p.textContent = 'Eftersyn først, derefter efter frist. Tryk på et nummer for at melde det klar.'; boks.append(p); }
+    else boks.innerHTML = '<p class="po-note">Køen er tom.</p>';
     ko.forEach((r) => boks.append(raekke(r)));
-    if (kl.length) { const h = document.createElement('h2'); h.className = 'po-h'; h.textContent = 'Klar i skabet'; boks.append(h); kl.forEach((r) => boks.append(raekke(r))); }
-  } catch (err) { boks.textContent = ''; besked($('koeMsg'), err.message, 'err'); }
+    hb.innerHTML = '';
+    if (!kl.length) hb.innerHTML = '<p class="po-note">Afhentningsskabet er tomt.</p>';
+    kl.slice().sort((a, b) => (b.dage - a.dage)).forEach((r) => hb.append(raekke(r)));
+  } catch (err) { boks.textContent = ''; hb.textContent = ''; besked($('koeMsg'), err.message, 'err'); besked($('hentMsg'), err.message, 'err'); }
 }
 async function hentet(nr, knap) {
   knap.disabled = true;
   try { await motor('opstrengning', 'hentet', { nr }, nyId()); hentKoe(); }
-  catch (err) { besked($('koeMsg'), err.message, 'err'); knap.disabled = false; }
+  catch (err) { besked($('hentMsg'), err.message, 'err'); knap.disabled = false; }
 }
 let toemId = nyId();
+let ukendtNr = '';
+$('tNr').addEventListener('input', () => { toemId = nyId(); });
 $('toemForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const nr = $('tNr').value.trim(); if (!nr) return;
-  besked($('toemMsg'), 'Gemmer …');
+  const nr = $('tNr').value.trim(); if (!nr || fotoTravl) return;
+  besked($('toemMsg'), FOTOS.t.length ? 'Gemmer med billeder …' : 'Gemmer …');
+  const n4 = nr.replace(/\D/g, '').padStart(4, '0');
   try {
-    const r = await motor('opstrengning', 'registrer', { nr, afleveret: $('tDato').value, note: $('tNote').value }, toemId);
+    const r = await motor('opstrengning', 'registrer', { nr, afleveret: $('tDato').value, note: $('tNote').value, billeder: FOTOS.t.slice(), ukendtOk: ukendtNr === n4 }, toemId);
     toemId = nyId();
-    besked($('toemMsg'), 'Nr. ' + r.nr + ' modtaget. Klar senest ' + datoTekst(r.klarSenest) + '.', 'okm');
-    $('tNr').value = ''; $('tNote').value = ''; $('tNr').focus();
-    hentKoe();
+    if (r.spoerg) {
+      // Ikke trukket fra telefonen: måske læst forkert. Andet tryk med samme nummer gemmer (Lars 20. oktober kl. 08.40)
+      ukendtNr = n4;
+      besked($('toemMsg'), 'Nr. ' + r.nr + ' er ikke trukket fra telefonen. Tjek sedlen. Er nummeret rigtigt, så tryk Modtaget igen.', 'err');
+      $('tNr').focus(); return;
+    }
+    ukendtNr = '';
+    besked($('toemMsg'), 'Nr. ' + r.nr + ' modtaget' + billedTekst(r) + '. Klar senest ' + datoTekst(r.klarSenest) + '.' + billedFejlTekst(r, 't'), r.billedFejl ? 'err' : 'okm');
+    $('tNr').value = ''; $('tNote').value = ''; $('tDato').value = ''; FOTOS.t = []; visFotos('t'); $('tNr').focus();
+    hentKoe(); hentNumre();
   } catch (err) { besked($('toemMsg'), err.message, 'err'); if (!err.net) toemId = nyId(); $('tNr').select(); }
+});
+
+// ---- Numre trukket af medlemmer og tjek af skabet (Lars 20. oktober kl. 08.48)
+let NUMRE = null, alleNumre = false;
+const tidTekst = (x) => { if (!x) return ''; const d = datoTekst(x.slice(0, 10)); return d.charAt(0).toUpperCase() + d.slice(1) + ' kl. ' + x.slice(11, 16).replace(':', '.'); };
+const kortTidTekst = (x) => x ? kort(x.slice(0, 10)) + ' kl. ' + x.slice(11, 16).replace(':', '.') : '';
+function nummerRaekke(n) {
+  const el = document.createElement('div'); el.className = 'sk-r' + (n.status === 'ikkeBrugt' || n.status === 'ikkeAfleveret' ? ' graa' : '');
+  const under = { ikke: 'Ikke i skabet endnu', ikkeAfleveret: 'Ikke afleveret ved tjek ' + kort(n.tjek), koe: 'Modtaget ' + kortTidTekst(n.modtaget), klar: 'Klar ' + kort(n.klarDato) + (n.initialer ? ' · ' + n.initialer : ''), hentet: 'Hentet', ikkeBrugt: 'Ikke brugt' }[n.status] || '';
+  const tag = { koe: ['I køen', 'n'], klar: ['Klar', 'ok'], hentet: ['Hentet', 'n'] }[n.status];
+  el.innerHTML = '<span class="nr">' + esc(n.nr) + '</span><span class="tid">' + esc(tidTekst(n.trukket)) + '<small>' + esc(under) + '</small></span>' + (tag ? '<span class="tt-st ' + tag[1] + '">' + esc(tag[0]) + '</span>' : '');
+  if (n.status === 'ikke' || n.status === 'ikkeAfleveret') {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'af-chip lille ' + (n.status === 'ikke' ? 'fyldt' : 'info');
+    b.textContent = 'Modtaget'; b.setAttribute('aria-label', 'Modtaget nr. ' + n.nr);
+    // Samme vej som feltet, så note, dato og billeder kommer med
+    b.addEventListener('click', () => { b.disabled = true; $('tNr').value = n.nr; toemId = nyId(); $('toemForm').requestSubmit(); });
+    el.append(b);
+  }
+  return el;
+}
+function visNumre() {
+  const boks = $('numreListe'); const x = NUMRE;
+  if (!x) return;
+  boks.innerHTML = '';
+  if (!x.numre.length) { boks.innerHTML = '<p class="po-note" style="margin:10px 14px">Ingen numre de sidste 30 dage.</p>'; }
+  const vis = alleNumre ? x.numre : x.numre.slice(0, 8);
+  vis.forEach((n) => boks.append(nummerRaekke(n)));
+  if (x.numre.length > 8) {
+    const m = document.createElement('button'); m.type = 'button'; m.className = 'sk-mere';
+    m.textContent = alleNumre ? 'Vis færre numre' : 'Vis ældre numre (' + (x.numre.length - 8) + ')';
+    m.setAttribute('aria-expanded', String(alleNumre));
+    m.addEventListener('click', () => { alleNumre = !alleNumre; visNumre(); boks.querySelector('.sk-mere').focus(); });
+    boks.append(m);
+  }
+  const s = x.sidste;
+  $('tjekBoks').classList.toggle('gammel', !!x.gammel);
+  $('tjekH').textContent = x.gammel ? 'Afleveringsskabet er ikke tjekket i ' + x.hverdage + ' hverdage' : 'Sidste tjek af afleveringsskabet';
+  $('tjekTekst').textContent = (s ? (x.gammel ? 'Sidst ' : '') + tidTekst(s.tid) + (s.initialer ? ' · ' + s.initialer : '') : 'Ikke tjekket endnu') + (x.gammel && x.siden ? ' · ' + x.siden + (x.siden === 1 ? ' nummer' : ' numre') + ' trukket siden' : '');
+  $('tjekListe').innerHTML = x.tjek.length ? x.tjek.map((t) => '<div class="sk-r"><span class="tid">' + esc(tidTekst(t.tid)) + '<small>' + esc((t.navn || t.initialer || '') + ' · ' + t.antal + ' modtaget') + '</small></span></div>').join('') : '<p class="po-note" style="margin:10px 14px">Ingen tjek de sidste 30 dage.</p>';
+}
+async function hentNumre() {
+  try { NUMRE = await motor('opstrengning', 'numre'); visNumre(); }
+  catch (err) { $('numreListe').innerHTML = ''; const p = document.createElement('p'); p.className = 'msg err'; p.style.margin = '10px 14px'; p.textContent = err.message; $('numreListe').append(p); }
+}
+let tjekId = nyId();
+$('tjekKnap').addEventListener('click', async () => {
+  const k = $('tjekKnap'); k.disabled = true; besked($('tjekMsg'), 'Gemmer …');
+  try {
+    const r = await motor('opstrengning', 'skabTjek', {}, tjekId);
+    tjekId = nyId();
+    besked($('tjekMsg'), 'Skabet er tjekket ' + tidTekst(r.tid).replace(/^./, (c) => c.toLowerCase()) + '. ' + r.antal + (r.antal === 1 ? ' ketsjer' : ' ketsjere') + ' modtaget siden sidste tjek.', 'okm');
+    hentNumre();
+  } catch (err) { besked($('tjekMsg'), err.message, 'err'); if (!err.net) tjekId = nyId(); }
+  k.disabled = false;
 });
 
 // ---- Meld klar: kode fra sedlen eller Andet. Hårdheden starter ved den vejledende og rettes i halve kg
@@ -280,7 +404,7 @@ function fyldValg() {
   $('koder').innerHTML = Object.keys(valg.koder).map((k) => '<button type="button" data-kode="' + esc(k) + '" aria-pressed="false" aria-label="' + esc(k + ', ' + valg.koder[k].pris + ' kr.') + '">' + esc(k) + '<span>' + valg.koder[k].pris + ' kr.</span></button>').join('') +
     '<button type="button" class="os-andet" data-kode="Andet" aria-pressed="false" aria-label="Andet, skriv selv, kun strenge på lager">Andet<span>skriv selv, kun strenge på lager</span></button>';
   const opt = valg.strenge.map((t) => '<option>' + esc(t) + '</option>').join('');
-  $('aLangs').innerHTML = '<option value="">Vælg</option>' + opt; $('aTvaers').innerHTML = '<option value="">Vælg</option>' + opt; $('iStreng').innerHTML = opt;
+  $('aLangs').innerHTML = '<option value="">Vælg</option>' + opt; $('aTvaers').innerHTML = '<option value="">Vælg</option>' + opt;
   $('priser').innerHTML = valg.priser.map((p) => '<button type="button" data-pris="' + p + '" aria-pressed="false">' + p + ' kr.</button>').join('');
 }
 function strenge() {
@@ -296,7 +420,7 @@ function visKode() {
   $('kodeInfo').innerHTML = k ? '<div class="os-boks"><b>' + esc(K.kode + ' ' + k.type) + '</b><div class="po-note" style="margin:4px 0 0">' +
     esc(k.langs === k.tvaers ? k.langs + ' · 1 stykke á 12 m' : k.langs + ' langs · ' + k.tvaers + ' tværs · 2 stykker á 6 m') + ' · Ingen forstrækning</div></div>' : '';
   $('kg').textContent = K.kg === null ? 'Vælg' : kg(K.kg);
-  $('kgNote').textContent = !K.kode ? 'Vælg koden først.' : k ? 'Vejledende for ' + K.kode + '. Står der noget andet på sedlen, så ret det.' : 'Skriv hårdheden fra sedlen.';
+  $('kgNote').textContent = !K.kode ? 'Vælg typen først.' : k ? 'Vejledende for ' + K.kode + '. Står der noget andet på sedlen, så ret det.' : 'Skriv hårdheden fra sedlen.';
   const s = strenge();
   $('traek').textContent = !s.length ? '' : s[0] === s[1] ? 'Trækkes fra lageret: 1 opstrengning ' + s[0] + '.' : 'Trækkes fra lageret: ½ opstrengning ' + s[0] + ' og ½ ' + s[1] + '.';
   const nr = $('mNr').value.trim();
@@ -315,33 +439,186 @@ $('priser').addEventListener('click', (e) => { const b = e.target.closest('butto
 $('kgNed').addEventListener('click', () => { if (!K.kode) return; if (K.kg === null) K.kg = 24; else if (K.kg > 15) K.kg -= 0.5; visKode(); });
 $('kgOp').addEventListener('click', () => { if (!K.kode) return; if (K.kg === null) K.kg = 24; else if (K.kg < 35) K.kg += 0.5; visKode(); });
 ['aLangs', 'aTvaers'].forEach((id) => $(id).addEventListener('change', visKode));
-$('mNr').addEventListener('input', () => { klarId = nyId(); visKode(); });
+$('mNr').addEventListener('input', () => { klarId = nyId(); visKode(); visModt(); });
 function aabnKlar(r) {
-  vaelgFane('klar');
+  // Køen står på samme fane som formularen: vælg nummeret og gå ned til formularen
   $('mNr').value = r.nr;
+  $('klarH').scrollIntoView({ block: 'start', behavior: 'smooth' });
   K.kode = ''; K.kg = null; K.pris = null; klarId = nyId();
   $('mNote').value = '';
+  FOTOS.m = []; visFotos('m');
   besked($('klarMsg'), r.eftersyn ? 'Eftersyn: ' + r.note : '');
-  visKode();
+  visKode(); visModt();
   setTimeout(() => { const b = $('koder').querySelector('button'); if (b) b.focus(); }, 50);
 }
 let klarId = nyId();
 $('klarForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  if (!K.kode) { besked($('klarMsg'), 'Vælg koden fra sedlen', 'err'); return; }
+  if (fotoTravl) return;
+  if (!K.kode) { besked($('klarMsg'), 'Vælg opstrengningstypen fra sedlen', 'err'); return; }
   if (K.kg === null) { besked($('klarMsg'), 'Vælg hårdheden', 'err'); return; }
   const knap = $('klarKnap'); knap.disabled = true;
-  besked($('klarMsg'), 'Gemmer …');
-  const d = { nr: $('mNr').value, kode: K.kode, haardhed: K.kg, note: $('mNote').value };
+  besked($('klarMsg'), FOTOS.m.length ? 'Gemmer med billeder …' : 'Gemmer …');
+  const d = { nr: $('mNr').value, kode: K.kode, haardhed: K.kg, note: $('mNote').value, billeder: FOTOS.m.slice() };
   if (K.kode === 'Andet') Object.assign(d, { langs: $('aLangs').value, tvaers: $('aTvaers').value, pris: K.pris });
   try {
     const r = await motor('opstrengning', 'meldKlar', d, klarId);
     klarId = nyId();
     const t = r.taeller;
-    besked($('klarMsg'), 'Nr. ' + r.nr + ' er klar' + (r.sms ? ', og medlemmet har fået en sms' : '') + '. Måneden: ' + t.udenTimer + (t.tilNaesteTrin ? ', ' + t.tilNaesteTrin + ' til ' + t.naesteSats + ' kr.' : '') + '.', 'okm');
-    $('mNr').value = ''; $('mNote').value = ''; K.kode = ''; K.kg = null; K.pris = null; visKode();
+    besked($('klarMsg'), 'Nr. ' + r.nr + ' er klar' + billedTekst(r) + (r.sms ? ', og medlemmet har fået en sms' : '') + '. Måneden: ' + t.udenTimer + (t.tilNaesteTrin ? ', ' + t.tilNaesteTrin + ' til ' + t.naesteSats + ' kr.' : '') + '.' + billedFejlTekst(r, 'm'), r.billedFejl ? 'err' : 'okm');
+    $('mNr').value = ''; $('mNote').value = ''; K.kode = ''; K.kg = null; K.pris = null; FOTOS.m = []; visFotos('m'); visKode(); visModt();
   } catch (err) { besked($('klarMsg'), err.message, 'err'); if (!err.net) klarId = nyId(); }
   knap.disabled = false;
+});
+
+// ---- Billeder af ketsjeren (Lars 20. oktober kl. 07.26): højst 3 ved modtagelsen og 3 ved Meld klar.
+// Telefonen gør dem mindre, før de sendes. Kun opstrengere og administratorer kan hente dem
+const KAM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.6"/></svg>';
+const MAKS_FOTO = 3;
+const FOTOS = { t: [], m: [] };
+const BIL = {};
+let KOE = {};
+let fotoMaal = 't';
+const kortTid = (iso) => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString('da-DK', { day: 'numeric', month: 'short' }); };
+const billedTekst = (r) => r.billeder ? ' med ' + r.billeder + (r.billeder === 1 ? ' billede' : ' billeder') : '';
+const billedFejlTekst = (r, h) => r.billedFejl ? (h === 't' ? ' Billederne kom ikke med. Tag dem igen ved Meld klar.' : ' Billederne kom ikke med.') : '';
+let fotoTravl = false;
+
+/** Gør et billede til JPEG under grænsen: først lavere kvalitet, så mindre. */
+async function skalerFoto(fil) {
+  const url = URL.createObjectURL(fil);
+  try {
+    const img = await new Promise((ok, nej) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => nej(new Error('billede')); i.src = url; });
+    let side = 1600, q = 0.82;
+    for (let k = 0; k < 12; k++) {
+      const s = Math.min(1, side / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(img.naturalWidth * s)); c.height = Math.max(1, Math.round(img.naturalHeight * s));
+      const x = c.getContext('2d'); x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+      const data = c.toDataURL('image/jpeg', q);
+      if (data.length <= 600000 && data.indexOf('data:image/jpeg;base64,') === 0) return data;
+      if (q > 0.6) q -= 0.1; else side = Math.round(side * 0.8);
+    }
+    throw new Error('stort');
+  } finally { URL.revokeObjectURL(url); }
+}
+function fotoMsg(h) { return $(h === 't' ? 'toemMsg' : 'klarMsg'); }
+function visFotos(h) {
+  const boks = $(h === 't' ? 'tFotos' : 'mFotos'); boks.innerHTML = '';
+  FOTOS[h].forEach((d, i) => {
+    const w = document.createElement('div'); w.className = 'os-foto';
+    const v = document.createElement('button'); v.type = 'button'; v.className = 'vis'; v.setAttribute('aria-label', 'Se billede ' + (i + 1));
+    v.innerHTML = '<img alt="" src="' + d + '">';
+    v.addEventListener('click', () => lysAabn(FOTOS[h].map((src) => ({ src, tekst: 'Ikke gemt endnu' })), i, 'Nyt billede', v));
+    const x = document.createElement('button'); x.type = 'button'; x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', 'Fjern billede ' + (i + 1));
+    x.addEventListener('click', () => { FOTOS[h].splice(i, 1); nyFotoId(h); visFotos(h); const t = boks.querySelector('.os-tilf, .x'); if (t) t.focus(); });
+    w.append(v, x); boks.append(w);
+  });
+  if (FOTOS[h].length < MAKS_FOTO) {
+    const t = document.createElement('button'); t.type = 'button'; t.className = 'os-tilf';
+    t.innerHTML = KAM + 'Billede'; t.setAttribute('aria-label', 'Tag eller vælg et billede');
+    t.addEventListener('click', () => { fotoMaal = h; $('filVaelg').click(); });
+    boks.append(t);
+  }
+}
+// Nye billeder er en ny registrering, så et nyt id
+function nyFotoId(h) { if (h === 't') toemId = nyId(); else klarId = nyId(); }
+// Mens billederne gøres klar, kan der hverken vælges flere eller gemmes, så intet sendes halvt (gennemgangen 20. oktober)
+function travl(ja) {
+  fotoTravl = ja;
+  [$('klarKnap'), ...document.querySelectorAll('#toemForm button, .os-tilf')].forEach((b) => { b.disabled = ja; });
+}
+$('filVaelg').addEventListener('change', async (e) => {
+  const h = fotoMaal;
+  const filer = [...e.target.files]; e.target.value = '';
+  if (!filer.length || fotoTravl) return;
+  const liste = FOTOS[h];
+  const plads = MAKS_FOTO - liste.length;
+  if (filer.length > plads) besked(fotoMsg(h), 'Højst ' + MAKS_FOTO + ' billeder. De første ' + plads + ' er taget med.', 'err');
+  else besked(fotoMsg(h), 'Gør billedet klar …');
+  let fejl = 0;
+  travl(true);
+  try {
+    for (const f of filer.slice(0, plads)) {
+      try { const d = await skalerFoto(f); if (FOTOS[h] === liste && liste.length < MAKS_FOTO) liste.push(d); } catch (err) { fejl++; }
+    }
+  } finally { travl(false); }
+  nyFotoId(h); visFotos(h);
+  if (fejl) besked(fotoMsg(h), fejl === 1 ? 'Et billede kunne ikke læses. Prøv et andet.' : 'Billederne kunne ikke læses. Prøv andre.', 'err');
+  else if (filer.length <= plads) besked(fotoMsg(h), '');
+});
+visFotos('t'); visFotos('m');
+
+async function hentBillede(id) {
+  const k = Object.keys(BIL); if (!BIL[id] && k.length >= 12) delete BIL[k[0]];
+  if (!BIL[id]) BIL[id] = motor('opstrengning', 'billede', { id }).then((r) => r.data).catch((err) => { delete BIL[id]; throw err; });
+  return BIL[id];
+}
+/** Noten og billederne fra modtagelsen vises ved Meld klar, så opstrengeren kan se, hvordan ketsjeren så ud */
+function visModt() {
+  const boks = $('fraModt'); boks.innerHTML = '';
+  const v = $('mNr').value.trim().replace(/\D/g, '');
+  const r = v ? KOE[v.padStart(4, '0')] : null;
+  if (!r || r.status === 'Klar') return;
+  const bil = (r.billeder || []).filter((b) => b.trin !== 'K');
+  if (!bil.length && (!r.note || r.eftersyn)) return;
+  const d = document.createElement('div'); d.className = 'os-boks';
+  d.innerHTML = '<b>Fra modtagelsen ' + esc(kort(r.afleveret)) + '</b>' + (r.note && !r.eftersyn ? '<div class="po-note" style="margin:4px 0 0">' + esc(r.note) + '</div>' : '');
+  if (bil.length) {
+    const f = document.createElement('div'); f.className = 'os-fotos';
+    bil.forEach((b, i) => {
+      const w = document.createElement('div'); w.className = 'os-foto';
+      const k = document.createElement('button'); k.type = 'button'; k.className = 'vis'; k.setAttribute('aria-label', 'Se billede ' + (i + 1) + ' fra modtagelsen');
+      k.innerHTML = '<span class="os-hent" aria-hidden="true">…</span>';
+      k.addEventListener('click', () => lysAabn(bil.map((x) => ({ id: x.id, tekst: 'Modtaget ' + kortTid(x.tid) })), i, 'Nr. ' + r.nr, k));
+      hentBillede(b.id).then((src) => { if (k.isConnected) k.innerHTML = '<img alt="" src="' + src + '">'; }).catch(() => { if (k.isConnected) k.innerHTML = '<span class="os-hent">!</span>'; });
+      w.append(k); f.append(w);
+    });
+    d.append(f);
+  }
+  boks.append(d);
+}
+
+// Et billede i stor størrelse inde i siden, så der altid er en vej tilbage
+let LYS = null;
+function lysAabn(liste, i, titel, fra) {
+  LYS = { liste, i, titel, fra };
+  $('lys').classList.remove('hidden'); document.body.classList.add('fuld-aaben');
+  lysVis(i); $('lysLuk').focus();
+}
+function lysVis(i) {
+  const x = LYS; if (!x) return;
+  const n = x.liste.length; x.i = (i + n) % n;
+  const b = x.liste[x.i], nr = x.i;
+  $('lysTitel').innerHTML = '<b>' + esc(x.titel) + '</b>' + (b.tekst ? ' · ' + esc(b.tekst) : '');
+  $('lysTal').textContent = n > 1 ? (x.i + 1) + ' af ' + n : '';
+  $('lysForr').classList.toggle('os-skjult', n < 2); $('lysNaeste').classList.toggle('os-skjult', n < 2);
+  const img = $('lysImg'); img.alt = 'Billede ' + (x.i + 1) + ' af ' + n + ' af ' + x.titel.toLowerCase();
+  if (b.src) { img.src = b.src; return; }
+  img.removeAttribute('src');
+  hentBillede(b.id).then((src) => { if (LYS === x && x.i === nr) img.src = src; }).catch((err) => { if (LYS === x && x.i === nr) $('lysTal').textContent = err.message; });
+}
+function lysLuk() {
+  if (!LYS) return;
+  const fra = LYS.fra; LYS = null;
+  $('lys').classList.add('hidden'); $('lysImg').removeAttribute('src'); document.body.classList.remove('fuld-aaben');
+  const til = fra && fra.isConnected ? fra : (document.querySelector('#fraModt .vis') || (!$('fane-klar').classList.contains('hidden') ? $('mNr') : $('tNr')));
+  if (til && til.focus) til.focus();
+}
+$('lysLuk').addEventListener('click', lysLuk);
+$('lysForr').addEventListener('click', () => lysVis(LYS.i - 1));
+$('lysNaeste').addEventListener('click', () => lysVis(LYS.i + 1));
+$('lys').addEventListener('click', (e) => { if (e.target.classList.contains('bil')) lysLuk(); });
+document.addEventListener('keydown', (e) => {
+  if (!LYS) return;
+  if (e.key === 'Escape') { e.preventDefault(); lysLuk(); }
+  else if (e.key === 'ArrowLeft' && LYS.liste.length > 1) lysVis(LYS.i - 1);
+  else if (e.key === 'ArrowRight' && LYS.liste.length > 1) lysVis(LYS.i + 1);
+  else if (e.key === 'Tab') {
+    const k = [...$('lys').querySelectorAll('button:not(.os-skjult)')]; if (!k.length) return;
+    const j = k.indexOf(document.activeElement);
+    e.preventDefault(); k[(j + (e.shiftKey ? -1 : 1) + k.length) % k.length].focus();
+  }
 });
 
 // ---- Måneden
@@ -373,15 +650,6 @@ function visLager(l) {
       '<div class="po-note" style="margin:0">' + String(s.ruller).replace('.', ',') + (s.ruller === 1 ? ' rulle' : ' ruller') + ' · cirka ' + s.opstrengninger + ' opstrengninger · ' + s.meter + ' m</div></div>';
   }).join('');
 }
-let indId = nyId();
-$('indForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  besked($('indMsg'), 'Gemmer …');
-  try {
-    visLager(await motor('opstrengning', 'strengeInd', { streng: $('iStreng').value, ruller: 1, note: $('iNote').value }, indId));
-    indId = nyId(); besked($('indMsg'), 'En rulle ' + $('iStreng').value + ' er lagt på lager.', 'okm'); $('iNote').value = '';
-  } catch (err) { besked($('indMsg'), err.message, 'err'); if (!err.net) indId = nyId(); }
-});
 
 // ---- Start
 if (!token) location.replace('./?til=opstrengning.html');
