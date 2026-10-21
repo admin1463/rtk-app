@@ -101,7 +101,9 @@
       res = await fetch(KONFIG.motor, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ modul: modul, handling: handling, data: data || {}, token: hent('rtk.token') || '', id: id || '' }) });
     } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
-    var svar = await res.json();
+    var svar;
+    // Google svarer af og til med en HTML-side (ende til ende-testen 20. oktober)
+    try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
     if (!svar.ok) {
       if (svar.login) { gem('rtk.token', null); if (paaLogud) paaLogud(); }
       throw new Error(svar.fejl || 'Noget gik galt');
@@ -155,7 +157,11 @@
     boks.appendChild(f1); boks.appendChild(f2); boks.appendChild(msg);
     var kodeTil = null;
 
+    // Et dobbelttryk sender kun én kode og logger kun ind én gang (ende til ende-testen 20. oktober)
+    var igang = false;
     async function sendKode(kanal) {
+      if (igang) return;
+      igang = true;
       besked(msg, t('kSender'));
       try {
         var r = await motor('kerne', 'sendKode', { mobil: mobilNr, kanal: kanal, enhed: enhed });
@@ -171,16 +177,20 @@
           }).catch(function () {});
         }
       } catch (err) { besked(msg, fejlTekst(err.message), 'err'); }
+      finally { igang = false; }
     }
     f1.addEventListener('submit', function (e) { e.preventDefault(); mobilNr = mobil.value.trim(); sendKode('sms'); });
     f2.addEventListener('submit', async function (e) {
-      e.preventDefault(); besked(msg, t('kLogger'));
+      e.preventDefault();
+      if (igang) return;
+      igang = true; besked(msg, t('kLogger'));
       try {
         var r = await motor('kerne', 'kodeLogin', { mobil: mobilNr, kode: kode.value, enhed: enhed, husk: husk.checked });
         gem('rtk.token', r.token); kode.value = ''; besked(msg, '');
         if (window.RTK_VELKOMST) window.RTK_VELKOMST.tjek();
         valg.onLogin(r);
       } catch (err) { besked(msg, fejlTekst(err.message), 'err'); }
+      finally { igang = false; }
     });
     igen.addEventListener('click', function () { sendKode('sms'); });
     paaMail.addEventListener('click', function () { sendKode('mail'); });

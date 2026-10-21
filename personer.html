@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="5fe08ef796d2">
+<script src="/opdater.js?v=2222ad998c00" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Personer og roller · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css?v=6f4501ee138d">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Personer og roller</b><span>Personale og frivillige</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+  <div id="omraade" class="hidden tt">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div id="ikkeAdmin" class="hidden card"><b>Kun for klubbens administratorer.</b><p class="hint">Personer og roller kan kun ses af klubbens administratorer.</p></div>
+    <div id="vis"></div>
+  </div>
+  </div>
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script src="../konfig.js?v=1301d6285ee2"></script>
+<script>
+// Personer og roller under Administration (Lars 19. oktober kl. 17.36 til 17.47, mockup godkendt 17.46).
+// Kun administratorer. Medlemskab og stamdata kommer på sigt fra ForeningsLet og rettes ikke her. Roller styres hos os:
+// fjern én rolle og stop som medarbejder (alle roller, login og medlemskab røres ikke). Nye personer og roller lægger
+// Lars og Claude ind. Rolleskift følger stop-logikken: Arbejdstøj og udstyr og opstrengervagten følger med.
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+let token = hent('rtk.token') || '';
+let person = null;
+const S = { liste: null, filter: 'alle', sog: '', en: Object.create(null), msg: '', ids: Object.create(null) };
+const NAVNE = { admin: 'Administrator', opstrenger: 'Opstrenger', traener: 'Træner', kaptajn: 'Holdkaptajn', cheftraener: 'Cheftræner', boldansvarlig: 'Boldansvarlig', bogholder: 'Bogholder', koordinator: 'Koordinator', oevrige: 'Øvrige' };
+const FILTRE = [['alle', 'Alle'], ['traener', 'Trænere'], ['opstrenger', 'Opstrengere'], ['oevrige', 'Øvrige'], ['admin', 'Administration'], ['tidligere', 'Tidligere']];
+const FARVER = ['#0F2537', '#0B3D3A', '#5B2A86', '#8A3B12'];
+const STATUS = { tt: ['Mangler', 'v'], aaben: ['Åben', 'v'], sendt: ['Sendt', 'v'], godkendt: ['Godkendt', 'ok'], bestilt: ['Bestilt', 'ok'], leveret: ['Leveret', 'ok'], modtaget: ['Modtaget', 'ok'], bortfaldet: ['Bortfaldet', 'po-graa'] };
+
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+
+async function motor(modul, handling, data, id) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: id || '' }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  let svar;
+  // Google svarer af og til med en HTML-side. Så er det en forbindelsesfejl, ikke en teknisk fejltekst (ende til ende-testen 20. oktober)
+  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  return svar.data;
+}
+function logUd(udloebet) {
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null);
+  location.replace(udloebet ? './?til=' + encodeURIComponent('personer.html' + location.hash) + '&igen=1' : './');
+}
+$('logud').addEventListener('click', () => logUd(false));
+
+const hero = (kick, h) => '<div class="af-hero"><img src="../billeder/felt-fordele.jpg" alt=""><div class="tx"><span class="kick">' + esc(kick) + '</span><h1>' + esc(h) + '</h1></div></div>';
+const tilbage = () => '<a class="gr-tilbage" href="#">&#8592; Personer og roller</a>';
+const rolleTekst = (p) => p.roller.length ? p.roller.map((r) => NAVNE[r] || r).join(' · ') : (p.tidligere.length ? 'Tidligere ' + p.tidligere.map((r) => (NAVNE[r] || r).toLowerCase()).join(' og ') : 'Ingen roller');
+const mobilTekst = (m) => { const d = String(m || '').replace(/\s/g, ''); const x = /^(\+45)?(\d{2})(\d{2})(\d{2})(\d{2})$/.exec(d); return x ? '+45 ' + x.slice(2).join(' ') : String(m || ''); };
+const datoKort = (s) => { if (!s) return ''; const d = new Date(s.replace(' ', 'T')); const i = new Date(); const g = new Date(i.getTime() - 86400000);
+  const ens = (a, b) => a.toDateString() === b.toDateString();
+  return ens(d, i) ? 'i dag' : ens(d, g) ? 'i går' : d.toLocaleDateString('da-DK', { day: 'numeric', month: 'short' }); };
+function statusPille(p) {
+  if (!p.medarbejder) return '<span class="tt-st po-graa">Tidligere</span>';
+  if (!p.sidstLogin) return '<span class="tt-st v">Ikke logget ind</span>';
+  return '<span class="tt-st ok">Aktiv</span>';
+}
+function matcher(p) {
+  if (S.filter === 'tidligere' && p.medarbejder) return false;
+  if (S.filter !== 'alle' && S.filter !== 'tidligere') {
+    if (!p.medarbejder) return false;
+    const r = S.filter === 'traener' ? ['traener', 'cheftraener'] : [S.filter];
+    if (!p.roller.some((x) => r.indexOf(x) >= 0)) return false;
+  }
+  const q = S.sog.trim().toLowerCase();
+  return !q || (p.navn + ' ' + rolleTekst(p)).toLowerCase().indexOf(q) >= 0;
+}
+function antal(f) { const gl = S.filter; S.filter = f; const q = S.sog; S.sog = ''; const n = S.liste.filter(matcher).length; S.filter = gl; S.sog = q; return n; }
+
+function vis(html, fokus) {
+  $('vis').innerHTML = html;
+  const h = $('vis').querySelector(fokus || 'h1');
+  if (h && fokus !== false) { h.setAttribute('tabindex', '-1'); try { h.focus({ preventScroll: true }); } catch (e) {} }
+}
+
+function vListe() {
+  if (!S.liste) { vis(hero('Administration', 'Personer og roller') + '<p class="msg" role="status">Henter …</p>', false); return; }
+  const aktive = S.liste.filter((p) => p.medarbejder).length, tidl = S.liste.length - aktive;
+  let h = hero('Administration', 'Personer og roller') +
+    '<label class="sr" for="sog">Søg efter navn eller rolle</label><input id="sog" class="po-sog" type="search" placeholder="Søg efter navn eller rolle" autocomplete="off" value="' + esc(S.sog) + '">' +
+    '<div class="af-chips" role="group" aria-label="Vis">' + FILTRE.map(([f, t]) => '<button type="button" class="af-chip' + (S.filter === f ? ' valgt' : '') + '" data-filter="' + f + '" aria-pressed="' + (S.filter === f) + '">' + t + ' ' + antal(f) + '</button>').join('') + '</div>' +
+    '<p class="po-note">Medarbejdere og frivillige med en rolle. Medlemmer uden rolle står ikke her.</p><div id="poListe">' + listeHtml() + '</div>' +
+    '<p class="po-note"><b>' + aktive + ' aktive · ' + tidl + ' tidligere.</b> Nye personer og roller lægger Lars og Claude ind.</p>' +
+    '<div class="af-chips"><button type="button" class="af-chip info" id="csv">Hent listen som regneark</button></div>';
+  vis(h, false);
+  $('sog').addEventListener('input', (e) => { S.sog = e.target.value; $('poListe').innerHTML = listeHtml(); });
+  $('vis').querySelectorAll('[data-filter]').forEach((b) => b.addEventListener('click', () => { S.filter = b.dataset.filter; vListe(); const v = $('vis').querySelector('[data-filter="' + S.filter + '"]'); if (v) v.focus(); }));
+  $('csv').addEventListener('click', hentCsv);
+}
+function listeHtml() {
+  const l = S.liste.filter(matcher);
+  if (!l.length) return '<p class="hint">Ingen personer passer.</p>';
+  return l.map((p, i) => '<a class="tt-tr' + (p.medarbejder ? '' : ' po-tidl') + '" href="#p/' + encodeURIComponent(p.pid) + '"><span class="gr-av" style="background:' + FARVER[i % 4] + '" aria-hidden="true">' + esc(p.initialer || p.navn.split(' ').map((x) => x[0]).join('').slice(0, 2)) + '</span>' +
+    '<div class="tt-mid"><b>' + esc(p.navn) + '</b><span>' + esc(rolleTekst(p)) + (p.paaVagt ? ' · på vagt' : '') + '</span></div>' + statusPille(p) + '</a>').join('');
+}
+
+function hentCsv() {
+  const mobilCsv = (m) => mobilTekst(m).replace(/^\+45 /, '');
+  const rk = [['Navn', 'Roller', 'Status', 'Mobil', 'Mail', 'Løn', 'Sidst logget ind']].concat(S.liste.map((p) => [p.navn, p.roller.map((r) => NAVNE[r] || r).join(', ') || ('Tidligere: ' + p.tidligere.map((r) => NAVNE[r] || r).join(', ')), p.medarbejder ? (p.sidstLogin ? 'Aktiv' : 'Ikke logget ind') : 'Tidligere', mobilCsv(p.mobil), p.mail, p.loen, p.sidstLogin]));
+  // Semikolon og BOM, så Excel på dansk åbner filen rigtigt. Celler, der starter med = + - @, får en apostrof (ingen formler)
+  const celle = (v) => { let s = String(v == null ? '' : v); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
+  const csv = '﻿' + rk.map((r) => r.map(celle).join(';')).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'personer-og-roller-' + new Date().toISOString().slice(0, 10) + '.csv'; document.body.append(a); a.click(); a.remove();
+}
+
+function msgHtml() { return S.msg ? '<div class="msg ' + (S.msgType || 'okm') + '" role="status">' + esc(S.msg) + '</div>' : ''; }
+
+function vPerson(pid, igen) {
+  const p = S.en[pid];
+  if (!p) { vis(tilbage() + '<p class="msg" role="status">Henter …</p>', false); return; }
+  const mig = person && p.pid === person.id, adm = p.roller.indexOf('admin') >= 0;
+  let h = tilbage() + hero(rolleTekst(p), p.navn) + msgHtml();
+  h += '<h2 class="po-h">Roller hos os</h2><div class="po-fakta">';
+  if (!p.roller.length) h += '<div><span>' + esc(p.medarbejder ? 'Ingen roller' : rolleTekst(p)) + '</span><b>' + (p.aktiv ? '' : 'Ikke aktiv') + '</b></div>';
+  p.roller.forEach((r) => {
+    h += '<div><span>' + esc(NAVNE[r] || r) + (r === 'opstrenger' && p.paaVagt ? ' · på vagt' : '') + '</span><b>' +
+      (adm || mig ? '' : '<a class="af-chip lille farlig" href="#p/' + encodeURIComponent(p.pid) + '/fjern/' + encodeURIComponent(r) + '">Fjern rollen<span class="sr"> ' + esc(NAVNE[r] || r) + '</span></a>') + '</b></div>';
+  });
+  if (p.loen) h += '<div><span>Løn</span><b>' + esc(p.loen === 'lønnet' ? 'Lønnet' : 'Ulønnet') + '</b></div>';
+  h += '</div>';
+  if (adm) h += '<p class="po-note">Administratorer ændres af Lars og Claude.</p>';
+  h += '<h2 class="po-h">Kontakt</h2><div class="po-fakta"><div><span>Mobil</span><b>' + (p.mobil ? '<a href="tel:' + esc(p.mobil.replace(/\s/g, '')) + '">' + esc(mobilTekst(p.mobil)) + '</a>' : '–') + '</b></div><div><span>Mail</span><b>' + (p.mail ? esc(p.mail) : '–') + '</b></div></div>' +
+    '<p class="po-note">Navn, mobil og mail rettes af Lars og Claude nu. Når importen fra ForeningsLet er bygget, rettes de dér.</p>';
+  h += '<h2 class="po-h">Login</h2><div class="po-fakta"><div><span>Sidst logget ind</span><b>' + esc(p.sidstLogin ? datoKort(p.sidstLogin) + ' kl. ' + p.sidstLogin.slice(11).replace(':', '.') : 'Aldrig') + '</b></div><div><span>Husket på</span><b>' + p.enheder + (p.enheder === 1 ? ' enhed' : ' enheder') + '</b></div></div>';
+  if (!mig && !adm && p.enheder > 0) h += '<div class="af-chips" style="margin-top:0"><a class="af-chip lille" href="#p/' + encodeURIComponent(p.pid) + '/logud">Log ud på alle enheder</a></div>';
+  if (p.toej || p.opstrengning) {
+    h += '<h2 class="po-h">I systemet</h2>';
+    if (p.toej) { const st = STATUS[p.toej.seneste.status] || [p.toej.seneste.status, 'v'];
+      h += '<a class="tt-tr" href="arbejdstoej.html#personer"><div class="tt-mid"><b>Arbejdstøj og udstyr</b><span>' + esc(Number(p.toej.seneste.beloeb).toLocaleString('da-DK') + ' kr. · frist ' + p.toej.seneste.frist) + (p.toej.antal > 1 ? ' · ' + p.toej.antal + ' tildelinger i alt' : '') + '</span></div><span class="tt-st ' + st[1] + '">' + esc(st[0]) + '</span></a>'; }
+    if (p.opstrengning) h += '<a class="tt-tr" href="opstrengning.html"><div class="tt-mid"><b>Opstrengning</b><span>' + p.opstrengning.antal + (p.opstrengning.antal === 1 ? ' opstrengning i ' : ' opstrengninger i ') + esc(new Date(p.opstrengning.maaned + '-01T12:00').toLocaleDateString('da-DK', { month: 'long' })) + '</span></div>' + (p.paaVagt ? '<span class="tt-st ok">På vagt</span>' : '') + '</a>';
+  }
+  if (p.medarbejder && !adm && !mig) h += '<div class="af-chips"><a class="af-chip farlig" href="#p/' + encodeURIComponent(p.pid) + '/stop">Stop som medarbejder</a></div>';
+  vis(h, igen ? false : (S.msg ? '.msg' : 'h1'));
+}
+
+function bekraeft(pid, slags, rolle) {
+  const p = S.en[pid];
+  if (!p) { vis(tilbage() + '<p class="msg" role="status">Henter …</p>', false); return; }
+  const fornavn = p.navn.split(' ')[0];
+  let titel, punkter, knap, grund = false;
+  if (slags === 'fjern') {
+    const rn = NAVNE[rolle] || rolle, rester = p.roller.filter((r) => r !== rolle);
+    titel = 'Fjern rollen ' + rn + '?';
+    punkter = [];
+    if (rolle === 'opstrenger' && p.paaVagt) punkter.push(fornavn + ' tages af opstrengervagten, og I får en mail om at sætte en ny på vagt.');
+    punkter.push('Felterne for rollen forsvinder fra ' + fornavn + 's personaleside.');
+    if (rester.length) punkter.push(fornavn + ' er fortsat ' + rester.map((r) => (NAVNE[r] || r).toLowerCase()).join(' og ') + '. Login er uændret.');
+    else { punkter.push('Det er den sidste rolle, så ' + fornavn + ' står som tidligere medarbejder.'); if (p.toej) punkter.push('En tildeling i Arbejdstøj, der ikke er bestilt, annulleres. Det bestilte står.'); punkter.push(fornavn + ' beholder sit login som medlem.'); }
+    knap = 'Ja, fjern ' + rn;
+  } else if (slags === 'stop') {
+    titel = 'Stop ' + p.navn + ' som medarbejder?';
+    punkter = [(p.roller.length === 1 ? 'Rollen ' : 'Rollerne ') + p.roller.map((r) => NAVNE[r] || r).join(' og ') + ' fjernes, og personalesiden er tom for ' + fornavn + '.'];
+    if (p.paaVagt) punkter.push(fornavn + ' tages af opstrengervagten, og I får en mail om at sætte en ny på vagt.');
+    if (p.toej) punkter.push('En tildeling i Arbejdstøj, der ikke er bestilt, annulleres, og beløbet er frit igen. Det bestilte står.');
+    punkter.push({ fed: fornavn + ' beholder sit login som medlem.', t: ' Udmeldelse af klubben sker kun i ForeningsLet.' });
+    knap = 'Ja, stop ' + fornavn + ' som medarbejder'; grund = true;
+  } else {
+    titel = 'Log ' + p.navn + ' ud på alle enheder?';
+    punkter = [fornavn + ' logges ud på ' + p.enheder + (p.enheder === 1 ? ' enhed' : ' enheder') + ' og skal logge ind igen med en sms-kode.', 'Roller og alt andet er uændret. Brug det fx, hvis en telefon er mistet.'];
+    knap = 'Ja, log ' + fornavn + ' ud';
+  }
+  let h = tilbage() + hero(rolleTekst(p), p.navn) + '<div class="po-fare" role="alert"><b>' + esc(titel) + '</b><ul>' + punkter.map((x) => '<li>' + (typeof x === 'string' ? esc(x) : '<b>' + esc(x.fed) + '</b>' + esc(x.t)) + '</li>').join('') + '</ul></div>';
+  if (grund) h += '<label for="grund" style="font-weight:700">Hvorfor? (gemmes i driftsloggen)</label><input id="grund" class="po-sog" maxlength="120" placeholder="Fx stoppet som træner">';
+  h += '<div class="af-chips"><button type="button" class="af-chip farlig fyldt" id="ja">' + esc(knap) + '</button><a class="af-chip info" href="#p/' + encodeURIComponent(pid) + '">Fortryd</a></div><div id="bMsg" class="msg" role="status"></div>';
+  vis(h, '.po-fare b');
+  const noegle = slags + '/' + pid + '/' + (rolle || '');
+  $('ja').addEventListener('click', async () => {
+    const b = $('ja'); if (b.disabled) return; b.disabled = true; b.textContent = 'Gemmer …';
+    S.ids[noegle] = S.ids[noegle] || nyId();
+    try {
+      const h2 = slags === 'fjern' ? 'fjernRolle' : slags === 'stop' ? 'stop' : 'logudAlle';
+      const d = { pid }; if (rolle) d.rolle = rolle; if (grund) d.grund = $('grund').value;
+      const r = await motor('personer', h2, d, S.ids[noegle]);
+      delete S.ids[noegle];
+      S.en[pid] = r.person;
+      S.msg = slags === 'fjern' ? 'Rollen ' + (NAVNE[rolle] || rolle) + ' er fjernet.' : slags === 'stop' ? p.navn + ' er stoppet som medarbejder.' : p.navn + ' er logget ud på ' + r.enheder + (r.enheder === 1 ? ' enhed.' : ' enheder.');
+      S.msgType = 'okm'; S.msgRute = '#p/' + encodeURIComponent(pid);
+      if (r.advarsler && r.advarsler.length) { S.msg += ' Men: ' + r.advarsler.join(' ') + ' Vagthunden prøver igen inden for 20 minutter.'; S.msgType = 'err'; }
+      S.liste = null; hentListe();
+      location.hash = '#p/' + encodeURIComponent(pid);
+    } catch (err) { b.disabled = false; b.textContent = knap; const m = $('bMsg'); m.textContent = err.message; m.className = 'msg err'; }
+  });
+}
+
+async function hentListe() {
+  try { const d = await motor('personer', 'liste'); S.liste = d.personer; if (!location.hash || location.hash === '#') vListe(); }
+  catch (err) { if (!location.hash || location.hash === '#') vis(hero('Administration', 'Personer og roller') + '<p class="msg err" role="alert">' + esc(err.message) + '</p>', false); }
+}
+async function hentEn(pid) {
+  try { S.en[pid] = await motor('personer', 'en', { pid }); }
+  catch (err) { if (rute().pid === pid) vis(tilbage() + '<p class="msg err" role="alert">' + esc(err.message) + '</p>', false); return false; }
+  return true;
+}
+function rute() {
+  const m = /^#p\/([^/]+)(?:\/(fjern|stop|logud)(?:\/([a-z]+))?)?$/.exec(location.hash);
+  return m ? { pid: decodeURIComponent(m[1]), slags: m[2] || '', rolle: m[3] || '' } : {};
+}
+async function visRute() {
+  const r = rute();
+  if (S.msg && location.hash !== S.msgRute) S.msg = '';
+  if (!r.pid) { vListe(); if (!S.liste) hentListe(); return; }
+  const tegn = (igen) => { const n = rute(); if (n.pid !== r.pid || n.slags !== r.slags) return; if (r.slags) bekraeft(r.pid, r.slags, r.rolle); else vPerson(r.pid, igen); };
+  const havde = !!S.en[r.pid];
+  // Personen hentes frisk hver gang, så "Fjern" og "Stop" altid bygger på det, der står nu. Bekræftelsen tegnes først bagefter
+  if (r.slags) { vis(tilbage() + '<p class="msg" role="status">Henter …</p>', false); if (await hentEn(r.pid)) tegn(false); return; }
+  tegn(false);
+  if (await hentEn(r.pid)) tegn(havde);
+}
+window.addEventListener('hashchange', visRute);
+
+function start() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn;
+  if ((person.roller || []).indexOf('admin') < 0) { $('ikkeAdmin').classList.remove('hidden'); return; }
+  visRute();
+}
+
+if (!token) location.replace('./?til=' + encodeURIComponent('personer.html' + location.hash));
+else motor('kerne', 'mig').then((p) => { person = p; start(); }).catch(() => {});
+</script>
+<script src="../velkomst.js?v=02d869848285"></script>
+</body>
+</html>

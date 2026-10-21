@@ -1,142 +1,300 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="2d11ecc964ed">
+<meta name="rtk-version" content="b2eb852604c9">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0B3D3A">
-<meta name="apple-mobile-web-app-title" content="Mit RTK">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="ikon-medlem-180.png">
-<link rel="icon" type="image/png" href="ikon-medlem-180.png">
-<title>Mit RTK</title>
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>RTK personale og frivillige</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=6f4501ee138d">
+<link rel="stylesheet" href="../rtk.css?v=6f4501ee138d">
 </head>
 <body>
 <header class="top">
   <div class="wrap">
     <div class="brand">
-      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
-      <a class="navn" href="./"><b>Mit RTK</b><span class="klub-d">Roskilde Tennis Klub</span><span class="hvor-m"><i class="prik"></i><span data-t="side">Medlemssiden</span></span></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <a class="navn" href="./"><b>Mit RTK</b><span class="klub-d">Roskilde Tennis Klub</span><span class="hvor-m"><i class="prik"></i>Personale og frivillige</span></a>
     </div>
     <div class="hoejre">
-      <span class="hvor"><i class="prik" aria-hidden="true"></i><span><span data-t="duErPaa">Du er på:</span> <b data-t="side">Medlemssiden</b></span></span>
-      <div class="sprog" role="group" aria-label="Sprog / Language">
-        <button type="button" data-sprog="da" lang="da" aria-label="Dansk" aria-pressed="true">DA</button>
-        <button type="button" data-sprog="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
-      </div>
+      <span class="hvor"><i class="prik" aria-hidden="true"></i><span>Du er på: <b>Personale og frivillige</b></span></span>
     </div>
   </div>
 </header>
 
 <main class="side">
   <div class="monster" aria-hidden="true"></div>
-  <section class="wrap hero">
+  <section class="wrap hero" style="padding-bottom:8px">
     <div>
-      <p class="kicker" data-t="forMedlemmer">For medlemmer</p>
-      <h1 data-t="overskrift">Klubben i lommen.</h1>
-      <p class="intro" data-t="intro">Se om din ketsjer er klar, følg holdkampene og find dine medlemsfordele.</p>
+      <p class="kicker">For personale og frivillige</p>
+      <h1>Klubbens værktøjer.</h1>
     </div>
   </section>
 
-  <section class="wrap tiles">
-    <a class="tile foto-felt" href="grupper.html">
-      <img class="foto" src="billeder/felt-grupper.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="grupper">Grupper</b><span class="tekst" data-t="grupperTekst">Chat med dem, du spiller med, og meld dig til spil.</span></span>
-      <span class="aabn"><span class="ord" data-t="aabn">Åbn</span> &#8594;</span></span>
-    </a>
-    <a class="tile foto-felt" href="opstrengning.html">
-      <img class="foto" src="billeder/felt-opstrengning.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="opstrengning">Opstrengning</b><span class="tekst" data-t="opstrengningTekst">Er min ketsjer klar? Skriv til opstrengeren, og se priserne.</span></span>
-      <span class="aabn"><span class="ord" data-t="aabn">Åbn</span> &#8594;</span></span>
-    </a>
-    <a class="tile foto-felt" href="grupper.html#profil">
-      <img class="foto" src="billeder/felt-profil.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="profil">Min profil</b><span class="tekst" data-t="profilTekst">For voksne medlemmer: dit profilkort med billede, niveau og lidt om dig. Bruges i grupper og på spillerbørsen.</span></span>
-      <span class="aabn"><span class="ord" data-t="aabn">Åbn</span> &#8594;</span></span>
-    </a>
-    <a class="tile foto-felt" href="beskeder.html">
-      <img class="foto" src="billeder/felt-beskeder.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="beskeder">Beskeder</b><span class="tekst" data-t="beskederTekst">Vælg, hvordan beskeder fra klubben kommer: notifikation, sms eller mail.</span></span>
-      <span class="aabn"><span class="ord" data-t="aabn">Åbn</span> &#8594;</span></span>
-    </a>
-    <a class="tile foto-felt" href="boern.html">
-      <img class="foto" src="billeder/felt-boern.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="boern">Mine børn</b><span class="tekst" data-t="boernTekst">For forældre: bestem over beskederne om dine børn under 18.</span></span>
-      <span class="aabn"><span class="ord" data-t="aabn">Åbn</span> &#8594;</span></span>
-    </a>
-    <div class="tile foto-felt" aria-disabled="true">
-      <img class="foto" src="billeder/felt-nyheder.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="nyheder">Nyheder</b><span class="tekst" data-t="nyhederTekst">Det sker i klubben: nyt for børn, unge og voksne i padel og tennis.</span><span class="snart" data-t="snart">Kommer snart</span></span></span>
+  <div class="wrap indhold" style="padding-top:16px">
+    <div id="testBanner" class="hidden"></div>
+    <div class="card hidden" id="loginKort" style="max-width:520px">
+      <h2>Log ind</h2>
+      <!-- Login med mobilnummer og engangskode på sms. Besluttet af Lars 11. oktober 2026. -->
+      <form id="mobilForm" autocomplete="on">
+        <p class="hint" style="margin:0 0 12px">Skriv dit mobilnummer, så sender vi en kode på sms. Ingen pinkode at huske.</p>
+        <label for="mobil">Dit mobilnummer</label>
+        <input id="mobil" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="landekode" maxlength="16" style="font-size:20px;letter-spacing:.04em">
+        <p class="hint" id="landekode" style="margin:6px 0 0">Danske numre skrives uden +45. Udenlandske med landekode, fx +46.</p>
+        <button type="submit" style="width:100%;margin-top:12px">Send kode på sms</button>
+      </form>
+      <form id="kodeForm" class="hidden">
+        <label for="kode" id="kodeLabel">Koden fra sms'en</label>
+        <div class="big"><input id="kode" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code"></div>
+        <p class="hint" style="margin:6px 0 0">Koden gælder i 10 minutter. Kommer der ingen sms, så tjek nummeret.</p>
+        <label style="display:flex;align-items:center;gap:12px;margin:14px 0 0;font-size:15px;min-height:44px"><input type="checkbox" id="husk" checked style="width:22px;height:22px;min-height:0;margin:0;accent-color:#E6005C"> Husk mig på denne enhed i 30 dage</label>
+        <button type="submit" style="width:100%;margin-top:10px">Log ind</button>
+        <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:8px">
+          <button type="button" class="ghost small" id="sendIgen">Send igen</button>
+          <button type="button" class="ghost small" id="sendMail">Send koden på mail i stedet</button>
+        </div>
+        <button type="button" class="ghost small" id="andetNr" style="margin-top:8px">Brug et andet nummer</button>
+      </form>
+      <form id="loginForm" class="row big hidden">
+        <label for="pin" class="sr">Din sekscifrede pinkode</label>
+        <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Pinkode" autocomplete="current-password">
+        <button type="submit" style="flex:0 0 auto">Log ind</button>
+      </form>
+      <div id="loginMsg" class="msg" aria-live="polite"></div>
+      <p class="hint" id="pinSkift"><button type="button" class="ghost small" id="brugPin">Log ind med pinkode (kun i testen)</button></p>
     </div>
-    <div class="tile foto-felt" aria-disabled="true">
-      <img class="foto" src="billeder/felt-holdkampe.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="holdkampe">Holdkampe</b><span class="tekst" data-t="holdkampeTekst">Resultater for Roskilde-holdene og tilmelding til kampe.</span><span class="snart" data-t="snart">Kommer snart</span></span></span>
+
+    <div id="omraade" class="hidden">
+      <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+      <div id="felter"></div>
+      <p class="hint hidden" id="ingen">Der er ikke noget til din rolle her endnu. Kontakt Lars eller Henrik, hvis du mener, du burde have adgang.</p>
     </div>
-    <div class="tile foto-felt" aria-disabled="true">
-      <img class="foto" src="billeder/felt-fordele.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="fordele">Medlemsfordele</b><span class="tekst" data-t="fordeleTekst">Rabatter og tilbud til medlemmer.</span><span class="snart" data-t="snart">Kommer snart</span></span></span>
-    </div>
-  </section>
+  </div>
 
   <div class="wrap partnere">
-    <img class="p-babolat" src="ikoner/babolat.png" alt="Babolat">
-    <span data-t="partnere">Officielle partnere</span>
-    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" data-t-aria="racketlifeLink" aria-label="Racketlife (åbner i ny fane)"><img src="ikoner/racketlife.png" alt=""></a>
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
   </div>
 </main>
 
 <footer class="bund">
   <div class="wrap">
     <span class="klub">
-      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
       <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
     </span>
     <span class="hoejre">
-      <span data-t="test">Testversion. Data er opdigtede.</span>
-      <a class="diskret" href="personale/" lang="da">Personale og frivillige</a>
-      <a class="privat" href="privatliv.html" data-t="privatliv">Privatliv</a>
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
     </span>
   </div>
 </footer>
 
+<script src="../konfig.js?v=1301d6285ee2"></script>
 <script>
-window.TEKSTER = {
-  da: {
-    titel: 'Mit RTK', duErPaa: 'Du er på:', side: 'Medlemssiden', forMedlemmer: 'For medlemmer',
-    overskrift: 'Klubben i lommen.', intro: 'Se om din ketsjer er klar, følg holdkampene og find dine medlemsfordele.',
-    opstrengning: 'Opstrengning', opstrengningTekst: 'Er min ketsjer klar? Skriv til opstrengeren, og se priserne.', aabn: 'Åbn',
-    beskeder: 'Beskeder', beskederTekst: 'Vælg, hvordan beskeder fra klubben kommer: notifikation, sms eller mail.',
-    boern: 'Mine børn', boernTekst: 'For forældre: bestem over beskederne om dine børn under 18.',
-    grupper: 'Grupper', grupperTekst: 'Chat med dem, du spiller med, og meld dig til spil.',
-    profil: 'Min profil', profilTekst: 'For voksne medlemmer: dit profilkort med billede, niveau og lidt om dig. Bruges i grupper og på spillerbørsen.',
-    holdkampe: 'Holdkampe', holdkampeTekst: 'Resultater for Roskilde-holdene og tilmelding til kampe.',
-    fordele: 'Medlemsfordele', fordeleTekst: 'Rabatter og tilbud til medlemmer.',
-    nyheder: 'Nyheder', nyhederTekst: 'Det sker i klubben: nyt for børn, unge og voksne i padel og tennis.', snart: 'Kommer snart',
-    partnere: 'Officielle partnere', test: 'Testversion. Data er opdigtede.', privatliv: 'Privatliv',
-    klubLink: 'Roskilde Tennis Klubs hjemmeside (åbner i ny fane)', racketlifeLink: 'Racketlife (åbner i ny fane)'
-  },
-  en: {
-    titel: 'Mit RTK', duErPaa: 'You are on:', side: 'Members’ area', forMedlemmer: 'For members',
-    overskrift: 'The club in your pocket.', intro: 'Check whether your racket is ready, follow the team matches and find your member benefits.',
-    opstrengning: 'Racket stringing', opstrengningTekst: 'Is my racket ready? Message the stringer and see the prices.', aabn: 'Open',
-    beskeder: 'Messages', beskederTekst: 'Choose how messages from the club reach you: notification, text message or email.',
-    boern: 'My children', boernTekst: 'For parents: decide about messages concerning your children under 18.',
-    grupper: 'Groups', grupperTekst: 'Chat with the people you play with and sign up for games.',
-    profil: 'My profile', profilTekst: 'For adult members: your profile card with a photo, your level and a little about you. Used in groups and on the player exchange.',
-    holdkampe: 'Team matches', holdkampeTekst: 'Results for the Roskilde teams and sign-up for matches.',
-    fordele: 'Member benefits', fordeleTekst: 'Discounts and offers for members.',
-    nyheder: 'News', nyhederTekst: 'What is happening at the club: news for juniors and adults in padel and tennis.', snart: 'Coming soon',
-    partnere: 'Official partners', test: 'Test version. All data is fictitious.', privatliv: 'Privacy',
-    klubLink: 'Roskilde Tennis Klub website (opens in a new tab)', racketlifeLink: 'Racketlife (opens in a new tab)'
-  }
+// Adressen til motoren står i konfig.js (fælles for alle sider)
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
+
+// Ikoner i felterne: stregtegninger i mørkeblå.
+const IKON = {
+  personer: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><rect x="5" y="9" width="34" height="26" rx="3"/><circle cx="15" cy="20" r="4"/><path d="M9 31c0-4 3-6 6-6s6 2 6 6"/><line x1="25" y1="18" x2="34" y2="18"/><line x1="25" y1="23" x2="34" y2="23"/><line x1="25" y1="28" x2="31" y2="28"/></svg>',
+  bold: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="22" cy="22" r="15"/><path d="M10 12c6 5 6 15 0 20"/><path d="M34 12c-6 5-6 15 0 20"/></svg>',
+  drift: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><path d="M6 32a16 16 0 0 1 32 0"/><line x1="22" y1="32" x2="31" y2="20" stroke-width="2.5"/><circle cx="22" cy="32" r="2.5"/><line x1="6" y1="38" x2="38" y2="38"/></svg>',
+  grupper: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="15" cy="15" r="6"/><circle cx="31" cy="17" r="5"/><path d="M4 37c0-7 5-11 11-11s11 4 11 11"/><path d="M27 26c1-.6 2.4-1 4-1 5 0 9 3.5 9 10"/></svg>',
+  liste: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><rect x="9" y="7" width="26" height="33" rx="2"/><rect x="16" y="4" width="12" height="6" rx="1.5"/><path d="M14 19l2.5 2.5 4.5-5"/><line x1="24" y1="19" x2="30" y2="19"/><path d="M14 28l2.5 2.5 4.5-5"/><line x1="24" y1="28" x2="30" y2="28"/></svg>',
+  toej: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5" stroke-linejoin="round"><path d="M16 6l-10 6 4 8 5-2v20h14V18l5 2 4-8-10-6c-1 3-3.5 5-6 5s-5-2-6-5z"/><line x1="19" y1="28" x2="25" y2="28"/></svg>',
+  ketsjer: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><ellipse cx="17" cy="16" rx="11" ry="13"/><line x1="9" y1="10" x2="25" y2="10"/><line x1="7" y1="16" x2="27" y2="16"/><line x1="9" y1="22" x2="25" y2="22"/><line x1="12" y1="4" x2="12" y2="28"/><line x1="17" y1="3" x2="17" y2="29"/><line x1="22" y1="4" x2="22" y2="28"/><line x1="24" y1="27" x2="38" y2="41" stroke-width="3"/></svg>'
 };
+
+// Felterne på personalesiden i to afsnit (Lars 19. oktober kl. 10.05 til 10.20, mockup godkendt samme formiddag).
+// "Dit arbejde": det, man bruger i sit arbejde, efter ens roller. "Administration": nederst, kun for klubbens administratorer
+// (Lars og Henrik, senere formanden). Trænere og frivillige ser slet ikke afsnittet. Motoren tjekker rollerne igen på hvert kald.
+// En person med flere roller ser felterne for alle sine roller. Boldregnskabet er som før for cheftræner og boldansvarlig (Lars 19. oktober).
+const ANSVARLIG = ['admin', 'cheftraener', 'boldansvarlig'];
+const FELTER = [
+  { afsnit: 'arbejde', navn: (p) => harRolle(p, ANSVARLIG) ? 'Boldregnskab' : 'Tag bolde', side: 'bolde.html', ikon: 'bold', roller: ['traener', 'cheftraener', 'boldansvarlig'],
+    tekst: (p) => harRolle(p, ANSVARLIG) ? 'Tag bolde, lager, forbrug, optælling og bestilling.' : 'Tag bolde til træning, og se lageret.' },
+  // Arbejdstøj og udstyr fra kontoen hos Sports Group (Lars 16. oktober kl. 20.58). Alle med en rolle kan få en tildeling.
+  { afsnit: 'arbejde', navn: 'Mit arbejdstøj', side: 'arbejdstoej.html', ikon: 'toej', roller: ['opstrenger', 'traener', 'kaptajn', 'cheftraener', 'boldansvarlig', 'bogholder', 'koordinator', 'oevrige'],
+    tekst: () => 'Vælg dit arbejdstøj, når klubben giver dig en tildeling.' },
+  { afsnit: 'arbejde', navn: 'Opstrengere', side: 'opstrengning.html', ikon: 'ketsjer', roller: ['opstrenger'],
+    tekst: () => 'Kø, tøm skabet, meld klar, måneden og strengelager.' },
+  // Pladsholder (Lars 14. oktober kl. 21.43): trænerne registrerer deltagerne ved hver holdtræning, også nye.
+  { afsnit: 'arbejde', navn: 'Deltagerregistrering', snart: true, ikon: 'liste', roller: ['traener', 'cheftraener'],
+    tekst: () => 'Registrér deltagerne ved hver holdtræning, også nye spillere.' },
+  { afsnit: 'admin', navn: 'Arbejdstøj: tildelinger og konto', side: 'arbejdstoej.html#konto', ikon: 'toej', roller: ['admin'],
+    tekst: () => 'Kontoen hos Sports Group, nye tildelinger, godkendelse og bestilling hos Carsten.' },
+  { afsnit: 'admin', navn: 'Bolde: lager, forbrug og bestilling', side: 'bolde.html#forbrug', ikon: 'bold', roller: ['admin'],
+    tekst: () => 'Forbrug pr. træner og hold, optælling og svind, bestillingsforslag.' },
+  { afsnit: 'admin', navn: 'Personer og roller', side: 'personer.html', ikon: 'personer', roller: ['admin'],
+    tekst: () => 'Medarbejdere og frivillige med roller, login og hvem der er stoppet.' },
+  { afsnit: 'admin', navn: 'Grupper i klubben', side: 'grupper.html', ikon: 'grupper', roller: ['admin'],
+    tekst: () => 'Alle grupper med medlemmer, og hvor ofte de spiller. Ikke chat og betalinger.' },
+  { afsnit: 'admin', navn: 'Drift og forbrug', side: 'drift.html', ikon: 'drift', roller: ['admin'],
+    tekst: () => 'Sms og mail i dag, de sidste 30 dage, saldo og alarmer.' }
+];
+const AFSNIT = [['arbejde', 'Dit arbejde', ''], ['admin', 'Administration', 'Kun for klubbens administratorer. Trænere og frivillige ser ikke dette afsnit.']];
+
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+const harRolle = (p, roller) => !!p && (p.roller || []).some((r) => r === 'admin' || roller.indexOf(r) >= 0);
+
+let enhed = hent('rtk.enhed'); if (!enhed) { enhed = nyId(); gem('rtk.enhed', enhed); }
+let token = hent('rtk.token') || '';
+const qs = new URLSearchParams(location.search);
+const SIDER = FELTER.map((f) => f.side).filter(Boolean);
+const tilQ = qs.get('til') || '';
+let til = SIDER.indexOf(tilQ) >= 0 ? tilQ : (SIDER.indexOf(tilQ.split('#')[0]) >= 0 ? tilQ.split('#')[0] : '');
+const navnPaa = (f, p) => (typeof f.navn === 'function' ? f.navn(p) : f.navn);
+
+function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+
+async function motor(modul, handling, data) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: '' }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  let svar;
+  // Google svarer af og til med en HTML-side. Så er det en forbindelsesfejl, ikke en teknisk fejltekst (ende til ende-testen 20. oktober)
+  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (!svar.ok) { if (svar.login) visLogin('Log ind igen.'); throw new Error(svar.fejl || 'Noget gik galt'); }
+  return svar.data;
+}
+
+function visLogin(tekst) {
+  token = ''; gem('rtk.token', null);
+  $('omraade').classList.add('hidden'); $('loginKort').classList.remove('hidden');
+  besked($('loginMsg'), tekst || '', tekst ? 'err' : '');
+  visTrin('mobil');
+  setTimeout(() => $('mobil').focus(), 50);
+}
+
+// ---- Login med mobilnummer og kode
+let loginMobil = '';
+function visTrin(t) {
+  $('mobilForm').classList.toggle('hidden', t !== 'mobil');
+  $('kodeForm').classList.toggle('hidden', t !== 'kode');
+  $('loginForm').classList.toggle('hidden', t !== 'pin');
+  // Login med pinkode er slået fra (Lars 14. oktober kl. 08.36). Knappen vises kun med ?pin=1, til test af en motor, hvor den er slået til
+  $('pinSkift').classList.toggle('hidden', t === 'pin' || MILJOE === 'produktion' || !new URLSearchParams(location.search).has('pin'));
+}
+// Et dobbelttryk sender kun én kode og logger kun ind én gang (ende til ende-testen 20. oktober)
+let igang = false;
+async function sendKode(kanal) {
+  if (igang) return;
+  igang = true;
+  besked($('loginMsg'), kanal === 'mail' ? 'Sender koden på mail …' : 'Sender koden …');
+  try {
+    const r = await motor('kerne', 'sendKode', { mobil: loginMobil, kanal, enhed });
+    $('kodeLabel').textContent = r.kanal === 'mail' ? 'Koden fra mailen. Har klubben ikke din mail, kommer der ingen.' : "Koden fra sms'en til " + r.til;
+    $('sendMail').classList.toggle('hidden', !r.harMail || r.kanal === 'mail');
+    visTrin('kode'); besked($('loginMsg'), '');
+    $('kode').value = ''; setTimeout(() => $('kode').focus(), 50);
+    venterPaaSms();
+  } catch (err) { besked($('loginMsg'), err.message, 'err'); }
+  finally { igang = false; }
+}
+// Android: hent koden direkte fra sms'en (sidste linje "@mitrtk.dk #kode"). iPhone foreslår den selv over tastaturet.
+function venterPaaSms() {
+  if (!('OTPCredential' in window)) return;
+  const ac = new AbortController(); setTimeout(() => ac.abort(), 600000);
+  navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal })
+    .then((o) => { if (o && o.code && !$('kodeForm').classList.contains('hidden')) { $('kode').value = o.code; $('kodeForm').requestSubmit(); } })
+    .catch(() => {});
+}
+$('mobilForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  loginMobil = $('mobil').value.trim();
+  sendKode('sms');
+});
+$('kodeForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (igang) return;
+  igang = true; besked($('loginMsg'), 'Logger ind …');
+  try {
+    const r = await motor('kerne', 'kodeLogin', { mobil: loginMobil, kode: $('kode').value, enhed, husk: $('husk').checked });
+    token = r.token; gem('rtk.token', token); $('kode').value = ''; besked($('loginMsg'), '');
+    visFelter(r.person);
+    if (window.RTK_VELKOMST) window.RTK_VELKOMST.tjek();
+  } catch (err) { besked($('loginMsg'), err.message, 'err'); }
+  finally { igang = false; }
+});
+$('sendIgen').addEventListener('click', () => sendKode('sms'));
+$('sendMail').addEventListener('click', () => sendKode('mail'));
+$('andetNr').addEventListener('click', () => { visTrin('mobil'); besked($('loginMsg'), ''); $('mobil').focus(); });
+$('brugPin').addEventListener('click', () => { visTrin('pin'); besked($('loginMsg'), ''); setTimeout(() => $('pin').focus(), 50); });
+
+function visFelter(p) {
+  // Kom man fra en underside uden at være logget ind, går man direkte tilbage dertil.
+  const kan = (s) => FELTER.some((f) => f.side === s && harRolle(p, f.roller));
+  if (til && kan(til)) { location.replace(til); return; }
+  if (til && kan(til.split('#')[0])) { location.replace(til.split('#')[0]); return; }
+  $('loginKort').classList.add('hidden'); $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + p.navn;
+  const mine = FELTER.filter((f) => harRolle(p, f.roller));
+  const toAfsnit = mine.some((f) => f.afsnit === 'admin');
+  $('felter').innerHTML = '';
+  AFSNIT.forEach(([id, titel, under]) => {
+    const fs = mine.filter((f) => f.afsnit === id);
+    if (!fs.length) return;
+    const sek = document.createElement('section'); sek.className = 'pa-afsnit' + (id === 'admin' ? ' admin' : '');
+    // Overskrifterne vises kun, når der er to afsnit. Trænere og frivillige ser bare deres felter.
+    if (toAfsnit) {
+      const h = document.createElement('h2'); h.className = 'pa-titel'; h.id = 'afsnit-' + id; h.textContent = titel; sek.append(h);
+      sek.setAttribute('aria-labelledby', h.id);
+      if (under) { const u = document.createElement('p'); u.className = 'pa-under'; u.textContent = under; sek.append(u); }
+    }
+    const g = document.createElement('div'); g.className = 'tiles pa-tiles';
+    fs.forEach((f) => {
+      // Et felt, der kommer snart, er gråt og kan ikke trykkes på, ligesom på medlemssiden
+      const a = document.createElement(f.snart ? 'div' : 'a'); a.className = 'tile';
+      if (f.snart) a.setAttribute('aria-disabled', 'true'); else a.href = f.side;
+      a.insertAdjacentHTML('afterbegin', IKON[f.ikon]);
+      if (f.snart) a.querySelector('svg').style.opacity = '.45';
+      const tk = document.createElement('span'); tk.className = 'tk';
+      const b = document.createElement('b'); b.textContent = navnPaa(f, p);
+      const s = document.createElement('span'); s.className = 'tekst'; s.textContent = f.tekst(p);
+      tk.append(b, s);
+      if (f.snart) { const sn = document.createElement('span'); sn.className = 'snart'; sn.textContent = 'Kommer snart'; tk.append(sn); a.append(tk); g.append(a); return; }
+      const aabn = document.createElement('span'); aabn.className = 'aabn'; aabn.innerHTML = '<span class="ord">Åbn</span> &#8594;';
+      a.append(tk, aabn); g.append(a);
+    });
+    sek.append(g); $('felter').append(sek);
+  });
+  $('ingen').classList.toggle('hidden', mine.some((f) => !f.snart));
+}
+
+$('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); besked($('loginMsg'), 'Logger ind …');
+  try {
+    const r = await motor('kerne', 'login', { pin: $('pin').value, enhed });
+    token = r.token; gem('rtk.token', token); $('pin').value = ''; besked($('loginMsg'), '');
+    visFelter(r.person);
+    if (window.RTK_VELKOMST) window.RTK_VELKOMST.tjek();
+  } catch (err) { besked($('loginMsg'), err.message, 'err'); }
+});
+
+$('logud').addEventListener('click', () => {
+  if (token) motor('kerne', 'logud').catch(() => {});
+  til = ''; history.replaceState(null, '', location.pathname);
+  visLogin('');
+});
+
+// ---- Start
+if (!token) visLogin(qs.get('igen') ? 'Log ind igen.' : '');
+else motor('kerne', 'mig').then(visFelter).catch(() => {});
 </script>
-<script src="sprog.js?v=1976d8c45489"></script>
-<script src="velkomst.js?v=02d869848285"></script>
+<script src="../velkomst.js?v=02d869848285"></script>
 </body>
 </html>

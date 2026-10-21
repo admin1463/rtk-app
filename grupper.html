@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="80f6ce23cee1">
+<meta name="rtk-version" content="672b78a6cc99">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -921,7 +921,7 @@ window.TEKSTER = {
 };
 </script>
 <script src="konfig.js?v=1301d6285ee2"></script>
-<script src="konto.js?v=a24aedec2740"></script>
+<script src="konto.js?v=2c0717d1df88"></script>
 <script src="sprog.js?v=1976d8c45489"></script>
 <script src="velkomst.js?v=02d869848285"></script>
 <script type="module">
@@ -1051,7 +1051,14 @@ const erAdmin = () => minRolle() === 'admin';
 function maaInvitere() { const g = tilstand.gruppe; return !!g && (erAdmin() || minRolle() === 'inviter' || g.invitation === 'alle'); }
 function stopLyt() { lyt.forEach((f) => { try { f(); } catch (e) {} }); lyt = []; if (ab) ab.ansGid = null; }
 function vis(id) { ['vListe', 'vNy', 'vGruppe', 'vNytSpil', 'vSpil', 'vBoers', 'vOpslag', 'vGrOpslag', 'vNytOpslag', 'vFind', 'vFindG', 'vSoeger', 'vSpiller', 'vProfil', 'vAfstemNy', 'vAfstem'].forEach((v) => $(v).classList.toggle('hidden', v !== id)); }
-function fejl(el, err) { console.warn(err); if (err && err.code === 'permission-denied' && tilstand.gruppeVaek && Date.now() - tilstand.gruppeVaek < 10000) return; K.besked(el, err && err.code === 'permission-denied' ? t('ingenAdgang') : (err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem')), 'err'); }
+// Afviser Firestore, spørges motoren, om login stadig gælder. Er det lukket (fx log ud på alle enheder), logger siden ud (fund 1)
+let tjekLoginTid = 0;
+function tjekLoginVedAfvisning(err) {
+  if (!err || err.code !== 'permission-denied' || !K.loggetInd() || Date.now() - tjekLoginTid < 5000) return;
+  tjekLoginTid = Date.now();
+  K.motor('kerne', 'mig').catch(() => {});
+}
+function fejl(el, err) { console.warn(err); tjekLoginVedAfvisning(err); if (err && err.code === 'permission-denied' && tilstand.gruppeVaek && Date.now() - tilstand.gruppeVaek < 10000) return; K.besked(el, err && err.code === 'permission-denied' ? t('ingenAdgang') : (err && err.message && !err.code ? K.fejlTekst(err.message) : t('fejlGem')), 'err'); }
 function laest(gid) { try { return Number(localStorage.getItem('rtk.gr.laest.' + gid) || 0); } catch (e) { return 0; } }
 function saetLaest(gid, ms) { try { if (ms > laest(gid)) localStorage.setItem('rtk.gr.laest.' + gid, String(ms)); } catch (e) {} }
 
@@ -1123,13 +1130,13 @@ async function logIndFirebase() {
   await FB.au.authStateReady();
   tidMaal('login fundet');
   let u = FB.au.currentUser;
-  let type = '';
+  let type = '', authTid = 0;
   // Firebase-login hører til det login i motoren (rtk.token), det blev lavet med. Er der logget ind på ny, også på en
   // anden side (Beskeder, Mine børn, personalesiden), skal der hentes en ny Firebase-adgang (gennemgangen 13. oktober aften).
   const binding = await tokenBinding();
   if (u) {
     const r = await u.getIdTokenResult();
-    type = r.claims.type || '';
+    type = r.claims.type || ''; authTid = Number(r.claims.auth_time) || 0;
     const gemt = (() => { try { return localStorage.getItem('rtk.gr.uid'); } catch (e) { return null; } })();
     const gemtTok = (() => { try { return localStorage.getItem('rtk.gr.tok'); } catch (e) { return null; } })();
     if (gemt !== u.uid || gemtTok !== binding) { u = null; await FB.auth.signOut(FB.au).catch(() => {}); }
@@ -1141,18 +1148,37 @@ async function logIndFirebase() {
     const c = await FB.auth.signInWithCustomToken(FB.au, svar.token);
     if (g !== gen || !K.loggetInd()) { await FB.auth.signOut(FB.au).catch(() => {}); throw new Error(AFBRUDT); }
     u = c.user; type = svar.type;
+    authTid = Number((await u.getIdTokenResult()).claims.auth_time) || 0;
     const forrige = (() => { try { return localStorage.getItem('rtk.gr.uid'); } catch (e) { return null; } })();
     if (forrige && forrige !== u.uid) rydLokalt();
     try { localStorage.setItem('rtk.gr.uid', u.uid); localStorage.setItem('rtk.gr.tok', binding); } catch (e) {}
   }
-  mig = { uid: u.uid, type };
+  mig = { uid: u.uid, type, authTid, binding };
   return mig;
+}
+
+// Log ud på alle enheder, stop og adgang slået fra (ende til ende-testen 20. oktober, fund 1): motoren skriver spaerret/{pid}.
+// Er dette login fra før spærringen, logges der ud med det samme, også selv om siden står åben. Reglerne afviser det alligevel.
+let spaerLyt = null;
+function lytSpaerret() {
+  if (spaerLyt) { spaerLyt(); spaerLyt = null; }
+  const m = mig;
+  if (!m || !FB) return;
+  spaerLyt = FB.fs.onSnapshot(FB.fs.doc(FB.db, 'spaerret', m.uid), (d) => {
+    const fra = d.exists() ? Number(d.data().fra) || 0 : 0;
+    if (!fra || m !== mig || m.authTid > fra) return;
+    // Er der logget ind på ny i en anden fane imens, er det nye login ikke spærret. Så ryddes kun denne fane (gennemgangen 21. oktober)
+    tokenBinding().then((b) => {
+      if (m !== mig) return;
+      if (b === m.binding && K.loggetInd()) K.logud(); else location.reload();
+    }).catch(() => {});
+  }, () => {});
 }
 
 function visLogin() {
   gen++;
   const varInde = mig !== null;
-  stopLyt(); if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } tilstand.slettede = []; sletGids.clear();
+  stopLyt(); if (spaerLyt) { spaerLyt(); spaerLyt = null; } if (listeLyt) { listeLyt(); listeLyt = null; } if (sletLyt) { sletLyt(); sletLyt = null; } tilstand.slettede = []; sletGids.clear();
   stopBoers(); stopAaben();
   mig = null;
   rydMig();
@@ -1188,6 +1214,7 @@ async function start() {
     if (g !== gen) return;
     K.besked($('hentMsg'), '');
     tidMaal('login klar');
+    lytSpaerret();
     $('ikkeVoksen').classList.toggle('hidden', mig.type === 'medlem');
     if (mig.type !== 'medlem') { vis(''); return; }
     const uid0 = mig.uid;
