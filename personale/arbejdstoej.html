@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="f5ff88948752">
+<meta name="rtk-version" content="bddac7109c6e">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -88,7 +88,9 @@ async function motor(modul, handling, data, id) {
   let res;
   try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: id || '' }) }); }
   catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
-  const svar = await res.json();
+  let svar;
+  // Google svarer af og til med en HTML-side. Så er det en forbindelsesfejl, ikke en teknisk fejltekst (ende til ende-testen 20. oktober)
+  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
   if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
   return svar.data;
 }
@@ -528,6 +530,8 @@ async function rute() {
   window.RTK_TRAVL = false;
   if (S.flashH !== location.hash) S.flash = '';
   const admin = ['konto', 'godkend', 'personer', 'giv', 'varer'].indexOf(navn) >= 0;
+  // Skifter adressen, før startdata er hentet, tegnes siden, når start() er færdig (ende til ende-testen 20. oktober)
+  if (!S.start) return;
   if (S.som && ['t', 'kurv', 'side'].indexOf(navn) < 0) { somLuk(false); }
   if (admin && !S.start.admin) { location.replace('#'); return; }
   if (admin && !S.adm) { vis('<p class="hint">Henter …</p>'); try { await hentAdm(); } catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; } }

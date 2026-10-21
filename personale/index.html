@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="8ed38654f6ed">
+<meta name="rtk-version" content="b2eb852604c9">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -165,7 +165,9 @@ async function motor(modul, handling, data) {
   let res;
   try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: '' }) }); }
   catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
-  const svar = await res.json();
+  let svar;
+  // Google svarer af og til med en HTML-side. Så er det en forbindelsesfejl, ikke en teknisk fejltekst (ende til ende-testen 20. oktober)
+  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
   if (!svar.ok) { if (svar.login) visLogin('Log ind igen.'); throw new Error(svar.fejl || 'Noget gik galt'); }
   return svar.data;
 }
@@ -187,7 +189,11 @@ function visTrin(t) {
   // Login med pinkode er slået fra (Lars 14. oktober kl. 08.36). Knappen vises kun med ?pin=1, til test af en motor, hvor den er slået til
   $('pinSkift').classList.toggle('hidden', t === 'pin' || MILJOE === 'produktion' || !new URLSearchParams(location.search).has('pin'));
 }
+// Et dobbelttryk sender kun én kode og logger kun ind én gang (ende til ende-testen 20. oktober)
+let igang = false;
 async function sendKode(kanal) {
+  if (igang) return;
+  igang = true;
   besked($('loginMsg'), kanal === 'mail' ? 'Sender koden på mail …' : 'Sender koden …');
   try {
     const r = await motor('kerne', 'sendKode', { mobil: loginMobil, kanal, enhed });
@@ -197,6 +203,7 @@ async function sendKode(kanal) {
     $('kode').value = ''; setTimeout(() => $('kode').focus(), 50);
     venterPaaSms();
   } catch (err) { besked($('loginMsg'), err.message, 'err'); }
+  finally { igang = false; }
 }
 // Android: hent koden direkte fra sms'en (sidste linje "@mitrtk.dk #kode"). iPhone foreslår den selv over tastaturet.
 function venterPaaSms() {
@@ -212,13 +219,16 @@ $('mobilForm').addEventListener('submit', (e) => {
   sendKode('sms');
 });
 $('kodeForm').addEventListener('submit', async (e) => {
-  e.preventDefault(); besked($('loginMsg'), 'Logger ind …');
+  e.preventDefault();
+  if (igang) return;
+  igang = true; besked($('loginMsg'), 'Logger ind …');
   try {
     const r = await motor('kerne', 'kodeLogin', { mobil: loginMobil, kode: $('kode').value, enhed, husk: $('husk').checked });
     token = r.token; gem('rtk.token', token); $('kode').value = ''; besked($('loginMsg'), '');
     visFelter(r.person);
     if (window.RTK_VELKOMST) window.RTK_VELKOMST.tjek();
   } catch (err) { besked($('loginMsg'), err.message, 'err'); }
+  finally { igang = false; }
 });
 $('sendIgen').addEventListener('click', () => sendKode('sms'));
 $('sendMail').addEventListener('click', () => sendKode('mail'));
