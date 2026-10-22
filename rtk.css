@@ -972,3 +972,64 @@ details.af-mere.tt-valg summary::-webkit-details-marker,details.af-mere.tt-grupp
 /* QR-koden til afleveringsskabet (20. oktober) */
 .qr-billede{max-width:260px;background:#FFFFFF;border:1px solid var(--line);border-radius:12px;padding:10px}
 .qr-billede svg{display:block;width:100%;height:auto}
+
+/* ---------- Privattræning (22. oktober 2026). Mockup: kilder/mockup/privattraening_mockup.py. Bygger på .af-*, .pr-*, .tt-kat, .kl-* og .nr-* */
+.pt .af-tid{border-radius:14px}
+.pt .af-tid.valgt-nu{border:2px solid var(--pink)}
+.pt-sek{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px}
+.pt-st{display:inline-block;font-size:12.5px;font-weight:700;border-radius:99px;padding:3px 9px;white-space:nowrap;background:var(--soft);color:var(--ink)}
+.pt-st.ok{background:var(--okbg);color:var(--ok)}
+.pt-st.vent{background:var(--waitbg);color:var(--wait)}
+.pt-st.fejl{background:var(--badbg);color:var(--bad)}
+.pt-tr{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.pt-boble{max-width:88%;padding:10px 14px;border-radius:18px 18px 18px 4px;background:var(--soft);font-size:15.5px;line-height:1.4;margin:0 0 4px;white-space:pre-wrap;overflow-wrap:anywhere}
+.pt-boble.mig{margin-left:auto;border-radius:18px 18px 4px 18px;background:#FDE6EF}
+.pt-af{font-size:12.5px;color:var(--muted);margin:0 0 10px}
+.pt-af.mig{text-align:right}
+.pt-lbl{display:block;font-weight:700;margin:16px 0 6px}
+.pt-antal{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pt-antal button{min-height:58px;padding:4px;border:1.5px solid var(--line2);border-radius:12px;background:#FFFFFF;font-weight:800;font-size:18px;color:inherit;line-height:1.1}
+.pt-antal button span{display:block;font-size:12.5px;font-weight:600;color:var(--muted)}
+.pt-antal button[aria-pressed="true"]{border:2px solid var(--pink);background:#FDE6EF;color:var(--pink)}
+.pt-antal button[aria-pressed="true"] span{color:var(--pink)}
+.pt .tt-kat button[aria-pressed="true"]{border-color:var(--pink);background:var(--pink);color:#FFFFFF}
+.pt .tt-kat.tt-model button[aria-pressed="true"]{background:#FDE6EF;color:var(--pink)}
+.pt textarea{min-height:96px;resize:vertical;line-height:1.4}
+.pt-kort-bund{display:flex;align-items:center;gap:10px;margin-top:10px}
+.pt-kort-bund .af-chip{flex:1;justify-content:center;min-height:46px}
+.pt-av{flex:0 0 24px;width:24px;height:24px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;color:#FFFFFF;font-size:10px;font-weight:800;background:var(--teal) center/cover no-repeat}
+.pt-mid-l{display:flex;align-items:center;gap:6px;margin-top:2px}
+.pt-vaelg{margin-left:auto;flex:0 0 auto}
+.pt-check{display:flex;gap:10px;align-items:center;font-size:14.5px;margin:10px 0 0;min-height:44px;cursor:pointer}
+.pt-check input{width:24px;height:24px;min-height:0;margin:0;flex:0 0 24px;accent-color:#E6005C}
+.pt-knapper{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.pt-knapper .fuld{flex:1}
+.nr-stor.pt-nr .tal{font-size:52px;letter-spacing:.06em}
+.pt-profil-bill{position:relative;border-radius:12px;overflow:hidden;margin:6px 0 14px;background:var(--teal);color:#FFFFFF}
+.pt-profil-bill img{display:block;width:100%;height:280px;object-fit:cover}
+.pt-profil-bill .ini{display:flex;align-items:center;justify-content:center;height:180px;font-size:56px;font-weight:900}
+.pt-profil-bill .tx{position:absolute;left:16px;right:16px;bottom:14px;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.pt-profil-bill .kick{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#D7F05A}
+.pt-profil-bill h1{color:#FFFFFF;margin:4px 0 0;font-size:28px}
+.pt-om{font-size:16px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 14px}
+.pt-fakta small{display:block;font-size:13.5px;color:var(--muted)}
+.pt-fakta b{display:block;font-size:15.5px}
+.pt-fakta>div{padding:12px 0;border-top:1px solid var(--line)}
+.pt-fakta>div:first-child{border-top:0;padding-top:4px}
+.pt-skriv{display:flex;gap:8px;margin:10px 0 0}
+.pt-skriv textarea{min-height:48px;flex:1}
+.pt-skriv button{flex:0 0 auto}
+.pt-tom{border:2px dashed var(--line2);border-radius:12px;padding:16px;text-align:center;color:var(--muted);font-size:14.5px;margin:4px 0 8px}
+.pt-raekke{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+.pt-raekke .d{flex:0 0 82px;font-weight:700;font-size:15px;line-height:1.15}
+.pt-raekke .d small{display:block;font-weight:500;font-size:12.5px;color:var(--muted)}
+.pt-raekke input[type=time]{flex:1;min-width:0;min-height:46px;padding:8px}
+.pt-raekke .x{flex:0 0 44px;min-height:44px;padding:0;border:1px solid var(--line2);background:#FFFFFF;border-radius:10px;font-size:18px;color:var(--muted)}
+.pt-billede-r{display:flex;gap:14px;align-items:center}
+.pt-billede-r img,.pt-billede-r .pt-av{width:88px;height:88px;flex:0 0 88px;border-radius:99px;object-fit:cover;font-size:28px}
+.pt-tabel{width:100%;border-collapse:collapse;font-size:14.5px}
+.pt-tabel th,.pt-tabel td{text-align:left;padding:8px 6px;border-top:1px solid var(--line);vertical-align:top}
+.pt-tabel th{font-size:12.5px;color:var(--muted);font-weight:700;border-top:0}
+.pt-tabel td.tal{text-align:right;white-space:nowrap;font-weight:700}
+@media (max-width:360px){.pt-antal button{font-size:16px}.nr-stor.pt-nr .tal{font-size:44px}}
+.pt .kl-r .tal{font-size:17px;letter-spacing:0;font-weight:800}

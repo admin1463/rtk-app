@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="fc970d2a52da">
+<script src="/opdater.js?v=2222ad998c00" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="Mit RTK">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-medlem-180.png">
+<link rel="icon" type="image/png" href="ikon-medlem-180.png">
+<title>Privattræning · Mit RTK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="rtk.css?v=492102879f3d">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" data-t-aria="tilForsiden" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b data-t="sideTitel">Privattræning</b><span><span class="klub-d">Mit RTK · </span><span data-t="side">Medlemssiden</span></span></span>
+    </div>
+    <div class="hoejre">
+      <div class="sprog" role="group" aria-label="Sprog / Language">
+        <button type="button" data-sprog="da" lang="da" aria-label="Dansk" aria-pressed="true">DA</button>
+        <button type="button" data-sprog="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold smal">
+
+    <section id="loginDel" class="hidden">
+      <p class="kicker" data-t="kick">Med klubbens trænere</p>
+      <h1 class="lille" data-t="h1Login">Book en privattime</h1>
+      <p class="hint" style="font-size:16px;max-width:560px" data-t="introLogin">Log ind med dit mobilnummer. Du får en kode på sms.</p>
+      <div class="card" id="login" style="max-width:520px;margin-top:16px"></div>
+    </section>
+
+    <section id="indeDel" class="hidden pt">
+      <div class="who"><span id="hvem"></span><button type="button" class="ghost small" id="logud" data-t="kLogUd">Log ud</button></div>
+      <div id="msg" class="msg" aria-live="polite"></div>
+      <div id="vis"></div>
+    </section>
+  </div>
+
+  <div class="wrap partnere">
+    <img class="p-babolat" src="ikoner/babolat.png" alt="Babolat">
+    <span data-t="partnere">Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" data-t-aria="racketlifeLink" aria-label="Racketlife (åbner i ny fane)"><img src="ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" data-t-aria="klubLink" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span data-t="test">Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="personale/" lang="da">Personale og frivillige</a>
+      <a class="privat" href="privatliv.html" data-t="privatliv">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+window.TEKSTER = {
+  da: {
+    titel: 'Privattræning · Mit RTK', side: 'Medlemssiden', tilForsiden: 'Til forsiden',
+    klubLink: 'Roskilde Tennis Klubs hjemmeside (åbner i ny fane)', racketlifeLink: 'Racketlife (åbner i ny fane)',
+    partnere: 'Officielle partnere', test: 'Testversion. Data er opdigtede.', privatliv: 'Privatliv',
+    sideTitel: 'Privattræning',
+    "h1Login": "Book en privattime",
+    "introLogin": "Log ind med dit mobilnummer. Du får en kode på sms.",
+    "henter": "Henter …",
+    "sender": "Sender …",
+    "gemmer": "Gemmer …",
+    "gemt": "Gemt",
+    "uge": "søn.,man.,tir.,ons.,tor.,fre.,lør.",
+    "ugeLang": "Søndag,Mandag,Tirsdag,Onsdag,Torsdag,Fredag,Lørdag",
+    "mdr": "jan.,feb.,mar.,apr.,maj,jun.,jul.,aug.,sep.,okt.,nov.,dec.",
+    "mdrLang": "januar,februar,marts,april,maj,juni,juli,august,september,oktober,november,december",
+    "min": "{n} min.",
+    "time1": "1 time",
+    "timer": "{n} timer",
+    "og": "og",
+    "tennis": "Tennis",
+    "padel": "Padel",
+    "begge": "Tennis og padel",
+    "tennisOgPadel": "Tennis og padel",
+    "mfBeg": "Begyndere",
+    "mfLet": "Let øvede",
+    "mfOev": "Øvede",
+    "mfKonk": "Konkurrence",
+    "mfJun": "Juniorer",
+    "stAftalt": "Aftalt",
+    "stHoldt": "Holdt",
+    "stUdeblev": "Udeblev",
+    "stAfbud": "Afbud",
+    "stAflyst": "Aflyst",
+    "ikkeBetalt": "Ikke betalt",
+    "betalt": "Betalt",
+    "person1": "1 person",
+    "personer": "{n} personer",
+    "harSvaret": "{navn} har svaret",
+    "venterPaa": "Venter på {navn}",
+    "flytAf": "Ny tid til {nr}",
+    "nTider": "{n} tider at vælge imellem",
+    "forespSendt": "Din forespørgsel er sendt",
+    "vaelgTid": "Vælg tid",
+    "venter": "Venter",
+    "h1": "Privattræning",
+    "kick": "Mit RTK · med klubbens trænere",
+    "intro": "Book en ledig tid direkte, eller spørg en træner, hvis ingen af tiderne passer.",
+    "pris1": "1 person {kr}",
+    "prisEkstra": "+ {kr} pr. ekstra, højst {n}",
+    "baneFL": "Banen bookes i ForeningsLet",
+    "ungTekst": "Dine forældre booker privattimer for dig under Mine børn. Her kan du se dine timer.",
+    "dineTimer": "Dine privattimer",
+    "fLedige": "Ledige tider",
+    "fTraenere": "Spørg en træner",
+    "book": "Book",
+    "bookAria": "Book {tid} med {navn}",
+    "alleTraenere": "Alle trænere",
+    "ingenFilter": "Ingen ledige tider med det valg. Prøv et andet, eller spørg en træner.",
+    "ingenLedige": "Ingen ledige tider lige nu. Spørg en træner om en tid.",
+    "fristNote": "Hver træner vælger, hvor sent en tid kan bookes.",
+    "laesMere": "Læs mere",
+    "spoergOm": "Spørg om en privattime",
+    "ingenTraenere": "Ingen trænere tilbyder privattimer lige nu.",
+    "baggrund": "Baggrund",
+    "uddannelse": "Uddannelse",
+    "godTil": "Det er jeg god til",
+    "mestFor": "Mest for",
+    "sprog": "Sprog",
+    "billedeAf": "Billede af {navn}",
+    "traener": "Træner",
+    "ledigeHos": "{navn}s ledige tider",
+    "ingenLedigeHos": "{navn} har ingen ledige tider lige nu.",
+    "passerIngen": "Passer ingen af tiderne, så spørg {navn} om en anden tid.",
+    "spoergNavn": "Spørg {navn} om en privattime",
+    "tidVaek": "Tiden kan ikke bookes længere. Vælg en anden.",
+    "ingenTraener": "Træneren tilbyder ikke privattimer lige nu.",
+    "bookH": "Book tiden",
+    "privattimeMed": "Privattime med {navn}",
+    "spoergH": "Spørg {navn}",
+    "forespoergsel": "forespørgsel",
+    "mig": "Mig",
+    "hvemTil": "Hvem er timen til?",
+    "sport": "Sport",
+    "hvorMange": "Hvor mange er I?",
+    "hvemAnden": "Hvem er den anden?",
+    "hvemNr": "Hvem er nr. {n}?",
+    "andreNote": "Behøver ikke være medlem. Du betaler for hele timen.",
+    "arbejdeMed": "Hvad vil I gerne arbejde med?",
+    "arbejdeMedValgfri": "Hvad vil du gerne arbejde med? (valgfrit)",
+    "oenskePh": "Fx serv, volley eller taktik i double. Gerne også dit niveau.",
+    "hvornaar": "Hvornår passer det?",
+    "d_man": "Man",
+    "d_tir": "Tir",
+    "d_ons": "Ons",
+    "d_tor": "Tor",
+    "d_fre": "Fre",
+    "d_loer": "Lør",
+    "d_soen": "Søn",
+    "t_formiddag": "Formiddag",
+    "t_eftermiddag": "Eftermiddag",
+    "t_aften": "Aften",
+    "foerDuBooker": "Før du booker",
+    "foerTekst": "Tiden er din med det samme. Du betaler {kr} med MobilePay og booker banen i ForeningsLet. Afbud senest {timer} timer før koster {gebyr}, senere hele beløbet.",
+    "faarBesked": "{navn} får en besked",
+    "bookTiden": "Book tiden",
+    "sendTil": "Send til {navn}",
+    "beskeder": "Beskeder",
+    "ingenBeskeder": "Ingen beskeder endnu.",
+    "skrivTil": "Skriv til træneren",
+    "send": "Send",
+    "forespLukket": "Forespørgslen er lukket. Se dine timer på forsiden.",
+    "vaelgTidH": "Vælg en tid",
+    "venterH": "Venter på svar",
+    "svarSenest": "Vælg senest {tid}",
+    "venterTekst": "{navn} har fået din forespørgsel og svarer med nogle tider. Du får en besked.",
+    "hvilkenTid": "Hvilken tid passer?",
+    "valgt": "Valgt",
+    "vaelg": "Vælg",
+    "passerIngenSkriv": "Passer ingen af tiderne? Skriv til {navn} nedenfor, så kan {navn} foreslå andre.",
+    "flytBetaling": "Timen flyttes, og betalingen følger med",
+    "faarBeskedStraks": "{navn} får en besked med det samme",
+    "bekraeft": "Bekræft tiden",
+    "timenVaek": "Timen findes ikke. Se dine timer på forsiden.",
+    "aftaltH": "Timen er aftalt",
+    "holdtH": "Timen er holdt",
+    "udeblevH": "Timen blev ikke til noget",
+    "afbudH": "Afbud",
+    "aflystH": "Timen er aflyst",
+    "bookingnummer": "Bookingnummer",
+    "skrivNr": "Skriv det i beskeden i MobilePay",
+    "erBetalt": "Betalt {kr}",
+    "betal": "Betal {kr} med MobilePay",
+    "betaltTekst": "Tak. Klubben har fået din betaling.",
+    "betalTekst": "Til RTK Privattræning, gerne nu. Skriv {nr} i beskeden.",
+    "aabnMP": "Åbn MobilePay",
+    "bookBane": "Book banen i ForeningsLet",
+    "bookBaneTekst": "{tid}. Indendørs koster banen 60 til 100 kr., udendørs er gratis.",
+    "skrivBane": "Skriv hvilken bane",
+    "skrivBaneTekst": "Så ved {navn}, hvor I mødes.",
+    "banePh": "Fx bane 3, Dronning Sofies Vej",
+    "gem": "Gem",
+    "flytEllerAfbud": "Flyt eller meld afbud",
+    "reglerFoer": "Indtil {tid} kan du flytte gratis, når {navn} tilbyder en ny tid. Afbud koster {gebyr}, og resten får du tilbage. Senere koster et afbud eller et flyt hele beløbet.",
+    "reglerEfter": "Det er under 24 timer til timen. Et afbud koster hele beløbet, {kr}.",
+    "flytVenter": "Du har bedt {navn} om en anden tid. Se svaret her",
+    "flytHvad": "Hvornår passer det bedre? {navn} svarer med nogle tider.",
+    "flytPh": "Fx onsdag eller torsdag efter kl. 17",
+    "flytSend": "Send til {navn}",
+    "fortryd": "Fortryd",
+    "bedOmAnden": "Bed om en anden tid",
+    "afbudIgen": "Tryk igen for at melde afbud. Det koster {kr}",
+    "meldAfbud": "Meld afbud",
+    "paamindNote": "Du får en påmindelse dagen før. Skriv til {navn} nedenfor, hvis der er noget.",
+    "faarTilbage": "Du får {kr} tilbage med MobilePay.",
+    "betalAfbud": "Afbuddet koster {kr}. Betal med MobilePay til RTK Privattræning, og skriv {nr} i beskeden.",
+    "betalMangler": "Der mangler {kr}. Betal med MobilePay til RTK Privattræning, og skriv {nr} i beskeden.",
+    "gratisAfbud": "Afbuddet er gratis.",
+    "erTilbage": "Klubben har betalt {kr} tilbage.",
+  },
+  en: {
+    titel: 'Private lessons · Mit RTK', side: 'Members’ area', tilForsiden: 'To the front page',
+    klubLink: 'Roskilde Tennis Klub website (opens in a new tab)', racketlifeLink: 'Racketlife (opens in a new tab)',
+    partnere: 'Official partners', test: 'Test version. All data is fictitious.', privatliv: 'Privacy',
+    sideTitel: 'Private lessons',
+    "h1Login": "Book a private lesson",
+    "introLogin": "Log in with your mobile number. You will get a code by text message.",
+    "henter": "Loading …",
+    "sender": "Sending …",
+    "gemmer": "Saving …",
+    "gemt": "Saved",
+    "uge": "Sun,Mon,Tue,Wed,Thu,Fri,Sat",
+    "ugeLang": "Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday",
+    "mdr": "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec",
+    "mdrLang": "January,February,March,April,May,June,July,August,September,October,November,December",
+    "min": "{n} min",
+    "time1": "1 hour",
+    "timer": "{n} hours",
+    "og": "and",
+    "tennis": "Tennis",
+    "padel": "Padel",
+    "begge": "Tennis and padel",
+    "tennisOgPadel": "Tennis and padel",
+    "mfBeg": "Beginners",
+    "mfLet": "Improvers",
+    "mfOev": "Intermediate",
+    "mfKonk": "Competition",
+    "mfJun": "Juniors",
+    "stAftalt": "Booked",
+    "stHoldt": "Held",
+    "stUdeblev": "No-show",
+    "stAfbud": "Cancelled",
+    "stAflyst": "Cancelled by coach",
+    "ikkeBetalt": "Not paid",
+    "betalt": "Paid",
+    "person1": "1 person",
+    "personer": "{n} people",
+    "harSvaret": "{navn} has replied",
+    "venterPaa": "Waiting for {navn}",
+    "flytAf": "New time for {nr}",
+    "nTider": "{n} times to choose from",
+    "forespSendt": "Your request has been sent",
+    "vaelgTid": "Choose a time",
+    "venter": "Waiting",
+    "h1": "Private lessons",
+    "kick": "Mit RTK · with the club’s coaches",
+    "intro": "Book an available time directly, or ask a coach if none of the times suit you.",
+    "pris1": "1 person {kr}",
+    "prisEkstra": "+ {kr} per extra person, max {n}",
+    "baneFL": "Book the court in ForeningsLet",
+    "ungTekst": "Your parents book private lessons for you under My children. Here you can see your lessons.",
+    "dineTimer": "Your private lessons",
+    "fLedige": "Available times",
+    "fTraenere": "Ask a coach",
+    "book": "Book",
+    "bookAria": "Book {tid} with {navn}",
+    "alleTraenere": "All coaches",
+    "ingenFilter": "No available times with that choice. Try another, or ask a coach.",
+    "ingenLedige": "No available times right now. Ask a coach for a time.",
+    "fristNote": "Each coach decides how late a time can be booked.",
+    "laesMere": "Read more",
+    "spoergOm": "Ask for a private lesson",
+    "ingenTraenere": "No coaches are offering private lessons right now.",
+    "baggrund": "Background",
+    "uddannelse": "Qualifications",
+    "godTil": "What I am good at",
+    "mestFor": "Mostly for",
+    "sprog": "Languages",
+    "billedeAf": "Photo of {navn}",
+    "traener": "Coach",
+    "ledigeHos": "{navn}’s available times",
+    "ingenLedigeHos": "{navn} has no available times right now.",
+    "passerIngen": "If none of the times suit you, ask {navn} for another time.",
+    "spoergNavn": "Ask {navn} for a private lesson",
+    "tidVaek": "This time can no longer be booked. Choose another one.",
+    "ingenTraener": "The coach is not offering private lessons right now.",
+    "bookH": "Book the time",
+    "privattimeMed": "Private lesson with {navn}",
+    "spoergH": "Ask {navn}",
+    "forespoergsel": "request",
+    "mig": "Me",
+    "hvemTil": "Who is the lesson for?",
+    "sport": "Sport",
+    "hvorMange": "How many are you?",
+    "hvemAnden": "Who is the other person?",
+    "hvemNr": "Who is number {n}?",
+    "andreNote": "They do not need to be members. You pay for the whole lesson.",
+    "arbejdeMed": "What would you like to work on?",
+    "arbejdeMedValgfri": "What would you like to work on? (optional)",
+    "oenskePh": "E.g. serve, volley or doubles tactics. Your level is helpful too.",
+    "hvornaar": "When does it suit you?",
+    "d_man": "Mon",
+    "d_tir": "Tue",
+    "d_ons": "Wed",
+    "d_tor": "Thu",
+    "d_fre": "Fri",
+    "d_loer": "Sat",
+    "d_soen": "Sun",
+    "t_formiddag": "Morning",
+    "t_eftermiddag": "Afternoon",
+    "t_aften": "Evening",
+    "foerDuBooker": "Before you book",
+    "foerTekst": "The time is yours straight away. You pay {kr} with MobilePay and book the court in ForeningsLet. Cancelling at least {timer} hours before costs {gebyr}, later the full amount.",
+    "faarBesked": "{navn} will be notified",
+    "bookTiden": "Book the time",
+    "sendTil": "Send to {navn}",
+    "beskeder": "Messages",
+    "ingenBeskeder": "No messages yet.",
+    "skrivTil": "Write to the coach",
+    "send": "Send",
+    "forespLukket": "The request is closed. See your lessons on the front page.",
+    "vaelgTidH": "Choose a time",
+    "venterH": "Waiting for a reply",
+    "svarSenest": "Choose by {tid}",
+    "venterTekst": "{navn} has received your request and will reply with some times. You will be notified.",
+    "hvilkenTid": "Which time suits you?",
+    "valgt": "Chosen",
+    "vaelg": "Choose",
+    "passerIngenSkriv": "None of the times suit you? Write to {navn} below, and {navn} can suggest others.",
+    "flytBetaling": "The lesson is moved, and the payment follows",
+    "faarBeskedStraks": "{navn} will be notified straight away",
+    "bekraeft": "Confirm the time",
+    "timenVaek": "The lesson was not found. See your lessons on the front page.",
+    "aftaltH": "The lesson is booked",
+    "holdtH": "The lesson has been held",
+    "udeblevH": "The lesson did not take place",
+    "afbudH": "Cancelled",
+    "aflystH": "The lesson is cancelled",
+    "bookingnummer": "Booking number",
+    "skrivNr": "Write it in the MobilePay message",
+    "erBetalt": "Paid {kr}",
+    "betal": "Pay {kr} with MobilePay",
+    "betaltTekst": "Thank you. The club has received your payment.",
+    "betalTekst": "To RTK Privattræning, preferably now. Write {nr} in the message.",
+    "aabnMP": "Open MobilePay",
+    "bookBane": "Book the court in ForeningsLet",
+    "bookBaneTekst": "{tid}. An indoor court costs 60 to 100 DKK, outdoor courts are free.",
+    "skrivBane": "Which court?",
+    "skrivBaneTekst": "So {navn} knows where to meet.",
+    "banePh": "E.g. court 3, Dronning Sofies Vej",
+    "gem": "Save",
+    "flytEllerAfbud": "Move or cancel",
+    "reglerFoer": "Until {tid} you can move the lesson for free when {navn} offers a new time. Cancelling costs {gebyr}, and you get the rest back. Later, cancelling or moving costs the full amount.",
+    "reglerEfter": "It is less than 24 hours until the lesson. Cancelling costs the full amount, {kr}.",
+    "flytVenter": "You have asked {navn} for another time. See the reply here",
+    "flytHvad": "When would suit you better? {navn} will reply with some times.",
+    "flytPh": "E.g. Wednesday or Thursday after 5 pm",
+    "flytSend": "Send to {navn}",
+    "fortryd": "Cancel",
+    "bedOmAnden": "Ask for another time",
+    "afbudIgen": "Tap again to cancel. It costs {kr}",
+    "meldAfbud": "Cancel the lesson",
+    "paamindNote": "You will get a reminder the day before. Write to {navn} below if anything comes up.",
+    "faarTilbage": "You will get {kr} back via MobilePay.",
+    "betalAfbud": "The cancellation costs {kr}. Pay with MobilePay to RTK Privattræning and write {nr} in the message.",
+    "betalMangler": "{kr} is outstanding. Pay with MobilePay to RTK Privattræning and write {nr} in the message.",
+    "gratisAfbud": "The cancellation is free.",
+    "erTilbage": "The club has refunded {kr}.",
+  }
+};
+</script>
+<script src="konfig.js?v=1301d6285ee2"></script>
+<script src="konto.js?v=2c0717d1df88"></script>
+<script src="sprog.js?v=1976d8c45489"></script>
+<script src="velkomst.js?v=02d869848285"></script>
+<script>
+// Privattræning for medlemmer og forældre (privattraening.html). Bygges ind af privattraening.py. 22. oktober 2026.
+// Ledige tider, der bookes direkte, trænerkort og profiler, forespørgsel med trænerens tider, bookingnummer, betaling,
+// bane, flyt og afbud og en tråd med træneren. Mockup: kilder/mockup/privattraening_mockup.py. Beslutningerne står i BESLUTNINGER under "Privattræning".
+const K = window.RTK_KONTO;
+const $ = (id) => document.getElementById(id);
+const t = K.t;
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const en = () => document.documentElement.lang === 'en';
+const kr = (n) => String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, en() ? ',' : '.') + (en() ? ' DKK' : ' kr.');
+const to = (n) => String(n).padStart(2, '0');
+const kl = (ms) => { const d = new Date(ms); return to(d.getHours()) + (en() ? ':' : '.') + to(d.getMinutes()); };
+const ugedag = (ms) => t('uge').split(',')[new Date(ms).getDay()];
+const ugedagLang = (ms) => t('ugeLang').split(',')[new Date(ms).getDay()];
+const md = (ms) => t('mdr').split(',')[new Date(ms).getMonth()];
+const dagTekst = (ms) => { const d = new Date(ms); return ugedag(ms) + ' ' + d.getDate() + (en() ? ' ' : '. ') + md(ms); };
+const dagLang = (ms) => { const d = new Date(ms); return ugedagLang(ms) + ' ' + d.getDate() + (en() ? ' ' : '. ') + t('mdrLang').split(',')[d.getMonth()]; };
+const tidsrum = (a, b) => kl(a) + '–' + kl(b);
+const varighed = (a, b) => { const m = Math.round((b - a) / 60000); return m % 60 ? t('min', { n: m }) : m === 60 ? t('time1') : t('timer', { n: m / 60 }); };
+const dagNoegle = (ms) => { const d = new Date(ms); return d.getFullYear() + '-' + to(d.getMonth() + 1) + '-' + to(d.getDate()); };
+const pris = (n) => S.data ? S.data.pris.en + S.data.pris.ekstra * (n - 1) : 0;
+const FARVER = ['#2D6A8E', '#8E2D5A', '#0B3D3A', '#6A4C93', '#B5651D', '#1E6B45'];
+const farve = (id) => FARVER[String(id).split('').reduce((a, c) => a + c.charCodeAt(0), 0) % FARVER.length];
+const ini = (navn) => String(navn || '').split(/\s+/).filter(Boolean).map((x) => x[0]).slice(0, 2).join('').toUpperCase();
+const SPORT = () => ({ tennis: t('tennis'), padel: t('padel'), begge: t('begge') });
+const MESTFOR = () => ({ begyndere: t('mfBeg'), let: t('mfLet'), oevede: t('mfOev'), konkurrence: t('mfKonk'), juniorer: t('mfJun') });
+const DAGE = ['man', 'tir', 'ons', 'tor', 'fre', 'loer', 'soen'];
+const TIDSP = ['formiddag', 'eftermiddag', 'aften'];
+
+// Motorens fejl på engelsk (de faste står i MOTOR_EN, dem med navne og tider her)
+window.MOTOR_EN = Object.assign(window.MOTOR_EN || {}, {
+  'Træneren tilbyder ikke privattimer lige nu': 'The coach is not offering private lessons right now',
+  'Du kan ikke booke dig selv': 'You cannot book yourself',
+  'Vælg tennis eller padel': 'Choose tennis or padel',
+  'Tiden findes ikke': 'The time no longer exists',
+  'Tiden er lige blevet booket af en anden. Vælg en anden tid.': 'Someone else has just booked this time. Choose another one.',
+  'Tiden kan ikke bookes længere. Vælg en anden tid.': 'This time can no longer be booked. Choose another one.',
+  'Forespørgslen findes ikke': 'The request no longer exists',
+  'Dine forældre vælger tiden': 'Your parents choose the time',
+  'Tiden er allerede valgt': 'A time has already been chosen',
+  'Træneren har ikke sendt tider endnu': 'The coach has not sent any times yet',
+  'Forespørgslen er lukket': 'The request is closed',
+  'Tiderne er udløbet. Spørg træneren igen.': 'The times have expired. Ask the coach again.',
+  'Tiden er overstået. Vælg en anden.': 'That time has passed. Choose another one.',
+  'Timen kan ikke flyttes længere': 'The lesson can no longer be moved',
+  'Timen findes ikke': 'The lesson no longer exists',
+  'Dine forældre styrer timen': 'Your parents manage this lesson',
+  'Timen er ikke aftalt længere': 'The lesson is no longer booked',
+  'Timen er begyndt. Skriv til træneren.': 'The lesson has started. Write to the coach.',
+  'Under 24 timer før tæller et flyt som et afbud. Meld afbud, eller skriv til træneren.': 'Less than 24 hours before, moving counts as a cancellation. Cancel, or write to the coach.',
+  'Skriv en besked': 'Write a message',
+  'Dine forældre skriver med træneren': 'Your parents write with the coach',
+  'Samtalen er blevet for lang. Ring eller skriv til klubben.': 'The conversation has become too long. Call or write to the club.',
+  'Findes ikke': 'Not found',
+  'Du kan kun booke for dine egne børn': 'You can only book for your own children',
+  'Dine forældre booker privattimer for dig under Mine børn': 'Your parents book private lessons for you under My children',
+  'Vælg, hvilket barn timen er til': 'Choose which child the lesson is for',
+  'I kan være 1 til 4 personer': 'You can be 1 to 4 people',
+  'Du har sendt mange forespørgsler. Prøv igen om en time.': 'You have sent many requests. Try again in an hour.',
+  'Du har skrevet mange beskeder. Prøv igen om lidt.': 'You have written many messages. Try again shortly.'
+});
+const FEJL_EN = [
+  [/^(.+) tilbyder ikke (tennis|padel) lige nu$/, (m, n, s) => n + ' is not offering ' + s + ' right now'],
+  [/^Du har (\d+) forespørgsler, der venter\. Vent på svar, før du spørger igen\.$/, (m, n) => 'You have ' + n + ' requests waiting. Wait for an answer before asking again.'],
+  [/^Du har allerede spurgt (.+)\. Vent på svar, eller skriv til .+ under din forespørgsel\.$/, (m, n) => 'You have already asked ' + n + '. Wait for an answer, or write to ' + n + ' under your request.'],
+  [/^(.+) har fået en anden aftale på det tidspunkt\. Vælg en anden tid\.$/, (m, n) => n + ' has another booking at that time. Choose another time.']
+];
+function fejl(m) {
+  m = String(m && m.message ? m.message : m);
+  if (en()) for (const [r, f] of FEJL_EN) { const x = m.match(r); if (x) return f(...x); }
+  return K.fejlTekst(m);
+}
+
+const S = { traadTekst: {}, flytTekst: '', data: null, profil: {}, traad: {}, fane: hent('rtk.pt.fane') || 'ledige', filT: 'alle', filS: 'alle', form: null, sender: false, vaelg: null, afbudKlar: '', flytAaben: false };
+window.RTK_TRAVL = false;
+
+// ------------------------------------------------------------ login og data
+function visLogin() {
+  S.data = null; S.profil = {}; S.traad = {}; S.form = null;
+  $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
+  K.loginKort($('login'), { onLogin: () => { start(); } });
+}
+K.vedLogud(visLogin);
+$('logud').addEventListener('click', () => K.logud());
+
+async function hentData() {
+  S.data = await K.motor('privat', 'start');
+  $('hvem').textContent = t('kLoggetInd', { navn: S.data.mig.navn });
+}
+async function start() {
+  $('loginDel').classList.add('hidden'); $('indeDel').classList.remove('hidden');
+  K.besked($('msg'), t('henter'));
+  try { await hentData(); K.besked($('msg'), ''); tegn(); }
+  catch (err) { if (K.loggetInd()) K.besked($('msg'), fejl(err), 'err'); }
+}
+// Data hentes igen i baggrunden, når siden skifter visning eller får fokus igen
+let friskTid = 0;
+async function frisk() {
+  if (!K.loggetInd() || !S.data || Date.now() - friskTid < 4000) return;
+  friskTid = Date.now();
+  try { await hentData(); if ((!S.form || !S.form.aendret) && !window.RTK_TRAVL) tegn(); } catch (err) { /* vises ved næste handling */ }
+}
+addEventListener('hashchange', () => { S.form = null; S.vaelg = null; S.afbudKlar = ''; S.flytAaben = false; window.RTK_TRAVL = false; tegn(); scrollTo(0, 0); frisk(); });
+addEventListener('focus', frisk);
+document.addEventListener('sprog', () => { if (S.data) tegn(); });
+
+// ------------------------------------------------------------ byggeklodser
+const hero = (h, kick, bill) => '<div class="af-hero"><img src="' + (bill || 'billeder/felt-privat.jpg') + '" alt=""><div class="tx"><span class="kick">' + esc(kick) + '</span><h1>' + esc(h) + '</h1></div></div>';
+const kal = (ms) => '<div class="af-kal"><span>' + esc(ugedag(ms).replace('.', '')) + '</span><b>' + new Date(ms).getDate() + '</b></div>';
+const chips = (liste) => '<div class="af-info">' + liste.map(([x, pink]) => '<span' + (pink ? ' class="pink"' : '') + '>' + esc(x) + '</span>').join('') + '</div>';
+const tilbage = (href, tekst) => '<a class="gr-tilbage" href="' + href + '">&#8592; ' + esc(tekst) + '</a>';
+const sek = (x) => '<div class="pt-sek">' + esc(x) + '</div>';
+const st = (x, slags) => '<span class="pt-st' + (slags ? ' ' + slags : '') + '">' + esc(x) + '</span>';
+const avatar = (tr, str) => tr && tr.mini ? '<span class="pt-av" style="' + (str ? 'width:' + str + 'px;height:' + str + 'px;flex-basis:' + str + 'px;' : '') + 'background-image:url(' + tr.mini + ')" aria-hidden="true"></span>'
+  : '<span class="pt-av" style="background-color:' + farve(tr ? tr.id : '') + (str ? ';width:' + str + 'px;height:' + str + 'px;flex-basis:' + str + 'px;font-size:' + Math.round(str / 2.8) + 'px' : '') + '" aria-hidden="true">' + esc(ini(tr ? tr.navn : '')) + '</span>';
+const traener = (pid) => (S.data.traenere || []).find((x) => x.id === pid) || null;
+const fornavn = (pid, navn) => { const tr = traener(pid); const n = tr ? tr.navn : navn || ''; const f = String(n).split(/\s+/)[0]; return (S.data.traenere || []).filter((x) => x.navn.split(/\s+/)[0] === f).length > 1 ? n : f; };
+function bund(b, s, knap, id, svag) { return '<div class="af-bund"><div class="info"><b>' + esc(b) + '</b>' + esc(s) + '</div><button type="button" id="' + id + '"' + (svag ? ' class="svag"' : '') + '>' + esc(knap) + '</button></div>'; }
+function msg(x, slags) { K.besked($('msg'), x, slags); }
+function vis(html) { $('vis').innerHTML = html; }
+
+// ------------------------------------------------------------ ruter
+function tegn() {
+  if (!S.data) return;
+  const h = location.hash.replace(/^#/, '').split('/');
+  msg('');
+  if (h[0] === 't' && h[1]) return tegnProfil(h[1]);
+  if (h[0] === 'spoerg' && h[1]) return tegnForm('spoerg', h[1]);
+  if (h[0] === 'book' && h[1]) return tegnForm('book', h[1]);
+  if (h[0] === 'f' && h[1]) return tegnForesp(h[1]);
+  if (h[0] === 'b' && h[1]) return tegnBooking(h[1]);
+  tegnForside();
+}
+
+// ------------------------------------------------------------ forsiden
+const STATUS_B = () => ({ aftalt: [t('stAftalt'), 'ok'], holdt: [t('stHoldt'), ''], udeblev: [t('stUdeblev'), 'vent'], afbud: [t('stAfbud'), ''], aflyst: [t('stAflyst'), 'fejl'] });
+function minKortB(b) {
+  const [tx, sl] = STATUS_B()[b.status] || [b.status, ''];
+  const betaling = b.status === 'aftalt' ? (b.tilBetaling > 0 ? st(t('ikkeBetalt'), 'vent') : st(t('betalt'), 'ok')) : st(tx, sl);
+  return '<a class="af-bedst" href="#b/' + esc(b.nr) + '" style="text-decoration:none;color:inherit;margin-bottom:8px' + (b.status !== 'aftalt' ? ';border-style:dashed;border-color:var(--line2)' : '') + '">' + kal(b.start) +
+    '<div class="af-mid"><span class="kl">' + esc(tidsrum(b.start, b.slut)) + '</span><span class="lg">' + esc([fornavn(b.pid, b.traener), b.barnId ? b.spiller : '', t(b.antal === 1 ? 'person1' : 'personer', { n: b.antal }), b.bane].filter(Boolean).join(' · ')) + '</span></div>' + betaling + '</a>';
+}
+function minKortF(f) {
+  const n = fornavn(f.pid, f.traener);
+  const tekst = f.status === 'tider' && f.tider.length ? t('harSvaret', { navn: n }) : t('venterPaa', { navn: n });
+  return '<a class="af-bedst tom" href="#f/' + esc(f.id) + '" style="text-decoration:none;color:inherit;margin-bottom:8px">' + avatar(traener(f.pid) || { id: f.pid, navn: f.traener }, 52) +
+    '<div class="af-mid"><span class="kl" style="font-size:16px">' + esc(tekst) + '</span><span class="lg">' + esc(f.flyt ? t('flytAf', { nr: f.flyt }) : (f.status === 'tider' ? t('nTider', { n: f.tider.length }) : t('forespSendt'))) + (f.barnId ? ' · ' + esc(f.spiller) : '') + '</span></div>' +
+    (f.status === 'tider' && f.tider.length ? st(t('vaelgTid'), 'vent') : st(t('venter'))) + '</a>';
+}
+function tegnForside() {
+  const d = S.data;
+  const mine = d.mine;
+  const aktive = mine.bookinger.filter((b) => b.status === 'aftalt').concat(mine.bookinger.filter((b) => b.status !== 'aftalt' && (b.tilBetaling > 0 || b.tilTilbage > 0)));
+  let h = hero(t('h1'), t('kick')) +
+    '<p style="margin:0 0 10px;font-size:16px">' + esc(t('intro')) + '</p>' +
+    chips([[t('pris1', { kr: kr(d.pris.en) }), 0], [t('prisEkstra', { kr: kr(d.pris.ekstra), n: d.pris.maks }), 0], [t('baneFL'), 1]]);
+  if (!d.mig.kanBooke) h += '<div class="pt-tom" style="text-align:left">' + esc(t('ungTekst')) + '</div>';
+  if (aktive.length || mine.forespoergsler.length) {
+    h += sek(t('dineTimer')) + mine.forespoergsler.map(minKortF).join('') + aktive.map(minKortB).join('');
+  }
+  h += '<div class="tt-kat" role="tablist" style="margin-top:18px">' +
+    '<button type="button" role="tab" data-fane="ledige" aria-pressed="' + (S.fane === 'ledige') + '" aria-selected="' + (S.fane === 'ledige') + '">' + esc(t('fLedige')) + ' · ' + d.ledige.length + '</button>' +
+    '<button type="button" role="tab" data-fane="traenere" aria-pressed="' + (S.fane === 'traenere') + '" aria-selected="' + (S.fane === 'traenere') + '">' + esc(t('fTraenere')) + '</button></div>';
+  h += S.fane === 'traenere' ? tegnTraenere() : tegnLedige();
+  vis(h);
+  document.querySelectorAll('[data-fane]').forEach((b) => b.addEventListener('click', () => { S.fane = b.dataset.fane; gem('rtk.pt.fane', S.fane); tegnForside(); }));
+  document.querySelectorAll('[data-filt]').forEach((b) => b.addEventListener('click', () => { S.filT = b.dataset.filt; tegnForside(); }));
+  document.querySelectorAll('[data-fils]').forEach((b) => b.addEventListener('click', () => { S.filS = b.dataset.fils; tegnForside(); }));
+}
+function ledigKort(x) {
+  const tr = traener(x.pid);
+  return '<div class="af-tid"><div class="af-r1">' + kal(x.start) + '<div class="af-mid"><span class="kl">' + esc(tidsrum(x.start, x.slut)) + '</span>' +
+    '<span class="lg pt-mid-l">' + avatar(tr) + esc(fornavn(x.pid) + ' · ' + SPORT()[x.sport]) + '</span></div>' +
+    (S.data.mig.kanBooke ? '<a class="af-chip lille fyldt pt-vaelg" href="#book/' + esc(x.id) + '" aria-label="' + esc(t('bookAria', { tid: dagTekst(x.start) + ' ' + tidsrum(x.start, x.slut), navn: fornavn(x.pid) })) + '">' + esc(t('book')) + '</a>' : '') + '</div></div>';
+}
+function tegnLedige() {
+  const d = S.data;
+  const T = d.traenere.filter((tr) => d.ledige.some((x) => x.pid === tr.id));
+  if (S.filT !== 'alle' && !T.some((x) => x.id === S.filT)) S.filT = 'alle';
+  let h = '';
+  if (T.length > 1) h += '<div class="tt-kat tt-model"><button type="button" data-filt="alle" aria-pressed="' + (S.filT === 'alle') + '">' + esc(t('alleTraenere')) + '</button>' +
+    T.map((tr) => '<button type="button" data-filt="' + esc(tr.id) + '" aria-pressed="' + (S.filT === tr.id) + '">' + esc(fornavn(tr.id)) + '</button>').join('') + '</div>';
+  const sporter = [...new Set(d.ledige.map((x) => x.sport))];
+  if (sporter.length > 1) h += '<div class="tt-kat tt-model">' + ['alle', 'tennis', 'padel'].map((s) => '<button type="button" data-fils="' + s + '" aria-pressed="' + (S.filS === s) + '">' + esc(s === 'alle' ? t('tennisOgPadel') : SPORT()[s]) + '</button>').join('') + '</div>';
+  const L = d.ledige.filter((x) => (S.filT === 'alle' || x.pid === S.filT) && (S.filS === 'alle' || x.sport === S.filS || x.sport === 'begge'));
+  if (!L.length) return h + '<div class="pt-tom">' + esc(d.ledige.length ? t('ingenFilter') : t('ingenLedige')) + '</div>';
+  let dag = '';
+  L.forEach((x) => {
+    const k = dagNoegle(x.start);
+    if (k !== dag) { if (dag) h += '</div>'; h += sek(dagLang(x.start)) + '<div class="af-liste">'; dag = k; }
+    h += ledigKort(x);
+  });
+  return h + '</div><p class="po-note">' + esc(t('fristNote')) + '</p>';
+}
+function traenerKort(tr) {
+  const sp = tr.sport.map((s) => SPORT()[s]).concat(tr.mestFor.map((m) => MESTFOR()[m]));
+  return '<div class="pr-kort"><div class="pr-hoved">' + avatar(tr, 64) + '<div class="pr-midt"><div class="pr-navn">' + esc(tr.navn) + '</div>' +
+    '<div class="pt-tr">' + sp.map((x) => st(x)).join('') + '</div></div></div>' +
+    '<p class="pr-tekst">' + esc(tr.om) + ' <a href="#t/' + esc(tr.id) + '" style="color:var(--pink);font-weight:700">' + esc(t('laesMere')) + '</a></p>' +
+    (S.data.mig.kanBooke ? '<div class="pt-kort-bund"><a class="af-chip fyldt" href="#spoerg/' + esc(tr.id) + '">' + esc(t('spoergOm')) + '</a></div>' : '') + '</div>';
+}
+function tegnTraenere() {
+  const T = S.data.traenere;
+  if (!T.length) return '<div class="pt-tom">' + esc(t('ingenTraenere')) + '</div>';
+  return T.map(traenerKort).join('');
+}
+
+// ------------------------------------------------------------ trænerprofilen
+async function tegnProfil(pid) {
+  if (!S.profil[pid]) {
+    vis(tilbage('#', t('h1')) + '<p class="hint">' + esc(t('henter')) + '</p>');
+    try { S.profil[pid] = await K.motor('privat', 'profil', { pid }); }
+    catch (err) { vis(tilbage('#', t('h1'))); msg(fejl(err), 'err'); return; }
+    if (location.hash !== '#t/' + pid) return;
+  }
+  const p = S.profil[pid], tr = p.traener;
+  const fakta = [[t('baggrund'), tr.baggrund], [t('uddannelse'), tr.uddannelse], [t('godTil'), tr.godTil], [t('mestFor'), tr.mestFor.map((m) => MESTFOR()[m]).join(', ')], [t('sprog'), tr.sprog]].filter((x) => x[1]);
+  let h = tilbage('#', t('h1')) +
+    '<div class="pt-profil-bill">' + (tr.billede ? '<img src="' + tr.billede + '" alt="' + esc(t('billedeAf', { navn: tr.navn })) + '">' : '<div class="ini" aria-hidden="true">' + esc(ini(tr.navn)) + '</div>') +
+    '<div class="tx"><span class="kick">' + esc(t('traener') + ' · ' + tr.sport.map((s) => SPORT()[s]).join(' ' + t('og') + ' ')) + '</span><h1>' + esc(tr.navn) + '</h1></div></div>' +
+    '<p class="pt-om">' + esc(tr.om) + '</p>';
+  if (fakta.length) h += '<div class="kl-boks pt-fakta">' + fakta.map(([k, v]) => '<div><small>' + esc(k) + '</small><b>' + esc(v) + '</b></div>').join('') + '</div>';
+  h += sek(t('ledigeHos', { navn: fornavn(pid) }));
+  h += p.ledige.length ? '<div class="af-liste">' + p.ledige.map(ledigKort).join('') + '</div>' : '<div class="pt-tom">' + esc(t('ingenLedigeHos', { navn: fornavn(pid) })) + '</div>';
+  if (S.data.mig.kanBooke) h += '<p class="po-note">' + esc(t('passerIngen', { navn: fornavn(pid) })) + '</p><a class="af-chip fyldt" style="width:100%;justify-content:center;min-height:46px" href="#spoerg/' + esc(pid) + '">' + esc(t('spoergNavn', { navn: fornavn(pid) })) + '</a>';
+  vis(h);
+}
+
+// ------------------------------------------------------------ spørg og book
+function formStart(type, id) {
+  const d = S.data;
+  if (!S.form || S.form.type !== type || S.form.id !== id) {
+    const tr = type === 'spoerg' ? traener(id) : null;
+    const lt = type === 'book' ? d.ledige.find((x) => x.id === id) : null;
+    const sporter = tr ? tr.sport : lt ? (lt.sport === 'begge' ? ['tennis', 'padel'] : [lt.sport]) : [];
+    S.form = { type, id, tr, lt, sport: sporter[0] || 'tennis', sporter, antal: 1, andre: ['', '', ''], oenske: '', dage: [], tidsp: [],
+      barn: d.mig.forael || d.mig.ung ? (d.mig.boern[0] || {}).id || '' : '', aendret: false };
+  }
+  return S.form;
+}
+function tegnForm(type, id) {
+  const d = S.data;
+  if (!d.mig.kanBooke) { location.hash = ''; return; }
+  const f = formStart(type, id);
+  const tr = f.tr || (f.lt ? traener(f.lt.pid) : null);
+  if (!tr || (type === 'book' && !f.lt)) {
+    vis(tilbage('#', t('h1')) + '<div class="pt-tom">' + esc(type === 'book' ? t('tidVaek') : t('ingenTraener')) + '</div>');
+    return;
+  }
+  const navn = fornavn(tr.id);
+  let h = tilbage(type === 'book' ? '#' : '#t/' + tr.id, type === 'book' ? t('fLedige') : tr.navn);
+  if (type === 'book') {
+    h += hero(t('bookH'), t('privattimeMed', { navn })) +
+      '<div class="af-bedst" style="margin-bottom:6px">' + kal(f.lt.start) + '<div class="af-mid"><span class="kl">' + esc(tidsrum(f.lt.start, f.lt.slut)) + '</span><span class="lg">' + esc(dagLang(f.lt.start) + ' · ' + tr.navn) + '</span></div></div>';
+  } else {
+    h += hero(t('spoergH', { navn }), t('h1') + ' · ' + t('forespoergsel'));
+  }
+  if (d.mig.boern.length) {
+    const valg = (d.mig.forael ? [] : [{ id: '', navn: t('mig') }]).concat(d.mig.boern);
+    h += '<span class="pt-lbl">' + esc(t('hvemTil')) + '</span><div class="tt-kat" style="flex-wrap:wrap">' + valg.map((b) => '<button type="button" data-barn="' + esc(b.id) + '" aria-pressed="' + (f.barn === b.id) + '">' + esc(b.navn) + '</button>').join('') + '</div>';
+  }
+  if (f.sporter.length > 1) h += '<span class="pt-lbl">' + esc(t('sport')) + '</span><div class="tt-kat">' + f.sporter.map((s) => '<button type="button" data-sport="' + s + '" aria-pressed="' + (f.sport === s) + '">' + esc(SPORT()[s]) + '</button>').join('') + '</div>';
+  h += '<span class="pt-lbl" id="antalL">' + esc(t('hvorMange')) + '</span><div class="pt-antal" role="group" aria-labelledby="antalL">' +
+    [1, 2, 3, 4].slice(0, d.pris.maks).map((n) => '<button type="button" data-antal="' + n + '" aria-pressed="' + (f.antal === n) + '">' + n + '<span>' + esc(kr(pris(n))) + '</span></button>').join('') + '</div>';
+  for (let i = 0; i < f.antal - 1; i++) h += '<label class="pt-lbl" for="andre' + i + '">' + esc(f.antal === 2 ? t('hvemAnden') : t('hvemNr', { n: i + 2 })) + '</label><input id="andre' + i + '" data-andre="' + i + '" maxlength="60" autocomplete="off" value="' + esc(f.andre[i]) + '">';
+  if (f.antal > 1) h += '<p class="po-note" style="margin:6px 0 0">' + esc(t('andreNote')) + '</p>';
+  h += '<label class="pt-lbl" for="oenske">' + esc(type === 'book' ? t('arbejdeMedValgfri') : t('arbejdeMed')) + '</label><textarea id="oenske" maxlength="600" placeholder="' + esc(t('oenskePh')) + '">' + esc(f.oenske) + '</textarea>';
+  if (type === 'spoerg') {
+    h += '<span class="pt-lbl">' + esc(t('hvornaar')) + '</span><div class="tt-kat" style="flex-wrap:wrap">' + DAGE.map((x) => '<button type="button" data-dag="' + x + '" aria-pressed="' + f.dage.includes(x) + '">' + esc(t('d_' + x)) + '</button>').join('') + '</div>' +
+      '<div class="tt-kat" style="flex-wrap:wrap">' + TIDSP.map((x) => '<button type="button" data-tidsp="' + x + '" aria-pressed="' + f.tidsp.includes(x) + '">' + esc(t('t_' + x)) + '</button>').join('') + '</div>';
+  } else {
+    h += '<div class="kl-boks" style="margin-top:14px"><b style="font-size:15px">' + esc(t('foerDuBooker')) + '</b><p style="margin:6px 0 0;font-size:14.5px">' +
+      esc(t('foerTekst', { kr: kr(pris(f.antal)), gebyr: kr(d.pris.gebyr), timer: d.pris.afbudTimer })) + '</p></div>';
+  }
+  h += bund(t(f.antal === 1 ? 'person1' : 'personer', { n: f.antal }) + ' · ' + kr(pris(f.antal)), type === 'book' ? dagTekst(f.lt.start) + ' ' + tidsrum(f.lt.start, f.lt.slut) : t('faarBesked', { navn }),
+    type === 'book' ? t('bookTiden') : t('sendTil', { navn }), 'formSend');
+  vis(h);
+  const aendret = () => { f.aendret = true; window.RTK_TRAVL = true; };
+  document.querySelectorAll('[data-barn]').forEach((b) => b.addEventListener('click', () => { f.barn = b.dataset.barn; aendret(); tegnForm(type, id); }));
+  document.querySelectorAll('[data-sport]').forEach((b) => b.addEventListener('click', () => { f.sport = b.dataset.sport; aendret(); tegnForm(type, id); }));
+  document.querySelectorAll('[data-antal]').forEach((b) => b.addEventListener('click', () => { f.antal = Number(b.dataset.antal); aendret(); tegnForm(type, id); }));
+  document.querySelectorAll('[data-andre]').forEach((x) => x.addEventListener('input', () => { f.andre[Number(x.dataset.andre)] = x.value; aendret(); }));
+  document.querySelectorAll('[data-dag]').forEach((b) => b.addEventListener('click', () => { const x = b.dataset.dag; f.dage = f.dage.includes(x) ? f.dage.filter((y) => y !== x) : f.dage.concat(x); aendret(); b.setAttribute('aria-pressed', f.dage.includes(x)); }));
+  document.querySelectorAll('[data-tidsp]').forEach((b) => b.addEventListener('click', () => { const x = b.dataset.tidsp; f.tidsp = f.tidsp.includes(x) ? f.tidsp.filter((y) => y !== x) : f.tidsp.concat(x); aendret(); b.setAttribute('aria-pressed', f.tidsp.includes(x)); }));
+  $('oenske').addEventListener('input', () => { f.oenske = $('oenske').value; aendret(); });
+  $('formSend').addEventListener('click', () => sendForm(f));
+}
+async function sendForm(f) {
+  if (S.sender) return;
+  S.sender = true;
+  const knap = $('formSend');
+  knap.classList.add('svag'); msg(t('sender'));
+  if (!f.regId) f.regId = K.nyId();
+  const fl = { antal: f.antal, andre: f.andre.slice(0, f.antal - 1).map((x) => x.trim()).filter(Boolean), oenske: f.oenske.trim(), barn: f.barn || '' };
+  try {
+    let r;
+    if (f.type === 'book') { fl.id = f.id; fl.sport = f.sport; r = await K.motor('privat', 'book', fl, f.regId); }
+    else { fl.pid = f.id; fl.sport = f.sport; fl.dage = f.dage; fl.tidspunkt = f.tidsp; r = await K.motor('privat', 'spoerg', fl, f.regId); }
+    S.form = null; window.RTK_TRAVL = false;
+    await hentData().catch(() => {});
+    location.hash = f.type === 'book' ? '#b/' + r.nr : '#f/' + r.id;
+  } catch (err) {
+    msg(fejl(err), 'err');
+    if (/booket|bookes længere|findes ikke/.test(err.message)) { f.regId = null; await hentData().catch(() => {}); }
+    if (!/stadig gemt/.test(err.message)) f.regId = null;
+  } finally { S.sender = false; if ($('formSend')) $('formSend').classList.remove('svag'); }
+}
+
+// ------------------------------------------------------------ tråden med træneren
+async function hentTraad(id) {
+  try { S.traad[id] = (await K.motor('privat', 'traad', { id })).beskeder; } catch (err) { S.traad[id] = S.traad[id] || []; }
+  const b = $('traad'); if (b && b.dataset.id === id && !(document.activeElement && document.activeElement.id === 'traadTekst')) b.outerHTML = traadHtml(id, b.dataset.kan === '1');
+  bindTraad(id);
+}
+function traadHtml(id, kan) {
+  const L = S.traad[id];
+  let h = '<div id="traad" data-id="' + esc(id) + '" data-kan="' + (kan ? 1 : 0) + '">' + sek(t('beskeder'));
+  if (!L) h += '<p class="hint">' + esc(t('henter')) + '</p>';
+  else if (!L.length) h += '<p class="hint" style="margin-top:0">' + esc(t('ingenBeskeder')) + '</p>';
+  else L.forEach((b) => {
+    const mig = b.fra === 'medlem';
+    const d = new Date(b.tid);
+    h += '<div class="pt-boble' + (mig ? ' mig' : '') + '">' + esc(b.tekst) + '</div><p class="pt-af' + (mig ? ' mig' : '') + '">' + esc(b.navn + ' · ' + dagTekst(b.tid) + ' ' + kl(d.getTime())) + '</p>';
+  });
+  if (kan) h += '<div class="pt-skriv"><textarea id="traadTekst" maxlength="500" rows="2" aria-label="' + esc(t('skrivTil')) + '" placeholder="' + esc(t('skrivTil')) + '">' + esc(S.traadTekst[id] || '') + '</textarea><button type="button" id="traadSend" class="af-chip info">' + esc(t('send')) + '</button></div><div class="msg" id="traadMsg" aria-live="polite"></div>';
+  return h + '</div>';
+}
+function bindTraad(id) {
+  const k = $('traadSend'); if (!k) return;
+  $('traadTekst').addEventListener('input', () => { S.traadTekst[id] = $('traadTekst').value; window.RTK_TRAVL = !!$('traadTekst').value.trim(); });
+  k.addEventListener('click', async () => {
+    const tekst = $('traadTekst').value.trim();
+    if (!tekst || S.sender) return;
+    S.sender = true; K.besked($('traadMsg'), t('sender'));
+    try {
+      const r = await K.motor('privat', 'skriv', { id, tekst }, K.nyId());
+      S.traad[id] = r.beskeder; S.traadTekst[id] = ''; window.RTK_TRAVL = false;
+      $('traad').outerHTML = traadHtml(id, true); bindTraad(id);
+    } catch (err) { K.besked($('traadMsg'), fejl(err), 'err'); }
+    finally { S.sender = false; }
+  });
+}
+
+// ------------------------------------------------------------ forespørgslen
+function tegnForesp(id) {
+  const f = S.data.mine.forespoergsler.find((x) => x.id === id);
+  if (!f) {
+    // Valgt eller lukket: findes der en booking fra den, så gå dertil (gennemgangen fund 10)
+    const b = S.data.mine.bookinger.find((x) => x.kildeId === id);
+    if (b) { location.replace('#b/' + b.nr); return; }
+    vis(tilbage('#', t('h1')) + '<div class="pt-tom">' + esc(t('forespLukket')) + '</div>');
+    return;
+  }
+  const navn = fornavn(f.pid, f.traener);
+  let h = tilbage('#', t('h1')) + '<div class="af-svarside">' + hero(f.status === 'tider' && f.tider.length ? t('vaelgTidH') : t('venterH'), t('privattimeMed', { navn }));
+  const ch = [[t(f.antal === 1 ? 'person1' : 'personer', { n: f.antal }) + ' · ' + kr(f.pris), 0]];
+  if (f.flyt) ch.push([t('flytAf', { nr: f.flyt }), 0]);
+  if (f.status === 'tider' && f.gyldigTil) ch.push([t('svarSenest', { tid: dagTekst(f.gyldigTil) + ' ' + kl(f.gyldigTil) }), 1]);
+  h += chips(ch);
+  if (f.oenske) h += '<div class="pt-boble mig">' + esc(f.oenske) + '</div><p class="pt-af mig">' + esc(f.spiller) + '</p>';
+  if (f.status === 'venter' || !f.tider.length) {
+    h += '<div class="pt-tom" style="text-align:left">' + esc(t('venterTekst', { navn })) + '</div>';
+  } else {
+    h += '<div class="af-trin"><span class="nr">1</span><h2>' + esc(t('hvilkenTid')) + '</h2></div><div class="af-liste">' +
+      f.tider.map((x) => '<div class="af-tid' + (S.vaelg === x.id ? ' valgt-nu' : '') + '"><div class="af-r1">' + kal(x.start) + '<div class="af-mid"><span class="kl">' + esc(tidsrum(x.start, x.slut)) + '</span><span class="lg">' + esc(ugedagLang(x.start) + ' · ' + varighed(x.start, x.slut)) + '</span></div>' +
+        (f.kanAendre ? '<button type="button" class="af-chip lille pt-vaelg ' + (S.vaelg === x.id ? 'fyldt' : 'info') + '" data-vaelg="' + esc(x.id) + '" aria-pressed="' + (S.vaelg === x.id) + '">' + esc(S.vaelg === x.id ? t('valgt') : t('vaelg')) + '</button>' : '') + '</div></div>').join('') + '</div>' +
+      '<div class="af-mangler">' + esc(t('passerIngenSkriv', { navn })) + '</div>';
+  }
+  h += traadHtml(id, f.kanAendre);
+  const v = f.tider.find((x) => x.id === S.vaelg);
+  if (v && f.kanAendre) h += bund(dagTekst(v.start) + ' ' + tidsrum(v.start, v.slut), f.flyt ? t('flytBetaling') : t('faarBeskedStraks', { navn }), t('bekraeft'), 'vaelgSend');
+  vis(h + '</div>');
+  document.querySelectorAll('[data-vaelg]').forEach((b) => b.addEventListener('click', () => { S.vaelg = b.dataset.vaelg; tegnForesp(id); }));
+  if ($('vaelgSend')) $('vaelgSend').addEventListener('click', async () => {
+    if (S.sender) return;
+    S.sender = true; msg(t('sender'));
+    try {
+      const b = await K.motor('privat', 'vaelg', { id, tid: S.vaelg }, K.nyId());
+      await hentData().catch(() => {});
+      location.hash = '#b/' + b.nr;
+    } catch (err) { msg(fejl(err), 'err'); await hentData().catch(() => {}); }
+    finally { S.sender = false; }
+  });
+  if (!S.traad[id]) hentTraad(id); else bindTraad(id);
+}
+
+// ------------------------------------------------------------ bookingen
+function tegnBooking(nr) {
+  const b = S.data.mine.bookinger.find((x) => x.nr === nr);
+  if (!b) { vis(tilbage('#', t('h1')) + '<div class="pt-tom">' + esc(t('timenVaek')) + '</div>'); return; }
+  const navn = fornavn(b.pid, b.traener);
+  const d = S.data;
+  const H = { aftalt: t('aftaltH'), holdt: t('holdtH'), udeblev: t('udeblevH'), afbud: t('afbudH'), aflyst: t('aflystH') };
+  let h = tilbage('#', t('h1')) + hero(H[b.status] || b.status, t('privattimeMed', { navn })) +
+    '<div class="af-bedst" style="margin-bottom:14px">' + kal(b.start) + '<div class="af-mid"><span class="kl">' + esc(tidsrum(b.start, b.slut)) + '</span><span class="lg">' +
+    esc([dagLang(b.start), b.traener, [b.spiller].concat(b.andre).join(' ' + t('og') + ' ')].join(' · ')) + '</span></div></div>';
+  if (b.status === 'aftalt') {
+    const betalt = b.tilBetaling <= 0;
+    const mp = d.pris.mobilepay;
+    const mpLink = mp ? 'mobilepay://send?phone=' + encodeURIComponent(mp) + '&amount=' + b.tilBetaling + '&comment=' + encodeURIComponent(b.nr) + '&lock=1' : '';
+    h += '<div class="nr-stor pt-nr"><div class="lbl">' + esc(t('bookingnummer')) + '</div><div class="tal">' + esc(b.nr) + '</div><div class="tid">' + esc(t('skrivNr')) + '</div></div>' +
+      '<ol class="nr-trin">' +
+      '<li><span class="n"' + (betalt ? ' style="background:var(--ok)"' : '') + '>' + (betalt ? '✓' : '1') + '</span><div><b>' + esc(betalt ? t('erBetalt', { kr: kr(b.betalt) }) : t('betal', { kr: kr(b.tilBetaling) })) + '</b><span>' +
+        esc(betalt ? t('betaltTekst') : t('betalTekst', { nr: b.nr })) + '</span>' + (!betalt && b.kanAendre && mpLink ? '<a class="af-chip fyldt lille" style="display:inline-flex;margin-top:8px" href="' + esc(mpLink) + '">' + esc(t('aabnMP')) + '</a>' : '') + '</div></li>' +
+      '<li><span class="n">2</span><div><b>' + esc(t('bookBane')) + '</b><span>' + esc(t('bookBaneTekst', { tid: dagTekst(b.start) + ' ' + tidsrum(b.start, b.slut) })) + '</span></div></li>' +
+      '<li><span class="n"' + (b.bane ? ' style="background:var(--ok)"' : '') + '>' + (b.bane ? '✓' : '3') + '</span><div><b>' + esc(t('skrivBane')) + '</b><span>' + esc(t('skrivBaneTekst', { navn })) + '</span>' +
+        (b.kanAendre ? '<div class="pt-skriv"><input id="bane" maxlength="80" value="' + esc(b.bane) + '" aria-label="' + esc(t('skrivBane')) + '" placeholder="' + esc(t('banePh')) + '"><button type="button" class="af-chip info" id="baneGem">' + esc(t('gem')) + '</button></div><div class="msg" id="baneMsg" aria-live="polite"></div>' : b.bane ? '<b style="display:block;margin-top:6px">' + esc(b.bane) + '</b>' : '') + '</div></li></ol>';
+    if (b.kanAendre) {
+      const grænse = b.start - d.pris.afbudTimer * 3600000;
+      h += '<div class="kl-boks"><b style="font-size:16px">' + esc(t('flytEllerAfbud')) + '</b><p style="margin:6px 0 10px;font-size:14.5px">' +
+        esc(Date.now() < grænse ? t('reglerFoer', { tid: dagTekst(grænse) + ' ' + kl(grænse), navn, gebyr: kr(d.pris.gebyr) }) : t('reglerEfter', { kr: kr(b.pris) })) + '</p>';
+      if (b.flytVenter) h += '<p style="margin:0 0 10px"><a href="#f/' + esc(b.flytVenter) + '" style="color:var(--pink);font-weight:700">' + esc(t('flytVenter', { navn })) + '</a></p>';
+      else if (S.flytAaben) h += '<label class="pt-lbl" for="flytTekst" style="margin-top:0">' + esc(t('flytHvad', { navn })) + '</label><textarea id="flytTekst" maxlength="600" style="min-height:70px" placeholder="' + esc(t('flytPh')) + '">' + esc(S.flytTekst) + '</textarea>' +
+        '<div class="pt-knapper"><button type="button" class="af-chip fyldt" id="flytSend">' + esc(t('flytSend', { navn })) + '</button><button type="button" class="af-chip info" id="flytLuk">' + esc(t('fortryd')) + '</button></div>';
+      h += '<div class="pt-knapper">' + (Date.now() < grænse && !b.flytVenter && !S.flytAaben ? '<button type="button" class="af-chip info" id="flyt">' + esc(t('bedOmAnden')) + '</button>' : '') +
+        '<button type="button" class="af-chip farlig' + (S.afbudKlar === nr ? ' fyldt' : '') + '" id="afbud">' + esc(S.afbudKlar === nr ? t('afbudIgen', { kr: kr(Date.now() < grænse ? Math.min(d.pris.gebyr, b.pris) : b.pris) }) : t('meldAfbud')) + '</button></div>' +
+        '<div class="msg" id="afbudMsg" aria-live="polite"></div></div>';
+    }
+    h += '<p class="po-note">' + esc(t('paamindNote', { navn })) + '</p>';
+  } else {
+    // Afsluttet: hvad der skal betales, eller hvad der kommer tilbage
+    let tx = '';
+    if (b.tilTilbage > 0) tx = t('faarTilbage', { kr: kr(b.tilTilbage) });
+    else if (b.tilBetaling > 0) tx = t(b.status === 'afbud' ? 'betalAfbud' : 'betalMangler', { kr: kr(b.tilBetaling), nr: b.nr });
+    else if (b.status === 'afbud' && b.skyldig === 0) tx = t('gratisAfbud');
+    if (b.tilbagebetalt > 0) tx += (tx ? ' ' : '') + t('erTilbage', { kr: kr(b.tilbagebetalt) });
+    h += '<div class="kl-boks"><b style="font-size:16px">' + esc(t('bookingnummer') + ' ' + b.nr) + '</b>' + (tx ? '<p style="margin:6px 0 0;font-size:14.5px">' + esc(tx) + '</p>' : '') + '</div>';
+  }
+  h += traadHtml(nr, b.kanAendre);
+  vis(h);
+  if ($('baneGem')) $('baneGem').addEventListener('click', async () => {
+    if (S.sender) return; S.sender = true; K.besked($('baneMsg'), t('gemmer'));
+    try { await K.motor('privat', 'bane', { nr, bane: $('bane').value }, K.nyId()); await hentData(); tegnBooking(nr); K.besked($('baneMsg'), t('gemt'), 'okm'); }
+    catch (err) { K.besked($('baneMsg'), fejl(err), 'err'); } finally { S.sender = false; }
+  });
+  if ($('bane')) $('bane').addEventListener('input', () => { window.RTK_TRAVL = true; });
+  if ($('flyt')) $('flyt').addEventListener('click', () => { S.flytAaben = true; tegnBooking(nr); $('flytTekst').focus(); });
+  if ($('flytLuk')) $('flytLuk').addEventListener('click', () => { S.flytAaben = false; S.flytTekst = ''; window.RTK_TRAVL = false; tegnBooking(nr); });
+  if ($('flytTekst')) $('flytTekst').addEventListener('input', () => { S.flytTekst = $('flytTekst').value; window.RTK_TRAVL = !!S.flytTekst.trim(); });
+  if ($('flytSend')) $('flytSend').addEventListener('click', async () => {
+    if (S.sender) return; S.sender = true; K.besked($('afbudMsg'), t('sender'));
+    try { const r = await K.motor('privat', 'flyt', { nr, tekst: $('flytTekst').value }, K.nyId()); S.flytTekst = ''; window.RTK_TRAVL = false; await hentData(); location.hash = '#f/' + r.id; }
+    catch (err) { K.besked($('afbudMsg'), fejl(err), 'err'); } finally { S.sender = false; }
+  });
+  // Afbud kræver to tryk og siger, hvad det koster (Lars' regel om farlige handlinger)
+  if ($('afbud')) $('afbud').addEventListener('click', async () => {
+    if (S.afbudKlar !== nr) { S.afbudKlar = nr; tegnBooking(nr); setTimeout(() => { if (S.afbudKlar === nr && location.hash === '#b/' + nr) { S.afbudKlar = ''; if (!window.RTK_TRAVL) tegnBooking(nr); else if ($('afbud')) { $('afbud').classList.remove('fyldt'); $('afbud').textContent = t('meldAfbud'); } } }, 8000); return; }
+    if (S.sender) return; S.sender = true; K.besked($('afbudMsg'), t('sender'));
+    try { await K.motor('privat', 'afbud', { nr }, K.nyId()); S.afbudKlar = ''; await hentData(); tegnBooking(nr); }
+    catch (err) { K.besked($('afbudMsg'), fejl(err), 'err'); } finally { S.sender = false; }
+  });
+  if (!S.traad[nr]) hentTraad(nr); else bindTraad(nr);
+}
+
+if (K.loggetInd()) start(); else visLogin();
+</script>
+</body>
+</html>
