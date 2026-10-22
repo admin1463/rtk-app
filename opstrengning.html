@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="bdc865d828fe">
+<meta name="rtk-version" content="f282eb733391">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=6f4501ee138d">
+<link rel="stylesheet" href="rtk.css?v=ce10d07b5d31">
 </head>
 <body>
 <header class="top">
@@ -136,6 +136,15 @@ window.TEKSTER = {
     t1: 'Udfyld en seddel fra skabet', t1t: 'Skriv ketsjernummeret, opstrengningstypen (fx B1) og evt. hårdhed i kg.',
     t2: 'Betal med MobilePay', t2t: 'Scan MobilePay-koden på skabet. Vælg den samme opstrengningstype, skriv ketsjernummeret i beskeden, og betal.',
     t3: 'Læg ketsjeren i skabet', t3t: 'Med sedlen sat fast med en elastik. Den er klar senest {dato}, 3 hverdage efter.',
+    t3k: 'Lås afleveringsskabet op', t3kt: 'Med koden ovenfor. Læg ketsjeren ind med sedlen sat fast med en elastik, og lås igen.',
+    afleverH: 'Aflever en ketsjer', mobilIntro: 'Skriv dit mobilnummer. Når ketsjeren er færdig, får du en sms med koden til afhentningsskabet.',
+    mobilLbl: 'Dit mobilnummer', faaNr: 'Få nummer og kode', mobilNote: 'Nummeret bruges kun til sms\'en om din ketsjer og slettes, når den er hentet.',
+    kodeAfl: 'Kode til afleveringsskabet', kodeAflSmaa: 'Kun til at lægge ketsjeren i', kodeHent: 'Kode til afhentningsskabet', kodeHentSmaa: 'Vises kun, mens ketsjeren er klar',
+    smsTil: 'Du får en sms til {mobil} med koden til afhentningsskabet, når ketsjeren er klar, senest {dato}.',
+    laasIgen: 'Lås skabet igen, når du har taget din ketsjer.', kodeLoft: 'Koden står i sms\'en. Du har slået op mange gange, så koden vises her igen om en time.',
+    kodeSms: 'Koden til afhentningsskabet står i sms\'en. Den vises også her på den telefon, der scannede QR-koden.',
+    kodeOpstr: 'Skriv til opstrengeren for at få koden til afhentningsskabet.',
+    skaermbilledeK: 'Tag et skærmbillede, så du har ketsjernummeret og koden.',
     besked: 'Besked:', kopier: 'Kopiér', kopieret: 'Kopieret', kopierNr: 'Kopiér ketsjernummeret {nr}',
     skaermbillede: 'Tag et skærmbillede, så du har ketsjernummeret. Du kan altid se status og bede om en sms, når den er klar.',
     erTrukket: 'Nr. {nr} er trukket', erTrukketTekst: 'Når ketsjeren er afleveret, er den klar senest 3 hverdage efter.',
@@ -172,6 +181,15 @@ window.TEKSTER = {
     t1: 'Fill in a slip from the locker', t1t: 'Write the racket number, the stringing type (e.g. B1) and, if you like, the tension in kg.',
     t2: 'Pay with MobilePay', t2t: 'Scan the MobilePay code on the locker. Choose the same stringing type, put the racket number in the payment note, and pay.',
     t3: 'Put the racket in the locker', t3t: 'With the slip attached with a rubber band. It will be ready no later than {dato}, 3 working days later.',
+    t3k: 'Unlock the drop-off locker', t3kt: 'With the code above. Put the racket in with the slip attached with a rubber band, and lock it again.',
+    afleverH: 'Drop off a racket', mobilIntro: 'Enter your mobile number. When your racket is done, you get a text message with the code for the collection locker.',
+    mobilLbl: 'Your mobile number', faaNr: 'Get number and code', mobilNote: 'The number is only used for the text message about your racket and is deleted when it has been collected.',
+    kodeAfl: 'Code for the drop-off locker', kodeAflSmaa: 'Only for putting your racket in', kodeHent: 'Code for the collection locker', kodeHentSmaa: 'Only shown while your racket is ready',
+    smsTil: 'You get a text message to {mobil} with the code for the collection locker when your racket is ready, no later than {dato}.',
+    laasIgen: 'Lock the locker again when you have taken your racket.', kodeLoft: 'The code is in the text message. You have looked it up many times, so it will be shown here again in an hour.',
+    kodeSms: 'The code for the collection locker is in the text message. It is also shown here on the phone that scanned the QR code.',
+    kodeOpstr: 'Message the stringer to get the code for the collection locker.',
+    skaermbilledeK: 'Take a screenshot so you have the racket number and the code.',
     besked: 'Note:', kopier: 'Copy', kopieret: 'Copied', kopierNr: 'Copy the racket number {nr}',
     skaermbillede: 'Take a screenshot so you have the racket number. You can always check the status and ask for a text message when it is ready.',
     erTrukket: 'No. {nr} has been issued', erTrukketTekst: 'Once the racket has been dropped off, it will be ready no later than 3 working days later.',
@@ -279,6 +297,7 @@ async function motor(modul, handling, data, id) {
 let sidsteSvar = null;
 function visSvar() {
   const ud = $('opslagSvar');
+  if ($('kodeVis')) $('kodeVis').remove();
   if (!sidsteSvar) { ud.className = ''; ud.textContent = ''; return; }
   ud.innerHTML = '';
   if (sidsteSvar.fejl) { ud.className = 'result fejl'; ud.textContent = fejlTekst(sidsteSvar.fejl); return; }
@@ -288,6 +307,16 @@ function visSvar() {
     ud.className = 'result neutral'; b.textContent = t('ikkeReg', { nr: s.nr }); p.textContent = t('ikkeRegTekst');
   } else if (s.status === 'Klar') {
     ud.className = 'result klar'; b.textContent = t('erKlar', { nr: s.nr }); p.textContent = t('erKlarTekst', { dato: datoTekst(s.klarDato) });
+    // Koden til afhentningsskabet, kun mens den er klar (Lars 21. oktober kl. 19.46)
+    if (s.kode || s.kodeLoft || s.kodeHvor) {
+      ud.append(b, p);
+      const k = document.createElement('div');
+      const note = s.kodeLoft ? 'kodeLoft' : s.kodeHvor === 'opstrenger' ? 'kodeOpstr' : 'kodeSms';
+      k.innerHTML = s.kode ? kodeBoks('kodeHent', 'kodeHentSmaa', s.kode) + '<p class="po-note">' + esc(t('laasIgen')) + '</p>' : '<p class="po-note">' + esc(t(note)) + '</p>';
+      ud.after(k); k.id = 'kodeVis';
+      visSms();
+      return;
+    }
   } else if (s.status === 'Trukket') {
     ud.className = 'result vent'; b.textContent = t('erTrukket', { nr: s.nr }); p.textContent = t('erTrukketTekst');
   } else if (s.status === 'Hentet') {
@@ -344,10 +373,11 @@ $('opslagForm').addEventListener('submit', async (e) => {
   const ud = $('opslagSvar');
   const nr = $('nr').value.trim();
   if (!nr) return;
+  if ($('kodeVis')) $('kodeVis').remove();
   ud.className = 'result neutral'; ud.textContent = t('henter');
   if (!sidsteSvar || !sidsteSvar.s || sidsteSvar.s.nr !== nr.padStart(4, '0')) smsMobil = '';
   smsMsg = ''; $('smsBoks').classList.add('hidden');
-  try { sidsteSvar = { s: await motor('opstrengning', 'opslag', { nr }) }; }
+  try { sidsteSvar = { s: await motor('opstrengning', 'opslag', { nr, noegle: noegleFor(nr.replace(/\D/g, '').padStart(4, '0')) }) }; }
   catch (err) { sidsteSvar = { fejl: err.message }; }
   visSvar();
 });
@@ -384,14 +414,14 @@ $('kontaktForm').addEventListener('submit', async (e) => {
 
 // ---- Nyt nummer fra QR-koden på skabet. Hver scanning giver et nyt nummer (Lars 20. oktober kl. 08.29)
 let nummer = null, nummerId = nyId(), qrKode = '';
-// Koden fra motoren bevises, når der bestilles sms til et trukket nummer. Huskes på telefonen i 14 dage
+// Koden fra motoren bevises, når der bestilles sms til et trukket nummer, og når koden til afhentningsskabet vises. Huskes på telefonen i 90 dage
 const NOEGLER = {};
 function noeglerLaes() { try { return JSON.parse(localStorage.getItem('rtk.opsNoegler') || '{}') || {}; } catch (e) { return {}; } }
 function noegleFor(nr) { return NOEGLER[nr] || (noeglerLaes()[nr] || {}).k || ''; }
 function noegleGem(nr, k) {
   NOEGLER[nr] = k;
   try {
-    const m = noeglerLaes(); const graense = Date.now() - 14 * 86400000;
+    const m = noeglerLaes(); const graense = Date.now() - 90 * 86400000;
     Object.keys(m).forEach((x) => { if (!m[x] || m[x].t < graense) delete m[x]; });
     m[nr] = { k, t: Date.now() };
     localStorage.setItem('rtk.opsNoegler', JSON.stringify(m));
@@ -404,8 +434,28 @@ function visTilstand(nyt) {
   $('heroH').setAttribute('data-t', nyt ? 'ditNr' : 'klarSpm');
   $('heroH').textContent = t(nyt ? 'ditNr' : 'klarSpm');
 }
+function kodeBoks(lbl, smaa, kode) {
+  return '<div class="kl-kode"><div class="lbl">' + esc(t(lbl)) + '</div><small>' + esc(t(smaa)) + '</small><div class="tal">' + esc(String(kode).split('').join(' ')) + '</div></div>';
+}
+// Mobilnummeret er obligatorisk ved scanningen, så sms'en med koden kan sendes, når ketsjeren er klar (Lars 21. oktober kl. 19.46)
+let nrMobil = '';
+function visMobil(fejl) {
+  const boks = $('nummerVis');
+  if ($('nrMobil')) nrMobil = $('nrMobil').value;
+  $('heroH').setAttribute('data-t', 'afleverH'); $('heroH').textContent = t('afleverH');
+  boks.innerHTML = '<form id="nrForm" autocomplete="on"><p style="margin:0 0 12px;font-size:16px">' + esc(t('mobilIntro')) + '</p>' +
+    '<label for="nrMobil" class="os-lbl" style="margin-top:0">' + esc(t('mobilLbl')) + '</label>' +
+    '<input id="nrMobil" class="os-felt" type="tel" inputmode="tel" autocomplete="tel" required style="width:100%;margin-bottom:12px" value="' + esc(nrMobil) + '">' +
+    '<button type="submit" class="af-chip fyldt os-stor" id="nrFaa" style="width:100%;justify-content:center">' + esc(t('faaNr')) + '</button>' +
+    '<div id="nrMsg" class="msg' + (fejl ? ' err' : '') + '" aria-live="polite">' + esc(fejl ? fejlTekst(fejl) : '') + '</div>' +
+    '<p class="po-note" style="margin:10px 0 0">' + esc(t('mobilNote')) + '</p></form>';
+  $('nrForm').addEventListener('submit', (e) => { e.preventDefault(); nrMobil = $('nrMobil').value.trim(); if (nrMobil) hentNummer(); });
+  if (fejl) $('nrMobil').focus();
+}
 function visNummer() {
   const boks = $('nummerVis');
+  if (nummer && nummer.spoerg) { visMobil(nummer.fejlMobil); return; }
+  $('heroH').setAttribute('data-t', 'ditNr'); $('heroH').textContent = t('ditNr');
   if (!nummer) { boks.innerHTML = '<p class="msg">' + esc(t('henterNr')) + '</p>'; return; }
   if (nummer.fejl) {
     boks.innerHTML = '<div class="result fejl">' + esc(fejlTekst(nummer.fejl)) + '</div><button type="button" class="af-chip fyldt os-stor" id="nrIgen" style="margin-top:12px">' + esc(t('provIgen')) + '</button>';
@@ -415,12 +465,15 @@ function visNummer() {
   const n = nummer.nr;
   boks.innerHTML = '<div class="nr-stor"><div class="lbl">' + esc(t('ditNrLbl')) + '</div><div class="tal" id="nrTal">' + esc(n) + '</div>' +
     '<div class="tid">' + esc(t('trukket', { dato: datoTekst(nummer.trukket.slice(0, 10)), kl: kl(nummer.trukket) })) + '</div></div>' +
+    (nummer.kode ? kodeBoks('kodeAfl', 'kodeAflSmaa', nummer.kode) : '') +
     '<ol class="nr-trin">' +
     '<li><span class="n" aria-hidden="true">1</span><div><b>' + esc(t('t1')) + '</b><span>' + esc(t('t1t')) + '</span></div></li>' +
     '<li><span class="n" aria-hidden="true">2</span><div><b>' + esc(t('t2')) + '</b><span>' + esc(t('t2t')) + '</span>' +
     '<div class="nr-mp"><span>' + esc(t('besked')) + '</span><code>' + esc(n) + '</code><button type="button" class="af-chip lille info" id="nrKopier" aria-label="' + esc(t('kopierNr', { nr: n })) + '">' + esc(t('kopier')) + '</button></div></div></li>' +
-    '<li><span class="n" aria-hidden="true">3</span><div><b>' + esc(t('t3')) + '</b><span>' + esc(t('t3t', { dato: datoTekst(nummer.klarSenest) })) + '</span></div></li>' +
-    '</ol><p class="po-note">' + esc(t('skaermbillede')) + '</p>' +
+    (nummer.kode ? '<li><span class="n" aria-hidden="true">3</span><div><b>' + esc(t('t3k')) + '</b><span>' + esc(t('t3kt')) + '</span></div></li>'
+      : '<li><span class="n" aria-hidden="true">3</span><div><b>' + esc(t('t3')) + '</b><span>' + esc(t('t3t', { dato: datoTekst(nummer.klarSenest) })) + '</span></div></li>') +
+    '</ol>' + (nummer.mobil ? '<p class="po-note">' + esc(t('smsTil', { mobil: nummer.mobil, dato: datoTekst(nummer.klarSenest) })) + '</p>' : '') +
+    '<p class="po-note">' + esc(t(nummer.kode ? 'skaermbilledeK' : 'skaermbillede')) + '</p>' +
     '<div class="af-chips"><button type="button" class="af-chip info" id="nrStatus">' + esc(t('klarSpm')) + '</button><a class="af-chip info" href="#priser">' + esc(t('seListe')) + '</a></div>';
   $('nrKopier').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(n); $('nrKopier').textContent = t('kopieret'); } catch (e) { /* uden adgang til udklipsholderen står nummeret stadig synligt */ }
@@ -428,10 +481,11 @@ function visNummer() {
   $('nrStatus').addEventListener('click', () => { visTilstand(false); $('nr').value = n; $('opslagForm').requestSubmit(); $('nr').focus(); });
 }
 async function hentNummer() {
+  if (!nrMobil) { nummer = { spoerg: true }; visNummer(); return; }
   nummer = null; visNummer();
   // Samme id ved "Prøv igen", så et kald, der nåede frem, ikke trækker et nummer mere
-  try { nummer = await motor('opstrengning', 'nytNummer', { qr: qrKode }, nummerId); nummerId = nyId(); if (nummer.noegle) noegleGem(nummer.nr, nummer.noegle); }
-  catch (err) { nummer = { fejl: err.message }; }
+  try { nummer = await motor('opstrengning', 'nytNummer', { qr: qrKode, mobil: nrMobil }, nummerId); nummerId = nyId(); if (nummer.noegle) noegleGem(nummer.nr, nummer.noegle); }
+  catch (err) { nummer = /mobilnummer/.test(err.message) ? { spoerg: true, fejlMobil: err.message } : { fejl: err.message }; }
   visNummer();
   const tal = $('nrTal'); if (tal) { tal.setAttribute('tabindex', '-1'); tal.focus(); }
 }
@@ -447,7 +501,7 @@ function nummerFraQr() {
   const m = /^#nummer(?:-([a-z0-9]{4,20}))?$/i.exec(location.hash);
   if (!m) return;
   qrKode = (m[1] || '').toLowerCase();
-  history.replaceState(null, '', location.pathname + location.search); visTilstand(true); nummerId = nyId(); hentNummer(); window.scrollTo(0, 0);
+  history.replaceState(null, '', location.pathname + location.search); visTilstand(true); nummerId = nyId(); nummer = { spoerg: true }; visNummer(); window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', nummerFraQr);
 nummerFraQr();

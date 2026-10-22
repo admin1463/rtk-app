@@ -939,6 +939,19 @@ details.af-mere.tt-valg summary::-webkit-details-marker,details.af-mere.tt-grupp
 .nr-trin .n{flex:0 0 32px;height:32px;border-radius:99px;background:var(--pink);color:#FFFFFF;font-weight:800;display:flex;align-items:center;justify-content:center}
 .nr-trin b{display:block;font-size:16px}
 .nr-trin span{font-size:14.5px;line-height:1.4}
+/* Kodelåse på de to skabe (Lars 21. oktober kl. 19.44 til 20.30) */
+.kl-kode{border:2px solid var(--pink);border-radius:14px;background:#FFFFFF;text-align:center;padding:12px 14px;margin:0 0 14px}
+.kl-kode .lbl{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pink)}
+.kl-kode small{display:block;font-size:13.5px;color:var(--muted)}
+.kl-kode .tal{white-space:nowrap;margin:4px 0 2px;font-size:44px;font-weight:900;letter-spacing:.12em;line-height:1.1;color:var(--ink)}
+.kl-boks{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#FFFFFF;margin:0 0 12px}
+.kl-r{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.kl-r:first-of-type{border-top:0;padding-top:4px}
+.kl-r .navn{flex:1;min-width:0}
+.kl-r .navn b{display:block;font-size:16px}
+.kl-r .navn small{font-size:13.5px;color:var(--muted)}
+.kl-r .tal{white-space:nowrap;font-size:26px;font-weight:900;letter-spacing:.1em}
+.kl-ny{border:2px solid var(--pink);border-radius:12px;padding:12px 14px;margin:8px 0 4px;background:#FFFFFF}
 .nr-mp{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;background:var(--soft);border-radius:8px;padding:6px 6px 6px 10px;font-size:14px}
 .nr-mp code{font-weight:800;font-size:16px;font-family:inherit}
 /* Tjek af skabet og trukne numre hos opstrengerne (20. oktober) */
