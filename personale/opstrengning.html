@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="130d880cc2c4">
+<meta name="rtk-version" content="825d94f2f2db">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=6f4501ee138d">
+<link rel="stylesheet" href="../rtk.css?v=ce10d07b5d31">
 </head>
 <body>
 <header class="top">
@@ -47,6 +47,11 @@
 
     <!-- Aflevering: afleveringsskabet -->
     <div class="fane" id="fane-koe" role="tabpanel">
+      <!-- Kodelåse på de to skabe (Lars 21. oktober kl. 19.44 til 20.30). Ny kode i to tryk -->
+      <section id="koderBoks" class="kl-boks" aria-labelledby="koderH"><b id="koderH" style="font-size:17px">Koder til skabene</b>
+        <div id="koderListe" aria-live="polite"><p class="po-note" style="margin:6px 0 0">Henter …</p></div>
+        <div id="koderMsg" class="msg" aria-live="polite"></div>
+      </section>
       <!-- Tjek af skabet og numre fra telefonen (Lars 20. oktober kl. 08.48 til 08.52) -->
       <div id="tjekBoks" class="sk-tjek"><div><b id="tjekH">Sidste tjek af afleveringsskabet</b><span id="tjekTekst">Henter …</span></div><button type="button" class="af-chip fyldt" id="tjekKnap">Skabet er tjekket</button></div>
       <div id="tjekMsg" class="msg" aria-live="polite"></div>
@@ -251,7 +256,7 @@ function vaelgFane(navn) {
   document.querySelectorAll('[data-fane]').forEach((b) => { b.setAttribute('aria-selected', String(b.dataset.fane === navn)); b.classList.toggle('valgt', b.dataset.fane === navn); });
   document.querySelectorAll('.fane').forEach((f) => f.classList.toggle('hidden', f.id !== 'fane-' + navn));
   $('fTitel').textContent = TITLER[navn];
-  if (navn === 'koe') hentNumre();
+  if (navn === 'koe') { hentNumre(); hentKoder(); }
   if (navn === 'klar' || navn === 'hent') hentKoe();
   if (navn === 'taeller') hentTaeller();
   if (navn === 'strenge') hentLager();
@@ -404,6 +409,56 @@ $('tjekKnap').addEventListener('click', async () => {
     hentNumre();
   } catch (err) { besked($('tjekMsg'), err.message, 'err'); if (!err.net) tjekId = nyId(); }
   k.disabled = false;
+});
+
+// ---- Koder til skabene. App'en foreslår en ny kode, opstrengeren sætter den på låsen og bekræfter (Lars 21. oktober kl. 20.30)
+let KODER_S = null, kodeId = nyId(), kodeTravl = false;
+const kodeMell = (k) => String(k).split('').join(' ');
+function visKoderS() {
+  const x = KODER_S; if (!x) return;
+  const liste = $('koderListe');
+  let h = '';
+  x.skabe.forEach((s) => {
+    const under = s.skiftet ? 'Skiftet ' + tidTekst(s.skiftet).replace(/^./, (c) => c.toLowerCase()) + (s.af ? ' · ' + s.af : '') + (s.dage >= 14 ? ' · ' + s.dage + ' dage' : '') : 'Ingen kode i app\'en endnu';
+    h += '<div class="kl-r"><div class="navn"><b>' + esc(s.navn) + '</b><small>' + esc(under) + '</small></div>' +
+      (s.kode ? '<span class="tal">' + esc(s.kode) + '</span>' : '') +
+      (s.ny ? '' : '<button type="button" class="af-chip lille info" data-kny="' + esc(s.skab) + '" aria-label="Ny kode til ' + esc(s.navn.toLowerCase()) + 'et">Ny kode</button>') + '</div>';
+  });
+  x.skabe.filter((s) => s.ny).forEach((s) => {
+    h += '<div class="kl-ny"><b>Ny kode til ' + esc(s.navn.toLowerCase()) + 'et: ' + esc(kodeMell(s.ny)) + '</b>' +
+      '<p style="margin:4px 0 10px;font-size:14.5px">Sæt koden på låsen, og tryk så her.' + (s.kode ? ' Indtil da gælder ' + esc(s.kode) + ' stadig.' : '') + '</p>' +
+      '<button type="button" class="af-chip fyldt os-stor" style="width:100%;justify-content:center" data-ksat="' + esc(s.skab) + '" data-ny="' + esc(s.ny) + '">Koden er sat på låsen</button>' +
+      '<button type="button" class="ghost small" style="margin-top:8px" data-kfor="' + esc(s.skab) + '" data-ny="' + esc(s.ny) + '">Fortryd</button>' +
+      (s.skab === 'afhentning' && x.klarMedSms ? '<p class="po-note" style="margin:8px 0 0">' + x.klarMedSms + (x.klarMedSms === 1 ? ' ketsjer ligger' : ' ketsjere ligger') + ' klar med den gamle kode. ' + (x.klarMedSms === 1 ? 'Medlemmet' : 'Medlemmerne') + ' får en ny sms med den nye kode.</p>' : '') + '</div>';
+  });
+  liste.innerHTML = h;
+}
+async function hentKoder() {
+  try { KODER_S = await motor('opstrengning', 'koder'); visKoderS(); }
+  catch (err) { $('koderListe').innerHTML = ''; besked($('koderMsg'), err.message, 'err'); }
+}
+$('koderListe').addEventListener('click', async (e) => {
+  const b = e.target.closest('button[data-kny],button[data-ksat],button[data-kfor]');
+  if (!b || kodeTravl) return;
+  const skab = b.dataset.kny || b.dataset.ksat || b.dataset.kfor;
+  const handling = b.dataset.kny ? 'kodeNy' : b.dataset.ksat ? 'kodeSat' : 'kodeFortryd';
+  kodeTravl = true; b.disabled = true; besked($('koderMsg'), 'Gemmer …');
+  try {
+    const r = await motor('opstrengning', handling, { skab, ny: b.dataset.ny || '' }, kodeId);
+    kodeId = nyId(); KODER_S = r; visKoderS();
+    if (handling === 'kodeSat') {
+      const navn = r.skabe.find((s) => s.skab === skab).navn.toLowerCase();
+      let m = 'Koden til ' + navn + 'et er skiftet.';
+      if (skab === 'afhentning' && r.sendt) m += ' ' + r.sendt + ' sms med den nye kode er sendt.';
+      if (r.ikkeSendt) m += ' ' + r.ikkeSendt + ' sms kunne ikke sendes. Medlemmerne kan se koden ved at slå ketsjernummeret op.';
+      besked($('koderMsg'), m, r.ikkeSendt ? 'err' : 'okm');
+    } else besked($('koderMsg'), '');
+    const f = $('koderListe').querySelector(handling === 'kodeNy' ? 'button[data-ksat]' : 'button[data-kny]'); if (f) f.focus();
+  } catch (err) {
+    besked($('koderMsg'), err.message, 'err'); if (!err.net) kodeId = nyId();
+    if (/ændret imens|ingen ny kode|venter allerede/.test(err.message)) hentKoder(); else b.disabled = false;
+  }
+  kodeTravl = false;
 });
 
 // ---- QR-koden til afleveringsskabet (kun administratorer)
