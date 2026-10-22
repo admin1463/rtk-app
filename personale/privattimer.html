@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="06348777bfdc">
+<script src="/opdater.js?v=2222ad998c00" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Privattimer · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css?v=492102879f3d">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Privattimer</b><span>Personale og frivillige</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+
+  <div id="omraade" class="hidden pt">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div id="msg" class="msg" aria-live="polite"></div>
+    <div id="vis"></div>
+  </div>
+  </div>
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script src="../konfig.js?v=1301d6285ee2"></script>
+<script>
+// Privattimer for trænere og administrationen (personale/privattimer.html). Bygges ind af privattimer.py. 22. oktober 2026.
+// Træneren: timer at kvittere, kommende timer, ledige tider (afstemningens ugestribe og tidspiller), forespørgsler med tidsforslag,
+// måneden og trænerprofilen. Administrationen: betalinger fra MobilePay, tilbagebetalinger, løn og profiler.
+// Mockup: kilder/mockup/privattraening_mockup.py. Beslutningerne står i BESLUTNINGER under "Privattræning".
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const kr = (n) => String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' kr.';
+const to = (n) => String(n).padStart(2, '0');
+const UGE = ['søn.', 'man.', 'tir.', 'ons.', 'tor.', 'fre.', 'lør.'];
+const UGE_L = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag'];
+const MD = ['jan.', 'feb.', 'mar.', 'apr.', 'maj', 'jun.', 'jul.', 'aug.', 'sep.', 'okt.', 'nov.', 'dec.'];
+const MD_L = ['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'];
+const kl = (ms) => { const d = new Date(ms); return to(d.getHours()) + '.' + to(d.getMinutes()); };
+const dagTekst = (ms) => { const d = new Date(ms); return UGE[d.getDay()] + ' ' + d.getDate() + '. ' + MD[d.getMonth()]; };
+const tidsrum = (a, b) => kl(a) + '–' + kl(b);
+const naar = (a, b) => dagTekst(a) + ' kl. ' + tidsrum(a, b);
+const varighed = (a, b) => { const m = Math.round((b - a) / 60000); return m % 60 ? m + ' min.' : m === 60 ? '1 time' : (m / 60) + ' timer'; };
+const iso = (d) => d.getFullYear() + '-' + to(d.getMonth() + 1) + '-' + to(d.getDate());
+const fraIso = (s, hm) => { const [y, m, d] = s.split('-').map(Number); const [h, mi] = (hm || '00:00').split(':').map(Number); return new Date(y, m - 1, d, h, mi); };
+const SPORT = { tennis: 'Tennis', padel: 'Padel', begge: 'Tennis og padel' };
+const MESTFOR = { begyndere: 'Begyndere', let: 'Let øvede', oevede: 'Øvede', konkurrence: 'Konkurrence', juniorer: 'Juniorer' };
+const DAGE = { man: 'man', tir: 'tir', ons: 'ons', tor: 'tor', fre: 'fre', loer: 'lør', soen: 'søn' };
+const TIDSP = { formiddag: 'formiddag', eftermiddag: 'eftermiddag', aften: 'aften' };
+const ini = (navn) => String(navn || '').split(/\s+/).filter(Boolean).map((x) => x[0]).slice(0, 2).join('').toUpperCase();
+
+let token = hent('rtk.token') || '';
+let person = null;
+const S = { tekst: {}, d: null, adm: null, adm_md: '', traad: {}, ed: null, aabn: null, profil: null, to: '', sender: false, csv: null };
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+window.RTK_TRAVL = false;
+
+async function motor(modul, handling, data, id) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: id || '' }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  let svar;
+  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  return svar.data;
+}
+function logUd(udloebet) {
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null);
+  location.replace(udloebet ? './?til=' + encodeURIComponent('privattimer.html' + location.hash) + '&igen=1' : './');
+}
+$('logud').addEventListener('click', () => logUd(false));
+function besked(el, t, s) { if (!el) return; el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+const msg = (t, s) => besked($('msg'), t, s);
+const erAdmin = () => !!person && (person.roller || []).indexOf('admin') >= 0;
+const erTraener = () => !!person && (person.roller || []).some((r) => r === 'admin' || r === 'traener' || r === 'cheftraener');
+
+// ------------------------------------------------------------ start
+async function start() {
+  if (!token) { location.replace('./?til=' + encodeURIComponent('privattimer.html' + location.hash)); return; }
+  try {
+    person = await motor('kerne', 'mig');
+    if (!erTraener()) { $('omraade').classList.remove('hidden'); $('hvem').textContent = 'Logget ind som ' + person.navn; $('vis').innerHTML = '<div class="pt-tom">Kun for trænere og administratorer.</div>'; return; }
+    $('hvem').textContent = 'Logget ind som ' + person.navn;
+    $('omraade').classList.remove('hidden');
+    msg('Henter …');
+    S.d = await motor('privat', 'tStart');
+    msg('');
+    tegn();
+  } catch (err) { $('omraade').classList.remove('hidden'); msg(err.message, 'err'); }
+}
+let friskTid = 0;
+async function frisk() {
+  if (!S.d || Date.now() - friskTid < 4000) return;
+  friskTid = Date.now();
+  try { S.d = await motor('privat', 'tStart'); if (!window.RTK_TRAVL) tegn(); } catch (e) { /* vises ved næste handling */ }
+}
+addEventListener('hashchange', () => { S.to = ''; S.ed = null; window.RTK_TRAVL = false; if (!S.sender) msg(''); tegn(); scrollTo(0, 0); frisk(); });
+addEventListener('focus', frisk);
+
+// ------------------------------------------------------------ byggeklodser
+const hero = (h, kick) => '<div class="af-hero"><img src="../billeder/felt-privat.jpg" alt=""><div class="tx"><span class="kick">' + esc(kick) + '</span><h1>' + esc(h) + '</h1></div></div>';
+const kal = (ms) => '<div class="af-kal"><span>' + esc(UGE[new Date(ms).getDay()].replace('.', '')) + '</span><b>' + new Date(ms).getDate() + '</b></div>';
+const st = (x, slags) => '<span class="pt-st' + (slags ? ' ' + slags : '') + '">' + esc(x) + '</span>';
+const sek = (x) => '<div class="pt-sek">' + esc(x) + '</div>';
+const chips = (liste) => '<div class="af-info">' + liste.filter(Boolean).map(([x, pink]) => '<span' + (pink ? ' class="pink"' : '') + '>' + esc(x) + '</span>').join('') + '</div>';
+const tilbage = (href, tekst) => '<a class="gr-tilbage" href="' + href + '">&#8592; ' + esc(tekst) + '</a>';
+const bund = (b, s, knap, id, svag) => '<div class="af-bund"><div class="info"><b>' + esc(b) + '</b>' + esc(s) + '</div><button type="button" id="' + id + '"' + (svag ? ' class="svag"' : '') + '>' + esc(knap) + '</button></div>';
+const personer = (b) => [b.spiller].concat(b.andre || []).join(' og ');
+function faner(aktiv) {
+  const F = [['', 'Timer'], ['aabn', 'Åbne tider'], ['foresp', 'Forespørgsler' + (S.d.forespoergsler.length ? ' · ' + S.d.forespoergsler.length : '')], ['maaned', 'Måneden'], ['profil', 'Min profil']];
+  if (erAdmin()) F.push(['adm', 'Betalinger og løn']);
+  return '<div class="tt-kat" role="tablist">' + F.map(([h, n]) => '<a role="tab" href="#' + h + '" class="af-chip info lille" style="border-radius:999px;min-height:40px;padding:6px 14px;font-size:14px;' + (h === aktiv ? 'background:var(--pink);color:#FFFFFF;border-color:var(--pink)' : '') + '" aria-selected="' + (h === aktiv) + '">' + esc(n) + '</a>').join('') + '</div>';
+}
+function vis(html) { $('vis').innerHTML = html; }
+function betaltChip(b) { return b.betaltOk ? st('Betalt', 'ok') : b.betalt > 0 ? st('Delvist betalt', 'vent') : st('Ikke set betalt', 'vent'); }
+/** Knap med to tryk. Første tryk viser konsekvensen, andet udfører (Lars' regel om farlige handlinger). */
+function toTryk(id, nr, tekst1, tekst2, klasse) { return '<button type="button" class="af-chip ' + (klasse || 'farlig') + (S.to === id + nr ? ' fyldt' : '') + '" data-to="' + esc(id) + '" data-nr="' + esc(nr) + '">' + esc(S.to === id + nr ? tekst2 : tekst1) + '</button>'; }
+function bindToTryk(fn) {
+  document.querySelectorAll('[data-to]').forEach((b) => b.addEventListener('click', () => {
+    const k = b.dataset.to + b.dataset.nr;
+    if (S.to !== k) { S.to = k; tegn(); setTimeout(() => { if (S.to === k) { S.to = ''; tegn(); } }, 8000); return; }
+    S.to = ''; fn(b.dataset.to, b.dataset.nr);
+  }));
+}
+async function handling(navn, data, efter) {
+  if (S.sender) return;
+  S.sender = true; msg('Gemmer …');
+  try { S.d = await motor('privat', navn, data, nyId()); msg(efter || 'Gemt', 'okm'); window.RTK_TRAVL = false; tegn(); }
+  catch (err) { msg(err.message, 'err'); }
+  finally { S.sender = false; }
+}
+
+// ------------------------------------------------------------ ruter
+function tegn() {
+  if (!S.d) return;
+  const h = location.hash.replace(/^#/, '').split('/');
+  if (h[0] === 'aabn') return tegnAabn();
+  if (h[0] === 'foresp') return tegnForespListe();
+  if (h[0] === 'f' && h[1]) return tegnForesp(h[1]);
+  if (h[0] === 'b' && h[1]) return tegnBooking(h[1]);
+  if (h[0] === 'maaned') return tegnMaaned();
+  if (h[0] === 'profil') return tegnProfil();
+  if (h[0] === 'adm' && erAdmin()) return tegnAdm();
+  tegnTimer();
+}
+
+// ------------------------------------------------------------ timer
+function timeRaekke(b, ekstra) {
+  return '<a class="kl-r" href="#b/' + esc(b.nr) + '" style="text-decoration:none;color:inherit">' + kal(b.start) + '<div class="navn"><b>' + esc(tidsrum(b.start, b.slut)) + '</b><small>' +
+    esc([personer(b), b.bane || 'bane ikke skrevet', b.nr, b.beskeder ? b.beskeder + (b.beskeder === 1 ? ' besked' : ' beskeder') : ''].filter(Boolean).join(' · ')) + '</small></div>' + (ekstra || betaltChip(b)) + '</a>';
+}
+function tegnTimer() {
+  const d = S.d;
+  let h = hero('Privattimer', 'Dit arbejde') + faner('');
+  if (!d.til) h += '<div class="pt-tom" style="text-align:left">Medlemmerne kan ikke se dig endnu. Skriv din profil, og slå privattimer til under <a href="#profil" style="color:var(--pink);font-weight:700">Min profil</a>.</div>';
+  if (d.forespoergsler.length) h += '<a class="af-bedst tom" href="#foresp" style="text-decoration:none;color:inherit;margin-top:14px"><div class="af-mid"><span class="kl" style="font-size:16px">' +
+    d.forespoergsler.length + (d.forespoergsler.length === 1 ? ' forespørgsel' : ' forespørgsler') + '</span><span class="lg">Svar med nogle tider</span></div>' + st('Svar', 'vent') + '</a>';
+  if (d.kvitter.length) {
+    h += sek('Skal kvitteres');
+    d.kvitter.forEach((b) => {
+      h += '<div class="kl-boks">' + timeRaekke(b) +
+        '<label class="pt-check"><input type="checkbox" data-vagt="' + esc(b.nr) + '"' + (hent('rtk.pt.vagt.' + b.nr) === '1' ? ' checked' : '') + '>I betalt vagttid, så kun tillæg på ' + esc(kr(100)) + '</label>' +
+        '<div class="pt-knapper"><button type="button" class="af-chip fyldt fuld" data-holdt="' + esc(b.nr) + '" style="justify-content:center;min-height:46px">Timen er holdt</button>' +
+        toTryk('udeblev', b.nr, 'Udeblev', 'Tryk igen: der skal betales ' + kr(b.pris), 'info') + '</div></div>';
+    });
+  }
+  h += sek('Kommende');
+  h += d.kommende.length ? '<div class="kl-boks">' + d.kommende.map((b) => timeRaekke(b)).join('') + '</div>' : '<div class="pt-tom">Ingen aftalte privattimer.</div>';
+  if (d.seneste.length) {
+    const ST = { holdt: ['Holdt', 'ok'], udeblev: ['Udeblev', 'vent'], afbud: ['Afbud', ''], aflyst: ['Aflyst', 'fejl'] };
+    h += sek('Seneste') + '<div class="kl-boks">' + d.seneste.map((b) => timeRaekke(b, st(...(ST[b.status] || [b.status, ''])))).join('') + '</div>';
+  }
+  vis(h);
+  document.querySelectorAll('[data-vagt]').forEach((x) => x.addEventListener('change', () => gem('rtk.pt.vagt.' + x.dataset.vagt, x.checked ? '1' : null)));
+  document.querySelectorAll('[data-holdt]').forEach((b) => b.addEventListener('click', () => {
+    const nr = b.dataset.holdt;
+    handling('tHoldt', { nr, vagttid: !!document.querySelector('[data-vagt="' + nr + '"]:checked') }, 'Timen er kvitteret');
+  }));
+  bindToTryk((hv, nr) => { if (hv === 'udeblev') handling('tUdeblev', { nr, vagttid: !!document.querySelector('[data-vagt="' + nr + '"]:checked') }, 'Udeblivelsen er registreret'); });
+}
+
+// ------------------------------------------------------------ en time
+function alleB() { return S.d.kvitter.concat(S.d.kommende, S.d.seneste); }
+function tegnBooking(nr) {
+  const b = alleB().find((x) => x.nr === nr);
+  if (!b) { vis(tilbage('#', 'Privattimer') + '<div class="pt-tom">Timen findes ikke her længere.</div>'); return; }
+  const nu = Date.now();
+  const ST = { aftalt: 'Aftalt', holdt: 'Holdt', udeblev: 'Udeblev', afbud: 'Afbud', aflyst: 'Aflyst' };
+  let h = tilbage('#', 'Privattimer') + hero(personer(b), 'Privattime ' + b.nr + ' · ' + ST[b.status]) +
+    '<div class="af-bedst" style="margin-bottom:10px">' + kal(b.start) + '<div class="af-mid"><span class="kl">' + esc(tidsrum(b.start, b.slut)) + '</span><span class="lg">' +
+    esc([UGE_L[new Date(b.start).getDay()] + ' ' + new Date(b.start).getDate() + '. ' + MD_L[new Date(b.start).getMonth()], SPORT[b.sport] || b.sport, b.antal === 1 ? '1 person' : b.antal + ' personer'].join(' · ')) + '</span></div>' + (b.status === 'aftalt' ? betaltChip(b) : '') + '</div>' +
+    chips([[b.bane ? b.bane : 'Bane ikke skrevet endnu', !b.bane], [kr(b.pris), 0], b.barnId ? ['Junior, forælderen booker', 0] : null, b.frafaldet ? ['Betalingen er frafaldet', 0] : null]);
+  if (b.oenske) h += '<div class="pt-boble">' + esc(b.oenske) + '</div><p class="pt-af">' + esc(b.spiller) + '</p>';
+  if (b.status === 'aftalt' && b.start > nu) {
+    h += '<div class="kl-boks"><b>Aflys timen</b><p style="margin:6px 0 10px;font-size:14.5px">' + esc(b.barnId ? 'Forældrene' : b.spiller.split(' ')[0]) + ' får besked og alle pengene tilbage.</p>' +
+      '<label class="pt-lbl" for="aflysTekst" style="margin-top:0">Besked (valgfri)</label><textarea id="aflysTekst" maxlength="500" style="min-height:70px" placeholder="Fx jeg er desværre syg">' + esc(S.tekst['aflys' + b.nr] || '') + '</textarea>' +
+      '<div class="pt-knapper">' + toTryk('aflys', b.nr, 'Aflys timen', 'Tryk igen for at aflyse') + '</div></div>';
+  } else if (b.status === 'aftalt') {
+    h += '<div class="kl-boks"><label class="pt-check" style="margin-top:0"><input type="checkbox" data-vagt="' + esc(b.nr) + '"' + (hent('rtk.pt.vagt.' + b.nr) === '1' ? ' checked' : '') + '>I betalt vagttid, så kun tillæg</label>' +
+      '<div class="pt-knapper"><button type="button" class="af-chip fyldt fuld" data-holdt="' + esc(b.nr) + '" style="justify-content:center;min-height:46px">Timen er holdt</button>' + toTryk('udeblev', b.nr, 'Udeblev', 'Tryk igen: hele beløbet', 'info') + '</div></div>';
+  } else if ((b.status === 'afbud' || b.status === 'udeblev') && b.skyldig > 0 && !b.frafaldet) {
+    h += '<div class="kl-boks"><b>' + (b.status === 'afbud' ? 'Afbud ' + (b.skyldig >= b.pris ? 'under 24 timer før' : 'mere end 24 timer før') : 'Udeblevet') + '</b>' +
+      '<p style="margin:6px 0 10px;font-size:14.5px">Der skal betales ' + esc(kr(b.skyldig)) + '. Du kan frafalde det, fx ved sygdom.' + (b.skyldig >= b.pris ? ' Så får du ikke løn for timen.' : '') + '</p>' +
+      '<div class="pt-knapper">' + toTryk('frafald', b.nr, 'Frafald betalingen', 'Tryk igen for at frafalde', 'info') + '</div></div>';
+  }
+  h += '<div id="traad"></div>';
+  vis(h);
+  document.querySelectorAll('[data-vagt]').forEach((x) => x.addEventListener('change', () => gem('rtk.pt.vagt.' + x.dataset.vagt, x.checked ? '1' : null)));
+  document.querySelectorAll('[data-holdt]').forEach((x) => x.addEventListener('click', () => handling('tHoldt', { nr, vagttid: !!document.querySelector('[data-vagt]:checked') }, 'Timen er kvitteret')));
+  if ($('aflysTekst')) $('aflysTekst').addEventListener('input', () => { S.tekst['aflys' + nr] = $('aflysTekst').value; window.RTK_TRAVL = !!$('aflysTekst').value.trim(); });
+  bindToTryk((hv) => {
+    if (hv === 'aflys') handling('tAflys', { nr, tekst: S.tekst['aflys' + nr] || '' }, 'Timen er aflyst');
+    if (hv === 'udeblev') handling('tUdeblev', { nr, vagttid: !!document.querySelector('[data-vagt]:checked') }, 'Udeblivelsen er registreret');
+    if (hv === 'frafald') handling('tFrafald', { nr }, 'Betalingen er frafaldet');
+  });
+  traad(nr);
+}
+
+// ------------------------------------------------------------ tråden
+async function traad(id) {
+  const tegnT = () => {
+    const boks = $('traad'); if (!boks) return;
+    const L = S.traad[id];
+    let h = sek('Beskeder');
+    if (!L) h += '<p class="hint">Henter …</p>';
+    else if (!L.length) h += '<p class="hint" style="margin-top:0">Ingen beskeder endnu.</p>';
+    else L.forEach((b) => { const mig = b.fra === 'traener'; h += '<div class="pt-boble' + (mig ? ' mig' : '') + '">' + esc(b.tekst) + '</div><p class="pt-af' + (mig ? ' mig' : '') + '">' + esc(b.navn + ' · ' + dagTekst(b.tid) + ' ' + kl(b.tid)) + '</p>'; });
+    h += '<div class="pt-skriv"><textarea id="tTekst" maxlength="500" rows="2" aria-label="Skriv til medlemmet" placeholder="Skriv til medlemmet"></textarea><button type="button" id="tSend" class="af-chip info">Send</button></div><div class="msg" id="tMsg" aria-live="polite"></div>';
+    boks.innerHTML = h;
+    $('tTekst').addEventListener('input', () => { window.RTK_TRAVL = !!$('tTekst').value.trim(); });
+    $('tSend').addEventListener('click', async () => {
+      const tekst = $('tTekst').value.trim(); if (!tekst || S.sender) return;
+      S.sender = true; besked($('tMsg'), 'Sender …');
+      try { S.traad[id] = (await motor('privat', 'skriv', { id, tekst }, nyId())).beskeder; window.RTK_TRAVL = false; tegnT(); }
+      catch (err) { besked($('tMsg'), err.message, 'err'); } finally { S.sender = false; }
+    });
+  };
+  tegnT();
+  try { S.traad[id] = (await motor('privat', 'traad', { id })).beskeder; } catch (e) { S.traad[id] = S.traad[id] || []; }
+  if (!window.RTK_TRAVL) tegnT();
+}
+
+// ------------------------------------------------------------ tidsvælgeren (afstemningens design B)
+// E = { dage: { 'yyyy-mm-dd': [{ fra: '17:00', til: '18:00' }] }, sidste: { fra, til } }
+function nyEditor() { return { dage: {}, sidste: { fra: '17:00', til: '18:00' }, anden: false }; }
+function edTider(E) { return Object.keys(E.dage).sort().reduce((a, d) => a.concat(E.dage[d].map((x) => ({ dag: d, fra: x.fra, til: x.til }))), []); }
+function edHtml(E, trin1, trin2) {
+  const idag = new Date(); idag.setHours(12, 0, 0, 0);
+  const dage = []; for (let i = 0; i < 14; i++) { const d = new Date(idag); d.setDate(d.getDate() + i); dage.push(iso(d)); }
+  Object.keys(E.dage).forEach((d) => { if (dage.indexOf(d) < 0) dage.push(d); });
+  dage.sort();
+  let h = '<div class="af-trin"><span class="nr">1</span><h2>' + esc(trin1) + '</h2></div><div class="af-uge" id="edUge">' +
+    dage.map((d, i) => { const x = fraIso(d); const v = !!E.dage[d]; return '<button type="button" class="af-dag' + (v ? ' valgt' : '') + '" data-dag="' + d + '" aria-pressed="' + v + '" aria-label="' + esc(UGE_L[x.getDay()] + ' ' + x.getDate() + '. ' + MD_L[x.getMonth()]) + '"><span>' + (d === iso(idag) ? 'i dag' : UGE[x.getDay()].replace('.', '')) + '</span><b>' + x.getDate() + '</b>' + (v ? '<i class="prik"></i>' : '') + '</button>'; }).join('') +
+    '<button type="button" class="af-dag anden" id="edAnden"><span>anden</span><b>+</b><small>dato</small></button></div>';
+  if (E.anden) h += '<div class="pt-skriv" style="margin-top:0"><input type="date" id="edDato" min="' + iso(new Date()) + '" aria-label="Anden dato"><button type="button" class="af-chip info" id="edDatoOk">Tilføj</button></div>';
+  const T = Object.keys(E.dage).sort();
+  h += '<div class="af-trin"><span class="nr">2</span><h2>' + esc(trin2) + '</h2></div>';
+  if (!T.length) h += '<div class="pt-tom">Tryk på en dag ovenfor. Hver dag får en tid fra ' + esc(E.sidste.fra.replace(':', '.')) + ' til ' + esc(E.sidste.til.replace(':', '.')) + ', som du kan rette.</div>';
+  T.forEach((d) => {
+    const x = fraIso(d);
+    E.dage[d].forEach((tt, i) => {
+      h += '<div class="pt-raekke"><div class="d">' + (i === 0 ? esc(UGE_L[x.getDay()]) + '<small>' + x.getDate() + '. ' + MD[x.getMonth()] + '</small>' : '') + '</div>' +
+        '<input type="time" step="900" value="' + tt.fra + '" data-ed="fra" data-d="' + d + '" data-i="' + i + '" aria-label="Fra, ' + esc(UGE_L[x.getDay()]) + '">' +
+        '<input type="time" step="900" value="' + tt.til + '" data-ed="til" data-d="' + d + '" data-i="' + i + '" aria-label="Til, ' + esc(UGE_L[x.getDay()]) + '">' +
+        '<button type="button" class="x" data-edx="' + d + '" data-i="' + i + '" aria-label="Fjern tiden">×</button></div>';
+    });
+  });
+  if (T.length) h += '<button type="button" class="af-chip" id="edMere" style="margin:4px 0 0">+ En tid mere</button>';
+  return h;
+}
+function edBind(E, gentegn) {
+  document.querySelectorAll('#edUge [data-dag]').forEach((b) => b.addEventListener('click', () => {
+    const d = b.dataset.dag;
+    if (E.dage[d]) delete E.dage[d]; else E.dage[d] = [{ fra: E.sidste.fra, til: E.sidste.til }];
+    window.RTK_TRAVL = true; gentegn();
+  }));
+  $('edAnden').addEventListener('click', () => { E.anden = !E.anden; gentegn(); });
+  if ($('edDatoOk')) $('edDatoOk').addEventListener('click', () => { const v = $('edDato').value; if (v && !E.dage[v]) E.dage[v] = [{ fra: E.sidste.fra, til: E.sidste.til }]; E.anden = false; window.RTK_TRAVL = true; gentegn(); });
+  document.querySelectorAll('[data-ed]').forEach((x) => x.addEventListener('change', () => {
+    const r = E.dage[x.dataset.d][Number(x.dataset.i)];
+    const gl = { fra: r.fra, til: r.til };
+    r[x.dataset.ed] = x.value || r[x.dataset.ed];
+    // Flyttes "fra", følger "til" med, så længden holdes
+    if (x.dataset.ed === 'fra') { const l = (fraIso('2000-01-01', gl.til) - fraIso('2000-01-01', gl.fra)); const ny = new Date(fraIso('2000-01-01', r.fra).getTime() + (l > 0 ? l : 3600000)); r.til = to(ny.getHours()) + ':' + to(ny.getMinutes()); }
+    E.sidste = { fra: r.fra, til: r.til }; window.RTK_TRAVL = true; gentegn();
+  }));
+  document.querySelectorAll('[data-edx]').forEach((b) => b.addEventListener('click', () => {
+    const d = b.dataset.edx; E.dage[d].splice(Number(b.dataset.i), 1); if (!E.dage[d].length) delete E.dage[d]; gentegn();
+  }));
+  if ($('edMere')) $('edMere').addEventListener('click', () => {
+    const T = Object.keys(E.dage).sort(); const d = T[T.length - 1]; const s = E.dage[d][E.dage[d].length - 1];
+    const l = fraIso('2000-01-01', s.til) - fraIso('2000-01-01', s.fra);
+    const til = new Date(fraIso('2000-01-01', s.til).getTime() + (l > 0 ? l : 3600000));
+    E.dage[d].push({ fra: s.til, til: to(til.getHours()) + ':' + to(til.getMinutes()) }); window.RTK_TRAVL = true; gentegn();
+  });
+}
+/** Tiderne som millisekunder. Over midnat eller "til" før "fra" afvises her, så fejlen står ved feltet. */
+function edMs(E, uger) {
+  const ud = [];
+  edTider(E).forEach((x) => {
+    for (let w = 0; w <= (uger || 0); w++) {
+      const s = fraIso(x.dag, x.fra); s.setDate(s.getDate() + 7 * w);
+      const e = fraIso(x.dag, x.til); e.setDate(e.getDate() + 7 * w);
+      if (e <= s) throw new Error('Tiden ' + dagTekst(s.getTime()) + ' ' + x.fra.replace(':', '.') + ' slutter, før den begynder');
+      ud.push({ start: s.getTime(), slut: e.getTime() });
+    }
+  });
+  return ud;
+}
+
+// ------------------------------------------------------------ åbne tider
+function tegnAabn() {
+  const d = S.d;
+  if (!S.aabn) S.aabn = { E: nyEditor(), sport: (d.profil && d.profil.sport.length === 1) ? d.profil.sport[0] : 'tennis', uger: 0, frist: d.fristStd };
+  const A = S.aabn;
+  let h = hero('Åbn ledige tider', 'Dit arbejde · privattimer') + faner('aabn');
+  if (!d.til) h += '<div class="pt-tom" style="text-align:left">Slå privattimer til under <a href="#profil" style="color:var(--pink);font-weight:700">Min profil</a>, før du åbner tider.</div>';
+  h += edHtml(A.E, 'Tryk de dage, du kan', 'Ret tiderne') +
+    '<div class="af-trin"><span class="nr">3</span><h2>Sport, gentagelse og frist</h2></div>' +
+    '<div class="tt-kat">' + ['tennis', 'padel', 'begge'].map((s) => '<button type="button" data-asport="' + s + '" aria-pressed="' + (A.sport === s) + '">' + SPORT[s] + '</button>').join('') + '</div>' +
+    '<label class="pt-lbl" for="aUger" style="margin-top:8px">Gentag hver uge</label><select id="aUger">' +
+    Array.from({ length: 13 }, (_, i) => '<option value="' + i + '"' + (A.uger === i ? ' selected' : '') + '>' + (i === 0 ? 'Nej, kun denne gang' : i === 1 ? 'Også næste uge (2 uger)' : (i + 1) + ' uger i alt') + '</option>').join('') + '</select>' +
+    '<span class="pt-lbl">Kan bookes indtil</span><div class="tt-kat">' + d.fristValg.map((f) => '<button type="button" data-afrist="' + f + '" aria-pressed="' + (A.frist === f) + '">' + f + ' timer før</button>').join('') + '</div>' +
+    '<p class="po-note">Du får en besked, når en tid bliver booket. En booket tid aflyses som et afbud fra dig, så medlemmet får alle pengene tilbage.</p>';
+  const n = edTider(A.E).length, ialt = n * (A.uger + 1);
+  const kan = n > 0 && d.til && ialt <= 40;
+  h += bund(n ? n + (n === 1 ? ' tid' : ' tider') + (A.uger ? ' · ' + (A.uger + 1) + ' uger · ' + ialt + ' i alt' : '') : 'Ingen tider endnu',
+    !n ? 'Vælg mindst én dag' : !d.til ? 'Slå privattimer til først' : ialt > 40 ? 'Højst 40 tider ad gangen' : 'Vises for medlemmerne med det samme', 'Åbn tiderne', 'aSend', !kan);
+  // Dine åbne tider
+  h += sek('Dine åbne tider');
+  if (!d.tider.length) h += '<div class="pt-tom">Ingen åbne tider.</div>';
+  else h += '<div class="kl-boks">' + d.tider.map((x) => '<div class="kl-r">' + kal(x.start) + '<div class="navn"><b>' + esc(tidsrum(x.start, x.slut)) + '</b><small>' + esc(SPORT[x.sport] + ' · kan bookes til ' + x.frist + ' timer før') + '</small></div>' +
+    (x.status === 'booket' ? '<a href="#b/' + esc(x.booking) + '" style="text-decoration:none">' + st('Booket · ' + x.booking, 'ok') + '</a>' : st('Ledig') + ' <button type="button" class="af-chip info lille" data-luk="' + esc(x.id) + '" aria-label="Luk ' + esc(naar(x.start, x.slut)) + '">Luk</button>') + '</div>').join('') + '</div>';
+  vis(h);
+  edBind(A.E, tegnAabn);
+  document.querySelectorAll('[data-asport]').forEach((b) => b.addEventListener('click', () => { A.sport = b.dataset.asport; tegnAabn(); }));
+  document.querySelectorAll('[data-afrist]').forEach((b) => b.addEventListener('click', () => { A.frist = Number(b.dataset.afrist); tegnAabn(); }));
+  $('aUger').addEventListener('change', () => { A.uger = Number($('aUger').value); tegnAabn(); });
+  document.querySelectorAll('[data-luk]').forEach((b) => b.addEventListener('click', () => handling('tLuk', { id: b.dataset.luk }, 'Tiden er lukket')));
+  $('aSend').addEventListener('click', async () => {
+    if (S.sender || !kan) return;
+    let tider;
+    try { tider = edMs(A.E, A.uger); } catch (err) { msg(err.message, 'err'); return; }
+    S.sender = true; msg('Åbner tiderne …');
+    try {
+      const r = await motor('privat', 'tAabn', { tider, sport: A.sport, frist: A.frist }, nyId());
+      S.d = r; S.aabn = null; window.RTK_TRAVL = false; tegnAabn();
+      msg(r.aabnet + (r.aabnet === 1 ? ' tid er åbnet' : ' tider er åbnet') + (r.sprunget ? '. ' + r.sprunget + ' sprang over, fordi de overlapper noget, du har i forvejen, eller fristen er passeret' : '') + '.', 'okm');
+    } catch (err) { msg(err.message, 'err'); } finally { S.sender = false; }
+  });
+}
+
+// ------------------------------------------------------------ forespørgsler
+function tegnForespListe() {
+  const L = S.d.forespoergsler;
+  let h = hero('Forespørgsler', 'Dit arbejde · privattimer') + faner('foresp');
+  if (!L.length) h += '<div class="pt-tom">Ingen forespørgsler lige nu.</div>';
+  L.forEach((f) => {
+    h += '<a class="af-bedst' + (f.status === 'tider' ? ' tom' : '') + '" href="#f/' + esc(f.id) + '" style="text-decoration:none;color:inherit;margin:10px 0 0">' +
+      '<span class="pt-av" style="width:48px;height:48px;flex-basis:48px;font-size:17px">' + esc(ini(f.spiller)) + '</span><div class="af-mid"><span class="kl" style="font-size:16px">' + esc(f.spiller) + '</span><span class="lg">' +
+      esc([f.flyt ? 'Vil flytte ' + f.flyt : SPORT[f.sport], f.antal === 1 ? '1 person' : f.antal + ' personer', f.dage.map((x) => DAGE[x]).join(', '), f.tidspunkt.join(', ')].filter(Boolean).join(' · ')) + '</span></div>' +
+      (f.status === 'tider' ? st('Tider sendt') : st('Ny', 'vent')) + '</a>';
+  });
+  vis(h);
+}
+function tegnForesp(id) {
+  const f = S.d.forespoergsler.find((x) => x.id === id);
+  if (!f) { vis(tilbage('#foresp', 'Forespørgsler') + '<div class="pt-tom">Forespørgslen er besvaret eller lukket.</div>'); return; }
+  if (!S.ed || S.ed.id !== id) S.ed = { id, E: nyEditor(), tekst: '' };
+  const E = S.ed.E;
+  const o = new Date(f.oprettet);
+  let h = tilbage('#foresp', 'Forespørgsler') + hero(f.spiller, (f.flyt ? 'Vil flytte ' + f.flyt : 'Forespørgsel') + ' · ' + dagTekst(f.oprettet) + ' kl. ' + kl(o.getTime())) +
+    chips([[SPORT[f.sport] || f.sport, 0], [(f.antal === 1 ? '1 person' : f.antal + ' personer') + ' · ' + kr(f.pris), 0], (f.dage.length || f.tidspunkt.length) ? [f.dage.map((x) => DAGE[x]).join(', ') + (f.dage.length && f.tidspunkt.length ? ' · ' : '') + f.tidspunkt.join(', '), 1] : null]);
+  if (f.oenske) h += '<div class="pt-boble">' + esc(f.oenske) + '</div><p class="pt-af">' + esc(f.spiller + (f.andre.length ? ' · med ' + f.andre.join(' og ') : '')) + '</p>';
+  if (f.status === 'tider' && f.tider.length) h += '<div class="pt-tom" style="text-align:left">Du har sendt ' + f.tider.length + (f.tider.length === 1 ? ' tid' : ' tider') + ': ' + esc(f.tider.map((x) => naar(x.start, x.slut)).join(', ')) + '. Du kan sende nye tider, til medlemmet har valgt.</div>';
+  h += edHtml(E, 'Tryk de dage, du kan', 'Ret tiderne') +
+    '<div class="af-trin"><span class="nr">3</span><h2>Skriv til ' + esc(f.spiller.split(' ')[0]) + '</h2><p class="hint">valgfrit</p></div>' +
+    '<textarea id="svarTekst" maxlength="500" style="min-height:70px" placeholder="Fx hej, her er nogle tider">' + esc(S.ed.tekst) + '</textarea>' +
+    '<p class="po-note">Den første tid, medlemmet vælger, er aftalt. Tiderne gælder i 48 timer.</p>' +
+    '<label class="pt-lbl" for="afvisTekst">Kan du ikke tage timen?</label><textarea id="afvisTekst" maxlength="500" style="min-height:60px" placeholder="Besked (valgfri)">' + esc(S.tekst['afvis' + id] || '') + '</textarea>' +
+    '<div class="pt-knapper">' + toTryk('afvis', id, 'Jeg kan ikke tage timen', 'Tryk igen: medlemmet får besked') + '</div>' +
+    '<div id="traad"></div>';
+  const n = edTider(E).length;
+  h += bund(n ? n + (n === 1 ? ' tid' : ' tider') + ' · ' + Object.keys(E.dage).length + (Object.keys(E.dage).length === 1 ? ' dag' : ' dage') : 'Ingen tider endnu', n ? f.spiller.split(' ')[0] + ' får en besked' : 'Vælg mindst én dag', 'Send tiderne', 'svarSend', !n);
+  vis(h);
+  edBind(E, () => tegnForesp(id));
+  $('svarTekst').addEventListener('input', () => { S.ed.tekst = $('svarTekst').value; window.RTK_TRAVL = true; });
+  $('afvisTekst').addEventListener('input', () => { S.tekst['afvis' + id] = $('afvisTekst').value; window.RTK_TRAVL = true; });
+  bindToTryk(async () => { await handling('tAfvis', { id, tekst: S.tekst['afvis' + id] || '' }, 'Medlemmet har fået besked'); if (!S.d.forespoergsler.some((x) => x.id === id)) location.hash = '#foresp'; });
+  $('svarSend').addEventListener('click', async () => {
+    if (S.sender || !edTider(E).length) return;
+    let tider;
+    try { tider = edMs(E, 0); } catch (err) { msg(err.message, 'err'); return; }
+    S.sender = true; msg('Sender tiderne …');
+    try { S.d = await motor('privat', 'tSvar', { id, tider, tekst: S.ed.tekst }, nyId()); S.ed = null; window.RTK_TRAVL = false; delete S.traad[id]; msg('Tiderne er sendt. Du får besked, når der er valgt.', 'okm'); tegnForesp(id); }
+    catch (err) { msg(err.message, 'err'); } finally { S.sender = false; }
+  });
+  traad(id);
+}
+
+// ------------------------------------------------------------ måneden
+function tegnMaaned() {
+  let h = hero('Måneden', 'Dit arbejde · privattimer') + faner('maaned');
+  S.d.maaneder.forEach((m, i) => {
+    const md = m.maaned || '';
+    const [y, mm] = md.split('-').map(Number);
+    h += sek((i === 0 ? 'Denne måned' : 'Sidste måned') + (y ? ', ' + MD_L[mm - 1] + ' ' + y : '')) + '<div class="kl-boks">' +
+      '<div class="kl-r"><div class="navn"><b>' + m.antal + (m.antal === 1 ? ' privattime' : ' privattimer') + ' med løn</b><small>' + String(m.timer).replace('.', ',') + ' timer i alt · ' + String(m.medLoen).replace('.', ',') + ' med timeløn</small></div><span class="tal">+ ' + esc(kr(m.tillaeg)) + '</span></div></div>';
+  });
+  h += '<p class="po-note">Tillægget er 100 kr. pr. time. Timer uden for betalt vagttid giver også din normale timeløn. Udeblivelser og afbud under 24 timer før tæller med, medmindre du har frafaldet betalingen.</p>';
+  vis(h);
+}
+
+// ------------------------------------------------------------ min profil
+function tegnProfil() {
+  const d = S.d;
+  if (!S.profil) { const p = d.profil || {}; S.profil = { om: p.om || '', baggrund: p.baggrund || '', uddannelse: p.uddannelse || '', godTil: p.godTil || '', sprog: p.sprog || '', sport: (p.sport || []).slice(), mestFor: (p.mestFor || []).slice(), billede: p.billede || '', nyt: null, fjern: false }; }
+  const P = S.profil;
+  const bill = P.nyt ? P.nyt.stor : P.fjern ? '' : P.billede;
+  let h = hero('Min trænerprofil', 'Dit arbejde · privattimer') + faner('profil') +
+    '<div class="kl-boks" style="display:flex;align-items:center;gap:12px;margin-top:14px"><div style="flex:1"><b>Vis min profil for medlemmerne</b><small style="display:block;color:var(--muted);font-size:13.5px">' +
+    (d.skjult ? 'Skjult af en administrator. Skriv til klubben.' : d.til ? 'Medlemmerne kan se dig og booke dine ledige tider' : 'Slået fra. Ingen kan booke dig') + '</small></div>' +
+    '<button type="button" class="vippe" role="switch" id="pTil" aria-checked="' + d.til + '" aria-label="Vis min profil for medlemmerne"></button></div>' +
+    '<span class="pt-lbl">Billede</span><div class="pt-billede-r">' + (bill ? '<img src="' + bill + '" alt="Dit billede">' : '<span class="pt-av" aria-hidden="true">' + esc(ini(person.navn)) + '</span>') +
+    '<div style="display:flex;flex-direction:column;gap:8px"><label class="af-chip info lille" style="cursor:pointer">Tag eller vælg et billede<input type="file" id="pFil" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0"></label>' +
+    (bill ? '<button type="button" class="af-chip info lille" id="pFjern">Fjern</button>' : '') + '</div></div>' +
+    '<p class="po-note" style="margin:6px 0 0">Et billede, hvor man kan se dig. Brug kun billeder, du selv har taget eller må bruge.</p>' +
+    '<span class="pt-lbl">Sport</span><div class="tt-kat">' + ['tennis', 'padel'].map((s) => '<button type="button" data-psport="' + s + '" aria-pressed="' + P.sport.includes(s) + '">' + SPORT[s] + '</button>').join('') + '</div>' +
+    '<label class="pt-lbl" for="pOm">Om dig</label><textarea id="pOm" maxlength="600" placeholder="Hvem er du som træner, og hvad kan man forvente af en time med dig?">' + esc(P.om) + '</textarea><p class="po-note" style="margin:4px 0 0" id="pOmTal">' + P.om.length + ' af 600 tegn</p>' +
+    '<label class="pt-lbl" for="pBag">Baggrund</label><input id="pBag" maxlength="120" value="' + esc(P.baggrund) + '" placeholder="Fx spillet 1. division. Træner i RTK siden 2018">' +
+    '<label class="pt-lbl" for="pUdd">Uddannelse</label><input id="pUdd" maxlength="120" value="' + esc(P.uddannelse) + '" placeholder="Fx DTF træner 2">' +
+    '<label class="pt-lbl" for="pGod">Det er jeg god til</label><input id="pGod" maxlength="120" value="' + esc(P.godTil) + '" placeholder="Fx serv, volley og taktik i double">' +
+    '<label class="pt-lbl" for="pSprog">Sprog</label><input id="pSprog" maxlength="120" value="' + esc(P.sprog) + '" placeholder="Fx dansk og engelsk">' +
+    '<span class="pt-lbl">Mest for</span><div class="tt-kat" style="flex-wrap:wrap">' + Object.keys(MESTFOR).map((m) => '<button type="button" data-pmest="' + m + '" aria-pressed="' + P.mestFor.includes(m) + '">' + MESTFOR[m] + '</button>').join('') + '</div>' +
+    sek('Sådan ser medlemmerne dig') +
+    '<div class="pr-kort"><div class="pr-hoved">' + (bill ? '<span class="pt-av" style="width:64px;height:64px;flex-basis:64px;background-image:url(' + bill + ')"></span>' : '<span class="pt-av" style="width:64px;height:64px;flex-basis:64px;font-size:22px">' + esc(ini(person.navn)) + '</span>') +
+    '<div class="pr-midt"><div class="pr-navn">' + esc(person.navn) + '</div><div class="pt-tr">' + P.sport.map((s) => st(SPORT[s])).concat(P.mestFor.map((m) => st(MESTFOR[m]))).join('') + '</div></div></div>' +
+    '<p class="pr-tekst">' + esc(P.om.replace(/\s+/g, ' ').slice(0, 160) || 'Skriv lidt om dig selv.') + '</p></div>' +
+    bund(d.til ? 'Profilen er synlig' : 'Profilen er ikke synlig', 'Gem, før du slår den til', 'Gem', 'pGem');
+  vis(h);
+  const felt = (id, k) => $(id).addEventListener('input', () => { P[k] = $(id).value; window.RTK_TRAVL = true; if (id === 'pOm') $('pOmTal').textContent = P.om.length + ' af 600 tegn'; });
+  felt('pOm', 'om'); felt('pBag', 'baggrund'); felt('pUdd', 'uddannelse'); felt('pGod', 'godTil'); felt('pSprog', 'sprog');
+  document.querySelectorAll('[data-psport]').forEach((b) => b.addEventListener('click', () => { const s = b.dataset.psport; P.sport = P.sport.includes(s) ? P.sport.filter((x) => x !== s) : P.sport.concat(s); window.RTK_TRAVL = true; tegnProfil(); }));
+  document.querySelectorAll('[data-pmest]').forEach((b) => b.addEventListener('click', () => { const s = b.dataset.pmest; P.mestFor = P.mestFor.includes(s) ? P.mestFor.filter((x) => x !== s) : P.mestFor.concat(s); window.RTK_TRAVL = true; tegnProfil(); }));
+  if ($('pFjern')) $('pFjern').addEventListener('click', () => { P.nyt = null; P.fjern = true; window.RTK_TRAVL = true; tegnProfil(); });
+  $('pFil').addEventListener('change', async () => {
+    const fil = $('pFil').files[0]; if (!fil) return;
+    msg('Gør billedet klar …');
+    try { P.nyt = await lavBilleder(fil); P.fjern = false; window.RTK_TRAVL = true; msg(''); tegnProfil(); }
+    catch (err) { msg(err.message, 'err'); }
+  });
+  // Kontakten skifter med det samme og gemmer bagefter. Fejler det, hopper den tilbage.
+  $('pTil').addEventListener('click', async () => {
+    if (S.sender) return;
+    const ny = !S.d.til;
+    // At slå fra lukker alle ledige tider, så det kræver to tryk med tekst om konsekvensen
+    if (!ny && S.to !== 'pTil') { S.to = 'pTil'; msg('Tryk igen for at skjule din profil. Alle dine ledige tider lukkes. Aftalte timer står.', 'err'); setTimeout(() => { if (S.to === 'pTil') { S.to = ''; msg(''); } }, 8000); return; }
+    S.to = '';
+    $('pTil').setAttribute('aria-checked', String(ny));
+    S.sender = true;
+    try { S.d = await motor('privat', 'tTil', { til: ny }, nyId()); msg(ny ? 'Din profil er synlig for medlemmerne' : 'Din profil er skjult, og dine ledige tider er lukket', 'okm'); }
+    catch (err) { msg(err.message, 'err'); }
+    finally { S.sender = false; tegnProfil(); }
+  });
+  $('pGem').addEventListener('click', async () => {
+    if (S.sender) return;
+    S.sender = true; msg('Gemmer …');
+    const data = { om: P.om, baggrund: P.baggrund, uddannelse: P.uddannelse, godTil: P.godTil, sprog: P.sprog, sport: P.sport, mestFor: P.mestFor };
+    if (P.nyt) data.billede = { stor: P.nyt.stor, mini: P.nyt.mini };
+    if (P.fjern) data.fjernBillede = true;
+    try { S.d = await motor('privat', 'tProfil', data, nyId()); S.profil = null; window.RTK_TRAVL = false; msg('Din profil er gemt', 'okm'); tegnProfil(); }
+    catch (err) { msg(err.message, 'err'); } finally { S.sender = false; }
+  });
+}
+/** Billedet gøres lille i browseren: et stort (højst 720 punkter) og et lille kvadratisk (96 punkter) som JPEG. */
+function lavBilleder(fil) {
+  return new Promise((ok, nej) => {
+    if (!/^image\//.test(fil.type)) return nej(new Error('Vælg et billede'));
+    const url = URL.createObjectURL(fil);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const tegn = (w, h, sx, sy, sw, sh, max) => {
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+        for (let q = 0.85; q >= 0.4; q -= 0.1) { const d = c.toDataURL('image/jpeg', q); if (d.length <= max) return d; }
+        throw new Error('Billedet er for stort. Vælg et andet.');
+      };
+      try {
+        const sk = Math.min(1, 720 / Math.max(img.width, img.height));
+        const stor = tegn(Math.round(img.width * sk), Math.round(img.height * sk), 0, 0, img.width, img.height, 390000);
+        const k = Math.min(img.width, img.height);
+        const mini = tegn(96, 96, (img.width - k) / 2, (img.height - k) / 2, k, k, 19000);
+        ok({ stor, mini });
+      } catch (e) { nej(e); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); nej(new Error('Billedet kan ikke læses. Vælg et andet.')); };
+    img.src = url;
+  });
+}
+
+// ------------------------------------------------------------ administration
+const BET_ST = { ok: ['Betalt rigtigt', 'ok'], venter: ['Før timen', ''], ingen: ['Ingen betaling', 'fejl'], forkert: ['Forkert beløb', 'vent'], tilbage: ['Skal betales tilbage', 'vent'] };
+async function hentAdm(md) {
+  S.adm = await motor('privat', 'aOversigt', { maaned: md || S.adm_md || '' });
+  S.adm_md = S.adm.maaned;
+}
+function admB(b) {
+  const [tx, sl] = BET_ST[b.betStatus] || [b.betStatus, ''];
+  return '<div class="kl-r"><div class="navn"><b>' + esc(b.nr + ' · ' + b.booker) + '</b><small>' + esc([b.traener.split(' ').slice(-1)[0], naar(b.start, b.slut), b.status === 'aftalt' ? '' : { holdt: 'holdt', udeblev: 'udeblevet', afbud: 'afbud', aflyst: 'aflyst' }[b.status]].filter(Boolean).join(' · ')) + '</small>' +
+    (b.paamindet ? '<small>Påmindet ' + esc(dagTekst(b.paamindet)) + '</small>' : '') + '</div><div style="text-align:right"><div class="tal" style="font-weight:800">' + esc(b.betalt ? kr(b.betalt) + ' af ' + kr(b.skyldig) : kr(b.skyldig)) + '</div>' + st(tx, sl) + '</div></div>' +
+    (b.status === 'aftalt' && b.start > Date.now() ? '<div style="padding:0 0 10px">' + toTryk('aaflys', b.nr, 'Aflys timen', 'Tryk igen: timen aflyses, og ' + (b.barnId ? 'forældrene' : b.booker.split(' ')[0]) + ' skylder intet') + '</div>' : '') +
+    (b.betStatus === 'tilbage' ? '<div style="padding:0 0 10px">' + toTryk('tilbage', b.nr, 'Betal ' + kr(b.tilTilbage) + ' tilbage', 'Tryk igen, når ' + kr(b.tilTilbage) + ' er betalt tilbage i MobilePay', 'info') + '</div>' : '');
+}
+async function tegnAdm() {
+  if (!S.adm) { vis(hero('Betalinger og løn', 'Administration · privattræning') + faner('adm') + '<p class="hint">Henter …</p>'); try { await hentAdm(); } catch (err) { msg(err.message, 'err'); return; } if (location.hash !== '#adm') return; }
+  const A = S.adm;
+  const grp = (k) => A.betalinger.filter((b) => b.betStatus === k);
+  const mangler = grp('ingen').concat(grp('forkert'));
+  let h = hero('Betalinger og løn', 'Administration · privattræning') + faner('adm') +
+    chips([[A.indlaest ? 'Transaktionsliste indlæst ' + dagTekst(A.indlaest) + ' kl. ' + kl(A.indlaest) : 'Ingen transaktionsliste indlæst endnu', !A.indlaest]]) +
+    '<div class="kl-boks"><b>Indlæs transaktionsliste fra MobilePay</b><p style="margin:6px 0 10px;font-size:14.5px">Hent listen for salgsstedet RTK Privattræning i erhvervsportalen som CSV. Betalinger med bookingnummeret (PT0147) i beskeden kobles af sig selv. En liste kan indlæses igen uden dubletter.</p>' +
+    '<label class="af-chip fyldt" style="cursor:pointer;justify-content:center;min-height:46px;width:100%">Vælg filen<input type="file" id="csvFil" accept=".csv,text/csv,text/plain" style="position:absolute;width:1px;height:1px;opacity:0"></label>' +
+    (S.csv ? '<p style="margin:10px 0 0">' + esc(S.csv.navn) + ': ' + S.csv.raekker.length + ' betalinger fundet.</p><div class="pt-knapper"><button type="button" class="af-chip fyldt" id="csvSend">Indlæs ' + S.csv.raekker.length + ' betalinger</button><button type="button" class="af-chip info" id="csvLuk">Fortryd</button></div>' : '') + '</div>';
+  h += sek('Mangler betaling · ' + mangler.length) + (mangler.length ? '<div class="kl-boks">' + mangler.map(admB).join('') + '<div style="margin-top:8px">' + toTryk('paamind', 'alle', 'Påmind dem, der mangler', 'Tryk igen: ' + mangler.length + (mangler.length === 1 ? ' får' : ' får') + ' en besked om at betale', 'info') + '</div></div>' : '<div class="pt-tom">Ingen mangler at betale.</div>');
+  const tilb = grp('tilbage');
+  if (tilb.length) h += sek('Skal betales tilbage · ' + tilb.length) + '<div class="kl-boks">' + tilb.map(admB).join('') + '</div>';
+  if (A.ukendte.length) h += sek('Betalinger uden bookingnummer · ' + A.ukendte.length) + '<div class="kl-boks">' + A.ukendte.map((p) => '<div class="kl-r"><div class="navn"><b>' + esc(p.navn || 'Ukendt') + '</b><small>' + esc(p.tid + ' · "' + p.besked + '"') + '</small></div><span class="tal">' + esc(kr(p.beloeb)) + '</span></div>' +
+    '<div class="pt-skriv" style="margin:0 0 12px"><input data-koblnr="' + esc(p.id) + '" placeholder="Fx PT0147" maxlength="8" aria-label="Bookingnummer til betalingen"><button type="button" class="af-chip info" data-kobl="' + esc(p.id) + '">Kobl</button></div>' +
+    '<div style="margin:0 0 12px">' + toTryk('ignorer', p.id, 'Ikke privattræning', 'Tryk igen: betalingen fjernes fra listen', 'info lille') + '</div>').join('') + '</div>';
+  const venter = grp('venter');
+  if (venter.length) h += sek('Kommende timer, ikke set betalt · ' + venter.length) + '<div class="kl-boks">' + venter.map(admB).join('') + '</div>';
+  const ok = grp('ok');
+  if (ok.length) h += '<details class="kl-boks"><summary style="font-weight:700;cursor:pointer;min-height:32px">Betalt rigtigt · ' + ok.length + '</summary>' + ok.map(admB).join('') + '</details>';
+  // Løn
+  const md = []; const nu = new Date(); for (let i = 0; i < 6; i++) { const d = new Date(nu.getFullYear(), nu.getMonth() - i, 15); md.push(d.getFullYear() + '-' + to(d.getMonth() + 1)); }
+  h += sek('Tillæg til lønnen') + '<select id="lonMd" aria-label="Måned">' + md.map((m) => '<option value="' + m + '"' + (m === A.maaned ? ' selected' : '') + '>' + MD_L[Number(m.slice(5)) - 1] + ' ' + m.slice(0, 4) + '</option>').join('') + '</select>';
+  h += A.loen.length ? '<div class="kl-boks" style="margin-top:10px"><table class="pt-tabel"><thead><tr><th>Træner</th><th>Timer</th><th>Med timeløn</th><th style="text-align:right">Tillæg</th></tr></thead><tbody>' +
+    A.loen.map((l) => '<tr><td>' + esc(l.navn) + '</td><td>' + String(l.timer).replace('.', ',') + '</td><td>' + String(l.medLoen).replace('.', ',') + '</td><td class="tal">' + esc(kr(l.tillaeg)) + '</td></tr>').join('') + '</tbody></table>' +
+    '<button type="button" class="af-chip info" id="lonCsv" style="margin-top:10px">Hent lønlisten som regneark</button></div>' : '<div class="pt-tom" style="margin-top:10px">Ingen holdte privattimer i måneden.</div>';
+  h += '<p class="po-note">Tillægget er 100 kr. pr. time. "Med timeløn" er timer uden for betalt vagttid, som også giver den normale timeløn. Udeblivelser og afbud under 24 timer før tæller med, medmindre træneren har frafaldet betalingen.</p>';
+  // Profiler
+  h += sek('Trænernes profiler') + (A.traenere.length ? '<div class="kl-boks">' + A.traenere.map((x) => '<div class="kl-r"><div class="navn"><b>' + esc(x.navn) + '</b><small>' + (x.skjult ? 'Skjult af en administrator' : x.synlig ? 'Synlig for medlemmerne' : x.til ? 'Slået til, men ikke træner længere' : 'Slået fra af træneren') + '</small></div>' +
+    (x.skjult ? '<button type="button" class="af-chip info lille" data-skjul="' + esc(x.id) + '" data-v="0">Vis igen</button>' : toTryk('skjul', x.id, 'Skjul', 'Tryk igen: medlemmerne kan ikke se ' + x.navn.split(' ')[0], 'info lille')) + '</div>').join('') + '</div>' : '<div class="pt-tom">Ingen trænere har skrevet en profil endnu.</div>');
+  vis(h);
+  const adm = async (navn, data, tekst) => {
+    if (S.sender) return; S.sender = true; msg('Gemmer …');
+    try { const r = await motor('privat', navn, data, nyId()); S.adm = r; msg(tekst || (navn === 'aPaamind' ? r.paamindet + (r.paamindet === 1 ? ' er påmindet' : ' er påmindet') : 'Gemt'), 'okm'); tegnAdm(); }
+    catch (err) { msg(err.message, 'err'); } finally { S.sender = false; }
+  };
+  $('csvFil').addEventListener('change', async () => {
+    const fil = $('csvFil').files[0]; if (!fil) return;
+    try { S.csv = { navn: fil.name, raekker: laesCsv(await fil.text()) }; msg(''); } catch (err) { S.csv = null; msg(err.message, 'err'); }
+    tegnAdm();
+  });
+  if ($('csvLuk')) $('csvLuk').addEventListener('click', () => { S.csv = null; tegnAdm(); });
+  if ($('csvSend')) $('csvSend').addEventListener('click', async () => {
+    if (S.sender) return; S.sender = true; msg('Indlæser …');
+    try { const r = await motor('privat', 'aIndlaes', { raekker: S.csv.raekker }, nyId()); S.csv = null; await hentAdm(); msg(r.nye + ' nye betalinger, ' + r.koblet + ' koblet, ' + r.ukendt + ' uden nummer, ' + r.igen + ' indlæst før' + (r.sprunget ? ', ' + r.sprunget + ' sprunget over (nul eller negative)' : '') + '.', 'okm'); tegnAdm(); }
+    catch (err) { msg(err.message, 'err'); } finally { S.sender = false; }
+  });
+  document.querySelectorAll('[data-kobl]').forEach((b) => b.addEventListener('click', () => { const v = document.querySelector('[data-koblnr="' + b.dataset.kobl + '"]').value.trim(); if (v) adm('aKobl', { id: b.dataset.kobl, nr: v }, 'Betalingen er koblet'); }));
+  document.querySelectorAll('[data-skjul]').forEach((b) => b.addEventListener('click', () => adm('aSkjul', { pid: b.dataset.skjul, skjul: false })));
+  $('lonMd').addEventListener('change', async () => { try { await hentAdm($('lonMd').value); tegnAdm(); } catch (err) { msg(err.message, 'err'); } });
+  if ($('lonCsv')) $('lonCsv').addEventListener('click', () => {
+    const r = [['Træner', 'Person-id', 'Måned', 'Privattimer', 'Timer', 'Timer med timeløn', 'Tillæg kr.']].concat(A.loen.map((l) => [l.navn, l.pid, A.maaned, l.antal, String(l.timer).replace('.', ','), String(l.medLoen).replace('.', ','), l.tillaeg]));
+    const csv = '﻿' + r.map((x) => x.map((v) => '"' + String(v).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'privattimer_loen_' + A.maaned + '.csv'; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  });
+  bindToTryk((hv, nr) => {
+    if (hv === 'tilbage') adm('aTilbage', { nr }, 'Tilbagebetalingen er registreret, og medlemmet har fået besked');
+    if (hv === 'skjul') adm('aSkjul', { pid: nr, skjul: true }, 'Profilen er skjult');
+    if (hv === 'paamind') adm('aPaamind', {});
+    if (hv === 'ignorer') adm('aKobl', { id: nr, nr: '' }, 'Betalingen er markeret som ikke privattræning');
+    if (hv === 'aaflys') adm('aAflys', { nr }, 'Timen er aflyst, og medlemmet har fået besked');
+  });
+}
+/** Transaktionslisten som CSV: semikolon, komma eller tabulator, med overskrifter. Kolonnerne findes på navnet. */
+function laesCsv(tekst) {
+  tekst = String(tekst).replace(/^﻿/, '');
+  const foerste = tekst.split(/\r?\n/)[0] || '';
+  const sep = [';', '\t', ','].sort((a, b) => foerste.split(b).length - foerste.split(a).length)[0];
+  const rk = []; let felt = '', linje = [], i = 0, cit = false;
+  for (; i < tekst.length; i++) {
+    const c = tekst[i];
+    if (cit) { if (c === '"' && tekst[i + 1] === '"') { felt += '"'; i++; } else if (c === '"') cit = false; else felt += c; continue; }
+    if (c === '"') cit = true; else if (c === sep) { linje.push(felt); felt = ''; } else if (c === '\n' || c === '\r') { if (c === '\r' && tekst[i + 1] === '\n') i++; linje.push(felt); rk.push(linje); linje = []; felt = ''; } else felt += c;
+  }
+  if (felt || linje.length) { linje.push(felt); rk.push(linje); }
+  const hoved = (rk.shift() || []).map((x) => x.trim().toLowerCase());
+  const find = (...ord) => hoved.findIndex((h) => ord.some((o) => h.indexOf(o) >= 0));
+  const iB = find('beløb', 'belob', 'amount'), iM = find('besked', 'message', 'kommentar', 'comment', 'tekst', 'note'), iN = find('navn', 'name', 'afsender', 'kunde'), iT = find('dato', 'date', 'tidspunkt', 'tid', 'time'), iI = find('transaktions-id', 'transaktion', 'transaction', 'reference', 'id');
+  if (iB < 0 || iM < 0) throw new Error('Filen mangler kolonnerne beløb og besked. Send filen til Claude, så kan formatet læses.');
+  return rk.filter((r) => r.length > 1 && r[iB] && r[iB].trim()).map((r) => ({ beloeb: r[iB].trim(), besked: r[iM] || '', navn: iN >= 0 ? r[iN] : '', tid: iT >= 0 ? r[iT] : '', id: iI >= 0 && iI !== iB ? r[iI] : '' }));
+}
+
+start();
+</script>
+<script src="../velkomst.js?v=02d869848285"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="90c99e9b2f35">
+<meta name="rtk-version" content="33037e9040b7">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=ce10d07b5d31">
+<link rel="stylesheet" href="../rtk.css?v=492102879f3d">
 </head>
 <body>
 <header class="top">
@@ -113,6 +113,8 @@ const IKON = {
   grupper: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="15" cy="15" r="6"/><circle cx="31" cy="17" r="5"/><path d="M4 37c0-7 5-11 11-11s11 4 11 11"/><path d="M27 26c1-.6 2.4-1 4-1 5 0 9 3.5 9 10"/></svg>',
   liste: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><rect x="9" y="7" width="26" height="33" rx="2"/><rect x="16" y="4" width="12" height="6" rx="1.5"/><path d="M14 19l2.5 2.5 4.5-5"/><line x1="24" y1="19" x2="30" y2="19"/><path d="M14 28l2.5 2.5 4.5-5"/><line x1="24" y1="28" x2="30" y2="28"/></svg>',
   toej: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5" stroke-linejoin="round"><path d="M16 6l-10 6 4 8 5-2v20h14V18l5 2 4-8-10-6c-1 3-3.5 5-6 5s-5-2-6-5z"/><line x1="19" y1="28" x2="25" y2="28"/></svg>',
+  // Privattimer (22. oktober 2026): en træner og en spiller ved nettet
+  privat: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="9" r="3.5"/><path d="M11 13v13M11 17l-5 5M11 17l6-3M11 26l-4 10M11 26l4 10"/><circle cx="33" cy="11" r="3"/><path d="M33 14v11M33 18l5 4M33 18l-5 3M33 25l-3 9M33 25l3 9"/><line x1="22" y1="20" x2="22" y2="38" stroke-dasharray="2 2"/><circle cx="22" cy="14" r="1.6"/></svg>',
   ketsjer: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><ellipse cx="17" cy="16" rx="11" ry="13"/><line x1="9" y1="10" x2="25" y2="10"/><line x1="7" y1="16" x2="27" y2="16"/><line x1="9" y1="22" x2="25" y2="22"/><line x1="12" y1="4" x2="12" y2="28"/><line x1="17" y1="3" x2="17" y2="29"/><line x1="22" y1="4" x2="22" y2="28"/><line x1="24" y1="27" x2="38" y2="41" stroke-width="3"/></svg>'
 };
 
@@ -129,6 +131,9 @@ const FELTER = [
     tekst: () => 'Vælg dit arbejdstøj, når klubben giver dig en tildeling.' },
   { afsnit: 'arbejde', navn: 'Opstrengere', side: 'opstrengning.html', ikon: 'ketsjer', roller: ['opstrenger'],
     tekst: () => 'Kø, tøm skabet, meld klar, måneden og strengelager.' },
+  // Privattimer (Lars 22. oktober 2026): ledige tider, forespørgsler, kvittering og trænerens profil
+  { afsnit: 'arbejde', navn: 'Privattimer', side: 'privattimer.html', ikon: 'privat', roller: ['traener', 'cheftraener'],
+    tekst: () => 'Dine privattimer, ledige tider, forespørgsler fra medlemmer og din trænerprofil.' },
   // Pladsholder (Lars 14. oktober kl. 21.43): trænerne registrerer deltagerne ved hver holdtræning, også nye.
   { afsnit: 'arbejde', navn: 'Deltagerregistrering', snart: true, ikon: 'liste', roller: ['traener', 'cheftraener'],
     tekst: () => 'Registrér deltagerne ved hver holdtræning, også nye spillere.' },
@@ -136,6 +141,8 @@ const FELTER = [
     tekst: () => 'Kontoen hos Sports Group, nye tildelinger, godkendelse og bestilling hos Carsten.' },
   { afsnit: 'admin', navn: 'Bolde: lager, forbrug og bestilling', side: 'bolde.html#forbrug', ikon: 'bold', roller: ['admin'],
     tekst: () => 'Forbrug pr. træner og hold, optælling og svind, bestillingsforslag.' },
+  { afsnit: 'admin', navn: 'Privattræning: betalinger og løn', side: 'privattimer.html#adm', ikon: 'privat', roller: ['admin'],
+    tekst: () => 'Betalinger fra MobilePay, tilbagebetalinger, tillæg til lønnen og trænernes profiler.' },
   { afsnit: 'admin', navn: 'Personer og roller', side: 'personer.html', ikon: 'personer', roller: ['admin'],
     tekst: () => 'Medarbejdere og frivillige med roller, login og hvem der er stoppet.' },
   { afsnit: 'admin', navn: 'Grupper i klubben', side: 'grupper.html', ikon: 'grupper', roller: ['admin'],
