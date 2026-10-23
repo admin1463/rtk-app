@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="f075cbf87f54">
+<meta name="rtk-version" content="e4a2ebfb2102">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -395,7 +395,8 @@ window.TEKSTER = {
 };
 </script>
 <script src="konfig.js?v=1301d6285ee2"></script>
-<script src="konto.js?v=5df1d16d494c"></script>
+<script src="konto.js?v=562e94f1d379"></script>
+<script src="visning.js?v=9cd5651130e5"></script>
 <script src="sprog.js?v=1976d8c45489"></script>
 <script src="velkomst.js?v=02d869848285"></script>
 <script>
@@ -478,6 +479,8 @@ window.RTK_TRAVL = false;
 
 // ------------------------------------------------------------ login og data
 function visLogin() {
+  stopVisning(); S.lf = S.lp = 0;
+  if (window.RTKV) RTKV.logUd();
   S.data = null; S.profil = {}; S.traad = {}; S.form = null;
   $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
   K.loginKort($('login'), { onLogin: () => { start(); } });
@@ -485,14 +488,71 @@ function visLogin() {
 K.vedLogud(visLogin);
 $('logud').addEventListener('click', () => K.logud());
 
+/** Henter det nyeste fra motoren. Giver true, hvis det er andet end det, siden viser. */
 async function hentData() {
-  S.data = await K.motor('privat', 'start');
+  const d = await K.motor('privat', 'start');
+  // Er en del fra Firebase nyere end motorens svar, beholdes den del (gennemgangen V3)
+  const l = d.laest || 0;
+  const fNy = V.f && S.lf > l, pNy = V.p && S.lp > l;
+  const p = pNy ? V.p : d;
+  const ny = { laest: l, mig: p.mig, pris: fNy ? V.f.pris : d.pris,
+    traenere: fNy ? V.f.traenere.filter((tr) => tr.id !== p.mig.id) : d.traenere,
+    ledige: fNy ? (V.f.ledige || []).filter((x) => x.pid !== p.mig.id) : d.ledige, mine: p.mine };
+  if (!fNy) S.lf = l;
+  if (!pNy) S.lp = l;
+  const aendret = !S.data || udenLaest(S.data) !== udenLaest(ny);
+  S.data = ny;
   $('hvem').textContent = t('kLoggetInd', { navn: S.data.mig.navn });
+  return aendret;
 }
+const udenLaest = (o) => JSON.stringify(o, (k, v) => (k === 'laest' ? undefined : v));
+/** Må siden tegnes igen nu? Ikke midt i en formular, et felt med fokus eller mens der gemmes (gennemgangen M8). */
+function kanTegne() {
+  const a = document.activeElement;
+  if (a && $('vis') && $('vis').contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return false;
+  return (!S.form || !S.form.aendret) && !window.RTK_TRAVL && !S.sender;
+}
+/** Tegn igen og behold en besked, der står (fx en fejl), så en opdatering fra Firebase ikke visker den væk. */
+function tegnBevar() {
+  const m = $('msg'), tx = m.textContent, kl = m.className;
+  tegn();
+  if (tx && tx !== t('henter') && !m.textContent) { m.textContent = tx; m.className = kl; }
+}
+
+// Det, motoren sidst lagde i Firebase, vises med det samme, og ændringer fra trænerne kommer af sig selv (trin 1, 23. oktober).
+// Det fælles (trænere, ledige tider, pris) og ens eget (timer, forespørgsler) er to dokumenter. Hver del vises kun, hvis den er nyere.
+const V = { f: null, p: null, stop: [] };
+function fraVisning(del, x) {
+  if (!x || typeof x !== 'object') return;
+  const k = del === 'f' ? 'lf' : 'lp';
+  if (S.data && S[k] && x.laest && x.laest <= S[k]) return;
+  V[del] = x; S[k] = x.laest || 0;
+  const f = V.f || (S.data && { pris: S.data.pris, traenere: S.data.traenere, ledige: S.data.ledige });
+  const p = V.p || (S.data && { mig: S.data.mig, mine: S.data.mine });
+  if (!f || !p || !p.mig || !p.mine || !Array.isArray(f.traenere)) return;
+  const d = { laest: S.data ? S.data.laest : (x.laest || 0), mig: p.mig, pris: f.pris,
+    traenere: f.traenere.filter((tr) => tr.id !== p.mig.id), ledige: (f.ledige || []).filter((l) => l.pid !== p.mig.id), mine: p.mine };
+  if (S.data && udenLaest(S.data) === udenLaest(d)) return;
+  const foerste = !S.data;
+  S.data = d;
+  $('hvem').textContent = t('kLoggetInd', { navn: d.mig.navn });
+  if (foerste && $('msg').textContent === t('henter')) K.besked($('msg'), '');
+  if (foerste || kanTegne()) tegnBevar();
+}
+function lytVisning() {
+  stopVisning();
+  if (!window.RTKV) return;
+  V.stop.push(RTKV.lyt(K.motor, 'privat', (x) => fraVisning('f', x), { faelles: true }));
+  V.stop.push(RTKV.lyt(K.motor, 'privat', (x) => fraVisning('p', x)));
+}
+function stopVisning() { V.stop.forEach((f) => { try { f(); } catch (e) {} }); V.stop = []; V.f = null; V.p = null; }
+
 async function start() {
   $('loginDel').classList.add('hidden'); $('indeDel').classList.remove('hidden');
-  K.besked($('msg'), t('henter'));
-  try { await hentData(); K.besked($('msg'), ''); tegn(); }
+  if (!S.data) K.besked($('msg'), t('henter'));
+  lytVisning();
+  try { const ny = await hentData(); if ($('msg').textContent === t('henter')) K.besked($('msg'), ''); if (ny && kanTegne()) tegnBevar(); }
+  // Viser siden det, der lå i Firebase, står fejlen under, så man ved, at det nyeste ikke kunne hentes (gennemgangen M7)
   catch (err) { if (K.loggetInd()) K.besked($('msg'), fejl(err), 'err'); }
 }
 // Data hentes igen i baggrunden, når siden skifter visning eller får fokus igen
@@ -500,7 +560,7 @@ let friskTid = 0;
 async function frisk() {
   if (!K.loggetInd() || !S.data || Date.now() - friskTid < 4000) return;
   friskTid = Date.now();
-  try { await hentData(); if ((!S.form || !S.form.aendret) && !window.RTK_TRAVL) tegn(); } catch (err) { /* vises ved næste handling */ }
+  try { if (await hentData() && kanTegne()) tegnBevar(); } catch (err) { /* vises ved næste handling */ }
 }
 addEventListener('hashchange', () => { S.form = null; S.vaelg = null; S.afbudKlar = ''; S.flytAaben = false; window.RTK_TRAVL = false; tegn(); scrollTo(0, 0); frisk(); });
 addEventListener('focus', frisk);
@@ -832,7 +892,7 @@ function tegnBooking(nr) {
   vis(h);
   if ($('baneGem')) $('baneGem').addEventListener('click', async () => {
     if (S.sender) return; S.sender = true; K.besked($('baneMsg'), t('gemmer'));
-    try { await K.motor('privat', 'bane', { nr, bane: $('bane').value }, K.nyId()); await hentData(); tegnBooking(nr); K.besked($('baneMsg'), t('gemt'), 'okm'); }
+    try { await K.motor('privat', 'bane', { nr, bane: $('bane').value }, K.nyId()); window.RTK_TRAVL = false; await hentData(); tegnBooking(nr); K.besked($('baneMsg'), t('gemt'), 'okm'); }
     catch (err) { K.besked($('baneMsg'), fejl(err), 'err'); } finally { S.sender = false; }
   });
   if ($('bane')) $('bane').addEventListener('input', () => { window.RTK_TRAVL = true; });

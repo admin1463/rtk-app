@@ -209,6 +209,9 @@
     if (hent('rtk.token')) motor('kerne', 'logud', hent('rtk.push.id') ? { pushId: hent('rtk.push.id') } : {}).catch(function () {});
     gem('rtk.push.id', null);
     gem('rtk.token', null);
+    // Firebase-login og den huskede person hører til den, der logger ud (visningerne, gennemgangen 23. oktober V2)
+    gem('rtk.mig', null);
+    if (!window.RTKV) { gem('rtk.gr.uid', null); gem('rtk.gr.tok', null); try { indexedDB.deleteDatabase('firebaseLocalStorageDb'); } catch (e) {} }
     if (paaLogud) paaLogud();
   }
 

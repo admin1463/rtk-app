@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="6842a4e91b22">
+<meta name="rtk-version" content="799255404ebc">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -295,6 +295,7 @@ $('loginForm').addEventListener('submit', async (e) => {
 
 $('logud').addEventListener('click', () => {
   if (token) motor('kerne', 'logud').catch(() => {});
+  glemForrige();
   til = ''; history.replaceState(null, '', location.pathname);
   visLogin('');
 });
@@ -303,7 +304,9 @@ $('logud').addEventListener('click', () => {
 // Personen huskes på telefonen, så siden går i gang med det samme, og motoren tjekker bagefter (Lars 23. oktober kl. 08.41: siderne var for langsomme)
 function migHusket() { try { const m = JSON.parse(hent('rtk.mig') || 'null'); return m && token && m.t === token.slice(-16) ? m.p : null; } catch (e) { return null; } }
 function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', JSON.stringify({ t: token.slice(-16), p: p })); return p; }); }
-if (!token) visLogin(qs.get('igen') ? 'Log ind igen.' : '');
+// Ingen er logget ind: intet fra den forrige må blive liggende på telefonen (Firebase-login og den huskede person, 23. oktober)
+function glemForrige() { try { ['rtk.mig', 'rtk.gr.uid', 'rtk.gr.tok'].forEach((k) => localStorage.removeItem(k)); indexedDB.deleteDatabase('firebaseLocalStorageDb'); } catch (e) {} }
+if (!token) { glemForrige(); visLogin(qs.get('igen') ? 'Log ind igen.' : ''); }
 else { const husket = migHusket(); if (husket) { visFelter(husket); migHent().then((p) => { if (JSON.stringify(p) !== JSON.stringify(husket)) visFelter(p); }).catch(() => {}); } else migHent().then(visFelter).catch(() => {}); }
 </script>
 <script src="../velkomst.js?v=02d869848285"></script>

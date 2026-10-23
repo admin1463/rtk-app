@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="60bbae61c89b">
+<meta name="rtk-version" content="823e749f86ec">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -60,6 +60,7 @@
 </footer>
 
 <script src="../konfig.js?v=1301d6285ee2"></script>
+<script src="../visning.js?v=9cd5651130e5"></script>
 <script>
 // Privattimer for trænere og administrationen (personale/privattimer.html). Bygges ind af privattimer.py. 22. oktober 2026.
 // Træneren: timer at kvittere, kommende timer, ledige tider (afstemningens ugestribe og tidspiller), forespørgsler med tidsforslag,
@@ -112,8 +113,10 @@ function logUd(udloebet) {
   // Kun én gang, når flere kald samtidig får 'Log ind igen' (den huskede person, 23. oktober)
   if (window.RTK_UD) return; window.RTK_UD = true;
   if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
-  token = ''; person = null; gem('rtk.token', null);
-  location.replace(udloebet ? './?til=' + encodeURIComponent('privattimer.html' + location.hash) + '&igen=1' : './');
+  token = ''; person = null; gem('rtk.token', null); gem('rtk.mig', null);
+  // Firebase-login glemmes, før siden skifter (højst et sekund, gennemgangen V2)
+  const ud = window.RTKV ? RTKV.logUd() : Promise.resolve();
+  ud.then(() => location.replace(udloebet ? './?til=' + encodeURIComponent('privattimer.html' + location.hash) + '&igen=1' : './'));
 }
 $('logud').addEventListener('click', () => logUd(false));
 function besked(el, t, s) { if (!el) return; el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
@@ -131,23 +134,54 @@ async function start() {
     // Timerne hentes samtidig med personen, så siden kun venter på ét kald
     const tP = motor('privat', 'tStart').then((d) => ({ d }), (e) => ({ e }));
     const husket = migHusket();
-    if (husket) { person = husket; migHent().catch(() => {}); } else person = await migHent();
+    // Er rollerne ændret siden sidst (fx ikke længere administrator), genindlæses siden med de rigtige (gennemgangen V1)
+    if (husket) { person = husket; migHent().then((p) => { if (JSON.stringify(p.roller || []) !== JSON.stringify(husket.roller || [])) location.reload(); }).catch(() => {}); } else person = await migHent();
     if (!erTraener()) { $('omraade').classList.remove('hidden'); $('hvem').textContent = 'Logget ind som ' + person.navn; $('vis').innerHTML = '<div class="pt-tom">Kun for trænere og administratorer.</div>'; return; }
     $('hvem').textContent = 'Logget ind som ' + person.navn;
     $('omraade').classList.remove('hidden');
-    msg('Henter …');
+    // Det, motoren sidst lagde i Firebase, vises med det samme. Svaret fra motoren og ændringer fra andre kommer bagefter (trin 1, 23. oktober)
+    if (window.RTKV) {
+      RTKV.lyt(motor, 'privatTraener', (d) => { if (nyD(d)) visNy(); });
+      if (erAdmin()) RTKV.lyt(motor, 'privatAdmin', (a) => {
+        if (S.adm_md && a.maaned !== S.adm_md) return;
+        if (S.adm && S.adm.laest && a.laest && a.laest <= S.adm.laest) return;
+        S.adm = a; S.adm_md = a.maaned;
+        if (location.hash === '#adm' && !window.RTK_TRAVL && !S.sender) tegnAdm();
+      });
+    }
+    if (!S.d) msg('Henter …');
     const r = await tP;
-    if (r.e) throw r.e;
-    S.d = r.d;
-    msg('');
-    tegn();
+    if (r.e) { if (!S.d) throw r.e; return; }
+    if (nyD(r.d)) visNy(); else if (msgTekst() === 'Henter …') msg('');
   } catch (err) { $('omraade').classList.remove('hidden'); msg(err.message, 'err'); }
 }
+/** Nye data fra Firebase eller motoren: kun hvis de er nyere end det, siden viser, og faktisk ændret. */
+function nyD(d) {
+  if (!d || typeof d !== 'object' || !Array.isArray(d.forespoergsler)) return false;
+  if (S.d && S.d.laest && d.laest && d.laest < S.d.laest) return false;
+  // Visningen i Firebase har ikke det store profilbillede: behold det, siden har (gennemgangen V5)
+  if (d.billedeUdeladt) {
+    d = Object.assign({}, d); delete d.billedeUdeladt;
+    if (d.profil && S.d && S.d.profil && S.d.profil.billede) d.profil = Object.assign({}, d.profil, { billede: S.d.profil.billede });
+  }
+  if (S.d && udenLaest(S.d) === udenLaest(d)) return false;
+  S.d = d;
+  return true;
+}
+const udenLaest = (o) => JSON.stringify(o, (k, v) => (k === 'laest' ? undefined : v));
+const msgTekst = () => ($('msg') ? $('msg').textContent : '');
+/** Må siden tegnes igen nu? Ikke mens et felt har fokus, der skrives, eller der gemmes (gennemgangen M8). */
+function kanTegne() {
+  const a = document.activeElement;
+  if (a && $('vis') && $('vis').contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return false;
+  return !window.RTK_TRAVL && !S.sender;
+}
+function visNy() { if (msgTekst() === 'Henter …') msg(''); if (!S.vist || kanTegne()) { S.vist = true; tegn(); } }
 let friskTid = 0;
 async function frisk() {
   if (!S.d || Date.now() - friskTid < 4000) return;
   friskTid = Date.now();
-  try { S.d = await motor('privat', 'tStart'); if (!window.RTK_TRAVL) tegn(); } catch (e) { /* vises ved næste handling */ }
+  try { if (nyD(await motor('privat', 'tStart')) && !window.RTK_TRAVL) tegn(); } catch (e) { /* vises ved næste handling */ }
 }
 addEventListener('hashchange', () => { S.to = ''; S.ed = null; window.RTK_TRAVL = false; if (!S.sender) msg(''); tegn(); scrollTo(0, 0); frisk(); });
 addEventListener('focus', frisk);
@@ -162,7 +196,7 @@ const tilbage = (href, tekst) => '<a class="gr-tilbage" href="' + href + '">&#85
 const bund = (b, s, knap, id, svag) => '<div class="af-bund"><div class="info"><b>' + esc(b) + '</b>' + esc(s) + '</div><button type="button" id="' + id + '"' + (svag ? ' class="svag"' : '') + '>' + esc(knap) + '</button></div>';
 const personer = (b) => [b.spiller].concat(b.andre || []).join(' og ');
 function faner(aktiv) {
-  const F = [['', 'Timer'], ['aabn', 'Åbne tider'], ['foresp', 'Forespørgsler' + (S.d.forespoergsler.length ? ' · ' + S.d.forespoergsler.length : '')], ['maaned', 'Måneden'], ['profil', 'Min profil']];
+  const F = [['', 'Timer'], ['aabn', 'Åbne tider'], ['foresp', 'Forespørgsler' + (S.d && S.d.forespoergsler.length ? ' · ' + S.d.forespoergsler.length : '')], ['maaned', 'Måneden'], ['profil', 'Min profil']];
   if (erAdmin()) F.push(['adm', 'Betalinger og løn']);
   return '<div class="tt-kat" role="tablist">' + F.map(([h, n]) => '<a role="tab" href="#' + h + '" class="af-chip info lille" style="border-radius:999px;min-height:40px;padding:6px 14px;font-size:14px;' + (h === aktiv ? 'background:var(--pink);color:#FFFFFF;border-color:var(--pink)' : '') + '" aria-selected="' + (h === aktiv) + '">' + esc(n) + '</a>').join('') + '</div>';
 }
@@ -569,6 +603,8 @@ function admB(b) {
 }
 async function tegnAdm() {
   if (!S.adm) { vis(hero('Betalinger og løn', 'Administration · privattræning') + faner('adm') + '<p class="hint">Henter …</p>'); try { await hentAdm(); } catch (err) { msg(err.message, 'err'); return; } if (location.hash !== '#adm') return; }
+  // Kom oversigten fra Firebase, hentes den nyeste fra motoren én gang i baggrunden
+  else if (!S.admFrisk) { S.admFrisk = true; hentAdm().then(() => { if (location.hash === '#adm' && !window.RTK_TRAVL && !S.sender) tegnAdm(); }).catch(() => {}); }
   const A = S.adm;
   const grp = (k) => A.betalinger.filter((b) => b.betStatus === k);
   const mangler = grp('ingen').concat(grp('forkert'));
