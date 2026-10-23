@@ -39,6 +39,7 @@
     'Kontoen er ikke aktiv. Skriv til kontakt@roskildetennisklub.dk.': 'The account is not active. Please write to kontakt@roskildetennisklub.dk.',
     'Systemet er optaget. Prøv igen om et øjeblik.': 'The system is busy. Please try again in a moment.',
     'Det bliver stadig gemt. Vent et øjeblik, og prøv igen.': 'It is still being saved. Please wait a moment and try again.',
+    'Forbindelsen blev afbrudt undervejs. Prøv igen.': 'The connection was interrupted. Please try again.',
     'Dine forældre bestemmer, hvordan beskederne kommer, indtil du fylder 18.': 'Your parents decide how messages are sent until you turn 18.',
     'Vælg notifikation, sms eller mail': 'Choose notification, text message or email',
     'Vi har ingen mail til dig. Skriv til klubben, hvis den skal på.': 'We have no email address for you. Write to the club if it should be added.',
@@ -95,7 +96,7 @@
   }
 
   /** Ét kald til motoren med sessionen. Udløbet session sender tilbage til login. */
-  async function motor(modul, handling, data, id) {
+  async function motor(modul, handling, data, id, forsoeg) {
     var res;
     try {
       res = await fetch(KONFIG.motor, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -105,6 +106,9 @@
     // Google svarer af og til med en HTML-side (ende til ende-testen 20. oktober)
     try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
     if (!svar.ok) {
+      // Telefonen kan lave kaldet om til en GET undervejs (iPhone 22. oktober). Motoren svarer så igen: true, og kaldet sendes igen.
+      // Samme registrerings-id, så intet gemmes to gange.
+      if (svar.igen && (forsoeg || 0) < 2) { await new Promise(function (ok) { setTimeout(ok, 500); }); return motor(modul, handling, data, id, (forsoeg || 0) + 1); }
       if (svar.login) { gem('rtk.token', null); if (paaLogud) paaLogud(); }
       throw new Error(svar.fejl || 'Noget gik galt');
     }
