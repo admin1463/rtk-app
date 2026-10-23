@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="d46d9339911d">
+<meta name="rtk-version" content="60bbae61c89b">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -109,6 +109,8 @@ async function motor(modul, handling, data, id, forsoeg) {
   return svar.data;
 }
 function logUd(udloebet) {
+  // Kun én gang, når flere kald samtidig får 'Log ind igen' (den huskede person, 23. oktober)
+  if (window.RTK_UD) return; window.RTK_UD = true;
   if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
   token = ''; person = null; gem('rtk.token', null);
   location.replace(udloebet ? './?til=' + encodeURIComponent('privattimer.html' + location.hash) + '&igen=1' : './');
@@ -120,15 +122,23 @@ const erAdmin = () => !!person && (person.roller || []).indexOf('admin') >= 0;
 const erTraener = () => !!person && (person.roller || []).some((r) => r === 'admin' || r === 'traener' || r === 'cheftraener');
 
 // ------------------------------------------------------------ start
+// Personen huskes på telefonen, så siden går i gang med det samme, og motoren tjekker bagefter (Lars 23. oktober kl. 08.41: siderne var for langsomme)
+function migHusket() { try { const m = JSON.parse(hent('rtk.mig') || 'null'); return m && token && m.t === token.slice(-16) ? m.p : null; } catch (e) { return null; } }
+function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', JSON.stringify({ t: token.slice(-16), p: p })); return p; }); }
 async function start() {
   if (!token) { location.replace('./?til=' + encodeURIComponent('privattimer.html' + location.hash)); return; }
   try {
-    person = await motor('kerne', 'mig');
+    // Timerne hentes samtidig med personen, så siden kun venter på ét kald
+    const tP = motor('privat', 'tStart').then((d) => ({ d }), (e) => ({ e }));
+    const husket = migHusket();
+    if (husket) { person = husket; migHent().catch(() => {}); } else person = await migHent();
     if (!erTraener()) { $('omraade').classList.remove('hidden'); $('hvem').textContent = 'Logget ind som ' + person.navn; $('vis').innerHTML = '<div class="pt-tom">Kun for trænere og administratorer.</div>'; return; }
     $('hvem').textContent = 'Logget ind som ' + person.navn;
     $('omraade').classList.remove('hidden');
     msg('Henter …');
-    S.d = await motor('privat', 'tStart');
+    const r = await tP;
+    if (r.e) throw r.e;
+    S.d = r.d;
     msg('');
     tegn();
   } catch (err) { $('omraade').classList.remove('hidden'); msg(err.message, 'err'); }
