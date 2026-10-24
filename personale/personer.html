@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="e1c56a7d5b2c">
+<meta name="rtk-version" content="b4c7a77dcb71">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -59,6 +59,7 @@
 </footer>
 
 <script src="../konfig.js?v=1301d6285ee2"></script>
+<script src="../visning.js?v=9cd5651130e5"></script>
 <script>
 // Personer og roller under Administration (Lars 19. oktober kl. 17.36 til 17.47, mockup godkendt 17.46).
 // Kun administratorer. Medlemskab og stamdata kommer på sigt fra ForeningsLet og rettes ikke her. Roller styres hos os:
@@ -89,14 +90,36 @@ async function motor(modul, handling, data, id) {
   // Google svarer af og til med en HTML-side. Så er det en forbindelsesfejl, ikke en teknisk fejltekst (ende til ende-testen 20. oktober)
   try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
   if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  SIDST[handling] = svar.tid || 0;
+  if (['fjernRolle', 'stop', 'logudAlle'].indexOf(handling) >= 0) LAEST.liste = Math.max(LAEST.liste || 0, svar.tidSlut || svar.tid || 0);
   return svar.data;
+}
+// Visningerne i Firebase (trin 1, Lars 24. oktober kl. 10.41): siden viser det, motoren sidst lagde i Firebase, med det samme,
+// og henter det nyeste fra motoren bagefter. Feltet laest (motorens tid) afgør, hvad der er nyest. Efter at have gemt tæller
+// kun kopier lavet efter, at gemningen var færdig (tidSlut).
+const SIDST = {}, LAEST = {};
+function fraVis(navn, x, vis) {
+  if (!x || !x.laest || x.svar === undefined) return;
+  if (LAEST[navn] && x.laest <= LAEST[navn]) return;
+  LAEST[navn] = x.laest;
+  try { vis(x.svar); } catch (e) { /* motorens svar kommer alligevel */ }
+}
+const nyereEnd = (navn, handling) => { const t = SIDST[handling] || 0; if (LAEST[navn] && t < LAEST[navn]) return false; LAEST[navn] = t; return true; };
+function lytVisninger() {
+  if (!window.RTKV) return;
+  RTKV.lyt(motor, 'persListe', (x) => fraVis('liste', x, (d) => {
+    S.liste = d.personer;
+    const a = document.activeElement;
+    if ((!location.hash || location.hash === '#') && !(a && a.closest && a.closest('#vis') && a.tagName === 'INPUT')) vListe();
+  }));
 }
 function logUd(udloebet) {
   // Kun én gang, når flere kald samtidig får 'Log ind igen' (den huskede person, 23. oktober)
   if (window.RTK_UD) return; window.RTK_UD = true;
   if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
-  token = ''; person = null; gem('rtk.token', null);
-  location.replace(udloebet ? './?til=' + encodeURIComponent('personer.html' + location.hash) + '&igen=1' : './');
+  token = ''; person = null; gem('rtk.token', null); gem('rtk.mig', null);
+  // Firebase-login glemmes, før siden skifter (højst et sekund)
+  (window.RTKV ? RTKV.logUd() : Promise.resolve()).then(() => location.replace(udloebet ? './?til=' + encodeURIComponent('personer.html' + location.hash) + '&igen=1' : './'));
 }
 $('logud').addEventListener('click', () => logUd(false));
 
@@ -241,8 +264,14 @@ function bekraeft(pid, slags, rolle) {
 }
 
 async function hentListe() {
-  try { const d = await motor('personer', 'liste'); S.liste = d.personer; if (!location.hash || location.hash === '#') vListe(); }
-  catch (err) { if (!location.hash || location.hash === '#') vis(hero('Administration', 'Personer og roller') + '<p class="msg err" role="alert">' + esc(err.message) + '</p>', false); }
+  try {
+    const d = await motor('personer', 'liste');
+    if (!nyereEnd('liste', 'liste')) return;
+    S.liste = d.personer;
+    const a = document.activeElement;
+    if ((!location.hash || location.hash === '#') && !(a && a.closest && a.closest('#vis') && a.tagName === 'INPUT' && S.liste)) vListe();
+  }
+  catch (err) { if ((!location.hash || location.hash === '#') && !S.liste) vis(hero('Administration', 'Personer og roller') + '<p class="msg err" role="alert">' + esc(err.message) + '</p>', false); }
 }
 async function hentEn(pid) {
   try { S.en[pid] = await motor('personer', 'en', { pid }); }
@@ -270,6 +299,7 @@ function start() {
   $('omraade').classList.remove('hidden');
   $('hvem').textContent = 'Logget ind som ' + person.navn;
   if ((person.roller || []).indexOf('admin') < 0) { $('ikkeAdmin').classList.remove('hidden'); return; }
+  lytVisninger();
   visRute();
 }
 
@@ -277,7 +307,7 @@ function start() {
 function migHusket() { try { const m = JSON.parse(hent('rtk.mig') || 'null'); return m && token && m.t === token.slice(-16) ? m.p : null; } catch (e) { return null; } }
 function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', JSON.stringify({ t: token.slice(-16), p: p })); return p; }); }
 if (!token) location.replace('./?til=' + encodeURIComponent('personer.html' + location.hash));
-else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
+else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().then((p) => { if ((husket.roller || []).indexOf('admin') >= 0 && (p.roller || []).indexOf('admin') < 0) location.reload(); }).catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
 </script>
 <script src="../velkomst.js?v=02d869848285"></script>
 </body>

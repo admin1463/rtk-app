@@ -112,8 +112,13 @@
       if (svar.login) { gem('rtk.token', null); if (paaLogud) paaLogud(); }
       throw new Error(svar.fejl || 'Noget gik galt');
     }
+    // Motorens ur for svaret: tid er før arkene blev læst, slut efter handlingen var færdig. Siderne afgør med dem, om en kopi
+    // fra Firebase er nyere end svaret (visningerne, trin 1)
+    // Nøglen er modul.handling, da fx push.gemValg og beskeder.gemValg hedder det samme (gennemgangen af de mindre sider M7)
+    SIDST[modul + '.' + handling] = { tid: svar.tid || 0, slut: svar.tidSlut || svar.tid || 0 };
     return svar.data;
   }
+  var SIDST = {};
 
   function el(tag, attr, tekst) {
     var e = document.createElement(tag);
@@ -218,6 +223,7 @@
   window.RTK_KONTO = {
     motor: motor, loginKort: loginKort, logud: logud, t: t, fejlTekst: fejlTekst, nyId: nyId, besked: besked, el: el,
     loggetInd: function () { return !!hent('rtk.token'); },
-    vedLogud: function (fn) { paaLogud = fn; }
+    vedLogud: function (fn) { paaLogud = fn; },
+    tid: function (noegle) { return SIDST[noegle] || { tid: 0, slut: 0 }; }
   };
 })();

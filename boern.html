@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="995bb004d237">
+<meta name="rtk-version" content="da1fdff76dc2">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -187,7 +187,8 @@ window.TEKSTER = {
 };
 </script>
 <script src="konfig.js?v=1301d6285ee2"></script>
-<script src="konto.js?v=562e94f1d379"></script>
+<script src="konto.js?v=ef1baeef501e"></script>
+<script src="visning.js?v=9cd5651130e5"></script>
 <script src="sprog.js?v=1976d8c45489"></script>
 <script src="velkomst.js?v=02d869848285"></script>
 <script>
@@ -197,9 +198,50 @@ const t = K.t;
 let data = null;
 const kladde = {}; // numre, der er skrevet, men ikke gemt endnu
 
+// Visningen i Firebase (trin 1, Lars 24. oktober kl. 10.41): siden viser det, motoren sidst lagde i Firebase, med det samme,
+// og henter det nyeste fra motoren bagefter. Er man i gang (gemmer, skriver et nummer), venter nye data, til man er færdig
+// (gennemgangen af de mindre sider V5 og M1).
+const V = { stop: null, laest: 0, gemmer: 0, gen: 0, vent: null, henter: false };
+/** Motoren, men et svar, der kommer efter log ud eller et skift af person, bruges aldrig (gennemgangen V1). */
+function M(modul, handling, d, id) {
+  const g = V.gen;
+  return K.motor(modul, handling, d, id).then((s) => (g === V.gen ? s : new Promise(() => {})), (e) => { if (g !== V.gen) return new Promise(() => {}); throw e; });
+}
+function travlt() {
+  const a = document.activeElement;
+  return V.gemmer > 0 || Object.keys(venter).length > 0 || !!(a && a.closest && a.closest('#indeDel') && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName));
+}
+/** Nye data fra kopien (kopi = true) eller fra motoren. Ældre data end det viste bruges ikke. */
+function tilbyd(d, t0, kopi) {
+  // Et svar uden tid (fx et reservesvar) bruges kun, når siden intet nyere viser
+  if (!d || (kopi && !t0)) return;
+  t0 = t0 || 0;
+  if (V.laest && (kopi ? t0 <= V.laest : t0 < V.laest)) return;
+  if (travlt()) { if (!V.vent || t0 > V.vent.t0) V.vent = { d, t0, kopi }; return; }
+  V.vent = null; V.laest = Math.max(V.laest, t0); data = d;
+  if (V.henter) { V.henter = false; K.besked($('hentMsg'), ''); }
+  vis();
+}
+/** Når man er færdig, vises det, der ventede. */
+function slip() { setTimeout(() => { if (V.vent && !travlt()) { const v = V.vent; V.vent = null; tilbyd(v.d, v.t0, v.kopi); } }, 0); }
+document.addEventListener('focusout', slip);
+/** Svaret på at gemme bruges altid. Kopier lavet før gemningen var færdig (tidSlut), tæller ikke. */
+function fraGem(handling, d) { if (!d) return; V.laest = Math.max(V.laest, K.tid('beskeder.' + handling).slut); data = d; V.vent = null; }
+function lytVisning() {
+  stopVisning();
+  if (!window.RTKV) return;
+  V.stop = RTKV.lyt(K.motor, 'beskBoern', (x) => { if (x) tilbyd(x.svar, x.laest, true); });
+}
+function stopVisning() { if (V.stop) { try { V.stop(); } catch (e) {} } V.stop = null; V.laest = 0; V.vent = null; }
+
 function visLogin() {
+  stopVisning();
+  if (window.RTKV) RTKV.logUd();
+  // Alt fra den forrige person glemmes, også svar, der stadig er på vej, og kladder (gennemgangen V1 og M11)
+  V.gen++; V.gemmer = 0; V.henter = false;
+  Object.keys(kladde).forEach((x) => delete kladde[x]); Object.keys(venter).forEach((x) => delete venter[x]); Object.keys(svar).forEach((x) => delete svar[x]);
   data = null;
-  $('skrivTak').classList.add('hidden'); $('skrivForm').classList.remove('hidden'); $('skrivMail').value = '';
+  $('skrivTak').classList.add('hidden'); $('skrivForm').classList.remove('hidden'); $('skrivMail').value = ''; $('skrivTekst').value = '';
   $('indeDel').classList.add('hidden'); $('loginDel').classList.remove('hidden');
   K.loginKort($('login'), { onLogin: hent });
 }
@@ -207,9 +249,10 @@ K.vedLogud(visLogin);
 
 async function hent() {
   $('loginDel').classList.add('hidden'); $('indeDel').classList.remove('hidden');
-  K.besked($('hentMsg'), t('henter'));
-  try { data = await K.motor('beskeder', 'mineBoern'); K.besked($('hentMsg'), ''); vis(); }
-  catch (err) { if (K.loggetInd()) K.besked($('hentMsg'), K.fejlTekst(err.message), 'err'); }
+  if (!data) { V.henter = true; K.besked($('hentMsg'), t('henter')); }
+  lytVisning();
+  try { const d = await M('beskeder', 'mineBoern'); if (V.henter && data) { V.henter = false; K.besked($('hentMsg'), ''); } tilbyd(d, K.tid('beskeder.mineBoern').tid, false); }
+  catch (err) { if (K.loggetInd()) { V.henter = false; K.besked($('hentMsg'), K.fejlTekst(err.message), 'err'); } }
 }
 
 const MODULER = [['holdkampe', 'mHoldkampe', 'mHoldkampeTekst'], ['grupper', 'mGrupper', 'mGrupperTekst'], ['proshop', 'mProshop', 'mProshopTekst']];
@@ -288,24 +331,26 @@ async function gemVippe(b, modul, k) {
   let til = venter[k];
   try {
     for (;;) {
-      data = await K.motor('beskeder', 'gemSamtykke', { barnId: b.id, modul, valg: til ? 'Ja' : 'Nej', oenske: '' }, K.nyId());
+      fraGem('gemSamtykke', await M('beskeder', 'gemSamtykke', { barnId: b.id, modul, valg: til ? 'Ja' : 'Nej', oenske: '' }, K.nyId()));
       if (venter[k] === til) break;
       til = venter[k];
     }
     delete venter[k]; delete svar[b.id];
     if (!Object.keys(venter).length) { vis(); fokus(); }
-    K.besked(sm(), t('gemt'), 'okm');
-  } catch (err) { delete venter[k]; vis(); fokus(); K.besked(sm(), K.fejlTekst(err.message), 'err'); }
+    K.besked(sm(), t('gemt'), 'okm'); slip();
+  } catch (err) { delete venter[k]; vis(); fokus(); K.besked(sm(), K.fejlTekst(err.message), 'err'); slip(); }
 }
 async function gemSamtykke(b, modul, valg, oenske) {
   const sm = () => document.getElementById('smsg-' + b.id);
   K.besked(sm(), t('gemmer'));
+  V.gemmer++;
   try {
-    data = await K.motor('beskeder', 'gemSamtykke', { barnId: b.id, modul, valg, oenske: oenske || '' }, K.nyId());
+    fraGem('gemSamtykke', await M('beskeder', 'gemSamtykke', { barnId: b.id, modul, valg, oenske: oenske || '' }, K.nyId()));
     if (oenske) svar[b.id] = { modul, valg }; else delete svar[b.id];
     vis();
     K.besked(sm(), oenske ? '' : t('gemt'), oenske ? '' : 'okm');
   } catch (err) { vis(); K.besked(sm(), K.fejlTekst(err.message), 'err'); }
+  finally { V.gemmer--; slip(); }
 }
 
 function barnKort(b) {
@@ -365,13 +410,15 @@ function vis() {
 async function gem(b, aendring, msg) {
   const ny = Object.assign({ barnId: b.id, kanal: b.kanal, nummer: kladde[b.id] !== undefined ? kladde[b.id] : b.nummer }, aendring);
   K.besked(msg, t('gemmer'));
+  V.gemmer++;
   try {
-    data = await K.motor('beskeder', 'gemBarn', ny, K.nyId());
+    fraGem('gemBarn', await M('beskeder', 'gemBarn', ny, K.nyId()));
     if (aendring.nummer !== undefined) delete kladde[b.id];
     vis();
     const nyMsg = document.querySelector('#h-' + CSS.escape(b.id)).parentNode.querySelector(':scope > .msg');
     K.besked(nyMsg, t('gemt'), 'okm');
   } catch (err) { vis(); const m2 = document.querySelector('#h-' + CSS.escape(b.id)).parentNode.querySelector(':scope > .msg'); K.besked(m2, K.fejlTekst(err.message), 'err'); }
+  finally { V.gemmer--; slip(); }
 }
 $('logud').addEventListener('click', () => K.logud());
 
@@ -380,7 +427,7 @@ $('skrivForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   K.besked($('skrivMsg'), t('sender'));
   try {
-    await K.motor('beskeder', 'skrivTilKlubben', { tekst: $('skrivTekst').value, mail: $('skrivMail').value.trim(), side: 'boern' }, skrivId);
+    await M('beskeder', 'skrivTilKlubben', { tekst: $('skrivTekst').value, mail: $('skrivMail').value.trim(), side: 'boern' }, skrivId);
     skrivId = K.nyId(); $('skrivTekst').value = ''; K.besked($('skrivMsg'), '');
     $('skrivForm').classList.add('hidden'); $('skrivTak').classList.remove('hidden'); $('skrivTak').focus();
   } catch (err) { K.besked($('skrivMsg'), K.fejlTekst(err.message), 'err'); }
