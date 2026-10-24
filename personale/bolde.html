@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="e9b2f279e574">
+<meta name="rtk-version" content="4a894dd107e6">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -152,6 +152,7 @@
 </footer>
 
 <script src="../konfig.js?v=1301d6285ee2"></script>
+<script src="../visning.js?v=9cd5651130e5"></script>
 <script>
 // Adressen til motoren står i konfig.js (fælles for alle sider)
 const MILJOE = window.RTK_KONFIG.miljoe;
@@ -180,15 +181,41 @@ async function motor(modul, handling, data, id) {
   let svar;
   try { svar = await res.json(); } catch (e) { throw netFejl(); }
   if (!svar.ok) { if (svar.login) logUd(true); throw Object.assign(new Error(svar.fejl || 'Noget gik galt'), { net: !!svar.igang }); }
+  SIDST[handling] = svar.tid || 0;
   return svar.data;
+}
+
+// Visningerne i Firebase (trin 1, Lars 24. oktober kl. 07.38): siden viser det, motoren sidst lagde i Firebase, med det samme,
+// og ændringer fra andre (fx en anden træner, der tager bolde) kommer af sig selv. Feltet laest afgør, hvad der er nyest.
+const SIDST = {}, LAEST = {};
+function fraVis(navn, x, vis) {
+  if (!x || !x.laest || x.svar === undefined) return;
+  if (LAEST[navn] && x.laest <= LAEST[navn]) return;
+  LAEST[navn] = x.laest;
+  try { vis(x.svar); } catch (e) { /* motorens svar kommer alligevel */ }
+}
+/** Et svar fra motoren tegnes kun, hvis det ikke er ældre end det, siden viser fra Firebase. */
+let lagerVenter = null;
+const visLagerKopi = (x) => fraVis('lager', x, (l) => { $('lagerTabel').innerHTML = lagerHtml(l); });
+const nyereEnd = (navn, handling) => { const t = SIDST[handling] || 0; if (LAEST[navn] && t < LAEST[navn]) return false; LAEST[navn] = t; return true; };
+function lytVisninger() {
+  if (!window.RTKV) return;
+  RTKV.lyt(motor, 'boldValg', (x) => { if (!valg) fraVis('valg', x, (v) => { valg = v; klar(); }); });
+  RTKV.lyt(motor, 'boldMine', (x) => fraVis('mine', x, visMine));
+  // Kommer lageret før valgene, gemmes det til klar() (gennemgangen M7)
+  RTKV.lyt(motor, 'boldLager', (x) => { if (valg) visLagerKopi(x); else lagerVenter = x; });
+  if (!erAnsvarlig()) return;
+  RTKV.lyt(motor, 'boldForbrug', (x) => { if (periode === 'denne') fraVis('forbrug', x, visForbrug); });
+  RTKV.lyt(motor, 'boldBestil', (x) => fraVis('bestil', x, visBestil));
 }
 
 function logUd(udloebet) {
   // Kun én gang, når flere kald samtidig får 'Log ind igen' (den huskede person, 23. oktober)
   if (window.RTK_UD) return; window.RTK_UD = true;
   if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
-  token = ''; person = null; gem('rtk.token', null);
-  location.replace(udloebet ? './?til=' + encodeURIComponent('bolde.html' + location.hash) + '&igen=1' : './');
+  token = ''; person = null; gem('rtk.token', null); gem('rtk.mig', null);
+  // Firebase-login glemmes, før siden skifter (højst et sekund)
+  (window.RTKV ? RTKV.logUd() : Promise.resolve()).then(() => location.replace(udloebet ? './?til=' + encodeURIComponent('bolde.html' + location.hash) + '&igen=1' : './'));
 }
 $('logud').addEventListener('click', () => logUd(false));
 
@@ -198,12 +225,37 @@ async function start() {
   $('omraade').classList.remove('hidden');
   $('hvem').textContent = 'Logget ind som ' + person.navn;
   document.querySelectorAll('.ansvarlig').forEach((b) => b.classList.toggle('hidden', !erAnsvarlig()));
-  try { valg = await motor('bold', 'valg'); } catch (err) { besked($('tagMsg'), err.message, 'err'); return; }
+  lytVisninger();
+  try {
+    const v = await motor('bold', 'valg');
+    if (!valg) { nyereEnd('valg', 'valg'); valg = v; klar(); }
+    // Er der kommet et nyt hold eller sted siden kopien i Firebase, tegnes valgene om
+    else if (nyereEnd('valg', 'valg') && JSON.stringify(v) !== JSON.stringify(valg)) nyeValg(v);
+  }
+  // Kopien er vist, men en adgangsfejl skal altid ses (gennemgangen M5)
+  catch (err) { if (!valg || /adgang/i.test(err.message)) besked($('tagMsg'), err.message, 'err'); }
+}
+/** Motorens valg afviger fra kopien (fx et nyt hold): tegn valgene om og behold det, man har valgt, hvis det stadig findes (gennemgangen M8). */
+function nyeValg(v) {
+  valg = v;
+  if (valg.steder.indexOf(valgt.sted) < 0) valgt.sted = valg.steder[0] || '';
+  if (!valg.bolde.some((b) => b.bold === valgt.bold)) valgt.bold = (valg.bolde[0] || {}).bold || '';
+  const gl = {}; ['iSted', 'iBold', 'fFra', 'fTil', 'fBold'].forEach((id) => { gl[id] = $(id).value; });
+  tegnTag(); fyldSelects();
+  Object.keys(gl).forEach((id) => { if ([...$(id).options].some((o) => o.value === gl[id])) $(id).value = gl[id]; });
+  if (optSted && valg.steder.indexOf(optSted) < 0) optSted = '';
+  if (!$('fane-optael').classList.contains('hidden') && !$('optLinjer').querySelector('input:focus') && ![...$('optLinjer').querySelectorAll('input')].some((i) => i.value.trim())) tegnOptael();
+}
+/** Når valgene er der (fra Firebase eller motoren), går siden i gang. Kun én gang. */
+let erKlar = false;
+function klar() {
+  if (erKlar) return; erKlar = true;
   if (valg.steder.indexOf(valgt.sted) < 0) valgt.sted = valg.steder[0] || '';
   if (!valg.bolde.some((b) => b.bold === valgt.bold)) valgt.bold = (valg.bolde[0] || {}).bold || '';
   // Fra Administration på personalesiden åbnes fx bolde.html#forbrug (19. oktober). Kun faner, man har adgang til.
   const h = location.hash.slice(1), fb = document.querySelector('#faner button[data-fane="' + h.replace(/[^a-z]/g, '') + '"]');
   vaelgFane(fb && !fb.classList.contains('hidden') ? fb.dataset.fane : 'tag'); tegnTag(); fyldSelects(); hentMine();
+  if (lagerVenter) { visLagerKopi(lagerVenter); lagerVenter = null; }
 }
 
 // ---------------- tag bolde
@@ -248,15 +300,20 @@ $('tagKnap').addEventListener('click', async () => {
 });
 
 async function hentMine() {
-  try {
-    const l = await motor('bold', 'mine');
+  try { const l = await motor('bold', 'mine'); if (nyereEnd('mine', 'mine')) visMine(l); }
+  catch (err) { if (!LAEST.mine) $('mine').textContent = err.message; }
+}
+function visMine(l) {
+  {
+    // Fortryd kun inden for 30 minutter, også når listen er en kopi fra Firebase
+    l.forEach((r) => { if (r.udloeber && r.udloeber < Date.now()) r.kanFortrydes = false; });
     $('mine').innerHTML = l.length ? '<table>' + l.map((r) => '<tr><td>' + esc(r.tid.slice(5).replace('-', '/')) + '</td><td>' + r.antal + ' × ' + esc(r.bold) + '<br><small style="color:var(--muted)">' + esc(r.formaal) + (r.hold ? ', ' + esc(r.hold) : '') + ', ' + esc(r.sted) + '</small></td><td class="n">' +
       (r.fortrudt ? '<small>fortrudt</small>' : r.kanFortrydes ? '<button class="ghost small" data-r="' + r.raekke + '">Fortryd</button>' : '') + '</td></tr>').join('') + '</table>' : 'Ingen endnu.';
     $('mine').querySelectorAll('button[data-r]').forEach((b) => b.addEventListener('click', async () => {
       b.disabled = true;
       try { await motor('bold', 'fortryd', { raekke: Number(b.dataset.r) }, nyId()); hentMine(); } catch (err) { alertMsg(err.message); b.disabled = false; }
     }));
-  } catch (err) { $('mine').textContent = err.message; }
+  }
 }
 function alertMsg(t) { besked($('tagMsg'), t, 'err'); }
 
@@ -279,7 +336,7 @@ function lagerHtml(l) {
       '<td class="n"><b>' + b.ialt + '</b></td><td>' + (b.bestil ? '<span class="pill">bestil</span>' : '') + '</td></tr>').join('') + '</table>';
 }
 async function hentLager() {
-  try { $('lagerTabel').innerHTML = lagerHtml(await motor('bold', 'lager')); } catch (err) { $('lagerTabel').textContent = err.message; }
+  try { const l = await motor('bold', 'lager'); if (nyereEnd('lager', 'lager')) $('lagerTabel').innerHTML = lagerHtml(l); } catch (err) { if (!LAEST.lager) $('lagerTabel').textContent = err.message; }
 }
 
 // ---------------- forbrug
@@ -293,13 +350,19 @@ function sumTabel(titel, o) {
   return '<h3>' + titel + '</h3>' + (k.length ? '<table>' + k.map((n) => '<tr><td>' + esc(n) + '</td><td class="n">' + o[n].enheder + '</td><td class="n">' + o[n].bolde + ' bolde</td></tr>').join('') + '</table>' : '<div class="total">Intet</div>');
 }
 async function hentForbrug() {
-  const ud = $('forbrugUd'); ud.textContent = 'Henter …';
-  const d = periode === 'maaned' ? { maaned: new Date().toISOString().slice(0, 7) } : { uge: periode };
+  const ud = $('forbrugUd'), p = periode;
+  // Denne uge står der måske allerede fra Firebase. De andre perioder hentes forfra
+  if (p !== 'denne') { ud.textContent = 'Henter …'; LAEST.forbrug = 0; } else if (!LAEST.forbrug) ud.textContent = 'Henter …';
+  const d = p === 'maaned' ? { maaned: new Date().toISOString().slice(0, 7) } : { uge: p };
   try {
     const f = await motor('bold', 'forbrug', d);
-    ud.innerHTML = '<div class="total">' + esc(f.fra) + ' til ' + esc(f.til) + ': <b>' + f.bolde + ' bolde</b></div>' +
-      sumTabel('Pr. træner', f.prTraener) + sumTabel('Pr. hold', f.prHold) + sumTabel('Pr. formål', f.prFormaal) + sumTabel('Pr. bold', f.prBold);
-  } catch (err) { ud.textContent = err.message; }
+    if (p !== periode) return;
+    if (p !== 'denne' || nyereEnd('forbrug', 'forbrug')) visForbrug(f);
+  } catch (err) { if (p === periode && (p !== 'denne' || !LAEST.forbrug)) ud.textContent = err.message; }
+}
+function visForbrug(f) {
+  $('forbrugUd').innerHTML = '<div class="total">' + esc(f.fra) + ' til ' + esc(f.til) + ': <b>' + f.bolde + ' bolde</b></div>' +
+    sumTabel('Pr. træner', f.prTraener) + sumTabel('Pr. hold', f.prHold) + sumTabel('Pr. formål', f.prFormaal) + sumTabel('Pr. bold', f.prBold);
 }
 
 // ---------------- optælling
@@ -345,9 +408,13 @@ $('flytForm').addEventListener('submit', async (e) => {
 
 // ---------------- bestilling
 async function hentBestil() {
-  const ud = $('bestilUd'); ud.textContent = 'Henter …';
-  try {
-    const b = await motor('bold', 'bestilling');
+  const ud = $('bestilUd'); if (!LAEST.bestil) ud.textContent = 'Henter …';
+  try { const b = await motor('bold', 'bestilling'); if (nyereEnd('bestil', 'bestilling')) visBestil(b); }
+  catch (err) { if (!LAEST.bestil) ud.textContent = err.message; }
+}
+function visBestil(b) {
+  const ud = $('bestilUd');
+  {
     if (!b.linjer.length) { ud.textContent = 'Intet under minimum. Ingen bestilling nu.'; return; }
     const kr = (n) => n.toLocaleString('da-DK', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
     ud.innerHTML = '<table><tr><th>Bold</th><th class="n">Lager</th><th class="n">Bestil</th><th class="n">Kr. ekskl. moms</th></tr>' +
@@ -358,7 +425,7 @@ async function hentBestil() {
     a.href = 'mailto:' + encodeURIComponent(b.modtager || '') + '?subject=' + encodeURIComponent('Boldbestilling Roskilde Tennis Klub') + (b.kopi ? '&cc=' + encodeURIComponent(b.kopi) : '') + '&body=' + encodeURIComponent(tekst);
     a.textContent = 'Lav mail med bestillingen'; a.className = 'ghost'; a.style.cssText = 'display:inline-block;margin-top:12px;color:var(--accent)';
     ud.append(a);
-  } catch (err) { ud.textContent = err.message; }
+  }
 }
 
 // ---------------- start

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="de212e02cfa8">
+<meta name="rtk-version" content="0741e77b30ab">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -59,6 +59,7 @@
 </footer>
 
 <script src="../konfig.js?v=1301d6285ee2"></script>
+<script src="../visning.js?v=9cd5651130e5"></script>
 <script>
 // Arbejdstøj og udstyr (personale/arbejdstoej.html). Bygges ind af arbejdstoej.py. 16. oktober 2026.
 // Trænerens kurv, hele katalogsiden, sko og størrelse, og for administratorerne kontoen, varerne, personerne,
@@ -92,14 +93,59 @@ async function motor(modul, handling, data, id) {
   // Google svarer af og til med en HTML-side. Så er det en forbindelsesfejl, ikke en teknisk fejltekst (ende til ende-testen 20. oktober)
   try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
   if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  SIDST[handling] = svar.tid || 0;
+  // Efter at have gemt regnes kun kopier fra Firebase, der er lavet efter, at handlingen var færdig (tidSlut), for nyere.
+  // Ellers kunne en kopi, der læste arket før gemningen, skrive kurven eller varerne over (gennemgangen af Bolde og Arbejdstøj V1 og V4)
+  const efter = svar.tidSlut || svar.tid || 0;
+  (GEMMER_I[handling] || []).forEach((n) => { if (!(n === 'start' && S.som)) LAEST[n] = Math.max(LAEST[n] || 0, efter); });
   return svar.data;
+}
+
+// Visningerne i Firebase (trin 1, Lars 24. oktober kl. 07.38): siden viser det, motoren sidst lagde i Firebase, med det samme,
+// og henter det nyeste fra motoren i baggrunden. Feltet laest (motorens tid) afgør, hvad der er nyest.
+const SIDST = {}, LAEST = {};
+const GEMMER_I = { kurv: ['start'], send: ['start'], fortryd: ['start'], modtaget: ['start'], vareTil: ['varer'], giv: ['adm', 'start'],
+  godkend: ['adm'], afvis: ['adm'], mangler: ['adm'], ordre: ['adm'], lever: ['adm'] };
+function fraVis(navn, x, vis) {
+  if (!x || !x.laest || x.svar === undefined) return;
+  if (LAEST[navn] && x.laest <= LAEST[navn]) return;
+  LAEST[navn] = x.laest;
+  try { vis(x.svar); } catch (e) { /* motorens svar kommer alligevel */ }
+}
+/** Et svar fra motoren bruges kun, hvis det ikke er ældre end det, siden viser fra Firebase. */
+const nyereEnd = (navn, handling) => { const t = SIDST[handling] || 0; if (LAEST[navn] && t < LAEST[navn]) return false; LAEST[navn] = t; return true; };
+function lytVisninger() {
+  if (!window.RTKV) return;
+  RTKV.lyt(motor, 'toejStart', (x) => fraVis('start', x, (s) => {
+    if (S.som) S.som.egen = s; else S.start = s;
+    if (!S.rutet) { S.rutet = true; rute(); } else tegnHvisRoligt(false);
+  }));
+  if (!(person.roller || []).includes('admin')) return;
+  RTKV.lyt(motor, 'toejAdm', (x) => fraVis('adm', x, (a) => { S.adm = a; tegnHvisRoligt(true); }));
+  RTKV.lyt(motor, 'toejVarer', (x) => { if (!S.varIgang && !(S.varKoe && S.varKoe.length)) fraVis('varer', x, (v) => { S.varerAdm = v; tegnHvisRoligt(true); }); });
+}
+/** Nye data fra Firebase tegnes kun på oversigterne, og ikke mens man skriver eller noget gemmes. Kurven og varerne beholder det, man er i gang med. */
+function tegnHvisRoligt(admin) {
+  if (!S.start || S.som) return;
+  const navn = location.hash.replace(/^#/, '').split('/')[0];
+  const adm = ['konto', 'godkend', 'personer', 'varer'].indexOf(navn) >= 0;
+  // Administratorens data vises også på forsiden (antal til godkendelse)
+  if (admin ? !(adm || !navn) : navn) return;
+  if (Object.keys(S.gemmer).some((k) => S.gemmer[k]) || S.komGemmer || S.varIgang) return;
+  const a = document.activeElement;
+  if (a && a.closest && a.closest('#vis') && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return;
+  // En kvittering, mailen til Carsten eller en halvskrevet tekst forsvinder ikke ved en omtegning (gennemgangen M4)
+  const v = $('vis');
+  if ([...v.querySelectorAll('.msg, #ordreUd')].some((m) => m.textContent.trim()) || [...v.querySelectorAll('textarea, input[type=text], input:not([type])')].some((x) => x.value.trim())) return;
+  tegn();
 }
 function logUd(udloebet) {
   // Kun én gang, når flere kald samtidig får 'Log ind igen' (den huskede person, 23. oktober)
   if (window.RTK_UD) return; window.RTK_UD = true;
   if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
-  token = ''; person = null; gem('rtk.token', null);
-  location.replace(udloebet ? './?til=' + encodeURIComponent('arbejdstoej.html' + location.hash) + '&igen=1' : './');
+  token = ''; person = null; gem('rtk.token', null); gem('rtk.mig', null);
+  // Firebase-login glemmes, før siden skifter (højst et sekund)
+  (window.RTKV ? RTKV.logUd() : Promise.resolve()).then(() => location.replace(udloebet ? './?til=' + encodeURIComponent('arbejdstoej.html' + location.hash) + '&igen=1' : './'));
 }
 $('logud').addEventListener('click', () => logUd(false));
 function besked(el, t, s) { if (!el) return; el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
@@ -189,9 +235,9 @@ function opdaterT(ny) {
   if (i >= 0) S.start.tildelinger[i] = ny;
 }
 // Under "Se som træner" må et svar, der kommer sent, ikke overskrive trænerens data: det gemmes til, når man lukker
-async function hentStart() { const s = await motor('toej', 'start'); if (S.som) S.som.egen = s; else S.start = s; }
+async function hentStart() { const s = await motor('toej', 'start'); if (!nyereEnd('start', 'start')) return; if (S.som) S.som.egen = s; else S.start = s; }
 const egneKladder = () => (S.som ? S.egenKladde || {} : S.kladde);
-async function hentAdm() { S.adm = await motor('toej', 'oversigt'); }
+async function hentAdm() { const a = await motor('toej', 'oversigt'); if (nyereEnd('adm', 'oversigt') || !S.adm) S.adm = a; }
 
 // ------------------------------------------------------------ fælles stumper
 const hero = (kick, h) => '<div class="af-hero"><img src="../billeder/felt-fordele.jpg" alt=""><div class="tx"><span class="kick">' + esc(kick) + '</span><h1>' + esc(h) + '</h1></div></div>';
@@ -507,7 +553,7 @@ function vGiv(forvalgt) {
 }
 
 async function vVarer() {
-  if (!S.varerAdm) { vis(tilbage('#konto', 'Kontoen') + '<p class="hint">Henter …</p>'); try { S.varerAdm = await motor('toej', 'varer'); } catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; } }
+  if (!S.varerAdm) { vis(tilbage('#konto', 'Kontoen') + '<p class="hint">Henter …</p>'); try { const v = await motor('toej', 'varer'); if (nyereEnd('varer', 'varer') || !S.varerAdm) S.varerAdm = v; } catch (err) { if (!S.varerAdm) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; } } }
   const a = S.varerAdm;
   const tilAntal = a.varer.filter((v) => v.til).length;
   let h = tilbage('#konto', 'Kontoen') + hero('Kontoen · prislisten FW26', 'Varerne');
@@ -536,7 +582,7 @@ async function rute() {
   if (!S.start) return;
   if (S.som && ['t', 'kurv', 'side'].indexOf(navn) < 0) { somLuk(false); }
   if (admin && !S.start.admin) { location.replace('#'); return; }
-  if (admin && !S.adm) { vis('<p class="hint">Henter …</p>'); try { await hentAdm(); } catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; } }
+  if (admin && !S.adm) { vis('<p class="hint">Henter …</p>'); try { await hentAdm(); } catch (err) { if (!S.adm) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; } } }
   else if (admin || !navn) friskOp(h, admin);
   if (navn !== 't' && navn !== 'kurv') S.fejl = '';
   if (navn === 't') vVaelg(a);
@@ -774,7 +820,7 @@ async function varKoer() {
   try {
     const ny = await motor('toej', 'varer');
     if (gen !== S.varGen || S.varIgang) return;
-    S.varerAdm = ny;
+    nyereEnd('varer', 'varer'); S.varerAdm = ny;
     await hentStart();
   } catch (err) { fejl = fejl || err; }
   if (gen !== S.varGen || S.varIgang) return;
@@ -796,9 +842,12 @@ function hentCsv() {
 async function start() {
   $('omraade').classList.remove('hidden');
   $('hvem').textContent = 'Logget ind som ' + person.navn;
+  // Kopien fra Firebase kommer typisk før motoren svarer, og så går siden i gang med den (lytVisninger)
+  lytVisninger();
   try { await hentStart(); if (S.start.admin) hentAdm().then(() => { if (!location.hash) tegn(); }).catch(() => {}); }
-  catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; }
-  rute();
+  // Kopien fra Firebase er vist, men motoren fejler: en adgangsfejl skal altid ses, ellers ser siden levende ud uden at virke (gennemgangen M5)
+  catch (err) { if (!S.start || /adgang/i.test(err.message)) vis('<p class="msg err">' + esc(err.message) + '</p>'); return; }
+  if (!S.rutet) { S.rutet = true; rute(); } else tegnHvisRoligt(false);
 }
 // Personen huskes på telefonen, så siden går i gang med det samme, og motoren tjekker bagefter (Lars 23. oktober kl. 08.41: siderne var for langsomme)
 function migHusket() { try { const m = JSON.parse(hent('rtk.mig') || 'null'); return m && token && m.t === token.slice(-16) ? m.p : null; } catch (e) { return null; } }
