@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="20266189094b">
+<meta name="rtk-version" content="ec1d2a1f97a7">
 <script src="/opdater.js?v=2222ad998c00" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -187,6 +187,7 @@
 </footer>
 
 <script src="../konfig.js?v=1301d6285ee2"></script>
+<script src="../visning.js?v=9cd5651130e5"></script>
 <script>
 // Adressen til motoren står i konfig.js (fælles for alle sider)
 const MILJOE = window.RTK_KONFIG.miljoe;
@@ -230,8 +231,29 @@ async function motor(modul, handling, data, id) {
     if (svar.login) { logUd(true); }
     throw Object.assign(new Error(svar.fejl || 'Noget gik galt'), { net: !!svar.igang });
   }
+  SIDST[handling] = svar.tid || 0;
   return svar.data;
 }
+// Visningerne i Firebase (trin 1, Lars 23. oktober kl. 22.48): siden viser det, motoren sidst lagde i Firebase, med det samme,
+// og ændringer fra andre (fx en ny ketsjer i skabet) kommer af sig selv. Feltet laest (motorens tid) afgør, hvad der er nyest.
+const SIDST = {}, LAEST = {};
+// Listerne rører ikke formularerne (Meld klar, modtagelse), så de kan altid tegnes om (gennemgangen M2)
+function fraVis(navn, x, vis) {
+  if (!x || !x.laest || x.svar === undefined) return;
+  if (LAEST[navn] && x.laest <= LAEST[navn]) return;
+  LAEST[navn] = x.laest;
+  try { vis(x.svar); } catch (e) { /* motorens svar kommer alligevel */ }
+}
+function lytVisninger() {
+  if (!window.RTKV) return;
+  RTKV.lyt(motor, 'opsKoe', (x) => fraVis('koe', x, visKoeData));
+  RTKV.lyt(motor, 'opsNumre', (x) => fraVis('numre', x, (n) => { NUMRE = n; visNumre(); }));
+  RTKV.lyt(motor, 'opsTaeller', (x) => fraVis('taeller', x, visTaeller));
+  RTKV.lyt(motor, 'opsLager', (x) => fraVis('lager', x, visLager));
+  RTKV.lyt(motor, 'opsValg', (x) => { if (!valg) fraVis('valg', x, (v) => { valg = v; fyldValg(); }); });
+}
+/** Et svar fra motoren tegnes kun, hvis det ikke er ældre end det, siden viser fra Firebase (gennemgangen M1). */
+const nyereEnd = (navn, handling) => { const t = SIDST[handling] || 0; if (LAEST[navn] && t < LAEST[navn]) return false; LAEST[navn] = t; return true; };
 
 // ===================== OPSTRENGERE =====================
 const esc = (x) => String(x == null ? '' : x).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -240,8 +262,9 @@ function logUd(udloebet) {
   // Kun én gang, når flere kald samtidig får 'Log ind igen' (den huskede person, 23. oktober)
   if (window.RTK_UD) return; window.RTK_UD = true;
   if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
-  token = ''; person = null; gem('rtk.token', null);
-  location.replace(udloebet ? './?til=opstrengning.html&igen=1' : './');
+  token = ''; person = null; gem('rtk.token', null); gem('rtk.mig', null);
+  // Firebase-login glemmes, før siden skifter (højst et sekund)
+  (window.RTKV ? RTKV.logUd() : Promise.resolve()).then(() => location.replace(udloebet ? './?til=opstrengning.html&igen=1' : './'));
 }
 $('logud').addEventListener('click', () => logUd(false));
 
@@ -250,8 +273,9 @@ async function visOmraade() {
   $('omraade').classList.remove('hidden');
   $('qrMere').classList.toggle('hidden', (person.roller || []).indexOf('admin') < 0);
   $('hvem').textContent = 'Logget ind som ' + person.navn + (person.initialer ? ' (' + person.initialer + ')' : '');
+  lytVisninger();
   vaelgFane('koe');
-  try { valg = await motor('opstrengning', 'valg'); fyldValg(); } catch (e) { besked($('klarMsg'), e.message, 'err'); }
+  try { const v = await motor('opstrengning', 'valg'); nyereEnd('valg', 'valg'); if (!valg) { valg = v; fyldValg(); } } catch (e) { if (!valg) besked($('klarMsg'), e.message, 'err'); }
 }
 
 function vaelgFane(navn) {
@@ -298,6 +322,8 @@ function raekke(r) {
   if (klar) {
     const knap = document.createElement('button'); knap.type = 'button'; knap.className = 'af-chip lille info';
     knap.textContent = 'Hentet'; knap.setAttribute('aria-label', 'Hentet nr. ' + r.nr);
+    // Tegnes køen om, mens Hentet gemmes, forbliver knappen slået fra (gennemgangen L1)
+    if (HENTER.has(r.nr)) knap.disabled = true;
     knap.addEventListener('click', () => hentet(r.nr, knap));
     el.append(knap);
   }
@@ -312,6 +338,12 @@ async function hentKoe() {
   besked($('koeMsg'), ''); besked($('hentMsg'), '');
   try {
     const k = await motor('opstrengning', 'koe');
+    if (nyereEnd('koe', 'koe')) visKoeData(k);
+  } catch (err) { if (!LAEST.koe) { boks.textContent = ''; hb.textContent = ''; } besked($('koeMsg'), err.message, 'err'); besked($('hentMsg'), err.message, 'err'); }
+}
+function visKoeData(k) {
+  const boks = $('koeListe'), hb = $('hentListe');
+  {
     const idag = new Date(); idag.setHours(0, 0, 0, 0);
     const ko = k.raekker.filter((r) => r.status !== 'Klar'), kl = k.raekker.filter((r) => r.status === 'Klar');
     kl.forEach((r) => { const [y, m, d] = String(r.klarDato || '').split('-').map(Number); r.dage = y ? Math.round((idag - new Date(y, m - 1, d)) / 86400000) : 0; r.gammel = r.dage > GAMMEL_DAGE; });
@@ -328,12 +360,14 @@ async function hentKoe() {
     hb.innerHTML = '';
     if (!kl.length) hb.innerHTML = '<p class="po-note">Afhentningsskabet er tomt.</p>';
     kl.slice().sort((a, b) => (b.dage - a.dage)).forEach((r) => hb.append(raekke(r)));
-  } catch (err) { boks.textContent = ''; hb.textContent = ''; besked($('koeMsg'), err.message, 'err'); besked($('hentMsg'), err.message, 'err'); }
+  }
 }
+const HENTER = new Set();
 async function hentet(nr, knap) {
-  knap.disabled = true;
-  try { await motor('opstrengning', 'hentet', { nr }, nyId()); hentKoe(); }
-  catch (err) { besked($('hentMsg'), err.message, 'err'); knap.disabled = false; }
+  if (HENTER.has(nr)) return;
+  knap.disabled = true; HENTER.add(nr);
+  try { await motor('opstrengning', 'hentet', { nr }, nyId()); HENTER.delete(nr); hentKoe(); }
+  catch (err) { HENTER.delete(nr); besked($('hentMsg'), err.message, 'err'); knap.disabled = false; }
 }
 let toemId = nyId();
 let ukendtNr = '';
@@ -398,8 +432,8 @@ function visNumre() {
   $('tjekListe').innerHTML = x.tjek.length ? x.tjek.map((t) => '<div class="sk-r"><span class="tid">' + esc(tidTekst(t.tid)) + '<small>' + esc((t.navn || t.initialer || '') + ' · ' + t.antal + ' modtaget') + '</small></span></div>').join('') : '<p class="po-note" style="margin:10px 14px">Ingen tjek de sidste 30 dage.</p>';
 }
 async function hentNumre() {
-  try { NUMRE = await motor('opstrengning', 'numre'); visNumre(); }
-  catch (err) { $('numreListe').innerHTML = ''; const p = document.createElement('p'); p.className = 'msg err'; p.style.margin = '10px 14px'; p.textContent = err.message; $('numreListe').append(p); }
+  try { const n = await motor('opstrengning', 'numre'); if (nyereEnd('numre', 'numre')) { NUMRE = n; visNumre(); } }
+  catch (err) { if (LAEST.numre) return; $('numreListe').innerHTML = ''; const p = document.createElement('p'); p.className = 'msg err'; p.style.margin = '10px 14px'; p.textContent = err.message; $('numreListe').append(p); }
 }
 let tjekId = nyId();
 $('tjekKnap').addEventListener('click', async () => {
@@ -564,6 +598,7 @@ $('klarForm').addEventListener('submit', async (e) => {
     const t = r.taeller;
     besked($('klarMsg'), 'Nr. ' + r.nr + ' er klar' + billedTekst(r) + (r.sms ? ', og medlemmet har fået en sms' : '') + '. Måneden: ' + t.udenTimer + (t.tilNaesteTrin ? ', ' + t.tilNaesteTrin + ' til ' + t.naesteSats + ' kr.' : '') + '.' + billedFejlTekst(r, 'm'), r.billedFejl ? 'err' : 'okm');
     $('mNr').value = ''; $('mNote').value = ''; K.kode = ''; K.kg = null; K.pris = null; FOTOS.m = []; visFotos('m'); visKode(); visModt();
+    hentKoe(); // rækken flytter til afhentning med det samme (gennemgangen M3)
   } catch (err) { besked($('klarMsg'), err.message, 'err'); if (!err.net) klarId = nyId(); }
   knap.disabled = false;
 });
@@ -722,6 +757,11 @@ document.addEventListener('keydown', (e) => {
 async function hentTaeller() {
   try {
     const t = await motor('opstrengning', 'taeller');
+    if (nyereEnd('taeller', 'taeller')) visTaeller(t);
+  } catch (err) { if (!LAEST.taeller) $('tPr').innerHTML = '<p class="msg err">' + esc(err.message) + '</p>'; }
+}
+function visTaeller(t) {
+  {
     const [y, m] = t.maaned.split('-').map(Number);
     $('tTitel').textContent = new Date(y, m - 1, 1).toLocaleDateString('da-DK', { month: 'long', year: 'numeric' }).replace(/^./, (c) => c.toUpperCase());
     $('tIalt').textContent = t.udenTimer; $('tSats').textContent = t.satsNu;
@@ -731,13 +771,13 @@ async function hentTaeller() {
     $('tMeter').style.width = Math.min(100, Math.round(100 * t.udenTimer / maal)) + '%';
     const pr = Object.entries(t.prOpstrenger);
     $('tPr').innerHTML = pr.map(([k, v]) => '<div class="tt-tr"><span class="os-k">' + esc(k) + '</span><div class="tt-mid"><b>' + v + (v === 1 ? ' opstrengning' : ' opstrengninger') + '</b></div></div>').join('');
-  } catch (err) { $('tPr').innerHTML = '<p class="msg err">' + esc(err.message) + '</p>'; }
+  }
 }
 
 // ---- Strenge
 async function hentLager() {
   const boks = $('lagerListe'); if (!boks.childElementCount) boks.textContent = 'Henter …';
-  try { visLager(await motor('opstrengning', 'strengelager')); } catch (err) { boks.textContent = err.message; }
+  try { const l = await motor('opstrengning', 'strengelager'); if (nyereEnd('lager', 'strengelager')) visLager(l); } catch (err) { if (!LAEST.lager) boks.textContent = err.message; }
 }
 function visLager(l) {
   $('lagerListe').innerHTML = l.map((s) => {
