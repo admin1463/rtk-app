@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="a3eb9ac5ec82">
+<meta name="rtk-version" content="3d8d05f72be1">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=0d792ee30096">
+<link rel="stylesheet" href="../rtk.css?v=f2596ebe600a">
 </head>
 <body>
 <header class="top">
@@ -185,6 +185,7 @@ async function motor(modul, handling, data) {
 
 function visLogin(tekst) {
   token = ''; gem('rtk.token', null);
+  if (window.RTK_ACE_API) RTK_ACE_API.fjern(); // også når sessionen er udløbet eller lukket (gennemgangen 25. oktober M1)
   $('omraade').classList.add('hidden'); $('loginKort').classList.remove('hidden');
   besked($('loginMsg'), tekst || '', tekst ? 'err' : '');
   visTrin('mobil');
@@ -238,6 +239,7 @@ $('kodeForm').addEventListener('submit', async (e) => {
     token = r.token; gem('rtk.token', token); $('kode').value = ''; besked($('loginMsg'), '');
     visFelter(r.person);
     if (window.RTK_VELKOMST) window.RTK_VELKOMST.tjek();
+    if (window.RTK_ACE_API) window.RTK_ACE_API.start(); // Ace dukker op uden at genindlæse siden
   } catch (err) { besked($('loginMsg'), err.message, 'err'); }
   finally { igang = false; }
 });
@@ -294,11 +296,13 @@ $('loginForm').addEventListener('submit', async (e) => {
     token = r.token; gem('rtk.token', token); $('pin').value = ''; besked($('loginMsg'), '');
     visFelter(r.person);
     if (window.RTK_VELKOMST) window.RTK_VELKOMST.tjek();
+    if (window.RTK_ACE_API) window.RTK_ACE_API.start(); // Ace dukker op uden at genindlæse siden
   } catch (err) { besked($('loginMsg'), err.message, 'err'); }
 });
 
 $('logud').addEventListener('click', () => {
   if (token) motor('kerne', 'logud').catch(() => {});
+  if (window.RTK_ACE_API) window.RTK_ACE_API.fjern();
   glemForrige();
   til = ''; history.replaceState(null, '', location.pathname);
   visLogin('');
@@ -314,5 +318,6 @@ if (!token) { glemForrige(); visLogin(qs.get('igen') ? 'Log ind igen.' : ''); }
 else { const husket = migHusket(); if (husket) { visFelter(husket); migHent().then((p) => { if (JSON.stringify(p) !== JSON.stringify(husket)) visFelter(p); }).catch(() => {}); } else migHent().then(visFelter).catch(() => {}); }
 </script>
 <script src="../velkomst.js?v=02d869848285"></script>
+<script src="../ace.js?v=3dd69e535906"></script>
 </body>
 </html>

@@ -18,7 +18,12 @@
       loft: 'Testudgave. Du har {n} spørgsmål tilbage i dag.', loft0: 'Testudgave. Du har ikke flere spørgsmål i dag.',
       sendH: 'Send spørgsmålet til klubben', sendT: 'Går til kontakt@roskildetennisklub.dk med dit navn og din mail, så de kan svare dig. Samtalen med Ace sendes med.',
       mail: 'Din mail', sendKnap: 'Send', nejTak: 'Nej tak', sender: 'Sender …', sendt: 'Sendt til klubben. De svarer dig på mail.',
-      fejl: 'Noget gik galt. Prøv igen.'
+      fejl: 'Noget gik galt. Prøv igen.',
+      pers: 'PERSONALE',
+      aiP: 'Ace er en AI og kan tage fejl. Den svarer ud fra guiderne til Mit RTK og personalesiderne, klubbens hjemmeside og infoskærmen. Den kan ikke se data og kender ingen koder.',
+      hej2P: 'Spørg mig om personalesiderne eller om klubben. Jeg kan ikke se data og kender ingen koder.',
+      sendHP: 'Send spørgsmålet til administratorerne', sendTP: 'Går til klubbens administratorer med dit navn og din mail, så de kan svare dig. Samtalen med Ace sendes med.',
+      sendtP: 'Sendt til administratorerne. De svarer dig på mail.'
     },
     en: {
       knap: 'Ask Ace', titel: 'Ace', under: 'The club\'s AI helper', test: 'TEST', luk: 'Close Ace', ny: 'New chat', nyAria: 'Start a new chat with Ace',
@@ -51,7 +56,7 @@
   function hent(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function sHent(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
   function sGem(k, v) { try { if (v === null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) {} }
-  function sprog() { try { if (window.RTK_SPROG) return window.RTK_SPROG.sprog; } catch (e) {} return hent('rtk.sprog') === 'en' ? 'en' : 'da'; }
+  function sprog() { if (/\/personale\//.test(location.pathname)) return 'da'; try { if (window.RTK_SPROG) return window.RTK_SPROG.sprog; } catch (e) {} return hent('rtk.sprog') === 'en' ? 'en' : 'da'; }
   function t(k, p) { var s = (T[sprog()] || T.da)[k] || T.da[k] || k; if (p) Object.keys(p).forEach(function (n) { s = s.split('{' + n + '}').join(p[n]); }); return s; }
   function fejlTekst(e) {
     var m = String(e && e.message || e || '');
@@ -64,16 +69,28 @@
     return m || t('fejl');
   }
   // Kun en sti i Mit RTK (én skråstreg foran) eller klubbens hjemmeside må blive et link (gennemgangen fund 1)
-  function linkOk(u) { u = String(u || ''); return /^\/(?!\/)/.test(u) && u.indexOf('//') < 0 ? u : (/^https:\/\/(www\.)?roskildetennisklub\.dk(\/|$)/i.test(u) ? u : ''); }
+  // Samme regel som motorens aceUrlOk_: kun klubbens egne adresser (gennemgangen 25. oktober L4)
+  function linkOk(u) { u = String(u || ''); return /^\/[a-z0-9_\/-]*(\.html)?(#[a-z0-9_\/-]*)?$/i.test(u) && u.indexOf('//') < 0 ? u : (/^https:\/\/(www\.)?roskildetennisklub\.dk(\/[^\s\\]*)?$/i.test(u) ? u : ''); }
   function nyId() { return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2); }
   function el(tag, cls, tekst) { var e = document.createElement(tag); if (cls) e.className = cls; if (tekst !== undefined) e.textContent = tekst; return e; }
 
+  // Ace på personalesiden (Lars 25. oktober kl. 09.02): siden hedder p_<navn>, teksterne er danske, og forslagene følger siden
+  var PERSONALE = /\/personale\//.test(location.pathname);
   var SIDE = (function () {
     var p = location.pathname.replace(/\/+$/, '/');
     var m = /\/([a-z]+)\.html$/.exec(p);
     var n = m ? m[1] : 'forside';
-    return n === 'index' ? 'forside' : n;
+    n = n === 'index' ? 'forside' : n;
+    return PERSONALE ? 'p_' + n : n;
   })();
+  var FORSLAG_P = {
+    p_forside: ['Hvad kan jeg på personalesiden?', 'Hvordan logger jeg ind på en ny telefon?', 'Hvordan vælger jeg mit arbejdstøj?', 'Noget virker ikke'],
+    p_opstrengning: ['Hvordan melder jeg en ketsjer klar?', 'Hvad gør jeg, når jeg har tømt skabet?', 'Hvordan laver jeg en ny kode til skabet?', 'Noget virker ikke'],
+    p_bolde: ['Hvordan tager jeg bolde til træning?', 'Hvordan fortryder jeg?', 'Hvordan tæller jeg lageret op?', 'Noget virker ikke'],
+    p_arbejdstoej: ['Hvordan vælger jeg mit arbejdstøj?', 'Hvordan finder jeg min skostørrelse?', 'Hvad sker der, når fristen udløber?', 'Noget virker ikke'],
+    p_privattimer: ['Hvordan åbner jeg ledige tider?', 'Hvordan svarer jeg på en forespørgsel?', 'Hvordan kvitterer jeg for en time?', 'Noget virker ikke']
+  };
+  function forslag() { return PERSONALE ? (FORSLAG_P[SIDE] || ['Hvad kan jeg på denne side?', 'Hvad kan jeg på personalesiden?', 'Noget virker ikke']) : ['f1', 'f2', 'f3', 'f4'].map(function (k) { return t(k); }); }
 
   function konfig() {
     if (window.RTK_KONFIG) return Promise.resolve(window.RTK_KONFIG);
@@ -107,7 +124,7 @@
 
   // Samtalen følger med fra side til side i 30 minutter (Lars 25. oktober kl. 08.06). Den ligger kun i browserfanen (sessionStorage),
   // bundet til login, og glemmes ved log ud, ved "Ny samtale" og når fanen lukkes
-  var HUSK = 'rtk.ace.samtale', HUSK_MS = 30 * 60000;
+  var HUSK = 'rtk.ace.samtale' + (PERSONALE ? '.p' : ''), HUSK_MS = 30 * 60000; // personalesiden har sin egen samtale
   function huskGem() {
     A.sidstBrugt = Date.now();
     sGem(HUSK, JSON.stringify({ b: binding(), t: A.sidstBrugt, id: A.samtale, beskeder: A.beskeder.slice(-30), vist: A.vist.slice(-40) }));
@@ -166,9 +183,11 @@
     if (A.knap) { A.knap.remove(); A.knap = null; }
     if (A.ark) { A.ark.remove(); A.ark = null; }
     document.body.classList.remove('ace-har');
-    A.start = null; A.beskeder = []; A.vist = []; A.samtale = nyId(); A.sidstBrugt = 0;
-    sGem('rtk.ace', null); sGem(HUSK, null);
+    A.start = null; A.b = ''; A.beskeder = []; A.vist = []; A.samtale = nyId(); A.sidstBrugt = 0;
+    glem();
   }
+  // Ved log ud glemmes begge samtaler, både medlemssidens og personalesidens (gennemgangen 25. oktober M2)
+  function glem() { sGem('rtk.ace', null); sGem('rtk.ace.samtale', null); sGem('rtk.ace.samtale.p', null); }
 
   // ------------------------------------------------------------ arket
   function byg() {
@@ -179,6 +198,7 @@
     var img = el('img', 'ace-ikon'); img.src = '/ikon-medlem-192.png'; img.alt = ''; img.width = 36; img.height = 36;
     var tt = el('div'); var h = el('b'); h.id = 'aceTitel';
     h.appendChild(document.createTextNode(t('titel') + ' ')); h.appendChild(el('span', 'ace-test', t('test')));
+    if (PERSONALE) h.appendChild(el('span', 'ace-pers', t('pers')));
     tt.appendChild(h); tt.appendChild(el('small', '', t('under')));
     var lukK = el('button', 'luk', '×'); lukK.type = 'button'; lukK.id = 'aceLuk'; lukK.setAttribute('aria-label', t('luk'));
     lukK.addEventListener('click', luk);
@@ -186,15 +206,15 @@
     nyK.addEventListener('click', nySamtale);
     top.appendChild(img); top.appendChild(tt); top.appendChild(nyK); top.appendChild(lukK);
     var log = el('div', 'ace-log'); log.id = 'aceLog'; log.setAttribute('aria-live', 'polite');
-    log.appendChild(el('p', 'ace-ai', t('ai')));
+    log.appendChild(el('p', 'ace-ai', t(PERSONALE ? 'aiP' : 'ai')));
     var hej = el('div', 'bob ace');
     hej.appendChild(el('p', '', t('hej', { navn: (A.start && A.start.fornavn) || '' }).replace('  ', ' ').replace(' .', '.')));
-    hej.appendChild(el('p', '', t('hej2')));
+    hej.appendChild(el('p', '', t(PERSONALE ? 'hej2P' : 'hej2')));
     log.appendChild(hej);
     var fs = el('div', 'ace-forslag'); fs.id = 'aceForslag';
-    ['f1', 'f2', 'f3', 'f4'].forEach(function (k) {
-      var c = el('button', 'ace-chip stiplet', t(k)); c.type = 'button';
-      c.addEventListener('click', function () { if (!A.sender) spoerg(t(k)); });
+    forslag().forEach(function (tekst) {
+      var c = el('button', 'ace-chip stiplet', tekst); c.type = 'button';
+      c.addEventListener('click', function () { if (!A.sender) spoerg(tekst); });
       fs.appendChild(c);
     });
     log.appendChild(fs);
@@ -277,15 +297,15 @@
 
   function sendKort(spm) {
     var k = el('div', 'ace-send');
-    k.appendChild(el('b', '', t('sendH')));
-    var ta = el('textarea'); ta.value = spm; ta.maxLength = 1000; ta.setAttribute('aria-label', t('sendH'));
+    k.appendChild(el('b', '', t(PERSONALE ? 'sendHP' : 'sendH')));
+    var ta = el('textarea'); ta.value = spm; ta.maxLength = 1000; ta.setAttribute('aria-label', t(PERSONALE ? 'sendHP' : 'sendH'));
     k.appendChild(ta);
     var mail = null;
     if (A.start && !A.start.harMail) {
       mail = el('input'); mail.type = 'email'; mail.autocomplete = 'email'; mail.setAttribute('placeholder', t('mail')); mail.setAttribute('aria-label', t('mail'));
       mail.className = 'ace-mail'; k.appendChild(mail);
     }
-    k.appendChild(el('small', '', t('sendT')));
+    k.appendChild(el('small', '', t(PERSONALE ? 'sendTP' : 'sendT')));
     var msg = el('div', 'msg'); msg.setAttribute('role', 'status');
     var r = el('div', 'r');
     var ja = el('button', 'fyldt', t('sendKnap')); ja.type = 'button';
@@ -294,8 +314,8 @@
     ja.addEventListener('click', async function () {
       ja.disabled = true; nej.disabled = true; msg.textContent = t('sender'); msg.className = 'msg';
       try {
-        await motor('send', { tekst: ta.value, mail: mail ? mail.value.trim() : '', samtale: A.beskeder.slice(-20) }, id);
-        k.innerHTML = ''; k.appendChild(el('p', 'ace-sendt', t('sendt'))); k.classList.add('sendt');
+        await motor('send', { tekst: ta.value, mail: mail ? mail.value.trim() : '', samtale: A.beskeder.slice(-20), side: SIDE }, id);
+        k.innerHTML = ''; k.appendChild(el('p', 'ace-sendt', t(PERSONALE ? 'sendtP' : 'sendt'))); k.classList.add('sendt');
       } catch (e) {
         msg.textContent = fejlTekst(e); msg.className = 'msg fejl'; ja.disabled = false; nej.disabled = false;
         if (e.login) fjernAlt();
@@ -348,10 +368,14 @@
   // ------------------------------------------------------------ start
   async function start() {
     try {
+      if (!hent('rtk.token')) { if (A.knap || A.start) fjernAlt(); else glem(); return; } // logget ud, også fra en anden side
+      if (A.start && A.b !== binding()) fjernAlt(); // en anden har logget ind i samme fane (gennemgangen 25. oktober M1)
       var g = GEN;
       var s = await tjekStart();
       if (!s || !s.til || g !== GEN || A.knap) return;
-      A.start = s;
+      if (PERSONALE && !s.personale) return; // personalesiden: kun med en rolle
+      if (!PERSONALE && s.kunPersonale) return; // en junior med en rolle: kun på personalesiden (Lars 25. oktober)
+      A.start = s; A.b = binding();
       huskHent();
       visKnap();
     } catch (e) {
