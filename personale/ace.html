@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="c8d3b0806cb0">
+<meta name="rtk-version" content="3eb73b388f0d">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -261,6 +261,6 @@ if (!token) location.replace('./?til=ace.html');
 else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().then((p) => { if ((husket.roller || []).indexOf('admin') >= 0 && (p.roller || []).indexOf('admin') < 0) location.reload(); }).catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
 </script>
 <script src="../velkomst.js?v=02d869848285"></script>
-<script src="../ace.js?v=7b8fa6764244"></script>
+<script src="../ace.js?v=a463c433356c"></script>
 </body>
 </html>

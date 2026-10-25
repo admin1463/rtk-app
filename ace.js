@@ -222,13 +222,13 @@
     var form = el('form', 'ace-skriv'); form.id = 'aceForm';
     // Feltet vokser med beskeden op til cirka 6 linjer (Lars 25. oktober kl. 13.38). Enter sender, Shift+Enter giver en ny linje
     var inp = el('textarea'); inp.id = 'aceInput'; inp.rows = 1; inp.maxLength = 500; inp.autocomplete = 'off';
-    inp.setAttribute('placeholder', t('ph')); inp.setAttribute('aria-label', t('ph')); inp.setAttribute('enterkeyhint', 'send');
+    inp.setAttribute('placeholder', t('ph')); inp.setAttribute('aria-label', t('ph')); inp.setAttribute('enterkeyhint', TRYK ? 'enter' : 'send');
     var s = el('button', '', '↑'); s.type = 'submit'; s.id = 'aceSend'; s.setAttribute('aria-label', t('send'));
     form.appendChild(inp); form.appendChild(s);
     form.addEventListener('submit', function (e) { e.preventDefault(); var v = inp.value.trim(); if (v && !A.sender) spoerg(v); });
     inp.addEventListener('input', function () { vokse(inp); });
     inp.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true })); }
+      if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && !TRYK) { e.preventDefault(); if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true })); }
     });
     var loft = el('div', 'ace-loft'); loft.id = 'aceLoft';
     ark.appendChild(top); ark.appendChild(log); ark.appendChild(form); ark.appendChild(loft);
@@ -332,6 +332,8 @@
     A.log.appendChild(k); rul();
   }
 
+  // Telefon og tablet: Enter giver en ny linje, og man sender med pilen, som i Beskeder og WhatsApp (Lars 25. oktober kl. 16.53)
+  var TRYK = (function () { try { return matchMedia('(pointer: coarse)').matches && !matchMedia('(pointer: fine)').matches; } catch (e) { return false; } })();
   function vokse(f) {
     if (!f) return;
     f.style.height = 'auto';
