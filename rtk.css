@@ -1079,8 +1079,8 @@ html.ace-laast,html.ace-laast body{overflow:hidden}
 .ace-send .r .tom{background:#FFFFFF;color:var(--ink);border:1.5px solid var(--line2)}
 .ace-send .msg{font-size:14px;margin-top:6px}.ace-send .msg.fejl{color:var(--bad)}
 .ace-sendt{margin:0;color:var(--ok);font-weight:600}
-.ace-skriv{display:flex;gap:8px;padding:10px 12px;background:#FFFFFF;border-top:1px solid var(--line)}
-.ace-skriv input{flex:1;min-width:0;min-height:46px;margin:0;border:1.5px solid var(--line2);border-radius:999px;padding:10px 16px;font-size:16px}
+.ace-skriv{display:flex;align-items:flex-end;gap:8px;padding:10px 12px;background:#FFFFFF;border-top:1px solid var(--line)}
+.ace-skriv input,.ace-skriv textarea{flex:1;min-width:0;min-height:46px;max-height:150px;margin:0;border:1.5px solid var(--line2);border-radius:23px;padding:11px 16px;font:inherit;font-size:16px;line-height:1.35;resize:none;overflow-y:hidden;box-sizing:border-box}
 .ace-skriv button{width:46px;height:46px;flex:0 0 46px;border-radius:999px;border:0;background:var(--pink);color:#FFFFFF;font-size:20px;cursor:pointer}
 .ace-skriv button:disabled{opacity:.5}
 .ace-loft{font-size:12px;color:var(--muted);text-align:center;padding:0 12px calc(10px + env(safe-area-inset-bottom));background:#FFFFFF}

@@ -220,11 +220,16 @@
     log.appendChild(fs);
     if (A.vist.length) fs.remove(); // en samtale fra en anden side: forslagene er brugt
     var form = el('form', 'ace-skriv'); form.id = 'aceForm';
-    var inp = el('input'); inp.id = 'aceInput'; inp.type = 'text'; inp.maxLength = 500; inp.autocomplete = 'off';
+    // Feltet vokser med beskeden op til cirka 6 linjer (Lars 25. oktober kl. 13.38). Enter sender, Shift+Enter giver en ny linje
+    var inp = el('textarea'); inp.id = 'aceInput'; inp.rows = 1; inp.maxLength = 500; inp.autocomplete = 'off';
     inp.setAttribute('placeholder', t('ph')); inp.setAttribute('aria-label', t('ph')); inp.setAttribute('enterkeyhint', 'send');
     var s = el('button', '', '↑'); s.type = 'submit'; s.id = 'aceSend'; s.setAttribute('aria-label', t('send'));
     form.appendChild(inp); form.appendChild(s);
     form.addEventListener('submit', function (e) { e.preventDefault(); var v = inp.value.trim(); if (v && !A.sender) spoerg(v); });
+    inp.addEventListener('input', function () { vokse(inp); });
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event('submit', { cancelable: true })); }
+    });
     var loft = el('div', 'ace-loft'); loft.id = 'aceLoft';
     ark.appendChild(top); ark.appendChild(log); ark.appendChild(form); ark.appendChild(loft);
     // Esc lukker, også når fokus er gået til siden bag (fx efter et tryk på en knap, der blev slået fra)
@@ -327,11 +332,19 @@
     A.log.appendChild(k); rul();
   }
 
+  function vokse(f) {
+    if (!f) return;
+    f.style.height = 'auto';
+    var h = Math.min(f.scrollHeight + 3, 150); // 3 er rammen, højst cirka 6 linjer, derefter kan man rulle i feltet
+    f.style.height = h + 'px';
+    f.style.overflowY = f.scrollHeight + 3 > 150 ? 'auto' : 'hidden';
+  }
+
   async function spoerg(tekst) {
     tekst = String(tekst || '').trim().slice(0, 500);
     if (!tekst || A.sender) return;
     var fs = document.getElementById('aceForslag'); if (fs) fs.remove();
-    A.input.value = '';
+    A.input.value = ''; vokse(A.input);
     bobMig(tekst);
     A.beskeder.push({ fra: 'mig', tekst: tekst });
     A.vist.push({ t: 'mig', tekst: tekst });
