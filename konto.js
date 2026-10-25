@@ -109,7 +109,7 @@
       // Telefonen kan lave kaldet om til en GET undervejs (iPhone 22. oktober). Motoren svarer så igen: true, og kaldet sendes igen.
       // Samme registrerings-id, så intet gemmes to gange.
       if (svar.igen && (forsoeg || 0) < 2) { await new Promise(function (ok) { setTimeout(ok, 500); }); return motor(modul, handling, data, id, (forsoeg || 0) + 1); }
-      if (svar.login) { gem('rtk.token', null); if (paaLogud) paaLogud(); }
+      if (svar.login) { gem('rtk.token', null); if (window.RTK_ACE_API) window.RTK_ACE_API.fjern(); if (paaLogud) paaLogud(); }
       throw new Error(svar.fejl || 'Noget gik galt');
     }
     // Motorens ur for svaret: tid er før arkene blev læst, slut efter handlingen var færdig. Siderne afgør med dem, om en kopi
@@ -198,6 +198,7 @@
         gem('rtk.token', r.token); kode.value = ''; besked(msg, '');
         if (window.RTK_VELKOMST) window.RTK_VELKOMST.tjek();
         valg.onLogin(r);
+        if (window.RTK_ACE_API) window.RTK_ACE_API.start(); // Ace dukker op uden at genindlæse siden
       } catch (err) { besked(msg, fejlTekst(err.message), 'err'); }
       finally { igang = false; }
     });
@@ -216,6 +217,7 @@
     gem('rtk.token', null);
     // Firebase-login og den huskede person hører til den, der logger ud (visningerne, gennemgangen 23. oktober V2)
     gem('rtk.mig', null);
+    if (window.RTK_ACE_API) window.RTK_ACE_API.fjern();
     if (!window.RTKV) { gem('rtk.gr.uid', null); gem('rtk.gr.tok', null); try { indexedDB.deleteDatabase('firebaseLocalStorageDb'); } catch (e) {} }
     if (paaLogud) paaLogud();
   }

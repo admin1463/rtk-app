@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="81f6ce70e575">
+<script src="/opdater.js?v=f299a739b234" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Ace: samtaler · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css?v=401b83ef0e13">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Ace: samtaler</b><span>Personale og frivillige</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold smal">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+  <div id="omraade" class="hidden">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div id="hentMsg" class="msg" aria-live="polite">Henter …</div>
+    <div id="ikkeAdmin" class="card hidden"><b>Kun for administratorer</b><p class="hint">Siden viser samtalerne med Ace, klubbens AI-hjælper.</p></div>
+
+    <div id="vListe" class="hidden">
+      <p class="hint" style="margin-top:0">Alle samtaler med Ace, spørgsmål og svar, de sidste 90 dage. Ingen navne: ingen kan se, hvem der har skrevet. Samtaler slettes efter 90 dage.</p>
+      <div class="stats" style="grid-template-columns:1fr 1fr">
+        <div class="stat"><b id="tSpm">0</b><span>Spørgsmål</span></div>
+        <div class="stat"><b id="tSamt">0</b><span>Samtaler</span></div>
+        <div class="stat"><b id="tUb">0</b><span>Uden svar</span></div>
+        <div class="stat"><b id="tPris">0</b><span>Overslag over prisen</span></div>
+      </div>
+      <div class="al-filtre" id="fDage" role="group" aria-label="Periode"><button type="button" class="af-chip" data-dage="7">7 dage</button><button type="button" class="af-chip valgt" data-dage="30" aria-pressed="true">30 dage</button><button type="button" class="af-chip" data-dage="90">90 dage</button></div>
+      <div class="al-filtre" id="fKun" role="group" aria-label="Hvilke samtaler" style="margin-top:0"><button type="button" class="af-chip valgt" data-kun="" aria-pressed="true">Alle samtaler</button><button type="button" class="af-chip" data-kun="ubesvaret">Kun med spørgsmål uden svar</button></div>
+      <label for="soeg" class="sr-kun">Søg i spørgsmål og svar</label>
+      <input id="soeg" class="al-soeg" type="search" placeholder="Søg i spørgsmål og svar" autocomplete="off">
+      <div id="liste"></div>
+      <p class="hint" id="flere"></p>
+
+      <section class="afsnit" id="status">
+        <h2>Ace lige nu</h2>
+        <dl class="adresser">
+          <dt>Ace</dt><dd id="sTil"></dd>
+          <dt>Nøgle hos Anthropic</dt><dd id="sNoegle"></dd>
+          <dt>Loft</dt><dd id="sLoft">20 spørgsmål pr. person og 300 for klubben om dagen. Står i Indstillinger som ace.loft.person og ace.loft.dag</dd>
+        </dl>
+      </section>
+      <section class="afsnit">
+        <h2>Kilder</h2>
+        <dl class="adresser">
+          <dt>Guiden til Mit RTK</dt><dd id="kGuide"></dd>
+          <dt>Klubbens hjemmeside</dt><dd id="kHjem"></dd>
+          <dt>Infoskærmen</dt><dd id="kInfo"></dd>
+        </dl>
+        <p class="hint">Hjemmesiden og infoskærmen hentes hver nat. Har nogen lige rettet noget, kan du hente dem nu.</p>
+        <button type="button" class="af-chip" id="hentNu">Hent hjemmesiden og infoskærmen nu</button>
+        <div id="hentNuMsg" class="msg" aria-live="polite"></div>
+      </section>
+      <section class="afsnit"><h2>Mandagsmail</h2><p class="hint" style="margin:0">Hver mandag fra kl. 8 får administratorerne en mail med ugens spørgsmål uden svar, uden navne.</p></section>
+    </div>
+
+    <div id="vSamtale" class="hidden">
+      <p class="al-tilbage"><a class="ghost small" href="#" id="tilbage">← Alle samtaler</a></p>
+      <section class="afsnit" style="margin-top:0"><h2 id="sTitel"></h2><p class="hint" style="margin:0" id="sMeta"></p>
+        <div class="al-log" id="sLog"></div>
+      </section>
+    </div>
+  </div>
+  </div>
+
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script src="../konfig.js?v=1301d6285ee2"></script>
+<script>
+// Ace: samtaler. Kun for administratorer (Lars 25. oktober 2026 kl. 06.36: hele loggen, spørgsmål og svar, uden navn, 90 dage).
+// Mockup: kilder/mockup/ace_log_mockup.py. Data fra motoren: ace.log { dage } og ace.hent.
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+let token = hent('rtk.token') || '';
+let person = null;
+let D = null;               // seneste svar fra ace.log
+const F = { dage: 30, kun: '', q: '' };
+let gen = 0;
+
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+function el(tag, cls, tekst) { const e = document.createElement(tag); if (cls) e.className = cls; if (tekst !== undefined) e.textContent = tekst; return e; }
+
+async function motor(modul, handling, data, id) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: id || '' }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  let svar;
+  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (svar.ok) motor.forsoeg = 0;
+  if (!svar.ok) {
+    if (svar.igen && (motor.forsoeg = (motor.forsoeg || 0) + 1) <= 2) return motor(modul, handling, data, id);
+    if (svar.login) logUd(true);
+    throw new Error(svar.fejl || 'Noget gik galt');
+  }
+  return svar.data;
+}
+function logUd(udloebet) {
+  if (window.RTK_UD) return; window.RTK_UD = true;
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null); gem('rtk.mig', null);
+  location.replace(udloebet ? './?til=ace.html&igen=1' : './');
+}
+$('logud').addEventListener('click', () => logUd(false));
+
+// ------------------------------------------------------------ tid
+const DAGE = ['søn.', 'man.', 'tir.', 'ons.', 'tor.', 'fre.', 'lør.'];
+const MDR = ['jan.', 'feb.', 'mar.', 'apr.', 'maj', 'jun.', 'jul.', 'aug.', 'sep.', 'okt.', 'nov.', 'dec.'];
+const kl = (d) => String(d.getHours()).padStart(2, '0') + '.' + String(d.getMinutes()).padStart(2, '0');
+function naar(ms) {
+  const d = new Date(ms), nu = new Date();
+  const dag = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const forskel = Math.round((dag(nu) - dag(d)) / 86400000);
+  if (forskel === 0) return 'I dag kl. ' + kl(d);
+  if (forskel === 1) return 'I går kl. ' + kl(d);
+  return DAGE[d.getDay()].replace(/^./, (c) => c.toUpperCase()) + ' ' + d.getDate() + '. ' + MDR[d.getMonth()] + ' kl. ' + kl(d);
+}
+const dollar = (n) => Number(n || 0).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+const tal = (n) => Number(n || 0).toLocaleString('da-DK');
+
+// ------------------------------------------------------------ listen
+function filtreret() {
+  if (!D) return [];
+  const q = F.q.toLowerCase();
+  return D.samtaler.filter((s) => (!F.kun || s.ubesvaret > 0) && (!q || s.linjer.some((l) => (l.sp + ' ' + l.svar).toLowerCase().indexOf(q) >= 0)));
+}
+function visListe() {
+  if (!D) return;
+  $('tSpm').textContent = tal(D.tal.spoergsmaal);
+  $('tSamt').textContent = tal(D.tal.samtaler);
+  $('tUb').textContent = tal(D.tal.ubesvaret);
+  $('tPris').textContent = dollar(D.tal.dollar);
+  const boks = $('liste'); boks.innerHTML = '';
+  const l = filtreret();
+  if (!l.length) boks.appendChild(el('p', 'hint', D.samtaler.length ? 'Ingen samtaler passer til søgningen.' : 'Ingen samtaler med Ace i perioden.'));
+  l.forEach((s) => {
+    const a = el('a', 'al-kort'); a.href = '#s/' + encodeURIComponent(s.id);
+    const r = el('span', 'r'); r.appendChild(el('span', '', naar(s.start) + (s.side ? ' · ' + s.side : '')));
+    if (s.ubesvaret) r.appendChild(el('span', 'al-ub', s.ubesvaret + ' uden svar'));
+    a.appendChild(r);
+    a.appendChild(el('b', '', (s.linjer[0] && s.linjer[0].sp) || ''));
+    a.appendChild(el('span', 'hint', s.linjer.length + (s.linjer.length === 1 ? ' spørgsmål' : ' spørgsmål')));
+    boks.appendChild(a);
+  });
+  $('flere').textContent = D.flere ? 'Der er ' + D.flere + ' ældre samtaler mere. Vælg en kortere periode, eller søg.' : '';
+  $('sTil').innerHTML = ''; $('sTil').appendChild(el('span', D.til ? 'al-ok' : 'al-adv', D.til ? (D.test ? 'Til i testen' : 'Til') : 'Slået fra'));
+  if (D.loft) $('sLoft').textContent = D.loft.person + ' spørgsmål pr. person og ' + D.loft.dag + ' for klubben om dagen. Står i Indstillinger som ace.loft.person og ace.loft.dag';
+  $('sNoegle').textContent = D.noegle ? 'Lagt ind' : 'Mangler. Lars lægger ANTHROPIC_API_KEY i Script Properties';
+  const v = D.viden || {};
+  const kilde = (x, navn) => x ? (tal(x.antal) + ' ' + navn + ', hentet ' + naar(x.tid).replace(/^I/, 'i') + (x.fejl && x.fejl > x.tid ? '. Seneste forsøg ' + naar(x.fejl).replace(/^I/, 'i') + ' fejlede' : '')) : 'Ikke hentet endnu';
+  $('kGuide').textContent = v.guide ? tal(v.guide.tegn) + ' tegn. Opdateres ved hver udrulning' : '';
+  $('kHjem').textContent = kilde(v.hjemmeside, 'sider og nyheder');
+  $('kInfo').textContent = kilde(v.infoskaerm, 'opslag');
+}
+
+// ------------------------------------------------------------ én samtale
+function visSamtale(id) {
+  const s = D && D.samtaler.find((x) => x.id === id);
+  if (!s) { $('sTitel').textContent = 'Samtalen findes ikke'; $('sMeta').textContent = 'Den kan være slettet efter 90 dage, eller den ligger uden for perioden.'; $('sLog').innerHTML = ''; return; }
+  $('sTitel').textContent = 'Samtale ' + naar(s.start).replace(/^I/, 'i');
+  $('sMeta').textContent = 'Startet på ' + (s.side || 'Forsiden') + ' · ' + (s.linjer[0] && s.linjer[0].sprog === 'en' ? 'engelsk' : 'dansk') + ' · ' + s.linjer.length + ' spørgsmål' + (s.ubesvaret ? ' · ' + s.ubesvaret + ' uden svar' : '');
+  const log = $('sLog'); log.innerHTML = '';
+  s.linjer.forEach((l) => {
+    log.appendChild(el('div', 'bob mig', l.sp));
+    log.appendChild(el('p', 'meta h', kl(new Date(l.tid))));
+    log.appendChild(el('div', 'bob ace', l.svar));
+    const m = el('p', 'meta');
+    if (l.kilder) m.appendChild(document.createTextNode('Kilde: ' + l.kilder.split('\n').join(' · ') + ' · '));
+    m.appendChild(el('span', l.besvaret ? 'al-ok' : 'al-adv', l.besvaret ? 'Besvaret' : 'Uden svar'));
+    log.appendChild(m);
+  });
+}
+
+function rute() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  const m = /^s\/(.+)$/.exec(h);
+  $('vListe').classList.toggle('hidden', !!m);
+  $('vSamtale').classList.toggle('hidden', !m);
+  if (m) { visSamtale(m[1]); window.scrollTo(0, 0); } else visListe();
+}
+window.addEventListener('hashchange', rute);
+$('tilbage').addEventListener('click', (e) => { e.preventDefault(); history.length > 1 && /^#s\//.test(location.hash) ? history.back() : (location.hash = ''); });
+
+async function hentData() {
+  const g = ++gen;
+  try {
+    const d = await motor('ace', 'log', { dage: F.dage, q: F.q, kun: F.kun });
+    if (g !== gen) return;
+    D = d; D.q = F.q; D.kun = F.kun; besked($('hentMsg'), '');
+    rute();
+  } catch (e) { if (g === gen) besked($('hentMsg'), e.message, 'err'); }
+}
+function vaelg(gruppe, attr, vaerdi) {
+  gruppe.querySelectorAll('button').forEach((b) => { const v = b.getAttribute(attr) === vaerdi; b.classList.toggle('valgt', v); b.setAttribute('aria-pressed', String(v)); });
+}
+$('fDage').addEventListener('click', (e) => { const b = e.target.closest('button[data-dage]'); if (!b) return; F.dage = Number(b.dataset.dage); vaelg($('fDage'), 'data-dage', b.dataset.dage); besked($('hentMsg'), 'Henter …'); hentData(); });
+// Filter og søgning vises med det samme blandt de hentede og hentes bagefter i motoren, så også ældre samtaler findes (gennemgangen fund 7)
+$('fKun').addEventListener('click', (e) => { const b = e.target.closest('button[data-kun]'); if (!b) return; F.kun = b.dataset.kun; vaelg($('fKun'), 'data-kun', b.dataset.kun); visListe(); if (D && (D.flere || D.kun)) hentData(); });
+let soegT = 0;
+$('soeg').addEventListener('input', () => { clearTimeout(soegT); soegT = setTimeout(() => { F.q = $('soeg').value.trim(); visListe(); if (D && (D.flere || D.q)) hentData(); }, 400); });
+$('hentNu').addEventListener('click', async () => {
+  const b = $('hentNu'); b.disabled = true; besked($('hentNuMsg'), 'Henter hjemmesiden og infoskærmen. Det kan tage et halvt minut …');
+  try {
+    const r = await motor('ace', 'hent', {}, (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())));
+    besked($('hentNuMsg'), r.fejl && r.fejl.length ? 'Delvist hentet: ' + r.fejl.join('. ') : 'Hentet.', r.fejl && r.fejl.length ? 'err' : 'okm');
+    hentData();
+  } catch (e) { besked($('hentNuMsg'), e.message, 'err'); }
+  finally { b.disabled = false; }
+});
+
+function start() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn;
+  if ((person.roller || []).indexOf('admin') < 0) { besked($('hentMsg'), ''); $('ikkeAdmin').classList.remove('hidden'); return; }
+  hentData();
+}
+function migHusket() { try { const m = JSON.parse(hent('rtk.mig') || 'null'); return m && token && m.t === token.slice(-16) ? m.p : null; } catch (e) { return null; } }
+function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', JSON.stringify({ t: token.slice(-16), p: p })); return p; }); }
+if (!token) location.replace('./?til=ace.html');
+else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().then((p) => { if ((husket.roller || []).indexOf('admin') >= 0 && (p.roller || []).indexOf('admin') < 0) location.reload(); }).catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
+</script>
+<script src="../velkomst.js?v=02d869848285"></script>
+</body>
+</html>

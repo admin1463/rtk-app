@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="799255404ebc">
-<script src="/opdater.js?v=2222ad998c00" defer></script>
+<meta name="rtk-version" content="af9ad3eefc67">
+<script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0B3D3A">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=492102879f3d">
+<link rel="stylesheet" href="../rtk.css?v=401b83ef0e13">
 </head>
 <body>
 <header class="top">
@@ -109,6 +109,7 @@ const URL_MOTOR = window.RTK_KONFIG.motor;
 const IKON = {
   personer: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><rect x="5" y="9" width="34" height="26" rx="3"/><circle cx="15" cy="20" r="4"/><path d="M9 31c0-4 3-6 6-6s6 2 6 6"/><line x1="25" y1="18" x2="34" y2="18"/><line x1="25" y1="23" x2="34" y2="23"/><line x1="25" y1="28" x2="31" y2="28"/></svg>',
   bold: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="22" cy="22" r="15"/><path d="M10 12c6 5 6 15 0 20"/><path d="M34 12c-6 5-6 15 0 20"/></svg>',
+  ace: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><path d="M8 10h28a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H20l-8 6v-6H8a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3z"/><circle cx="16" cy="20" r="1.6"/><circle cx="22" cy="20" r="1.6"/><circle cx="28" cy="20" r="1.6"/></svg>',
   drift: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><path d="M6 32a16 16 0 0 1 32 0"/><line x1="22" y1="32" x2="31" y2="20" stroke-width="2.5"/><circle cx="22" cy="32" r="2.5"/><line x1="6" y1="38" x2="38" y2="38"/></svg>',
   grupper: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><circle cx="15" cy="15" r="6"/><circle cx="31" cy="17" r="5"/><path d="M4 37c0-7 5-11 11-11s11 4 11 11"/><path d="M27 26c1-.6 2.4-1 4-1 5 0 9 3.5 9 10"/></svg>',
   liste: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><rect x="9" y="7" width="26" height="33" rx="2"/><rect x="16" y="4" width="12" height="6" rx="1.5"/><path d="M14 19l2.5 2.5 4.5-5"/><line x1="24" y1="19" x2="30" y2="19"/><path d="M14 28l2.5 2.5 4.5-5"/><line x1="24" y1="28" x2="30" y2="28"/></svg>',
@@ -148,7 +149,10 @@ const FELTER = [
   { afsnit: 'admin', navn: 'Grupper i klubben', side: 'grupper.html', ikon: 'grupper', roller: ['admin'],
     tekst: () => 'Alle grupper med medlemmer, og hvor ofte de spiller. Ikke chat og betalinger.' },
   { afsnit: 'admin', navn: 'Drift og forbrug', side: 'drift.html', ikon: 'drift', roller: ['admin'],
-    tekst: () => 'Sms og mail i dag, de sidste 30 dage, saldo og alarmer.' }
+    tekst: () => 'Sms og mail i dag, de sidste 30 dage, saldo og alarmer.' },
+  // Ace, klubbens AI-hjælper (Lars 25. oktober 2026 kl. 06.36): hele samtalerne uden navn, kun administratorer
+  { afsnit: 'admin', navn: 'Ace: samtaler', side: 'ace.html', ikon: 'ace', roller: ['admin'],
+    tekst: () => 'Hvad medlemmerne spørger Ace om, og hvad Ace svarer. Uden navne.' }
 ];
 const AFSNIT = [['arbejde', 'Dit arbejde', ''], ['admin', 'Administration', 'Kun for klubbens administratorer. Trænere og frivillige ser ikke dette afsnit.']];
 

@@ -1033,3 +1033,68 @@ details.af-mere.tt-valg summary::-webkit-details-marker,details.af-mere.tt-grupp
 .pt-tabel td.tal{text-align:right;white-space:nowrap;font-weight:700}
 @media (max-width:360px){.pt-antal button{font-size:16px}.nr-stor.pt-nr .tal{font-size:44px}}
 .pt .kl-r .tal{font-size:17px;letter-spacing:0;font-weight:800}
+
+/* Ace, klubbens AI-hjælper (testudgaven, 25. oktober 2026). Mockup: kilder/mockup/ace_test_mockup.py */
+.ace-knap{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:900;display:flex;align-items:center;gap:8px;min-height:48px;padding:8px 16px 8px 8px;border-radius:999px;border:2px solid #FFFFFF;background:var(--teal);color:#FFFFFF;font-weight:700;font-size:15px;box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer}
+.ace-knap:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+body.ace-har .bund .wrap{padding-bottom:84px}
+.ace-ikon{width:36px;height:36px;border-radius:999px;object-fit:cover;flex:0 0 36px;border:2px solid #FFFFFF}
+.ace-knap .ace-ikon{width:32px;height:32px;flex-basis:32px}
+html.ace-laast,html.ace-laast body{overflow:hidden}
+.ace-ark{position:fixed;inset:0;z-index:950;display:none;flex-direction:column;background:var(--soft);height:100vh;height:100dvh}
+.ace-ark.aaben{display:flex}
+@media (min-width:700px){.ace-ark{inset:auto 24px 24px auto;width:420px;height:min(720px,calc(100dvh - 48px));border-radius:16px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.3)}}
+.ace-top{display:flex;align-items:center;gap:10px;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));background:var(--teal);color:#FFFFFF}
+.ace-top b{display:block;font-size:17px;line-height:1.2}
+.ace-top small{display:block;font-size:12px;opacity:.85}
+.ace-test{display:inline-block;margin-left:4px;padding:1px 8px;border-radius:999px;background:var(--ice);color:var(--teal);font-size:11px;font-weight:700;vertical-align:2px}
+.ace-top .luk{margin-left:auto;width:44px;height:44px;border-radius:999px;border:1.5px solid var(--ice);background:transparent;color:#FFFFFF;font-size:22px;line-height:1;cursor:pointer}
+.ace-log{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 8px}
+.ace-ai{font-size:12px;color:var(--muted);text-align:center;margin:0 0 12px;line-height:1.4}
+.ace-log .bob{max-width:88%;padding:10px 13px;border-radius:16px;margin:0 0 10px;font-size:15px;line-height:1.45;overflow-wrap:anywhere}
+.ace-log .bob.ace{background:#FFFFFF;border:1px solid var(--line);border-bottom-left-radius:4px}
+.ace-log .bob.mig{background:var(--teal);color:#FFFFFF;margin-left:auto;border-bottom-right-radius:4px;width:fit-content}
+.ace-log .bob.vent{color:var(--muted);font-style:italic}
+.ace-log .bob.fejl{background:var(--badbg);border-color:#F2C6C1;color:var(--bad)}
+.ace-log .bob p{margin:0 0 6px}.ace-log .bob p:last-child{margin:0}
+.ace-tekst{white-space:pre-line}
+.ace-log .kilde{display:block;font-size:12px;color:var(--muted);margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
+.ace-log .kilde a{color:inherit}
+.ace-chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 2px}
+.ace-chip{min-height:40px;padding:6px 12px;border:1.5px solid var(--pink);border-radius:999px;background:#FFFFFF;font:inherit;font-size:14px;font-weight:700;color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;cursor:pointer;text-align:left}
+.ace-chip.stiplet{border-style:dashed}
+.ace-forslag{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin:2px 0 14px}
+.ace-send{background:#FFFFFF;border:1.5px solid var(--pink);border-radius:14px;padding:12px 13px;margin:0 0 10px}
+.ace-send.sendt{border-color:var(--ok);background:var(--okbg)}
+.ace-send b{display:block;font-size:15px;margin-bottom:6px}
+.ace-send small{display:block;font-size:12px;color:var(--muted);margin:6px 0 8px;line-height:1.4}
+.ace-send textarea,.ace-send .ace-mail{width:100%;border:1px solid var(--line2);border-radius:10px;padding:8px 10px;font-size:16px;margin:0 0 6px}
+.ace-send textarea{min-height:76px;resize:vertical}
+.ace-send .r{display:flex;gap:8px;margin-top:4px}
+.ace-send .r button{min-height:44px;padding:8px 16px;border-radius:999px;font-weight:700;font-size:15px;cursor:pointer}
+.ace-send .r .fyldt{background:var(--pink);color:#FFFFFF;border:1.5px solid var(--pink)}
+.ace-send .r .tom{background:#FFFFFF;color:var(--ink);border:1.5px solid var(--line2)}
+.ace-send .msg{font-size:14px;margin-top:6px}.ace-send .msg.fejl{color:var(--bad)}
+.ace-sendt{margin:0;color:var(--ok);font-weight:600}
+.ace-skriv{display:flex;gap:8px;padding:10px 12px;background:#FFFFFF;border-top:1px solid var(--line)}
+.ace-skriv input{flex:1;min-width:0;min-height:46px;margin:0;border:1.5px solid var(--line2);border-radius:999px;padding:10px 16px;font-size:16px}
+.ace-skriv button{width:46px;height:46px;flex:0 0 46px;border-radius:999px;border:0;background:var(--pink);color:#FFFFFF;font-size:20px;cursor:pointer}
+.ace-skriv button:disabled{opacity:.5}
+.ace-loft{font-size:12px;color:var(--muted);text-align:center;padding:0 12px calc(10px + env(safe-area-inset-bottom));background:#FFFFFF}
+/* Ace: samtaler under Administration (personale/ace.html). Mockup: kilder/mockup/ace_log_mockup.py */
+.al-filtre{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.al-soeg{width:100%;min-height:46px;border:1.5px solid var(--line2);border-radius:999px;padding:10px 16px;font-size:16px;margin:4px 0 10px}
+.al-kort{display:block;width:100%;text-align:left;background:#FFFFFF;border:1.5px solid var(--pink);border-radius:14px;padding:12px 14px;margin:0 0 10px;color:inherit;text-decoration:none;white-space:normal;overflow-wrap:anywhere}
+.al-kort .r{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted)}
+.al-kort b{display:block;font-size:16px;margin:4px 0 2px;line-height:1.35}
+.al-kort .hint{margin:0;font-size:13px}
+.al-ub{display:inline-block;padding:1px 8px;border-radius:999px;background:var(--waitbg);color:var(--wait);font-size:12px;font-weight:700;white-space:nowrap}
+.al-log{background:var(--soft);border-radius:14px;padding:12px;margin-top:10px}
+.al-log .bob{max-width:90%;padding:9px 12px;border-radius:14px;margin:0 0 4px;font-size:15px;line-height:1.45;white-space:pre-line;overflow-wrap:anywhere}
+.al-log .bob.mig{background:var(--teal);color:#FFFFFF;margin-left:auto;width:fit-content;border-bottom-right-radius:4px}
+.al-log .bob.ace{background:#FFFFFF;border:1px solid var(--line);border-bottom-left-radius:4px}
+.al-log .meta{font-size:12px;color:var(--muted);margin:0 0 10px}
+.al-log .meta.h{text-align:right}
+.al-tilbage{margin:4px 0 8px}
+a.ghost.small{display:inline-flex;align-items:center;text-decoration:none}
+.al-ok{color:var(--ok);font-weight:600}.al-adv{color:var(--wait);font-weight:600}

@@ -40,7 +40,7 @@
       if (f.tagName === 'SELECT') { for (var j = 0; j < f.options.length; j++) if (f.options[j].selected !== f.options[j].defaultSelected) return true; continue; }
       if (f.value !== f.defaultValue) return true;
     }
-    try { return !!window.RTK_TRAVL; } catch (e) { return true; }
+    try { return !!window.RTK_TRAVL || !!window.RTK_ACE; } catch (e) { return true; }
   }
   function hent(ny) {
     try {
