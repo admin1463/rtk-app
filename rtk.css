@@ -1048,6 +1048,8 @@ html.ace-laast,html.ace-laast body{overflow:hidden}
 .ace-top b{display:block;font-size:17px;line-height:1.2}
 .ace-top small{display:block;font-size:12px;opacity:.85}
 .ace-test{display:inline-block;margin-left:4px;padding:1px 8px;border-radius:999px;background:var(--ice);color:var(--teal);font-size:11px;font-weight:700;vertical-align:2px}
+.ace-top .ny{margin-left:auto;min-height:36px;padding:4px 12px;border-radius:999px;border:1.5px solid var(--ice);background:transparent;color:#FFFFFF;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.ace-top .ny~.luk{margin-left:8px}
 .ace-top .luk{margin-left:auto;width:44px;height:44px;border-radius:999px;border:1.5px solid var(--ice);background:transparent;color:#FFFFFF;font-size:22px;line-height:1;cursor:pointer}
 .ace-log{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 8px}
 .ace-ai{font-size:12px;color:var(--muted);text-align:center;margin:0 0 12px;line-height:1.4}

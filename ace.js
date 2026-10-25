@@ -10,7 +10,7 @@
 
   var T = {
     da: {
-      knap: 'Spørg Ace', titel: 'Ace', under: 'Klubbens AI-hjælper', test: 'TEST', luk: 'Luk Ace',
+      knap: 'Spørg Ace', titel: 'Ace', under: 'Klubbens AI-hjælper', test: 'TEST', luk: 'Luk Ace', ny: 'Ny samtale', nyAria: 'Start en ny samtale med Ace',
       ai: 'Ace er en AI og kan tage fejl. Den svarer ud fra guiden til Mit RTK, klubbens hjemmeside og infoskærmen. Skriv ikke personlige oplysninger.',
       hej: 'Hej {navn}. Jeg er Ace, klubbens AI-hjælper.', hej2: 'Spørg mig om Mit RTK, om klubben, eller hvis noget ikke virker. Jeg kan ikke se dine grupper eller dine data endnu.',
       f1: 'Hvordan melder jeg mig til et spil?', f2: 'Hvad sker der i klubben?', f3: 'Hvordan får jeg strenget min ketsjer?', f4: 'Noget virker ikke',
@@ -21,7 +21,7 @@
       fejl: 'Noget gik galt. Prøv igen.'
     },
     en: {
-      knap: 'Ask Ace', titel: 'Ace', under: 'The club\'s AI helper', test: 'TEST', luk: 'Close Ace',
+      knap: 'Ask Ace', titel: 'Ace', under: 'The club\'s AI helper', test: 'TEST', luk: 'Close Ace', ny: 'New chat', nyAria: 'Start a new chat with Ace',
       ai: 'Ace is an AI and can make mistakes. It answers from the guide to Mit RTK, the club website and the info screen. Do not write personal information.',
       hej: 'Hi {navn}. I am Ace, the club\'s AI helper.', hej2: 'Ask me about Mit RTK, about the club, or if something does not work. I cannot see your groups or your data yet.',
       f1: 'How do I sign up for a game?', f2: 'What is happening at the club?', f3: 'How do I get my racket strung?', f4: 'Something does not work',
@@ -103,7 +103,32 @@
 
   // ------------------------------------------------------------ tilstand
   var GEN = 0; // tælles op ved log ud og skift af bruger, så et startsvar, der kommer for sent, ikke bruges
-  var A = { start: null, aaben: false, beskeder: [], samtale: nyId(), sender: false, knap: null, ark: null, log: null, input: null, loftEl: null, sidstFokus: null };
+  var A = { start: null, aaben: false, beskeder: [], vist: [], samtale: nyId(), sidstBrugt: 0, sender: false, knap: null, ark: null, log: null, input: null, loftEl: null, sidstFokus: null };
+
+  // Samtalen følger med fra side til side i 30 minutter (Lars 25. oktober kl. 08.06). Den ligger kun i browserfanen (sessionStorage),
+  // bundet til login, og glemmes ved log ud, ved "Ny samtale" og når fanen lukkes
+  var HUSK = 'rtk.ace.samtale', HUSK_MS = 30 * 60000;
+  function huskGem() {
+    A.sidstBrugt = Date.now();
+    sGem(HUSK, JSON.stringify({ b: binding(), t: A.sidstBrugt, id: A.samtale, beskeder: A.beskeder.slice(-30), vist: A.vist.slice(-40) }));
+  }
+  function huskHent() {
+    var g = null;
+    try { g = JSON.parse(sHent(HUSK) || 'null'); } catch (e) { g = null; }
+    if (!g || g.b !== binding() || !(Date.now() - g.t < HUSK_MS) || !Array.isArray(g.vist)) { sGem(HUSK, null); return; }
+    A.samtale = /^[A-Za-z0-9-]{8,40}$/.test(String(g.id || '')) ? g.id : nyId();
+    A.beskeder = Array.isArray(g.beskeder) ? g.beskeder : [];
+    A.vist = g.vist; A.sidstBrugt = g.t;
+  }
+  function nySamtale() {
+    sGem(HUSK, null);
+    A.sender = false;
+    A.beskeder = []; A.vist = []; A.samtale = nyId(); A.sidstBrugt = 0;
+    var aaben = A.aaben;
+    if (A.ark) { A.ark.remove(); A.ark = null; }
+    A.aaben = false;
+    if (aaben) aabn();
+  }
 
   /** Er Ace til for den, der er logget ind? Huskes i fanen i 10 minutter, bundet til login, så den næste på telefonen ikke arver svaret. */
   function binding() { var tok = hent('rtk.token') || ''; return tok.slice(-16); }
@@ -141,8 +166,8 @@
     if (A.knap) { A.knap.remove(); A.knap = null; }
     if (A.ark) { A.ark.remove(); A.ark = null; }
     document.body.classList.remove('ace-har');
-    A.start = null; A.beskeder = []; A.samtale = nyId();
-    sGem('rtk.ace', null);
+    A.start = null; A.beskeder = []; A.vist = []; A.samtale = nyId(); A.sidstBrugt = 0;
+    sGem('rtk.ace', null); sGem(HUSK, null);
   }
 
   // ------------------------------------------------------------ arket
@@ -157,7 +182,9 @@
     tt.appendChild(h); tt.appendChild(el('small', '', t('under')));
     var lukK = el('button', 'luk', '×'); lukK.type = 'button'; lukK.id = 'aceLuk'; lukK.setAttribute('aria-label', t('luk'));
     lukK.addEventListener('click', luk);
-    top.appendChild(img); top.appendChild(tt); top.appendChild(lukK);
+    var nyK = el('button', 'ny', t('ny')); nyK.type = 'button'; nyK.id = 'aceNy'; nyK.setAttribute('aria-label', t('nyAria'));
+    nyK.addEventListener('click', nySamtale);
+    top.appendChild(img); top.appendChild(tt); top.appendChild(nyK); top.appendChild(lukK);
     var log = el('div', 'ace-log'); log.id = 'aceLog'; log.setAttribute('aria-live', 'polite');
     log.appendChild(el('p', 'ace-ai', t('ai')));
     var hej = el('div', 'bob ace');
@@ -171,6 +198,7 @@
       fs.appendChild(c);
     });
     log.appendChild(fs);
+    if (A.vist.length) fs.remove(); // en samtale fra en anden side: forslagene er brugt
     var form = el('form', 'ace-skriv'); form.id = 'aceForm';
     var inp = el('input'); inp.id = 'aceInput'; inp.type = 'text'; inp.maxLength = 500; inp.autocomplete = 'off';
     inp.setAttribute('placeholder', t('ph')); inp.setAttribute('aria-label', t('ph')); inp.setAttribute('enterkeyhint', 'send');
@@ -192,6 +220,7 @@
     });
     document.body.appendChild(ark);
     A.ark = ark; A.log = log; A.input = inp; A.loftEl = loft;
+    A.vist.forEach(function (x) { if (x && x.t === 'mig') bobMig(x.tekst); else if (x && x.t === 'ace') bobAce(x); });
     visLoft();
   }
   function visLoft() {
@@ -201,6 +230,7 @@
   }
   function aabn() {
     if (!A.start) return;
+    if (A.vist.length && Date.now() - A.sidstBrugt > HUSK_MS) { A.beskeder = []; A.vist = []; A.samtale = nyId(); sGem(HUSK, null); if (A.ark) { A.ark.remove(); A.ark = null; } }
     if (!A.ark) byg();
     A.sidstFokus = document.activeElement;
     A.ark.classList.add('aaben');
@@ -284,23 +314,30 @@
     A.input.value = '';
     bobMig(tekst);
     A.beskeder.push({ fra: 'mig', tekst: tekst });
+    A.vist.push({ t: 'mig', tekst: tekst });
     A.sender = true; document.getElementById('aceSend').disabled = true;
     var vent = el('div', 'bob ace vent', t('skriver')); A.log.appendChild(vent); rul();
+    var g = GEN, id0 = A.samtale; // et svar, der kommer efter log ud eller "Ny samtale", bruges ikke
     try {
       var s = await motor('spoerg', { samtale: A.samtale, side: SIDE, sprog: sprog(), beskeder: A.beskeder.slice(-12) }, nyId());
+      if (g !== GEN || id0 !== A.samtale) return;
       vent.remove();
       bobAce(s);
       A.beskeder.push({ fra: 'ace', tekst: s.svar });
+      A.vist.push({ t: 'ace', svar: s.svar, kilder: s.kilder || [], knap: s.knap || null });
+      huskGem();
       A.start.tilbage = s.tilbage;
       sGem('rtk.ace', JSON.stringify({ b: binding(), t: Date.now(), s: A.start }));
       visLoft();
       if (!s.besvaret) sendKort(tekst);
     } catch (e) {
+      if (g !== GEN || id0 !== A.samtale) return;
       vent.remove();
-      A.beskeder.pop(); // spørgsmålet kom ikke igennem, så det sendes ikke med næste gang
+      A.beskeder.pop(); A.vist.pop(); // spørgsmålet kom ikke igennem, så det sendes ikke med næste gang
       bobFejl(fejlTekst(e));
       if (e.login) { setTimeout(fjernAlt, 2500); }
     } finally {
+      if (g !== GEN || id0 !== A.samtale) return; // en ny samtale er i gang, og den styrer selv knappen
       A.sender = false;
       var sb = document.getElementById('aceSend'); if (sb) sb.disabled = false;
       if (A.aaben && A.input && !document.querySelector('.ace-send textarea:focus, .ace-send input:focus')) { try { A.input.focus({ preventScroll: true }); } catch (e) {} }
@@ -315,6 +352,7 @@
       var s = await tjekStart();
       if (!s || !s.til || g !== GEN || A.knap) return;
       A.start = s;
+      huskHent();
       visKnap();
     } catch (e) {
       // Ace er en ekstra hjælp. Fejler starten (fx ikke logget ind længere), vises knappen bare ikke
