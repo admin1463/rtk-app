@@ -1003,7 +1003,7 @@ details.af-mere.tt-valg summary::-webkit-details-marker,details.af-mere.tt-grupp
 .pt-check{display:flex;gap:10px;align-items:center;font-size:14.5px;margin:10px 0 0;min-height:44px;cursor:pointer}
 .pt-check input{width:24px;height:24px;min-height:0;margin:0;flex:0 0 24px;accent-color:#E6005C}
 .pt-knapper{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.pt-knapper .fuld{flex:1}
+.pt-knapper .bred{flex:1}
 .nr-stor.pt-nr .tal{font-size:52px;letter-spacing:.06em}
 .pt-profil-bill{position:relative;border-radius:12px;overflow:hidden;margin:6px 0 14px;background:var(--teal);color:#FFFFFF}
 .pt-profil-bill img{display:block;width:100%;height:280px;object-fit:cover}
@@ -1040,6 +1040,7 @@ details.af-mere.tt-valg summary::-webkit-details-marker,details.af-mere.tt-grupp
 body.ace-har .bund .wrap{padding-bottom:84px}
 .ace-ikon{width:36px;height:36px;border-radius:999px;object-fit:cover;flex:0 0 36px;border:2px solid #FFFFFF}
 .ace-knap .ace-ikon{width:32px;height:32px;flex-basis:32px}
+@media (max-width:480px){.ace-knap{padding:8px;min-height:52px}.ace-knap>span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.ace-knap .ace-ikon{width:34px;height:34px;flex-basis:34px}}
 html.ace-laast,html.ace-laast body{overflow:hidden}
 .ace-ark{position:fixed;inset:0;z-index:950;display:none;flex-direction:column;background:var(--soft);height:100vh;height:100dvh}
 .ace-ark.aaben{display:flex}
@@ -1101,3 +1102,18 @@ html.ace-laast,html.ace-laast body{overflow:hidden}
 .al-tilbage{margin:4px 0 8px}
 a.ghost.small{display:inline-flex;align-items:center;text-decoration:none}
 .al-ok{color:var(--ok);font-weight:600}.al-adv{color:var(--wait);font-weight:600}
+/* På vej på forsiden (25. oktober) */
+.paa-vej{margin-top:8px;margin-bottom:8px;padding:14px 18px;border:1.5px dashed var(--line2);border-radius:14px;background:rgba(255,255,255,.7)}
+.paa-vej h2{margin:0 0 4px;font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.paa-vej p{margin:0;color:var(--ink)}
+/* Giv en rolle i Personer og roller (26. oktober) */
+.po-roller{display:grid;gap:8px;margin:4px 0 12px;border:0;padding:0}
+.po-roller label{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line2);border-radius:14px;padding:12px 14px;background:#fff;font-size:15px;cursor:pointer}
+.po-roller label.valgt{border-color:var(--pink);box-shadow:0 0 0 2px rgba(230,0,92,.15)}
+.po-roller label.har{opacity:.55;cursor:default}
+.po-roller small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.po-roller input{width:20px;height:20px;min-height:0;margin:2px 0 0;flex:0 0 20px;accent-color:var(--pink)}
+.po-kons{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:#F3F7F6;font-size:14px;margin:0 0 12px}
+.po-kons ul{margin:6px 0 0 18px;padding:0}
+.po-tidl-boks{border:1.5px solid var(--line2);border-radius:14px;padding:12px 14px;background:#F7F8F9;margin:0 0 12px}
+.po-tidl-boks ul{margin:6px 0 0 18px;padding:0}

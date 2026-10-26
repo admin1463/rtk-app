@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="b4d0be48693d">
+<meta name="rtk-version" content="5152a5172458">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=52976bc554e0">
+<link rel="stylesheet" href="../rtk.css?v=ae69103d7b3d">
 </head>
 <body>
 <header class="top">
@@ -33,6 +33,11 @@
   <div id="testBanner" class="card neutral hidden" style="padding:10px 14px;font-size:14px">Testmiljø med opdigtede data.</div>
 
   <!-- Opstrengere i nyt design (Lars 19. oktober kl. 21.18 til 21.33, mockup godkendt 21.33). Kode fra strengeskemaet, Andet, sms og fem ruller -->
+  <!-- Kun for opstrengere: andre får et kort i stedet for en halv side (testagenten 25. oktober V4) -->
+  <div id="ikkeOps" class="hidden">
+    <div class="who"><span id="hvem2"></span><button class="ghost small" id="logud2" type="button">Log ud</button></div>
+    <div class="card"><b>Kun for opstrengere</b><p class="hint">Siden er for klubbens opstrengere. Vil du se, om din ketsjer er klar, så brug <a href="../opstrengning.html">Opstrengning på medlemssiden</a>.</p><p><a href="./">Til personalesidens forside</a></p></div>
+  </div>
   <div id="omraade" class="hidden tt">
     <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
     <div class="af-hero"><img src="../billeder/felt-opstrengning.jpg" alt=""><div class="tx"><span class="kick">Opstrengere</span><h1 id="fTitel">Aflevering</h1></div></div>
@@ -141,7 +146,7 @@
     <div class="fane hidden" id="fane-taeller" role="tabpanel">
       <h2 class="po-h" id="tTitel" style="margin-top:0">Måneden</h2>
       <div class="os-stat">
-        <div><b id="tIalt">·</b><span>opstrengninger</span></div>
+        <div><b id="tIalt">·</b><span id="tIaltT">opstrengninger</span></div>
         <div><b id="tSats">·</b><span>kr. pr. stk. nu</span></div>
         <div><b id="tTil">·</b><span id="tTilTekst">til næste trin</span></div>
       </div>
@@ -268,9 +273,17 @@ function logUd(udloebet) {
   (window.RTKV ? RTKV.logUd() : Promise.resolve()).then(() => location.replace(udloebet ? './?til=opstrengning.html&igen=1' : './'));
 }
 $('logud').addEventListener('click', () => logUd(false));
+$('logud2').addEventListener('click', () => logUd(false));
 
 const TITLER = { koe: 'Aflevering', klar: 'Meld klar', hent: 'Afhentning', taeller: 'Måneden', strenge: 'Strenge' };
 async function visOmraade() {
+  const r = person.roller || [];
+  if (r.indexOf('opstrenger') < 0 && r.indexOf('admin') < 0) {
+    $('hvem2').textContent = 'Logget ind som ' + person.navn;
+    $('omraade').classList.add('hidden'); $('ikkeOps').classList.remove('hidden');
+    return;
+  }
+  $('ikkeOps').classList.add('hidden');
   $('omraade').classList.remove('hidden');
   $('qrMere').classList.toggle('hidden', (person.roller || []).indexOf('admin') < 0);
   $('hvem').textContent = 'Logget ind som ' + person.navn + (person.initialer ? ' (' + person.initialer + ')' : '');
@@ -765,7 +778,7 @@ function visTaeller(t) {
   {
     const [y, m] = t.maaned.split('-').map(Number);
     $('tTitel').textContent = new Date(y, m - 1, 1).toLocaleDateString('da-DK', { month: 'long', year: 'numeric' }).replace(/^./, (c) => c.toUpperCase());
-    $('tIalt').textContent = t.udenTimer; $('tSats').textContent = t.satsNu;
+    $('tIalt').textContent = t.udenTimer; $('tIaltT').textContent = t.udenTimer === 1 ? 'opstrengning' : 'opstrengninger'; $('tSats').textContent = t.satsNu;
     $('tTil').textContent = t.tilNaesteTrin ? t.tilNaesteTrin : '·';
     $('tTilTekst').textContent = t.tilNaesteTrin ? 'til ' + t.naesteSats + ' kr.' : 'øverste trin';
     const maal = t.tilNaesteTrin ? t.udenTimer + t.tilNaesteTrin : Math.max(t.udenTimer, 1);
@@ -794,9 +807,10 @@ function visLager(l) {
 function migHusket() { try { const m = JSON.parse(hent('rtk.mig') || 'null'); return m && token && m.t === token.slice(-16) ? m.p : null; } catch (e) { return null; } }
 function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', JSON.stringify({ t: token.slice(-16), p: p })); return p; }); }
 if (!token) location.replace('./?til=opstrengning.html');
-else { const husket = migHusket(); if (husket) { person = husket; visOmraade(); migHent().catch(() => {}); } else migHent().then((p) => { person = p; visOmraade(); }).catch(() => {}); }
+// Nye roller siden sidst: siden tegnes igen (gennemgangen 26. oktober fund 5)
+else { const husket = migHusket(); if (husket) { person = husket; visOmraade(); migHent().then((p) => { if ((p.roller || []).join(' ') !== (husket.roller || []).join(' ')) location.reload(); }).catch(() => {}); } else migHent().then((p) => { person = p; visOmraade(); }).catch(() => {}); }
 </script>
-<script src="../velkomst.js?v=02d869848285"></script>
-<script src="../ace.js?v=a463c433356c"></script>
+<script src="../velkomst.js?v=b6e13365b949"></script>
+<script src="../ace.js?v=f16258091977"></script>
 </body>
 </html>

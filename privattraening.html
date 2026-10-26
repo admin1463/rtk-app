@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="2bb0c4ac4b51">
+<meta name="rtk-version" content="388a8fb65228">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=52976bc554e0">
+<link rel="stylesheet" href="rtk.css?v=ae69103d7b3d">
 </head>
 <body>
 <header class="top">
@@ -398,15 +398,15 @@ window.TEKSTER = {
 <script src="konto.js?v=4106af28933d"></script>
 <script src="visning.js?v=9cd5651130e5"></script>
 <script src="sprog.js?v=1976d8c45489"></script>
-<script src="velkomst.js?v=02d869848285"></script>
-<script src="ace.js?v=a463c433356c"></script>
+<script src="velkomst.js?v=b6e13365b949"></script>
+<script src="ace.js?v=f16258091977"></script>
 <script>
 // Privattræning for medlemmer og forældre (privattraening.html). Bygges ind af privattraening.py. 22. oktober 2026.
 // Ledige tider, der bookes direkte, trænerkort og profiler, forespørgsel med trænerens tider, bookingnummer, betaling,
 // bane, flyt og afbud og en tråd med træneren. Mockup: kilder/mockup/privattraening_mockup.py. Beslutningerne står i BESLUTNINGER under "Privattræning".
 const K = window.RTK_KONTO;
 const $ = (id) => document.getElementById(id);
-const t = K.t;
+const t = (k, v) => String(K.t(k, v)).replace(/kr\.\./g, 'kr.'); // et beløb sidst i en sætning giver ikke to punktummer (testagenten 25. oktober)
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="cca0bca17970">
+<meta name="rtk-version" content="ae765b1b82e8">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=52976bc554e0">
+<link rel="stylesheet" href="rtk.css?v=ae69103d7b3d">
 </head>
 <body>
 <header class="top">
@@ -39,7 +39,7 @@
     <div>
       <p class="kicker" data-t="forMedlemmer">For medlemmer</p>
       <h1 data-t="overskrift">Klubben i lommen.</h1>
-      <p class="intro" data-t="intro">Se om din ketsjer er klar, følg holdkampene og find dine medlemsfordele.</p>
+      <p class="intro" data-t="intro">Find nogen at spille med, se om din ketsjer er klar, og book en privattime.</p>
     </div>
   </section>
 
@@ -74,18 +74,12 @@
       <span class="ind"><span class="tk"><b data-t="boern">Mine børn</b><span class="tekst" data-t="boernTekst">For forældre: bestem over beskederne om dine børn under 18.</span></span>
       <span class="aabn"><span class="ord" data-t="aabn">Åbn</span> &#8594;</span></span>
     </a>
-    <div class="tile foto-felt" aria-disabled="true">
-      <img class="foto" src="billeder/felt-nyheder.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="nyheder">Nyheder</b><span class="tekst" data-t="nyhederTekst">Det sker i klubben: nyt for børn, unge og voksne i padel og tennis.</span><span class="snart" data-t="snart">Kommer snart</span></span></span>
-    </div>
-    <div class="tile foto-felt" aria-disabled="true">
-      <img class="foto" src="billeder/felt-holdkampe.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="holdkampe">Holdkampe</b><span class="tekst" data-t="holdkampeTekst">Resultater for Roskilde-holdene og tilmelding til kampe.</span><span class="snart" data-t="snart">Kommer snart</span></span></span>
-    </div>
-    <div class="tile foto-felt" aria-disabled="true">
-      <img class="foto" src="billeder/felt-fordele.jpg" alt="" width="960" height="320" loading="lazy">
-      <span class="ind"><span class="tk"><b data-t="fordele">Medlemsfordele</b><span class="tekst" data-t="fordeleTekst">Rabatter og tilbud til medlemmer.</span><span class="snart" data-t="snart">Kommer snart</span></span></span>
-    </div>
+  </section>
+
+  <!-- Det, der kommer, samlet i én linje (Lars 25. oktober kl. 18.40, testagenten V5) -->
+  <section class="wrap paa-vej" aria-labelledby="paaVejH">
+    <h2 id="paaVejH" data-t="paaVej">På vej</h2>
+    <p data-t="paaVejTekst">Nyheder fra klubben, holdkampe med resultater og tilmelding, og medlemsfordele hos klubbens partnere.</p>
   </section>
 
   <div class="wrap partnere">
@@ -113,7 +107,7 @@
 window.TEKSTER = {
   da: {
     titel: 'Mit RTK', duErPaa: 'Du er på:', side: 'Medlemssiden', forMedlemmer: 'For medlemmer',
-    overskrift: 'Klubben i lommen.', intro: 'Se om din ketsjer er klar, følg holdkampene og find dine medlemsfordele.',
+    overskrift: 'Klubben i lommen.', intro: 'Find nogen at spille med, se om din ketsjer er klar, og book en privattime.', paaVej: 'På vej', paaVejTekst: 'Nyheder fra klubben, holdkampe med resultater og tilmelding, og medlemsfordele hos klubbens partnere.',
     opstrengning: 'Opstrengning', opstrengningTekst: 'Er min ketsjer klar? Skriv til opstrengeren, og se priserne.', aabn: 'Åbn',
     beskeder: 'Beskeder', beskederTekst: 'Vælg, hvordan beskeder fra klubben kommer: notifikation, sms eller mail.',
     boern: 'Mine børn', boernTekst: 'For forældre: bestem over beskederne om dine børn under 18.',
@@ -128,7 +122,7 @@ window.TEKSTER = {
   },
   en: {
     titel: 'Mit RTK', duErPaa: 'You are on:', side: 'Members’ area', forMedlemmer: 'For members',
-    overskrift: 'The club in your pocket.', intro: 'Check whether your racket is ready, follow the team matches and find your member benefits.',
+    overskrift: 'The club in your pocket.', intro: 'Find people to play with, check whether your racket is ready and book a private lesson.', paaVej: 'Coming up', paaVejTekst: 'News from the club, team matches with results and sign-up, and member benefits with the club’s partners.',
     opstrengning: 'Racket stringing', opstrengningTekst: 'Is my racket ready? Message the stringer and see the prices.', aabn: 'Open',
     beskeder: 'Messages', beskederTekst: 'Choose how messages from the club reach you: notification, text message or email.',
     boern: 'My children', boernTekst: 'For parents: decide about messages concerning your children under 18.',
@@ -144,7 +138,7 @@ window.TEKSTER = {
 };
 </script>
 <script src="sprog.js?v=1976d8c45489"></script>
-<script src="velkomst.js?v=02d869848285"></script>
-<script src="ace.js?v=a463c433356c"></script>
+<script src="velkomst.js?v=b6e13365b949"></script>
+<script src="ace.js?v=f16258091977"></script>
 </body>
 </html>

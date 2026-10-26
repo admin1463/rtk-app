@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="3e79eca7a5bd">
+<meta name="rtk-version" content="d02d4204de62">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=52976bc554e0">
+<link rel="stylesheet" href="../rtk.css?v=ae69103d7b3d">
 </head>
 <body>
 <header class="top">
@@ -235,9 +235,9 @@ function opdaterT(ny) {
   if (i >= 0) S.start.tildelinger[i] = ny;
 }
 // Under "Se som træner" må et svar, der kommer sent, ikke overskrive trænerens data: det gemmes til, når man lukker
-async function hentStart() { const s = await motor('toej', 'start'); if (!nyereEnd('start', 'start')) return; if (S.som) S.som.egen = s; else S.start = s; }
+async function hentStart() { const s = await motor('toej', 'start'); S.startTid = Date.now(); if (!nyereEnd('start', 'start')) return; if (S.som) S.som.egen = s; else S.start = s; }
 const egneKladder = () => (S.som ? S.egenKladde || {} : S.kladde);
-async function hentAdm() { const a = await motor('toej', 'oversigt'); if (nyereEnd('adm', 'oversigt') || !S.adm) S.adm = a; }
+async function hentAdm() { const a = await motor('toej', 'oversigt'); S.admTid = Date.now(); if (nyereEnd('adm', 'oversigt') || !S.adm) S.adm = a; }
 
 // ------------------------------------------------------------ fælles stumper
 const hero = (kick, h) => '<div class="af-hero"><img src="../billeder/felt-fordele.jpg" alt=""><div class="tx"><span class="kick">' + esc(kick) + '</span><h1>' + esc(h) + '</h1></div></div>';
@@ -449,7 +449,7 @@ function vKonto() {
   o.traek.slice(0, 10).forEach((r) => { h += '<div class="tt-tr"><div class="tt-mid"><b>' + esc(r.beskrivelse || r.bilag) + '</b><span>' + esc(dagTekst(r.tid)) + ' · ' + esc(r.bilag) + '</span></div><span class="tt-st ok">Trukket ' + kr(r.beloeb) + '</span></div>'; });
   if (!vigtige.length && !o.traek.length) h += '<p class="hint">Ingen tildelinger eller træk endnu.</p>';
   h += '<div class="af-chips">' + chip('Personer (' + o.personer.length + ')', null, 'data-gaa="#personer"') + chip('+ Ny tildeling', null, 'data-gaa="#giv"') + chip('Varerne', null, 'data-gaa="#varer"') + chip('Hent som regneark', null, 'id="csv"') + '</div>';
-  h += '<p class="hint">Andre træk på kontoen, fx boldvogne, og Carstens saldo lægges ind af Claude.</p>';
+  h += '<p class="hint">Andre træk på kontoen, fx boldvogne, og saldoen fra Sports Group lægges ind af klubbens systemansvarlige.</p>';
   h += bund(kr(k.tilbage) + ' tilbage', k.carsten ? 'Carstens saldo ' + esc(dagTekst(k.carsten.dato)) + ': ' + kr(k.carsten.saldo) : 'Ingen opgørelse fra Carsten endnu', 'Til godkendelse', 'data-gaa="#godkend"');
   vis(h);
 }
@@ -459,16 +459,17 @@ function vGodkend() {
   let h = tilbage('#konto', 'Kontoen') + hero('Kontoen · valg og ordre', 'Til godkendelse');
   h += '<div id="admMsg" class="msg" aria-live="polite"></div>';
   h += trin(1, 'Valg fra trænerne', 'hver godkendes for sig');
+  h += '<p class="hint">Skattepligtig værdi er en anslået butikspris: ca. 62 % af listeprisen for tøj med logo og 75 % for udstyr uden logo, fx sko, svedbånd og de fleste kasketter. Den tælles sammen pr. person pr. kalenderår mod bagatelgrænsen for arbejdsrelaterede goder. Revisoren bekræfter reglerne.</p>';
   const ts = o.tildelinger.filter((t) => ['aaben', 'sendt', 'godkendt', 'bestilt'].indexOf(t.status) >= 0);
   if (!ts.length) h += '<p class="hint">Ingen valg lige nu.</p>';
   ts.forEach((t) => {
     const st = STATUS[t.status];
     const p = o.personer.find((x) => x.pid === t.pid);
-    const skat = p && t.betaler !== 'sg' ? (p.loen === 'ulønnet' ? ' · ulønnet, højst ' + kr(p.ulonnetLoft) + ' om året' : ' · ca. ' + kr(p.samlet) + ' af ' + kr(p.graense) + ' i ' + p.skatAar) : '';
+    const skat = p && t.betaler !== 'sg' ? (p.loen === 'ulønnet' ? ' · ulønnet, højst ' + kr(p.ulonnetLoft) + ' om året' : ' · skattepligtig værdi ca. ' + kr(p.samlet) + ' af bagatelgrænsen ' + kr(p.graense) + ' i ' + p.skatAar) : '';
     h += '<details class="af-mere tt-valg"' + (t.status === 'sendt' ? ' open' : '') + '><summary><span class="tt-mid"><b>' + esc(t.navn) + '</b><span>' + t.linjer.reduce((a, l) => a + (l.status === 'mangler' ? 0 : l.n), 0) + ' varer · ' + kr(t.valgt) + ' af ' + kr(t.beloeb) + ' · ' + esc((o.betalere[t.betaler] || '').toLowerCase()) + esc(skat) + '</span></span><span class="tt-st ' + st[1] + '">' + esc(t.status === 'sendt' ? 'Venter på dig' : st[0]) + '</span></summary><div class="ind">';
     t.linjer.forEach((l) => {
       h += '<div class="tt-post' + (l.status === 'mangler' ? ' streg' : '') + '"><div>' + l.n + ' × ' + esc(l.navn) + '<span>Str. ' + esc(l.s) + (l.status !== 'valgt' ? ' · ' + esc(l.status === 'mangler' ? 'ikke på lager' : l.status) : '') + (l.kan === false ? ' · <b>kan ikke vælges længere</b>' : '') + '</span></div><b>' + kr(l.pris * l.n) + '</b>' +
-        (['valgt', 'bestilt'].indexOf(l.status) >= 0 && t.status !== 'aaben' ? '<button type="button" class="af-chip lille farlig" data-mangler="' + t.id + ':' + l.raekke + '">Ikke på lager</button>' : '') + '</div>';
+        (['valgt', 'bestilt'].indexOf(l.status) >= 0 && t.status !== 'aaben' ? '<button type="button" class="af-chip lille farlig" data-mangler="' + t.id + ':' + l.raekke + '">Meld ikke på lager</button>' : '') + '</div>';
     });
     h += '<p class="hint" style="margin:6px 0 0">Må vælge ' + esc(udvalgNavn(t.udvalg)) + '</p>';
     if (t.kommentar) h += '<div class="tt-regel ny"><b>Kommentar fra ' + esc(fornavn(t.navn)) + ':</b> ' + esc(t.kommentar) + '</div>';
@@ -508,7 +509,7 @@ function vPersoner() {
       (p.sidsteId ? '<div class="af-chips tt-som-r">' + chip('Se ' + esc(fornavn(p.navn)) + 's skærm', null, 'data-som="' + esc(p.sidsteId) + '"') + '</div>' : '');
   });
   if (!o.personer.length) h += '<p class="hint">Ingen endnu.</p>';
-  h += '<div class="tt-regel">Nye personer, løn og stop klares af Claude og Lars i koden. Siden viser kun overblikket.</div>';
+  h += '<div class="tt-regel">Nye personer, løn og stop lægges ind af klubbens systemansvarlige. Siden viser kun overblikket.</div>';
   h += bund(o.personer.length + ' personer', 'Tøj, sko og kasket regnes sammen pr. person pr. kalenderår', '+ Ny tildeling', 'data-gaa="#giv"');
   vis(h);
 }
@@ -600,6 +601,10 @@ async function rute() {
 let friskNr = 0;
 function friskOp(h, admin) {
   const nr = ++friskNr;
+  // Kun den første visning lige efter start springer kaldet over, fordi start netop har hentet (testagenten 25. oktober,
+  // toej.start blev hentet to gange). Senere skærmskift henter altid, så en administrator ser det nyeste
+  const forst = !S.friskFoer; S.friskFoer = true;
+  if (forst && Date.now() - ((admin ? S.admTid : S.startTid) || 0) < 4000) return;
   (admin ? hentAdm() : hentStart()).then(() => {
     if (nr !== friskNr || location.hash.replace(/^#/, '') !== h) return;
     if (document.activeElement && document.activeElement.closest && document.activeElement.closest('#vis') && /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
@@ -737,7 +742,7 @@ $('vis').addEventListener('click', async (e) => {
     return;
   }
   if (d.mangler) {
-    if (!toTryk(el, 'm' + d.mangler, 'Tryk igen: ikke på lager')) return;
+    if (!toTryk(el, 'm' + d.mangler, 'Tryk igen: varen er ikke på lager')) return;
     const [tt, r] = d.mangler.split(':');
     try { await motor('toej', 'mangler', { tid: tt, raekke: Number(r) }, nyId()); await hentAdm(); tegn(); besked($('admMsg'), 'Træneren har fået en sms og kan vælge noget andet.', 'okm'); }
     catch (err) { besked($('admMsg'), err.message, 'err'); }
@@ -855,7 +860,7 @@ function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', J
 if (!token) location.replace('./?til=' + encodeURIComponent('arbejdstoej.html' + location.hash));
 else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
 </script>
-<script src="../velkomst.js?v=02d869848285"></script>
-<script src="../ace.js?v=a463c433356c"></script>
+<script src="../velkomst.js?v=b6e13365b949"></script>
+<script src="../ace.js?v=f16258091977"></script>
 </body>
 </html>

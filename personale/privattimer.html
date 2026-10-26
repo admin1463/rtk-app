@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="0614db68a1f7">
+<meta name="rtk-version" content="dcf9f8a8959c">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=52976bc554e0">
+<link rel="stylesheet" href="../rtk.css?v=ae69103d7b3d">
 </head>
 <body>
 <header class="top">
@@ -249,7 +249,7 @@ function tegnTimer() {
     d.kvitter.forEach((b) => {
       h += '<div class="kl-boks">' + timeRaekke(b) +
         '<label class="pt-check"><input type="checkbox" data-vagt="' + esc(b.nr) + '"' + (hent('rtk.pt.vagt.' + b.nr) === '1' ? ' checked' : '') + '>I betalt vagttid, så kun tillæg på ' + esc(kr(100)) + '</label>' +
-        '<div class="pt-knapper"><button type="button" class="af-chip fyldt fuld" data-holdt="' + esc(b.nr) + '" style="justify-content:center;min-height:46px">Timen er holdt</button>' +
+        '<div class="pt-knapper"><button type="button" class="af-chip fyldt bred" data-holdt="' + esc(b.nr) + '" style="justify-content:center;min-height:46px">Timen er holdt</button>' +
         toTryk('udeblev', b.nr, 'Udeblev', 'Tryk igen: der skal betales ' + kr(b.pris), 'info') + '</div></div>';
     });
   }
@@ -286,7 +286,7 @@ function tegnBooking(nr) {
       '<div class="pt-knapper">' + toTryk('aflys', b.nr, 'Aflys timen', 'Tryk igen for at aflyse') + '</div></div>';
   } else if (b.status === 'aftalt') {
     h += '<div class="kl-boks"><label class="pt-check" style="margin-top:0"><input type="checkbox" data-vagt="' + esc(b.nr) + '"' + (hent('rtk.pt.vagt.' + b.nr) === '1' ? ' checked' : '') + '>I betalt vagttid, så kun tillæg</label>' +
-      '<div class="pt-knapper"><button type="button" class="af-chip fyldt fuld" data-holdt="' + esc(b.nr) + '" style="justify-content:center;min-height:46px">Timen er holdt</button>' + toTryk('udeblev', b.nr, 'Udeblev', 'Tryk igen: hele beløbet', 'info') + '</div></div>';
+      '<div class="pt-knapper"><button type="button" class="af-chip fyldt bred" data-holdt="' + esc(b.nr) + '" style="justify-content:center;min-height:46px">Timen er holdt</button>' + toTryk('udeblev', b.nr, 'Udeblev', 'Tryk igen: hele beløbet', 'info') + '</div></div>';
   } else if ((b.status === 'afbud' || b.status === 'udeblev') && b.skyldig > 0 && !b.frafaldet) {
     h += '<div class="kl-boks"><b>' + (b.status === 'afbud' ? 'Afbud ' + (b.skyldig >= b.pris ? 'under 24 timer før' : 'mere end 24 timer før') : 'Udeblevet') + '</b>' +
       '<p style="margin:6px 0 10px;font-size:14.5px">Der skal betales ' + esc(kr(b.skyldig)) + '. Du kan frafalde det, fx ved sygdom.' + (b.skyldig >= b.pris ? ' Så får du ikke løn for timen.' : '') + '</p>' +
@@ -602,7 +602,7 @@ function admB(b) {
     (b.betStatus === 'tilbage' ? '<div style="padding:0 0 10px">' + toTryk('tilbage', b.nr, 'Betal ' + kr(b.tilTilbage) + ' tilbage', 'Tryk igen, når ' + kr(b.tilTilbage) + ' er betalt tilbage i MobilePay', 'info') + '</div>' : '');
 }
 async function tegnAdm() {
-  if (!S.adm) { vis(hero('Betalinger og løn', 'Administration · privattræning') + faner('adm') + '<p class="hint">Henter …</p>'); try { await hentAdm(); } catch (err) { msg(err.message, 'err'); return; } if (location.hash !== '#adm') return; }
+  if (!S.adm) { vis(hero('Betalinger og løn', 'Administration · privattræning') + faner('adm') + '<p class="hint">Henter …</p>'); try { await hentAdm(); S.admFrisk = true; } catch (err) { msg(err.message, 'err'); return; } if (location.hash !== '#adm') return; } // lige hentet: ikke igen (testagenten 25. oktober)
   // Kom oversigten fra Firebase, hentes den nyeste fra motoren én gang i baggrunden
   else if (!S.admFrisk) { S.admFrisk = true; hentAdm().then(() => { if (location.hash === '#adm' && !window.RTK_TRAVL && !S.sender) tegnAdm(); }).catch(() => {}); }
   const A = S.adm;
@@ -682,13 +682,13 @@ function laesCsv(tekst) {
   const hoved = (rk.shift() || []).map((x) => x.trim().toLowerCase());
   const find = (...ord) => hoved.findIndex((h) => ord.some((o) => h.indexOf(o) >= 0));
   const iB = find('beløb', 'belob', 'amount'), iM = find('besked', 'message', 'kommentar', 'comment', 'tekst', 'note'), iN = find('navn', 'name', 'afsender', 'kunde'), iT = find('dato', 'date', 'tidspunkt', 'tid', 'time'), iI = find('transaktions-id', 'transaktion', 'transaction', 'reference', 'id');
-  if (iB < 0 || iM < 0) throw new Error('Filen mangler kolonnerne beløb og besked. Send filen til Claude, så kan formatet læses.');
+  if (iB < 0 || iM < 0) throw new Error('Filen mangler kolonnerne beløb og besked. Send filen til klubbens systemansvarlige, så kan formatet læses.');
   return rk.filter((r) => r.length > 1 && r[iB] && r[iB].trim()).map((r) => ({ beloeb: r[iB].trim(), besked: r[iM] || '', navn: iN >= 0 ? r[iN] : '', tid: iT >= 0 ? r[iT] : '', id: iI >= 0 && iI !== iB ? r[iI] : '' }));
 }
 
 start();
 </script>
-<script src="../velkomst.js?v=02d869848285"></script>
-<script src="../ace.js?v=a463c433356c"></script>
+<script src="../velkomst.js?v=b6e13365b949"></script>
+<script src="../ace.js?v=f16258091977"></script>
 </body>
 </html>

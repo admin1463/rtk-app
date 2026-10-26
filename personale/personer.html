@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="d449977103e8">
+<meta name="rtk-version" content="9e07d5473bac">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=52976bc554e0">
+<link rel="stylesheet" href="../rtk.css?v=ae69103d7b3d">
 </head>
 <body>
 <header class="top">
@@ -91,7 +91,7 @@ async function motor(modul, handling, data, id) {
   try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
   if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
   SIDST[handling] = svar.tid || 0;
-  if (['fjernRolle', 'stop', 'logudAlle'].indexOf(handling) >= 0) LAEST.liste = Math.max(LAEST.liste || 0, svar.tidSlut || svar.tid || 0);
+  if (['fjernRolle', 'givRolle', 'stop', 'logudAlle'].indexOf(handling) >= 0) LAEST.liste = Math.max(LAEST.liste || 0, svar.tidSlut || svar.tid || 0);
   return svar.data;
 }
 // Visningerne i Firebase (trin 1, Lars 24. oktober kl. 10.41): siden viser det, motoren sidst lagde i Firebase, med det samme,
@@ -160,7 +160,7 @@ function vListe() {
     '<label class="sr" for="sog">Søg efter navn eller rolle</label><input id="sog" class="po-sog" type="search" placeholder="Søg efter navn eller rolle" autocomplete="off" value="' + esc(S.sog) + '">' +
     '<div class="af-chips" role="group" aria-label="Vis">' + FILTRE.map(([f, t]) => '<button type="button" class="af-chip' + (S.filter === f ? ' valgt' : '') + '" data-filter="' + f + '" aria-pressed="' + (S.filter === f) + '">' + t + ' ' + antal(f) + '</button>').join('') + '</div>' +
     '<p class="po-note">Medarbejdere og frivillige med en rolle. Medlemmer uden rolle står ikke her.</p><div id="poListe">' + listeHtml() + '</div>' +
-    '<p class="po-note"><b>' + aktive + ' aktive · ' + tidl + ' tidligere.</b> Nye personer og roller lægger Lars og Claude ind.</p>' +
+    '<p class="po-note"><b>' + aktive + ' aktive · ' + tidl + ' tidligere.</b> Nye personer lægges ind af klubbens systemansvarlige. Roller gives på den enkelte person.</p>' +
     '<div class="af-chips"><button type="button" class="af-chip info" id="csv">Hent listen som regneark</button></div>';
   vis(h, false);
   $('sog').addEventListener('input', (e) => { S.sog = e.target.value; $('poListe').innerHTML = listeHtml(); });
@@ -199,9 +199,16 @@ function vPerson(pid, igen) {
   });
   if (p.loen) h += '<div><span>Løn</span><b>' + esc(p.loen === 'lønnet' ? 'Lønnet' : 'Ulønnet') + '</b></div>';
   h += '</div>';
-  if (adm) h += '<p class="po-note">Administratorer ændres af Lars og Claude.</p>';
+  // Giv en rolle (testagenten 25. oktober V2, mockup godkendt af Lars 26. oktober)
+  if (!adm && !mig && p.aktiv !== false) {
+    const igen = (p.tidligere || []).filter((x) => GIV.indexOf(x) >= 0 && p.roller.indexOf(x) < 0);
+    if (!p.roller.length && (p.tidligere || []).length) h += '<div class="po-tidl-boks"><b>Tidligere roller</b><ul>' + p.tidligere.map((x) => '<li>' + esc(NAVNE[x] || x) + '</li>').join('') + '</ul></div>';
+    h += '<div class="af-chips" style="margin-top:0">' + (!p.roller.length ? igen.map((x) => '<a class="af-chip fyldt" href="#p/' + encodeURIComponent(p.pid) + '/giv/' + x + '">Giv rollen ' + esc(NAVNE[x] || x) + ' igen</a>').join('') : '') +
+      '<a class="af-chip' + (p.roller.length || !igen.length ? ' fyldt' : '') + '" href="#p/' + encodeURIComponent(p.pid) + '/giv">' + (!p.roller.length && igen.length ? '+ Giv en anden rolle' : '+ Giv en rolle') + '</a></div>';
+  }
+  if (adm) h += '<p class="po-note">Administratorer ændres af klubbens systemansvarlige.</p>';
   h += '<h2 class="po-h">Kontakt</h2><div class="po-fakta"><div><span>Mobil</span><b>' + (p.mobil ? '<a href="tel:' + esc(p.mobil.replace(/\s/g, '')) + '">' + esc(mobilTekst(p.mobil)) + '</a>' : '–') + '</b></div><div><span>Mail</span><b>' + (p.mail ? esc(p.mail) : '–') + '</b></div></div>' +
-    '<p class="po-note">Navn, mobil og mail rettes af Lars og Claude nu. Når importen fra ForeningsLet er bygget, rettes de dér.</p>';
+    '<p class="po-note">Navn, mobilnummer og mail rettes af klubbens systemansvarlige. Når importen fra ForeningsLet er bygget, rettes de dér.</p>';
   h += '<h2 class="po-h">Login</h2><div class="po-fakta"><div><span>Sidst logget ind</span><b>' + esc(p.sidstLogin ? datoKort(p.sidstLogin) + ' kl. ' + p.sidstLogin.slice(11).replace(':', '.') : 'Aldrig') + '</b></div><div><span>Husket på</span><b>' + p.enheder + (p.enheder === 1 ? ' enhed' : ' enheder') + '</b></div></div>';
   if (!mig && !adm && p.enheder > 0) h += '<div class="af-chips" style="margin-top:0"><a class="af-chip lille" href="#p/' + encodeURIComponent(p.pid) + '/logud">Log ud på alle enheder</a></div>';
   if (p.toej || p.opstrengning) {
@@ -214,9 +221,52 @@ function vPerson(pid, igen) {
   vis(h, igen ? false : (S.msg ? '.msg' : 'h1'));
 }
 
+const GIV = ['traener', 'cheftraener', 'opstrenger', 'boldansvarlig', 'oevrige'];
+const GIV_TEKST = { traener: 'Tag bolde, Mit arbejdstøj og Privattimer', cheftraener: 'Som træner plus Boldregnskab med forbrug og bestilling',
+  opstrenger: 'Opstrengere: kø, tøm skabet, meld klar og koder til skabene', boldansvarlig: 'Boldregnskab og Mit arbejdstøj', oevrige: 'Kun Mit arbejdstøj, fx banemand' };
+const GIV_FELT = { traener: 'felterne Tag bolde, Mit arbejdstøj og Privattimer', cheftraener: 'felterne Boldregnskab, Mit arbejdstøj og Privattimer',
+  opstrenger: 'feltet Opstrengere', boldansvarlig: 'felterne Boldregnskab og Mit arbejdstøj', oevrige: 'feltet Mit arbejdstøj' };
+function vGiv(pid, forvalgt) {
+  const p = S.en[pid];
+  const fornavn = p.navn.split(' ')[0];
+  let valgt = GIV.indexOf(forvalgt) >= 0 && p.roller.indexOf(forvalgt) < 0 ? forvalgt : '';
+  let h = tilbage() + hero(rolleTekst(p), p.navn) + '<h2 class="po-h" style="margin-top:0">Giv ' + esc(fornavn) + ' en rolle</h2><fieldset class="po-roller"><legend class="sr">Vælg en rolle</legend>';
+  GIV.forEach((x) => {
+    const har = p.roller.indexOf(x) >= 0;
+    h += '<label class="' + (har ? 'har' : '') + '"><input type="radio" name="giv" value="' + x + '"' + (har ? ' disabled' : '') + (valgt === x ? ' checked' : '') + '><span><b>' + esc(NAVNE[x]) + '</b>' + (har ? ' · har rollen' : '') + '<small>' + esc(GIV_TEKST[x]) + '</small></span></label>';
+  });
+  h += '</fieldset><div id="givKons" class="po-kons" aria-live="polite"></div><p class="po-note">Administrator gives af klubbens systemansvarlige.</p>' +
+    '<div class="af-chips"><button type="button" class="af-chip fyldt" id="ja">Giv rollen</button><a class="af-chip info" href="#p/' + encodeURIComponent(pid) + '">Fortryd</a></div><div id="bMsg" class="msg" role="status"></div>';
+  vis(h, 'h2');
+  const opdater = () => {
+    document.querySelectorAll('.po-roller label').forEach((l) => l.classList.toggle('valgt', !!l.querySelector('input:checked')));
+    $('givKons').innerHTML = valgt ? '<b>Når du giver rollen ' + esc(NAVNE[valgt]) + '</b><ul><li>' + esc(fornavn) + ' får ' + esc(GIV_FELT[valgt]) + ' på sin personaleside næste gang, siden åbnes.</li>' +
+      (valgt === 'opstrenger' ? '<li>' + esc(fornavn) + ' kan se koderne til skabene og melde ketsjere klar.</li>' : '') + '<li>Der sendes ingen sms. Fortæl selv ' + esc(fornavn) + ' om det.</li></ul>' : '<p class="hint" style="margin:0">Vælg en rolle.</p>';
+    $('ja').textContent = valgt ? 'Giv rollen ' + NAVNE[valgt] : 'Giv rollen';
+  };
+  document.querySelectorAll('.po-roller input').forEach((i) => i.addEventListener('change', () => { valgt = i.value; const m = $('bMsg'); m.textContent = ''; m.className = 'msg'; opdater(); }));
+  opdater();
+  $('ja').addEventListener('click', async () => {
+    const b = $('ja'); if (b.disabled) return;
+    if (!valgt) { const m = $('bMsg'); m.textContent = 'Vælg en rolle først.'; m.className = 'msg err'; return; }
+    b.disabled = true; b.textContent = 'Gemmer …';
+    const noegle = 'giv/' + pid + '/' + valgt;
+    S.ids[noegle] = S.ids[noegle] || nyId();
+    try {
+      const r = await motor('personer', 'givRolle', { pid, rolle: valgt }, S.ids[noegle]);
+      delete S.ids[noegle];
+      S.en[pid] = r.person;
+      S.msg = fornavn + ' har fået rollen ' + NAVNE[valgt] + '.'; S.msgType = 'okm'; S.msgRute = '#p/' + encodeURIComponent(pid);
+      S.liste = null; hentListe();
+      location.hash = '#p/' + encodeURIComponent(pid);
+    } catch (err) { b.disabled = false; opdater(); const m = $('bMsg'); m.textContent = err.message; m.className = 'msg err'; }
+  });
+}
+
 function bekraeft(pid, slags, rolle) {
   const p = S.en[pid];
   if (!p) { vis(tilbage() + '<p class="msg" role="status">Henter …</p>', false); return; }
+  if (slags === 'giv') { vGiv(pid, rolle); return; }
   const fornavn = p.navn.split(' ')[0];
   let titel, punkter, knap, grund = false;
   if (slags === 'fjern') {
@@ -279,7 +329,7 @@ async function hentEn(pid) {
   return true;
 }
 function rute() {
-  const m = /^#p\/([^/]+)(?:\/(fjern|stop|logud)(?:\/([a-z]+))?)?$/.exec(location.hash);
+  const m = /^#p\/([^/]+)(?:\/(fjern|stop|logud|giv)(?:\/([a-z]+))?)?$/.exec(location.hash);
   return m ? { pid: decodeURIComponent(m[1]), slags: m[2] || '', rolle: m[3] || '' } : {};
 }
 async function visRute() {
@@ -309,7 +359,7 @@ function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', J
 if (!token) location.replace('./?til=' + encodeURIComponent('personer.html' + location.hash));
 else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().then((p) => { if ((husket.roller || []).indexOf('admin') >= 0 && (p.roller || []).indexOf('admin') < 0) location.reload(); }).catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
 </script>
-<script src="../velkomst.js?v=02d869848285"></script>
-<script src="../ace.js?v=a463c433356c"></script>
+<script src="../velkomst.js?v=b6e13365b949"></script>
+<script src="../ace.js?v=f16258091977"></script>
 </body>
 </html>

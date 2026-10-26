@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="18fba6a0dc54">
+<meta name="rtk-version" content="23f0fb911257">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=52976bc554e0">
+<link rel="stylesheet" href="rtk.css?v=ae69103d7b3d">
 </head>
 <body>
 <header class="top">
@@ -116,7 +116,7 @@ window.TEKSTER = {
     kicker: 'For forældre', h1Login: 'Bestem over beskederne om dit barn',
     introLogin: 'Log ind med det mobilnummer, du gav ved indmeldelsen. Du får en kode på sms.',
     kunNumre: 'Kun numre, der står som forælder i klubbens system, kan få en kode. Får du ingen kode? Skriv til',
-    hvemF: 'Logget ind som forælder · {nr}', h1: 'Mine børn',
+    hvemF: 'Logget ind som forælder · {nr}', hvemU: 'Logget ind · {nr}', h1: 'Mine børn',
     intro: 'Bestem, hvad dine børn kan se i Mit RTK, og hvordan beskederne om dem kommer. Barnets navn står først i hver besked.',
     ingenH: 'Vi kan ikke se børn under 18 på dit nummer', ingenTekst: 'Mangler et barn, så skriv til klubben herunder.',
     aar: '{n} år', tilDig: 'Til dig',
@@ -137,7 +137,7 @@ window.TEKSTER = {
     mAdgang: 'Adgang til Mit RTK', mAdgangTekst: '{navn} logger ind med sit eget nummer.', mAdgangUdenNr: '{navn} logger ind med sit eget nummer. Skriv nummeret herunder først.',
     detKan: 'Det kan {navn} se', mHoldkampe: 'Mine hold og holdkampe', mHoldkampeTekst: 'Holdkampe, hvem der spiller, mødetid og sted.',
     mGrupper: 'Grupper', mGrupperTekst: 'Juniorgrupper med træner som ordstyrer.', mProshop: 'Pro shop', mProshopTekst: 'Se varer og priser. Aldrig tilbud eller nyheder.',
-    mOpstrengning: 'Opstrengning', mOpstrengningTekst: 'Se status med nummeret fra kvitteringen.', altid: 'Altid',
+    mOpstrengning: 'Opstrengning', mOpstrengningTekst: 'Se status med ketsjernummeret fra skabet.', altid: 'Altid', kommerSnart: 'Kommer snart', snartTekst: 'Findes ikke for juniorer endnu. Du kan slå det til, når det er klar.',
     sTil: 'Til', sFra: 'Fra', sAf: 'sat af {af}', dig: 'dig', ingenValg: 'ingen har valgt endnu', laast: '{af} har sagt nej, så kun {af} kan slå det til.',
     nejVinder: 'Et nej vinder: har en af jer sagt nej, er det fra, til den samme ændrer det. Den anden forælder får besked ved hver ændring.',
     oenskeFra: 'Ønske fra {navn} · {tid}', oenskeH: '{navn} vil gerne have {modul} slået til',
@@ -154,7 +154,7 @@ window.TEKSTER = {
     kicker: 'For parents', h1Login: 'Decide about messages concerning your child',
     introLogin: 'Log in with the mobile number you gave when your child joined. You will get a code by text message.',
     kunNumre: 'Only numbers registered as a parent in the club system can get a code. No code? Write to',
-    hvemF: 'Logged in as a parent · {nr}', h1: 'My children',
+    hvemF: 'Logged in as a parent · {nr}', hvemU: 'Logged in · {nr}', h1: 'My children',
     intro: 'Decide what your children can see in Mit RTK and how messages about them reach you. The child’s name comes first in every message.',
     ingenH: 'We cannot see any children under 18 on your number', ingenTekst: 'If a child is missing, write to the club below.',
     aar: '{n} years', tilDig: 'To you',
@@ -175,7 +175,7 @@ window.TEKSTER = {
     mAdgang: 'Access to Mit RTK', mAdgangTekst: '{navn} logs in with their own number.', mAdgangUdenNr: '{navn} logs in with their own number. Add the number below first.',
     detKan: 'What {navn} can see', mHoldkampe: 'My teams and team matches', mHoldkampeTekst: 'Team matches, who is playing, meeting time and place.',
     mGrupper: 'Groups', mGrupperTekst: 'Junior groups with a coach as moderator.', mProshop: 'Pro shop', mProshopTekst: 'See products and prices. Never offers or news.',
-    mOpstrengning: 'Stringing', mOpstrengningTekst: 'See the status with the number on the receipt.', altid: 'Always',
+    mOpstrengning: 'Stringing', mOpstrengningTekst: 'See the status with the racket number from the locker.', altid: 'Always', kommerSnart: 'Coming soon', snartTekst: 'Not available for juniors yet. You can turn it on when it is ready.',
     sTil: 'On', sFra: 'Off', sAf: 'set by {af}', dig: 'you', ingenValg: 'nobody has chosen yet', laast: '{af} has said no, so only {af} can turn it on.',
     nejVinder: 'A no wins: if one of you has said no, it stays off until the same person changes it. The other parent is told about every change.',
     oenskeFra: 'Request from {navn} · {tid}', oenskeH: '{navn} would like {modul} turned on',
@@ -190,8 +190,8 @@ window.TEKSTER = {
 <script src="konto.js?v=4106af28933d"></script>
 <script src="visning.js?v=9cd5651130e5"></script>
 <script src="sprog.js?v=1976d8c45489"></script>
-<script src="velkomst.js?v=02d869848285"></script>
-<script src="ace.js?v=a463c433356c"></script>
+<script src="velkomst.js?v=b6e13365b949"></script>
+<script src="ace.js?v=f16258091977"></script>
 <script>
 const K = window.RTK_KONTO;
 const $ = (id) => document.getElementById(id);
@@ -257,6 +257,8 @@ async function hent() {
 }
 
 const MODULER = [['holdkampe', 'mHoldkampe', 'mHoldkampeTekst'], ['grupper', 'mGrupper', 'mGrupperTekst'], ['proshop', 'mProshop', 'mProshopTekst']];
+// Moduler, der findes for juniorer i dag. De andre vises som Kommer snart uden kontakt (testagenten 25. oktober K3)
+const KLAR = window.RTK_KLAR || []; // testene af kontakterne sætter RTK_KLAR, så logikken stadig er prøvet, når modulerne kommer
 const svar = {}; // svar på ønsker, vises indtil siden hentes igen
 function modulNavn(m) { return t({ adgang: 'mAdgang', holdkampe: 'mHoldkampe', grupper: 'mGrupper', proshop: 'mProshop' }[m] || m); }
 function visDato(s) {
@@ -289,7 +291,14 @@ function samtykkeDel(b) {
   const d = K.el('div', { 'class': 'samtykke' });
   d.append(vippeRaekke(b, 'adgang', t('mAdgang'), t(b.nummer ? 'mAdgangTekst' : 'mAdgangUdenNr', { navn: b.navn }), 'adgang'));
   d.append(K.el('p', { 'class': 'underoverskrift' }, t('detKan', { navn: b.navn })));
-  MODULER.forEach(([m, n, tx]) => d.append(vippeRaekke(b, m, t(n), t(tx))));
+  MODULER.forEach(([m, n, tx]) => {
+    if (KLAR.indexOf(m) >= 0) { d.append(vippeRaekke(b, m, t(n), t(tx))); return; }
+    const l = K.el('div', { 'class': 'linje snart', 'data-modul': m });
+    const lt = K.el('div');
+    lt.append(K.el('b', null, t(n)), K.el('span', { 'class': 'smaa' }, t(tx) + ' ' + t('snartTekst')));
+    l.append(lt, K.el('span', { 'class': 'altid' }, t('kommerSnart')));
+    d.append(l);
+  });
   const op = K.el('div', { 'class': 'linje' });
   const opt = K.el('div');
   opt.append(K.el('b', null, t('mOpstrengning')), K.el('span', { 'class': 'smaa' }, t('mOpstrengningTekst')));
@@ -358,7 +367,7 @@ function barnKort(b) {
   const kort = K.el('section', { 'class': 'card barn', 'aria-labelledby': 'h-' + b.id, style: 'margin-top:16px' });
   kort.append(K.el('h2', { id: 'h-' + b.id }, b.navn));
   kort.append(K.el('p', { 'class': 'info' }, [b.alder !== null ? t('aar', { n: b.alder }) : '', b.hold].filter(Boolean).join(' · ')));
-  (b.oensker || []).forEach((o) => kort.append(oenskeKort(b, o)));
+  (b.oensker || []).filter((o) => KLAR.indexOf(o.modul) >= 0).forEach((o) => kort.append(oenskeKort(b, o)));
   if (svar[b.id]) {
     const s = svar[b.id];
     const tk = K.el('div', { 'class': 'tak', style: 'margin:0 0 14px' });
@@ -399,7 +408,7 @@ function barnKort(b) {
 
 function vis() {
   if (!data) return;
-  $('hvem').textContent = t('hvemF', { nr: data.mobil });
+  $('hvem').textContent = t((data.boern || []).length ? 'hvemF' : 'hvemU', { nr: data.mobil }); // et medlem uden børn er ikke forælder (testagenten 25. oktober)
   const liste = $('boern');
   liste.innerHTML = '';
   data.boern.forEach((b) => liste.append(barnKort(b)));

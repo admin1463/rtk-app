@@ -11,7 +11,7 @@
   var T = {
     da: {
       knap: 'Spørg Ace', titel: 'Ace', under: 'Klubbens AI-hjælper', test: 'TEST', luk: 'Luk Ace', ny: 'Ny samtale', nyAria: 'Start en ny samtale med Ace',
-      ai: 'Ace er en AI og kan tage fejl. Den svarer ud fra guiden til Mit RTK, klubbens hjemmeside og infoskærmen. Skriv ikke personlige oplysninger.',
+      ai: 'Ace er en AI og kan tage fejl. Den svarer ud fra siderne i Mit RTK, klubbens hjemmeside og infoskærmen. Skriv ikke personlige oplysninger.',
       hej: 'Hej {navn}. Jeg er Ace, klubbens AI-hjælper.', hej2: 'Spørg mig om Mit RTK, om klubben, eller hvis noget ikke virker. Jeg kan ikke se dine grupper eller dine data endnu.',
       f1: 'Hvordan melder jeg mig til et spil?', f2: 'Hvad sker der i klubben?', f3: 'Hvordan får jeg strenget min ketsjer?', f4: 'Noget virker ikke',
       ph: 'Skriv til Ace', send: 'Send', skriver: 'Ace skriver …', kilde: 'Kilde', kilder: 'Kilder',
@@ -20,14 +20,14 @@
       mail: 'Din mail', sendKnap: 'Send', nejTak: 'Nej tak', sender: 'Sender …', sendt: 'Sendt til klubben. De svarer dig på mail.',
       fejl: 'Noget gik galt. Prøv igen.',
       pers: 'PERSONALE',
-      aiP: 'Ace er en AI og kan tage fejl. Den svarer ud fra guiderne til Mit RTK og personalesiderne, klubbens hjemmeside og infoskærmen. Den kan ikke se data og kender ingen koder.',
+      aiP: 'Ace er en AI og kan tage fejl. Den svarer ud fra siderne i Mit RTK og personalesiderne, klubbens hjemmeside og infoskærmen. Den kan ikke se data og kender ingen koder.',
       hej2P: 'Spørg mig om personalesiderne eller om klubben. Jeg kan ikke se data og kender ingen koder.',
       sendHP: 'Send spørgsmålet til administratorerne', sendTP: 'Går til klubbens administratorer med dit navn og din mail, så de kan svare dig. Samtalen med Ace sendes med.',
       sendtP: 'Sendt til administratorerne. De svarer dig på mail.'
     },
     en: {
       knap: 'Ask Ace', titel: 'Ace', under: 'The club\'s AI helper', test: 'TEST', luk: 'Close Ace', ny: 'New chat', nyAria: 'Start a new chat with Ace',
-      ai: 'Ace is an AI and can make mistakes. It answers from the guide to Mit RTK, the club website and the info screen. Do not write personal information.',
+      ai: 'Ace is an AI and can make mistakes. It answers from the pages in Mit RTK, the club website and the info screen. Do not write personal information.',
       hej: 'Hi {navn}. I am Ace, the club\'s AI helper.', hej2: 'Ask me about Mit RTK, about the club, or if something does not work. I cannot see your groups or your data yet.',
       f1: 'How do I sign up for a game?', f2: 'What is happening at the club?', f3: 'How do I get my racket strung?', f4: 'Something does not work',
       ph: 'Write to Ace', send: 'Send', skriver: 'Ace is writing …', kilde: 'Source', kilder: 'Sources',
@@ -157,7 +157,13 @@
       var g = JSON.parse(sHent('rtk.ace') || 'null');
       if (g && g.b === binding() && Date.now() - g.t < 600000) return g.s;
     } catch (e) {}
-    var s = await motor('start', {});
+    var s;
+    try { s = await motor('start', {}); }
+    catch (e) {
+      // Et nej (fx en junior uden rolle) huskes også i 10 minutter, så siden ikke spørger igen ved hvert sideskift (testagenten 25. oktober)
+      if (g0 === GEN && b0 === binding() && /voksne|personale/i.test(String(e && e.message))) sGem('rtk.ace', JSON.stringify({ b: b0, t: Date.now(), s: { til: false } }));
+      throw e;
+    }
     if (g0 !== GEN || b0 !== binding()) return null; // der er logget ud eller ind imens (gennemgangen fund 2)
     sGem('rtk.ace', JSON.stringify({ b: b0, t: Date.now(), s: s }));
     return s;
@@ -172,10 +178,43 @@
     var img = el('img', 'ace-ikon'); img.src = '/ikon-medlem-192.png'; img.alt = ''; img.width = 32; img.height = 32;
     var sp = el('span', '', t('knap'));
     b.appendChild(img); b.appendChild(sp);
+    b.setAttribute('aria-label', t('knap'));
     b.addEventListener('click', aabn);
     document.body.appendChild(b);
     document.body.classList.add('ace-har');
     A.knap = b;
+    loftLyt();
+    loft();
+  }
+
+  // Knappen må aldrig ligge oven på en bundlinje med knapper (Send i kurven, Lav ordren, chatfeltet). Står en bundlinje
+  // nederst på skærmen, løftes knappen op over den (testagenten 25. oktober K2)
+  var BUNDLINJER = '.af-bund, .gr-skriv, .rtk-ny', loftVent = false;
+  function loft() {
+    loftVent = false;
+    if (!A.knap) return;
+    var h = 0, H = window.innerHeight, W = document.documentElement.clientWidth;
+    // Knappens egen plads, når den ikke er løftet: 16 px fra bund og højre kant (gennemgangen 26. oktober fund 1 og 2)
+    var kh = A.knap.offsetHeight || 52, kw = A.knap.offsetWidth || 52;
+    var kTop = H - 16 - kh, kBund = H - 16, kV = W - 16 - kw, kH = W - 16;
+    var l = document.querySelectorAll(BUNDLINJER);
+    for (var i = 0; i < l.length; i++) {
+      var e = l[i];
+      if (A.ark && A.ark.contains(e)) continue;
+      var r = e.getBoundingClientRect();
+      if (!r.height || !r.width || getComputedStyle(e).display === 'none' || getComputedStyle(e).visibility === 'hidden') continue;
+      if (r.top < kBund && r.bottom > kTop && r.left < kH && r.right > kV) h = Math.max(h, H - r.top);
+    }
+    var v = h ? Math.round(h + 10) + 'px' : '';
+    if (A.knap.style.bottom !== v) A.knap.style.bottom = v;
+  }
+  function loftSnart() { if (!loftVent) { loftVent = true; requestAnimationFrame(loft); } }
+  function loftLyt() {
+    if (A.loftLyt) return;
+    A.loftLyt = true;
+    window.addEventListener('scroll', loftSnart, { passive: true });
+    window.addEventListener('resize', loftSnart);
+    try { new MutationObserver(loftSnart).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'hidden', 'style'] }); } catch (e) {}
   }
   function fjernAlt() {
     GEN++;
@@ -400,7 +439,7 @@
   // Ny person eller log ud i en anden fane: knap og samtale væk
   window.addEventListener('storage', function (e) { if (e.key === 'rtk.token' || e.key === null) { fjernAlt(); start(); } });
   document.addEventListener('sprog', function () {
-    if (A.knap) A.knap.querySelector('span').textContent = t('knap');
+    if (A.knap) { A.knap.querySelector('span').textContent = t('knap'); A.knap.setAttribute('aria-label', t('knap')); }
     if (A.ark && !A.beskeder.length) { A.ark.remove(); A.ark = null; if (A.aaben) { A.aaben = false; aabn(); } }
   });
   window.RTK_ACE_API = { start: start, fjern: fjernAlt, aabn: aabn, luk: luk };

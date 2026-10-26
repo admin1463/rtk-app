@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="c3140a4feaa3">
+<meta name="rtk-version" content="8faf6b420323">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=52976bc554e0">
+<link rel="stylesheet" href="../rtk.css?v=ae69103d7b3d">
 </head>
 <body>
 <header class="top">
@@ -307,7 +307,9 @@ function visMine(l) {
   {
     // Fortryd kun inden for 30 minutter, også når listen er en kopi fra Firebase
     l.forEach((r) => { if (r.udloeber && r.udloeber < Date.now()) r.kanFortrydes = false; });
-    $('mine').innerHTML = l.length ? '<table>' + l.map((r) => '<tr><td>' + esc(r.tid.slice(5).replace('-', '/')) + '</td><td>' + r.antal + ' × ' + esc(r.bold) + '<br><small style="color:var(--muted)">' + esc(r.formaal) + (r.hold ? ', ' + esc(r.hold) : '') + ', ' + esc(r.sted) + '</small></td><td class="n">' +
+    // Dansk dato: 25/10 kl. 19.08 (testagenten 25. oktober, før stod der 10/25 19:08)
+    function kortTid(s) { const m = /(\d{4})-(\d\d)-(\d\d)[ T](\d\d):(\d\d)/.exec(String(s || '')); return m ? Number(m[3]) + '/' + Number(m[2]) + ' kl. ' + m[4] + '.' + m[5] : String(s || ''); }
+    $('mine').innerHTML = l.length ? '<table>' + l.map((r) => '<tr><td>' + esc(kortTid(r.tid)) + '</td><td>' + r.antal + ' × ' + esc(r.bold) + '<br><small style="color:var(--muted)">' + esc(r.formaal) + (r.hold ? ', ' + esc(r.hold) : '') + ', ' + esc(r.sted) + '</small></td><td class="n">' +
       (r.fortrudt ? '<small>fortrudt</small>' : r.kanFortrydes ? '<button class="ghost small" data-r="' + r.raekke + '">Fortryd</button>' : '') + '</td></tr>').join('') + '</table>' : 'Ingen endnu.';
     $('mine').querySelectorAll('button[data-r]').forEach((b) => b.addEventListener('click', async () => {
       b.disabled = true;
@@ -435,7 +437,7 @@ function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', J
 if (!token) location.replace('./?til=' + encodeURIComponent('bolde.html' + location.hash));
 else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
 </script>
-<script src="../velkomst.js?v=02d869848285"></script>
-<script src="../ace.js?v=a463c433356c"></script>
+<script src="../velkomst.js?v=b6e13365b949"></script>
+<script src="../ace.js?v=f16258091977"></script>
 </body>
 </html>

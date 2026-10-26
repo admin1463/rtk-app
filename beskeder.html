@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="3718716fa61a">
+<meta name="rtk-version" content="824d2577f9f5">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=52976bc554e0">
+<link rel="stylesheet" href="rtk.css?v=ae69103d7b3d">
 </head>
 <body>
 <header class="top">
@@ -157,7 +157,7 @@
       <section class="afsnit" id="adresseDel">
         <h2 data-t="herSender">Her sender vi til</h2>
         <dl class="adresser">
-          <dt data-t="mobil">Mobil</dt><dd id="visMobil"></dd>
+          <dt data-t="mobil">Mobilnummer</dt><dd id="visMobil"></dd>
           <dt data-t="mail">Mail</dt><dd id="visMail"></dd>
         </dl>
         <p class="hint" data-t="forkert">Forkert nummer eller mail? Det skal rettes i dine medlemsoplysninger hos klubben, så det gælder alt fra klubben og ikke kun Mit RTK.</p>
@@ -227,14 +227,14 @@ window.TEKSTER = {
     tilDig: 'Til dig', tilForaeldre: 'Til dine forældre', smsTil: 'Sms til {nr}', ingenNr: 'Intet nummer endnu', ingenForaeldre: 'Ingen forældre registreret',
     ungTekst: 'Dine forældre bestemmer, hvordan beskederne kommer, og hvilket nummer de går til. Når du fylder 18, bestemmer du selv.',
     ogsaaForaelder: 'Du er også forælder', ogsaaForaelderTekst: 'Bestem over beskederne om dine børn under 18.',
-    herSender: 'Her sender vi til', mobil: 'Mobil', mail: 'Mail', mangler: 'Mangler',
+    herSender: 'Her sender vi til', mobil: 'Mobilnummer', mail: 'Mail', mangler: 'Mangler',
     forkert: 'Forkert nummer eller mail? Det skal rettes i dine medlemsoplysninger hos klubben, så det gælder alt fra klubben og ikke kun Mit RTK.',
     skrivH: 'Skriv til klubben', skrivLabel: 'Skriv til klubbens kontor, hvad der skal rettes', skrivMail: 'Din mail, så kontoret kan svare',
     sendKlub: 'Send til klubben', skrivHint: 'Beskeden går til kontakt@roskildetennisklub.dk, og kontoret svarer på din mail.',
     takH: 'Tak, beskeden er sendt.', takTekst: 'Kontoret svarer på din mail.', skrivIgen: 'Skriv en besked mere',
     laesPrivatliv: 'Læs om privatliv i Mit RTK', henter: 'Henter …', gemmer: 'Gemmer …', gemt: 'Gemt.', sender: 'Sender …',
     detKanDu: 'Det kan du se', mHoldkampe: 'Mine hold og holdkampe', mGrupper: 'Grupper', mProshop: 'Pro shop', mOpstrengning: 'Opstrengning',
-    mOpstrengningTekst: 'Er min ketsjer klar?', erTil: 'Slået til', ikkeTil: 'Ikke slået til af dine forældre', venter: 'Venter på dine forældre',
+    mOpstrengningTekst: 'Er min ketsjer klar?', erTil: 'Slået til', ikkeTil: 'Ikke slået til af dine forældre', venter: 'Venter på dine forældre', kommerSnart: 'Kommer snart',
     bedForaeldre: 'Bed mine forældre om at ændre noget', foraeldreBestemmer: 'Dine forældre bestemmer, hvad du kan se her, indtil du fylder 18.',
     altTil: 'Dine forældre har slået det hele til.', hvadVil: 'Hvad vil du gerne have?', slaaXTil: 'Slå {modul} til',
     beskedTilForaeldre: 'Besked til dine forældre (frivillig)', oenskePh: 'Må jeg komme i U12-gruppen? Alle fra holdet er der.',
@@ -299,7 +299,7 @@ window.TEKSTER = {
     takH: 'Thank you, your message has been sent.', takTekst: 'The office will reply by email.', skrivIgen: 'Write another message',
     laesPrivatliv: 'Read about privacy in Mit RTK', henter: 'Loading …', gemmer: 'Saving …', gemt: 'Saved.', sender: 'Sending …',
     detKanDu: 'What you can see', mHoldkampe: 'My teams and team matches', mGrupper: 'Groups', mProshop: 'Pro shop', mOpstrengning: 'Stringing',
-    mOpstrengningTekst: 'Is my racket ready?', erTil: 'Turned on', ikkeTil: 'Not turned on by your parents', venter: 'Waiting for your parents',
+    mOpstrengningTekst: 'Is my racket ready?', erTil: 'Turned on', ikkeTil: 'Not turned on by your parents', venter: 'Waiting for your parents', kommerSnart: 'Coming soon',
     bedForaeldre: 'Ask my parents to change something', foraeldreBestemmer: 'Your parents decide what you can see here until you turn 18.',
     altTil: 'Your parents have turned everything on.', hvadVil: 'What would you like?', slaaXTil: 'Turn on {modul}',
     beskedTilForaeldre: 'Message to your parents (optional)', oenskePh: 'Can I join the U12 group? Everyone from the team is there.',
@@ -344,8 +344,8 @@ window.TEKSTER = {
 <script src="konto.js?v=4106af28933d"></script>
 <script src="visning.js?v=9cd5651130e5"></script>
 <script src="sprog.js?v=1976d8c45489"></script>
-<script src="velkomst.js?v=02d869848285"></script>
-<script src="ace.js?v=a463c433356c"></script>
+<script src="velkomst.js?v=b6e13365b949"></script>
+<script src="ace.js?v=f16258091977"></script>
 <script>
 const K = window.RTK_KONTO;
 const ALARM_NIV = {"tennis": [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5], "padel": [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5]};
@@ -696,19 +696,26 @@ function vis() {
 }
 
 const MNAVN = { holdkampe: 'mHoldkampe', grupper: 'mGrupper', proshop: 'mProshop' };
+const KLAR = window.RTK_KLAR || []; // moduler, der findes for juniorer i dag (testagenten 25. oktober K3)
 const mNavn = (m) => t(MNAVN[m] || m);
 let sendtBesked = null;
 function visModuler() {
-  const moduler = data.moduler || [];
-  const oensker = data.oensker || [];
+  const alle = data.moduler || [];
+  const moduler = alle.filter((m) => KLAR.indexOf(m.modul) >= 0);
+  const oensker = (data.oensker || []).filter((o) => KLAR.indexOf(o.modul) >= 0);
   const venter = (m) => oensker.some((o) => o.modul === m && o.status === 'venter');
   const ul = $('ungModuler'); ul.innerHTML = '';
+  const op = K.el('li'); op.append(K.el('b', null, t('mOpstrengning')), K.el('span', null, t('mOpstrengningTekst'))); ul.append(op);
+  alle.filter((m) => KLAR.indexOf(m.modul) < 0).forEach((m) => {
+    const li = K.el('li', { 'class': 'fra snart', 'data-modul': m.modul });
+    li.append(K.el('b', null, mNavn(m.modul)), K.el('span', null, t('kommerSnart')));
+    ul.append(li);
+  });
   moduler.forEach((m) => {
     const li = K.el('li', { 'class': m.til ? '' : 'fra', 'data-modul': m.modul });
     li.append(K.el('b', null, mNavn(m.modul)), K.el('span', null, t(m.til ? 'erTil' : (venter(m.modul) ? 'venter' : 'ikkeTil'))));
     ul.append(li);
   });
-  const op = K.el('li'); op.append(K.el('b', null, t('mOpstrengning')), K.el('span', null, t('mOpstrengningTekst'))); ul.append(op);
   const ol = $('ungOensker'); ol.innerHTML = '';
   oensker.slice(0, 5).forEach((o) => ol.append(K.el('li', { 'class': 'hint', style: 'margin:0' },
     t(o.status === 'venter' ? 'oVenter' : (o.status === 'ja' ? 'oJa' : 'oNej'), { modul: mNavn(o.modul), af: o.svarAf || '' }))));

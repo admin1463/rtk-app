@@ -12,7 +12,7 @@
   var TEKST = {
     da: {
       kicker: 'Velkommen til Mit RTK', titel: 'Kort om dine data og beskeder',
-      p1t: 'Kun det nødvendige', p1: 'Dit navn, dit mobilnummer og det, du bruger appen til, fx dine opstrengninger. Klubben giver det aldrig videre.',
+      p1t: 'Kun det nødvendige', p1: 'Dit navn, dit mobilnummer og det, du bruger appen til, fx dine opstrengninger. Klubben sælger det aldrig og bruger kun databehandlere, der driver appen for klubben.',
       p2t: 'Beskeder om det, du er med i', p2: 'Fx at din ketsjer er klar, eller at en kamp er aflyst. Dem får du altid, men du vælger selv: notifikation, sms eller mail.',
       p3t: 'Nyt fra pro shoppen og partnerne', p3: 'Kun hvis du selv siger ja under Beskeder. Aldrig som sms.',
       ok: 'Forstået', laes: 'Læs hele teksten om privatliv', note: 'Du finder den altid under Privatliv nederst på siden.',
@@ -20,7 +20,7 @@
     },
     en: {
       kicker: 'Welcome to Mit RTK', titel: 'In short: your data and messages',
-      p1t: 'Only what is needed', p1: 'Your name, your mobile number and what you use the app for, such as your racket stringing. The club never passes it on.',
+      p1t: 'Only what is needed', p1: 'Your name, your mobile number and what you use the app for, such as your racket stringing. The club never sells it and only uses data processors that run the app for the club.',
       p2t: 'Messages about things you take part in', p2: 'For example that your racket is ready or that a match is cancelled. You always get these, but you choose how: notification, text message or email.',
       p3t: 'News from the pro shop and partners', p3: 'Only if you say yes under Messages. Never by text message.',
       ok: 'Got it', laes: 'Read the full privacy text', note: 'You can always find it under Privacy at the bottom of the page.',
