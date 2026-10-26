@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="dcf9f8a8959c">
+<meta name="rtk-version" content="c3eccd2252f6">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=ae69103d7b3d">
+<link rel="stylesheet" href="../rtk.css?v=ea143393276c">
 </head>
 <body>
 <header class="top">
@@ -248,7 +248,6 @@ function tegnTimer() {
     h += sek('Skal kvitteres');
     d.kvitter.forEach((b) => {
       h += '<div class="kl-boks">' + timeRaekke(b) +
-        '<label class="pt-check"><input type="checkbox" data-vagt="' + esc(b.nr) + '"' + (hent('rtk.pt.vagt.' + b.nr) === '1' ? ' checked' : '') + '>I betalt vagttid, så kun tillæg på ' + esc(kr(100)) + '</label>' +
         '<div class="pt-knapper"><button type="button" class="af-chip fyldt bred" data-holdt="' + esc(b.nr) + '" style="justify-content:center;min-height:46px">Timen er holdt</button>' +
         toTryk('udeblev', b.nr, 'Udeblev', 'Tryk igen: der skal betales ' + kr(b.pris), 'info') + '</div></div>';
     });
@@ -260,12 +259,11 @@ function tegnTimer() {
     h += sek('Seneste') + '<div class="kl-boks">' + d.seneste.map((b) => timeRaekke(b, st(...(ST[b.status] || [b.status, ''])))).join('') + '</div>';
   }
   vis(h);
-  document.querySelectorAll('[data-vagt]').forEach((x) => x.addEventListener('change', () => gem('rtk.pt.vagt.' + x.dataset.vagt, x.checked ? '1' : null)));
   document.querySelectorAll('[data-holdt]').forEach((b) => b.addEventListener('click', () => {
     const nr = b.dataset.holdt;
-    handling('tHoldt', { nr, vagttid: !!document.querySelector('[data-vagt="' + nr + '"]:checked') }, 'Timen er kvitteret');
+    handling('tHoldt', { nr }, 'Timen er kvitteret');
   }));
-  bindToTryk((hv, nr) => { if (hv === 'udeblev') handling('tUdeblev', { nr, vagttid: !!document.querySelector('[data-vagt="' + nr + '"]:checked') }, 'Udeblivelsen er registreret'); });
+  bindToTryk((hv, nr) => { if (hv === 'udeblev') handling('tUdeblev', { nr }, 'Udeblivelsen er registreret'); });
 }
 
 // ------------------------------------------------------------ en time
@@ -285,8 +283,8 @@ function tegnBooking(nr) {
       '<label class="pt-lbl" for="aflysTekst" style="margin-top:0">Besked (valgfri)</label><textarea id="aflysTekst" maxlength="500" style="min-height:70px" placeholder="Fx jeg er desværre syg">' + esc(S.tekst['aflys' + b.nr] || '') + '</textarea>' +
       '<div class="pt-knapper">' + toTryk('aflys', b.nr, 'Aflys timen', 'Tryk igen for at aflyse') + '</div></div>';
   } else if (b.status === 'aftalt') {
-    h += '<div class="kl-boks"><label class="pt-check" style="margin-top:0"><input type="checkbox" data-vagt="' + esc(b.nr) + '"' + (hent('rtk.pt.vagt.' + b.nr) === '1' ? ' checked' : '') + '>I betalt vagttid, så kun tillæg</label>' +
-      '<div class="pt-knapper"><button type="button" class="af-chip fyldt bred" data-holdt="' + esc(b.nr) + '" style="justify-content:center;min-height:46px">Timen er holdt</button>' + toTryk('udeblev', b.nr, 'Udeblev', 'Tryk igen: hele beløbet', 'info') + '</div></div>';
+    h += '<div class="kl-boks">' +
+      '<div class="pt-knapper" style="margin-top:0"><button type="button" class="af-chip fyldt bred" data-holdt="' + esc(b.nr) + '" style="justify-content:center;min-height:46px">Timen er holdt</button>' + toTryk('udeblev', b.nr, 'Udeblev', 'Tryk igen: hele beløbet', 'info') + '</div></div>';
   } else if ((b.status === 'afbud' || b.status === 'udeblev') && b.skyldig > 0 && !b.frafaldet) {
     h += '<div class="kl-boks"><b>' + (b.status === 'afbud' ? 'Afbud ' + (b.skyldig >= b.pris ? 'under 24 timer før' : 'mere end 24 timer før') : 'Udeblevet') + '</b>' +
       '<p style="margin:6px 0 10px;font-size:14.5px">Der skal betales ' + esc(kr(b.skyldig)) + '. Du kan frafalde det, fx ved sygdom.' + (b.skyldig >= b.pris ? ' Så får du ikke løn for timen.' : '') + '</p>' +
@@ -294,12 +292,11 @@ function tegnBooking(nr) {
   }
   h += '<div id="traad"></div>';
   vis(h);
-  document.querySelectorAll('[data-vagt]').forEach((x) => x.addEventListener('change', () => gem('rtk.pt.vagt.' + x.dataset.vagt, x.checked ? '1' : null)));
-  document.querySelectorAll('[data-holdt]').forEach((x) => x.addEventListener('click', () => handling('tHoldt', { nr, vagttid: !!document.querySelector('[data-vagt]:checked') }, 'Timen er kvitteret')));
+  document.querySelectorAll('[data-holdt]').forEach((x) => x.addEventListener('click', () => handling('tHoldt', { nr }, 'Timen er kvitteret')));
   if ($('aflysTekst')) $('aflysTekst').addEventListener('input', () => { S.tekst['aflys' + nr] = $('aflysTekst').value; window.RTK_TRAVL = !!$('aflysTekst').value.trim(); });
   bindToTryk((hv) => {
     if (hv === 'aflys') handling('tAflys', { nr, tekst: S.tekst['aflys' + nr] || '' }, 'Timen er aflyst');
-    if (hv === 'udeblev') handling('tUdeblev', { nr, vagttid: !!document.querySelector('[data-vagt]:checked') }, 'Udeblivelsen er registreret');
+    if (hv === 'udeblev') handling('tUdeblev', { nr }, 'Udeblivelsen er registreret');
     if (hv === 'frafald') handling('tFrafald', { nr }, 'Betalingen er frafaldet');
   });
   traad(nr);
@@ -331,6 +328,9 @@ async function traad(id) {
 
 // ------------------------------------------------------------ tidsvælgeren (afstemningens design B)
 // E = { dage: { 'yyyy-mm-dd': [{ fra: '17:00', til: '18:00' }] }, sidste: { fra, til } }
+// Lars 26. oktober: i starten varer alle privattimer 60 minutter. Træneren vælger kun starttidspunktet.
+const LAENGDE = 60;
+const plusMin = (hhmm, m) => { const d = new Date(fraIso('2000-01-01', hhmm).getTime() + m * 60000); return to(d.getHours()) + ':' + to(d.getMinutes()); };
 function nyEditor() { return { dage: {}, sidste: { fra: '17:00', til: '18:00' }, anden: false }; }
 function edTider(E) { return Object.keys(E.dage).sort().reduce((a, d) => a.concat(E.dage[d].map((x) => ({ dag: d, fra: x.fra, til: x.til }))), []); }
 function edHtml(E, trin1, trin2) {
@@ -344,13 +344,13 @@ function edHtml(E, trin1, trin2) {
   if (E.anden) h += '<div class="pt-skriv" style="margin-top:0"><input type="date" id="edDato" min="' + iso(new Date()) + '" aria-label="Anden dato"><button type="button" class="af-chip info" id="edDatoOk">Tilføj</button></div>';
   const T = Object.keys(E.dage).sort();
   h += '<div class="af-trin"><span class="nr">2</span><h2>' + esc(trin2) + '</h2></div>';
-  if (!T.length) h += '<div class="pt-tom">Tryk på en dag ovenfor. Hver dag får en tid fra ' + esc(E.sidste.fra.replace(':', '.')) + ' til ' + esc(E.sidste.til.replace(':', '.')) + ', som du kan rette.</div>';
+  if (!T.length) h += '<div class="pt-tom">Tryk på en dag ovenfor. Hver dag får en time fra ' + esc(E.sidste.fra.replace(':', '.')) + ' til ' + esc(E.sidste.til.replace(':', '.')) + '. Du kan rette starttidspunktet. En privattime varer 1 time.</div>';
   T.forEach((d) => {
     const x = fraIso(d);
     E.dage[d].forEach((tt, i) => {
       h += '<div class="pt-raekke"><div class="d">' + (i === 0 ? esc(UGE_L[x.getDay()]) + '<small>' + x.getDate() + '. ' + MD[x.getMonth()] + '</small>' : '') + '</div>' +
         '<input type="time" step="900" value="' + tt.fra + '" data-ed="fra" data-d="' + d + '" data-i="' + i + '" aria-label="Fra, ' + esc(UGE_L[x.getDay()]) + '">' +
-        '<input type="time" step="900" value="' + tt.til + '" data-ed="til" data-d="' + d + '" data-i="' + i + '" aria-label="Til, ' + esc(UGE_L[x.getDay()]) + '">' +
+        '<span class="pt-til" aria-label="Til, ' + esc(UGE_L[x.getDay()]) + '">til ' + esc(tt.til.replace(':', '.')) + '</span>' +
         '<button type="button" class="x" data-edx="' + d + '" data-i="' + i + '" aria-label="Fjern tiden">×</button></div>';
     });
   });
@@ -369,8 +369,8 @@ function edBind(E, gentegn) {
     const r = E.dage[x.dataset.d][Number(x.dataset.i)];
     const gl = { fra: r.fra, til: r.til };
     r[x.dataset.ed] = x.value || r[x.dataset.ed];
-    // Flyttes "fra", følger "til" med, så længden holdes
-    if (x.dataset.ed === 'fra') { const l = (fraIso('2000-01-01', gl.til) - fraIso('2000-01-01', gl.fra)); const ny = new Date(fraIso('2000-01-01', r.fra).getTime() + (l > 0 ? l : 3600000)); r.til = to(ny.getHours()) + ':' + to(ny.getMinutes()); }
+    // Flyttes "fra", følger "til" med: en privattime varer altid LAENGDE minutter
+    if (x.dataset.ed === 'fra') r.til = plusMin(r.fra, LAENGDE);
     E.sidste = { fra: r.fra, til: r.til }; window.RTK_TRAVL = true; gentegn();
   }));
   document.querySelectorAll('[data-edx]').forEach((b) => b.addEventListener('click', () => {
@@ -378,9 +378,7 @@ function edBind(E, gentegn) {
   }));
   if ($('edMere')) $('edMere').addEventListener('click', () => {
     const T = Object.keys(E.dage).sort(); const d = T[T.length - 1]; const s = E.dage[d][E.dage[d].length - 1];
-    const l = fraIso('2000-01-01', s.til) - fraIso('2000-01-01', s.fra);
-    const til = new Date(fraIso('2000-01-01', s.til).getTime() + (l > 0 ? l : 3600000));
-    E.dage[d].push({ fra: s.til, til: to(til.getHours()) + ':' + to(til.getMinutes()) }); window.RTK_TRAVL = true; gentegn();
+    E.dage[d].push({ fra: s.til, til: plusMin(s.til, LAENGDE) }); window.RTK_TRAVL = true; gentegn();
   });
 }
 /** Tiderne som millisekunder. Over midnat eller "til" før "fra" afvises her, så fejlen står ved feltet. */
@@ -494,9 +492,9 @@ function tegnMaaned() {
     const md = m.maaned || '';
     const [y, mm] = md.split('-').map(Number);
     h += sek((i === 0 ? 'Denne måned' : 'Sidste måned') + (y ? ', ' + MD_L[mm - 1] + ' ' + y : '')) + '<div class="kl-boks">' +
-      '<div class="kl-r"><div class="navn"><b>' + m.antal + (m.antal === 1 ? ' privattime' : ' privattimer') + ' med løn</b><small>' + String(m.timer).replace('.', ',') + ' timer i alt · ' + String(m.medLoen).replace('.', ',') + ' med timeløn</small></div><span class="tal">+ ' + esc(kr(m.tillaeg)) + '</span></div></div>';
+      '<div class="kl-r"><div class="navn"><b>' + m.antal + (m.antal === 1 ? ' privattime' : ' privattimer') + ' med løn</b><small>' + String(m.timer).replace('.', ',') + ' timer med timeløn og tillæg</small></div><span class="tal">+ ' + esc(kr(m.tillaeg)) + '</span></div></div>';
   });
-  h += '<p class="po-note">Tillægget er 100 kr. pr. time. Timer uden for betalt vagttid giver også din normale timeløn. Udeblivelser og afbud under 24 timer før tæller med, medmindre du har frafaldet betalingen.</p>';
+  h += '<p class="po-note">Du får din normale timeløn plus et tillæg på 100 kr. pr. privattime. Udeblivelser og afbud under 24 timer før tæller med, medmindre du har frafaldet betalingen.</p>';
   vis(h);
 }
 
@@ -626,10 +624,10 @@ async function tegnAdm() {
   // Løn
   const md = []; const nu = new Date(); for (let i = 0; i < 6; i++) { const d = new Date(nu.getFullYear(), nu.getMonth() - i, 15); md.push(d.getFullYear() + '-' + to(d.getMonth() + 1)); }
   h += sek('Tillæg til lønnen') + '<select id="lonMd" aria-label="Måned">' + md.map((m) => '<option value="' + m + '"' + (m === A.maaned ? ' selected' : '') + '>' + MD_L[Number(m.slice(5)) - 1] + ' ' + m.slice(0, 4) + '</option>').join('') + '</select>';
-  h += A.loen.length ? '<div class="kl-boks" style="margin-top:10px"><table class="pt-tabel"><thead><tr><th>Træner</th><th>Timer</th><th>Med timeløn</th><th style="text-align:right">Tillæg</th></tr></thead><tbody>' +
-    A.loen.map((l) => '<tr><td>' + esc(l.navn) + '</td><td>' + String(l.timer).replace('.', ',') + '</td><td>' + String(l.medLoen).replace('.', ',') + '</td><td class="tal">' + esc(kr(l.tillaeg)) + '</td></tr>').join('') + '</tbody></table>' +
+  h += A.loen.length ? '<div class="kl-boks" style="margin-top:10px"><table class="pt-tabel"><thead><tr><th>Træner</th><th>Timer</th><th style="text-align:right">Tillæg</th></tr></thead><tbody>' +
+    A.loen.map((l) => '<tr><td>' + esc(l.navn) + '</td><td>' + String(l.timer).replace('.', ',') + '</td><td class="tal">' + esc(kr(l.tillaeg)) + '</td></tr>').join('') + '</tbody></table>' +
     '<button type="button" class="af-chip info" id="lonCsv" style="margin-top:10px">Hent lønlisten som regneark</button></div>' : '<div class="pt-tom" style="margin-top:10px">Ingen holdte privattimer i måneden.</div>';
-  h += '<p class="po-note">Tillægget er 100 kr. pr. time. "Med timeløn" er timer uden for betalt vagttid, som også giver den normale timeløn. Udeblivelser og afbud under 24 timer før tæller med, medmindre træneren har frafaldet betalingen.</p>';
+  h += '<p class="po-note">Træneren får timeløn for timerne plus et tillæg på 100 kr. pr. privattime. Udeblivelser og afbud under 24 timer før tæller med, medmindre træneren har frafaldet betalingen.</p>';
   // Profiler
   h += sek('Trænernes profiler') + (A.traenere.length ? '<div class="kl-boks">' + A.traenere.map((x) => '<div class="kl-r"><div class="navn"><b>' + esc(x.navn) + '</b><small>' + (x.skjult ? 'Skjult af en administrator' : x.synlig ? 'Synlig for medlemmerne' : x.til ? 'Slået til, men ikke træner længere' : 'Slået fra af træneren') + '</small></div>' +
     (x.skjult ? '<button type="button" class="af-chip info lille" data-skjul="' + esc(x.id) + '" data-v="0">Vis igen</button>' : toTryk('skjul', x.id, 'Skjul', 'Tryk igen: medlemmerne kan ikke se ' + x.navn.split(' ')[0], 'info lille')) + '</div>').join('') + '</div>' : '<div class="pt-tom">Ingen trænere har skrevet en profil endnu.</div>');
@@ -654,7 +652,7 @@ async function tegnAdm() {
   document.querySelectorAll('[data-skjul]').forEach((b) => b.addEventListener('click', () => adm('aSkjul', { pid: b.dataset.skjul, skjul: false })));
   $('lonMd').addEventListener('change', async () => { try { await hentAdm($('lonMd').value); tegnAdm(); } catch (err) { msg(err.message, 'err'); } });
   if ($('lonCsv')) $('lonCsv').addEventListener('click', () => {
-    const r = [['Træner', 'Person-id', 'Måned', 'Privattimer', 'Timer', 'Timer med timeløn', 'Tillæg kr.']].concat(A.loen.map((l) => [l.navn, l.pid, A.maaned, l.antal, String(l.timer).replace('.', ','), String(l.medLoen).replace('.', ','), l.tillaeg]));
+    const r = [['Træner', 'Person-id', 'Måned', 'Privattimer', 'Timer med timeløn', 'Tillæg kr.']].concat(A.loen.map((l) => [l.navn, l.pid, A.maaned, l.antal, String(l.timer).replace('.', ','), l.tillaeg]));
     const csv = '﻿' + r.map((x) => x.map((v) => '"' + String(v).replace(/"/g, '""') + '"').join(';')).join('\r\n');
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = 'privattimer_loen_' + A.maaned + '.csv'; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
