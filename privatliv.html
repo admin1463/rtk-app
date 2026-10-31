@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="9437b0c61695">
+<meta name="rtk-version" content="489e742896b1">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -173,6 +173,7 @@
   </div>
 </footer>
 
+<script src="konfig.js?v=6bc868fefced"></script>
 <script>
 window.TEKSTER = {
   da: {
@@ -286,6 +287,36 @@ window.TEKSTER = {
     partnere: 'Official partners', test: 'Test version. All data is fictitious.', privatliv: 'Privacy'
   }
 };
+</script>
+<script>
+// Produktion (Lars 31. oktober 2026): kun det, der er gået live, dvs. opstrengning, personalets login, arbejdstøj og
+// bolde. Grupper, profilkort, privattræning, Ace, Beskeder og juniorer er ikke live og står ikke her endnu.
+// Godkendt af Lars som klubbens systemansvarlige. Version 3.
+if (window.RTK_KONFIG && window.RTK_KONFIG.miljoe === 'produktion') {
+  Object.assign(window.TEKSTER.da, {
+    gem1: 'Login for personale og frivillige: dit navn, dit mobilnummer og evt. din mail. Du logger ind med en kode på sms, og din telefon husker dit login i op til 30 dage.',
+    gem8: 'Personale og frivillige: din rolle, det du registrerer (fx bolde og opstrengninger), og for trænere dit valg af arbejdstøj med størrelser og værdien til skatten.',
+    hjaelp: 'Klubben bruger databehandlere til at drive Mit RTK, fx til at opbevare data og sende sms og mails. De må kun bruge oplysningerne efter klubbens anvisning, og klubben har databehandleraftaler med dem. Nogle af dem kan behandle oplysninger uden for EU. Det sker kun med de garantier, databeskyttelsesreglerne kræver.',
+    telefon: 'Mit RTK gemmer dit login, hvem du er (så siden kan gå i gang med det samme), dit valg af sprog og at du har set velkomsten. Der er ingen cookies til statistik eller reklame.',
+    version: '1. november 2026. Version 3.'
+  });
+  Object.assign(window.TEKSTER.en, {
+    gem1: 'Login for staff and volunteers: your name, your mobile number and possibly your email. You log in with a code sent by text message, and your phone remembers your login for up to 30 days.',
+    gem8: 'Staff and volunteers: your role, what you register (for example balls and stringings), and for coaches your choice of work clothing with sizes and the value for tax purposes.',
+    hjaelp: 'The club uses data processors to run Mit RTK, for example to store data and send text messages and emails. They may only use the data as instructed by the club, and the club has data processing agreements with them. Some of them may process data outside the EU. This only happens with the safeguards that data protection rules require.',
+    telefon: 'Mit RTK stores your login, who you are (so the page can start straight away), your choice of language and that you have seen the welcome. There are no cookies for statistics or advertising.',
+    version: '1 November 2026. Version 3.'
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    var skjul = function (e) { if (e) e.style.display = 'none'; };
+    ['gem3', 'gem4', 'gem5', 'gem6', 'gem7'].forEach(function (k) { skjul(document.querySelector('[data-t="' + k + '"]')); });
+    ['aceH', 'beskH', 'ungH'].forEach(function (k) { var h = document.querySelector('[data-t="' + k + '"]'); skjul(h && h.closest('section')); });
+    ['o3', 'o4', 'o5', 'o7'].forEach(function (k) { var b = document.querySelector('b[data-t="' + k + '"]'); skjul(b && b.closest('.card')); });
+    skjul(document.querySelector('.udkast'));
+    var k = document.querySelector('a[href="mailto:privatliv@mitrtk.dk"]');
+    if (k) { k.href = 'mailto:kontakt@roskildetennisklub.dk'; k.textContent = 'kontakt@roskildetennisklub.dk'; }
+  });
+}
 </script>
 <script src="sprog.js?v=1976d8c45489"></script>
 <script src="ace.js?v=f16258091977"></script>
