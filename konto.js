@@ -137,7 +137,7 @@
     var mobilNr = '';
     var f1 = el('form', { autocomplete: 'on', novalidate: '' });
     f1.appendChild(el('label', { 'for': 'kMobil', 'data-t': 'kMobil' }, t('kMobil')));
-    var mobil = el('input', { id: 'kMobil', type: 'tel', inputmode: 'tel', autocomplete: 'tel', maxlength: '16', style: 'font-size:20px;letter-spacing:.04em' });
+    var mobil = el('input', { id: 'kMobil', type: 'tel', inputmode: 'tel', autocomplete: 'tel', maxlength: '22', style: 'font-size:20px;letter-spacing:.04em' });
     f1.appendChild(mobil);
     f1.appendChild(el('p', { 'class': 'hint', id: 'kLandekode', 'data-t': 'kLandekode', style: 'margin:6px 0 0' }, t('kLandekode')));
     mobil.setAttribute('aria-describedby', 'kLandekode');
