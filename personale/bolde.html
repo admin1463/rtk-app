@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="6d9fd6b3d1ff">
+<meta name="rtk-version" content="929d7d7ba306">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=39f9c5622a0f">
+<link rel="stylesheet" href="../rtk.css?v=5d9d8ba646d9">
 </head>
 <body>
 <header class="top">
@@ -188,6 +188,8 @@ const URL_MOTOR = window.RTK_KONFIG.motor;
 const $ = (id) => document.getElementById(id);
 const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
 const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+// QR-skiltet: lageret huskes, før siden evt. sender til login, så det også er valgt efter login (gennemgangen 1. november kl. 21)
+try { const q0 = new URLSearchParams(location.search).get('sted'); if (q0) gem('rtk.bold.sted', q0.slice(0, 60)); } catch (e) {}
 const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -399,7 +401,7 @@ function visInfo(altid) {
   document.querySelectorAll('.fane').forEach((f) => f.classList.add('hidden'));
   $('infoOk').focus();
 }
-$('infoOk').addEventListener('click', () => { gem(infoNoegle(), '1'); $('info').classList.add('hidden'); $('faner').classList.remove('hidden'); vaelgFane('tag'); });
+$('infoOk').addEventListener('click', () => { gem(infoNoegle(), '1'); $('info').classList.add('hidden'); $('faner').classList.remove('hidden'); vaelgFane('tag'); window.scrollTo(0, 0); });
 $('infoVis').addEventListener('click', () => visInfo(true));
 
 let tagId = nyId();
@@ -456,9 +458,10 @@ $('faner').addEventListener('click', (e) => { const b = e.target.closest('button
 function lagerCelle(tal, tekst) { return Math.abs(tal - Math.round(tal)) < 1e-6 ? String(Math.round(tal)) : (tekst || tal1(tal)); }
 function lagerHtml(l) {
   const steder = valg.steder;
-  return '<table><tr><th>Bold</th>' + steder.map((s) => '<th class="n">' + esc(s.split(' ')[0]) + '</th>').join('') + '<th class="n">I alt</th><th></th></tr>' +
+  // Tabellen ruller inde i sig selv på telefonen, så siden ikke ruller vandret (gennemgangen 1. november)
+  return '<div class="bm-rul"><table><tr><th>Bold</th>' + steder.map((s) => '<th class="n">' + esc(s.split(' ')[0]) + '</th>').join('') + '<th class="n">I alt</th><th></th></tr>' +
     l.map((b) => '<tr><td>' + esc(b.bold) + '</td>' + steder.map((s) => '<td class="n' + (b.prSted[s] < 0 ? ' minus' : '') + '">' + esc(lagerCelle(b.prSted[s], b.prStedTekst && b.prStedTekst[s])) + '</td>').join('') +
-      '<td class="n"><b>' + esc(lagerCelle(b.ialt, b.ialtTekst)) + '</b></td><td>' + (b.bestil ? '<span class="pill">bestil</span>' : '') + '</td></tr>').join('') + '</table>';
+      '<td class="n"><b>' + esc(lagerCelle(b.ialt, b.ialtTekst)) + '</b></td><td>' + (b.bestil ? '<span class="pill">bestil</span>' : '') + '</td></tr>').join('') + '</table></div>';
 }
 async function hentLager() {
   try { const l = await motor('bold', 'lager'); if (nyereEnd('lager', 'lager')) $('lagerTabel').innerHTML = lagerHtml(l); } catch (err) { if (!LAEST.lager) $('lagerTabel').textContent = err.message; }
@@ -580,7 +583,7 @@ function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', J
 if (!token) location.replace('./?til=' + encodeURIComponent('bolde.html' + location.hash));
 else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
 </script>
-<script src="../velkomst.js?v=b6e13365b949"></script>
+<script src="../velkomst.js?v=0c6d2cc815a7"></script>
 <script src="../ace.js?v=f16258091977"></script>
 </body>
 </html>

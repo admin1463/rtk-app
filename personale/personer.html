@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="c9f694c57a0b">
+<meta name="rtk-version" content="17bee0bced32">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=39f9c5622a0f">
+<link rel="stylesheet" href="../rtk.css?v=5d9d8ba646d9">
 </head>
 <body>
 <header class="top">
@@ -298,7 +298,7 @@ function bekraeft(pid, slags, rolle) {
   } else if (slags === 'pinkode') {
     const omr = (p.roller || []).indexOf('admin') >= 0 ? 'Administration' : 'bestyrelsens sider';
     titel = 'Nulstil ' + p.navn + 's pinkode til ' + omr + '?';
-    punkter = [fornavn + ' laver en ny pinkode, næste gang ' + omr + ' åbnes.', 'Alle ' + fornavn + 's enheder skal taste den nye pinkode. Login er uændret.', fornavn + ' får en sms om, at du har nulstillet den.'];
+    punkter = [fornavn + ' laver en ny pinkode, næste gang ' + omr + ' åbnes.', fornavn + ' logges ud på alle enheder og logger ind igen med en sms-kode.', fornavn + ' får en sms om, at du har nulstillet den.'];
     knap = 'Ja, nulstil pinkoden';
   } else {
     titel = 'Log ' + p.navn + ' ud på alle enheder?';
@@ -319,7 +319,7 @@ function bekraeft(pid, slags, rolle) {
       if (slags === 'pinkode') {
         await motor('kerne', 'apinNulstil', { pid }, S.ids[noegle]);
         delete S.ids[noegle];
-        S.msg = p.navn + 's pinkode er nulstillet. ' + fornavn + ' laver en ny, næste gang ' + ((p.roller || []).indexOf('admin') >= 0 ? 'Administration' : 'bestyrelsens sider') + ' åbnes.'; S.msgType = 'okm'; S.msgRute = '#p/' + encodeURIComponent(pid);
+        S.msg = p.navn + 's pinkode er nulstillet, og ' + fornavn + ' er logget ud. ' + fornavn + ' logger ind igen og laver en ny pinkode, næste gang ' + ((p.roller || []).indexOf('admin') >= 0 ? 'Administration' : 'bestyrelsens sider') + ' åbnes.'; S.msgType = 'okm'; S.msgRute = '#p/' + encodeURIComponent(pid);
         location.hash = '#p/' + encodeURIComponent(pid);
         return;
       }
@@ -387,7 +387,7 @@ function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', J
 if (!token) location.replace('./?til=' + encodeURIComponent('personer.html' + location.hash));
 else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().then((p) => { if ((husket.roller || []).indexOf('admin') >= 0 && (p.roller || []).indexOf('admin') < 0) location.reload(); }).catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
 </script>
-<script src="../velkomst.js?v=b6e13365b949"></script>
+<script src="../velkomst.js?v=0c6d2cc815a7"></script>
 <script src="../ace.js?v=f16258091977"></script>
 </body>
 </html>

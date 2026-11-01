@@ -18,6 +18,14 @@
       ok: 'Forstået', laes: 'Læs hele teksten om privatliv', note: 'Du finder den altid under Privatliv nederst på siden.',
       tilbage: 'Tilbage', privatliv: 'Privatliv'
     },
+    personale: {
+      kicker: 'Velkommen til Mit RTK', titel: 'Kort om dine data',
+      p1t: 'Kun det nødvendige', p1: 'Dit navn, dit mobilnummer, dine roller og det, du gør i appen, fx bolde du tager, tøj du vælger og ketsjere du strenger. Klubben sælger det aldrig og bruger kun databehandlere, der driver appen for klubben.',
+      p2t: 'Beskeder om dit arbejde', p2: 'Koder til login og beskeder om fx arbejdstøj og opstrengning. De kommer som sms eller mail.',
+      p3t: 'Ingen reklame', p3: 'Du får ingen nyheder fra pro shoppen eller partnerne gennem personalesiden.',
+      ok: 'Forstået', laes: 'Læs hele teksten om privatliv', note: 'Du finder den altid under Privatliv nederst på siden.',
+      tilbage: 'Tilbage', privatliv: 'Privatliv'
+    },
     en: {
       kicker: 'Welcome to Mit RTK', titel: 'In short: your data and messages',
       p1t: 'Only what is needed', p1: 'Your name, your mobile number and what you use the app for, such as your racket stringing. The club never sells it and only uses data processors that run the app for the club.',
@@ -63,7 +71,8 @@
 
   function vis() {
     if (document.getElementById('vk-bag')) return;
-    var T = TEKST[sprog()];
+    // Personale og frivillige får deres egen tekst uden Beskeder, som ikke er live i produktionen (gennemgangen 1. november kl. 21)
+    var T = /\/personale\//.test(location.pathname) ? TEKST.personale : TEKST[sprog()];
     if (!document.getElementById('vk-stil')) { var s = el('style', { id: 'vk-stil' }); s.textContent = STIL; document.head.appendChild(s); }
     var bag = el('div', { id: 'vk-bag', 'class': 'vk-bag' });
     var boks = el('div', { 'class': 'vk', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'vk-titel' });

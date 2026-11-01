@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="aada8b6789d6">
+<meta name="rtk-version" content="c09a92c80381">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=39f9c5622a0f">
+<link rel="stylesheet" href="../rtk.css?v=5d9d8ba646d9">
 </head>
 <body>
 <header class="top">
@@ -812,7 +812,7 @@ if (!token) location.replace('./?til=opstrengning.html');
 // Nye roller siden sidst: siden tegnes igen (gennemgangen 26. oktober fund 5)
 else { const husket = migHusket(); if (husket) { person = husket; visOmraade(); migHent().then((p) => { if ((p.roller || []).join(' ') !== (husket.roller || []).join(' ')) location.reload(); }).catch(() => {}); } else migHent().then((p) => { person = p; visOmraade(); }).catch(() => {}); }
 </script>
-<script src="../velkomst.js?v=b6e13365b949"></script>
+<script src="../velkomst.js?v=0c6d2cc815a7"></script>
 <script src="../ace.js?v=f16258091977"></script>
 </body>
 </html>
