@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="da8242fdb325">
+<meta name="rtk-version" content="380c0f75276c">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -89,18 +89,32 @@ if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
 async function motor(modul, handling, data, id) {
   let res;
   try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, apin: (window.RTK_APIN ? RTK_APIN.bevis() : ''), id: id || '' }) }); }
-  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  catch (e) { throw Object.assign(new Error('Ingen forbindelse. Tjek net og prøv igen.'), { net: true }); }
   let svar;
   // Google svarer af og til med en HTML-side. Så er det en forbindelsesfejl, ikke en teknisk fejltekst (ende til ende-testen 20. oktober)
-  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  try { svar = await res.json(); } catch (e) { throw Object.assign(new Error('Ingen forbindelse. Tjek net og prøv igen.'), { net: true }); }
   if (!svar.ok && svar.apin && window.RTK_APIN) { await RTK_APIN.spoerg(motor); return motor.apply(null, arguments); }
-  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  if (!svar.ok) { if (svar.login) logUd(true); throw Object.assign(new Error(svar.fejl || 'Noget gik galt'), { igang: !!svar.igang }); }
   SIDST[handling] = svar.tid || 0;
   // Efter at have gemt regnes kun kopier fra Firebase, der er lavet efter, at handlingen var færdig (tidSlut), for nyere.
   // Ellers kunne en kopi, der læste arket før gemningen, skrive kurven eller varerne over (gennemgangen af Bolde og Arbejdstøj V1 og V4)
   const efter = svar.tidSlut || svar.tid || 0;
   (GEMMER_I[handling] || []).forEach((n) => { if (!(n === 'start' && S.som)) LAEST[n] = Math.max(LAEST[n] || 0, efter); });
   return svar.data;
+}
+
+// Det samme registrerings-id bruges, indtil handlingen er lykkedes eller afvist af motoren. Kom svaret ikke frem, gemmer
+// et nyt tryk derfor ikke to gange: motoren giver det første svar eller "Det bliver stadig gemt" (Lars 1. november 2026 kl. 22.33,
+// hvor Giv tildelingerne tog 172 sekunder, siden viste Ingen forbindelse, og et nyt tryk gav tre tildelinger to gange)
+const REG = {};
+async function skriv(noegle, handling, data) {
+  REG[noegle] = REG[noegle] || nyId();
+  try { const r = await motor('toej', handling, data, REG[noegle]); delete REG[noegle]; return r; }
+  catch (err) {
+    if (!err.net && !err.igang) delete REG[noegle];
+    if (err.net) throw new Error('Svaret kom ikke frem. Det kan godt være gemt. Tryk igen, så får du svaret: det bliver ikke gemt to gange.');
+    throw err;
+  }
 }
 
 // Visningerne i Firebase (trin 1, Lars 24. oktober kl. 07.38): siden viser det, motoren sidst lagde i Firebase, med det samme,
@@ -738,19 +752,19 @@ $('vis').addEventListener('click', async (e) => {
     const data = { tid: t.id };
     if (typeof S.komm[t.id] === 'string') data.kommentar = S.komm[t.id];
     const ka = $('kommentar'); if (ka) ka.disabled = true;
-    try { opdaterT(await motor('toej', 'send', data, nyId())); S.kladde[t.id] = null; delete S.komm[t.id]; window.RTK_TRAVL = false; tegn(); }
+    try { opdaterT(await skriv('send|' + t.id, 'send', data)); S.kladde[t.id] = null; delete S.komm[t.id]; window.RTK_TRAVL = false; tegn(); }
     catch (err) { besked($('kurvMsg'), err.message, 'err'); el.disabled = false; if (ka) ka.disabled = false; }
     return;
   }
   if (el.id === 'fortryd' && t) {
     el.disabled = true;
-    try { opdaterT(await motor('toej', 'fortryd', { tid: t.id }, nyId())); location.hash = '#t/' + t.id; }
+    try { opdaterT(await skriv('fortryd|' + t.id, 'fortryd', { tid: t.id })); location.hash = '#t/' + t.id; }
     catch (err) { besked($('kurvMsg'), err.message, 'err'); el.disabled = false; }
     return;
   }
   if (el.id === 'modtaget' && t) {
     el.disabled = true;
-    try { opdaterT(await motor('toej', 'modtaget', { tid: t.id }, nyId())); tegn(); }
+    try { opdaterT(await skriv('modtaget|' + t.id, 'modtaget', { tid: t.id })); tegn(); }
     catch (err) { besked($('kurvMsg'), err.message, 'err'); el.disabled = false; }
     return;
   }
@@ -773,28 +787,28 @@ $('vis').addEventListener('click', async (e) => {
   }
   if (d.godkend) {
     el.disabled = true;
-    try { const r = await motor('toej', 'godkend', { tid: d.godkend }, nyId()); await hentAdm(); tegn(); if (r.advarsel) besked($('admMsg'), r.advarsel, 'err'); else besked($('admMsg'), 'Godkendt.', 'okm'); }
+    try { const r = await skriv('godkend|' + d.godkend, 'godkend', { tid: d.godkend }); await hentAdm(); tegn(); if (r.advarsel) besked($('admMsg'), r.advarsel, 'err'); else besked($('admMsg'), 'Godkendt.', 'okm'); }
     catch (err) { besked($('admMsg'), err.message, 'err'); el.disabled = false; }
     return;
   }
   if (d.afvis) { $('afv' + d.afvis).classList.remove('hidden'); $('afvt' + d.afvis).focus(); return; }
   if (d.afvissend) {
     el.disabled = true;
-    try { await motor('toej', 'afvis', { tid: d.afvissend, tekst: $('afvt' + d.afvissend).value }, nyId()); await hentAdm(); tegn(); besked($('admMsg'), 'Sendt tilbage med en sms.', 'okm'); }
+    try { await skriv('afvis|' + d.afvissend, 'afvis', { tid: d.afvissend, tekst: $('afvt' + d.afvissend).value }); await hentAdm(); tegn(); besked($('admMsg'), 'Sendt tilbage med en sms.', 'okm'); }
     catch (err) { besked($('admMsg'), err.message, 'err'); el.disabled = false; }
     return;
   }
   if (d.mangler) {
     if (!toTryk(el, 'm' + d.mangler, 'Tryk igen: varen er ikke på lager')) return;
     const [tt, r] = d.mangler.split(':');
-    try { await motor('toej', 'mangler', { tid: tt, raekke: Number(r) }, nyId()); await hentAdm(); tegn(); besked($('admMsg'), 'Træneren har fået en sms og kan vælge noget andet.', 'okm'); }
+    try { await skriv('mangler|' + d.mangler, 'mangler', { tid: tt, raekke: Number(r) }); await hentAdm(); tegn(); besked($('admMsg'), 'Træneren har fået en sms og kan vælge noget andet.', 'okm'); }
     catch (err) { besked($('admMsg'), err.message, 'err'); }
     return;
   }
   if (el.id === 'ordre') {
     el.disabled = true;
     try {
-      const r = await motor('toej', 'ordre', {}, nyId()); await hentAdm(); tegn();
+      const r = await skriv('ordre', 'ordre', {}); await hentAdm(); tegn();
       $('ordreUd').innerHTML = '<div class="af-preview"><span class="k">Mailen til Carsten</span><b>Ordre ' + esc(r.id) + ' · kontoen ' + kr(r.konto) + (r.sg ? ' · Sports Group ' + kr(r.sg) : '') + '</b><pre class="tt-mail">' + esc(r.tekst) + '</pre>' +
         '<div class="af-chips">' + chip('Kopiér mailen', null, 'data-kopi="' + r.id + '"') + (r.til ? '<a class="af-chip" href="mailto:' + encodeURIComponent(r.til) + '?subject=' + encodeURIComponent('RTK trænertøj, ordre ' + r.id) + (r.kopi ? '&cc=' + encodeURIComponent(r.kopi) : '') + '&body=' + encodeURIComponent(r.tekst) + '">Åbn i mail</a>' : '') + '</div>' +
         (r.tekst.length > 1800 ? '<span class="hint">Mailen er lang. Virker Åbn i mail ikke, så brug Kopiér mailen.</span>' : '') +
@@ -809,7 +823,7 @@ $('vis').addEventListener('click', async (e) => {
   }
   if (d.lever) {
     if (!toTryk(el, 'l' + d.lever, 'Tryk igen: leveret')) return;
-    try { const r = await motor('toej', 'lever', { ordre: d.lever }, nyId()); await hentAdm(); tegn(); besked($('admMsg'), 'Leveret. ' + kr(r.konto) + ' er trukket på kontoen, og ' + r.personer.length + ' har fået sms om afhentning.', 'okm'); }
+    try { const r = await skriv('lever|' + d.lever, 'lever', { ordre: d.lever }); await hentAdm(); tegn(); besked($('admMsg'), 'Leveret. ' + kr(r.konto) + ' er trukket på kontoen, og ' + r.personer.length + ' har fået sms om afhentning.', 'okm'); }
     catch (err) { besked($('admMsg'), err.message, 'err'); }
     return;
   }
@@ -824,7 +838,8 @@ $('vis').addEventListener('click', async (e) => {
   if (el.id === 'givKnap') {
     el.disabled = true; besked($('givMsg'), 'Giver …');
     try {
-      const r = await motor('toej', 'giv', { pids: giv.pids, udvalg: giv.udvalg, betaler: giv.betaler, beloeb: giv.beloeb, frist: giv.frist, grund: giv.grund }, nyId());
+      const gd = { pids: giv.pids.slice(), udvalg: giv.udvalg.slice(), betaler: giv.betaler, beloeb: giv.beloeb, frist: giv.frist, grund: giv.grund };
+      const r = await skriv('giv|' + JSON.stringify(gd), 'giv', gd);
       Object.assign(giv, { pids: [], udvalg: [], beloeb: '', betaler: 'konto', grund: '' });
       await hentAdm(); await hentStart();
       S.flash = r.tildelinger.length + ' tildeling' + (r.tildelinger.length > 1 ? 'er' : '') + ' givet. Sms og notifikation er sendt.';
