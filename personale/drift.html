@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="b3f7c45ccb48">
+<meta name="rtk-version" content="99e6675c8d02">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -84,7 +84,6 @@
           <dt>Mail i dag</dt><dd id="mail"></dd>
         </dl>
         <p class="hint" id="saldoHint"></p>
-        <p style="margin:10px 0 0"><a id="gwLink" href="https://app.gatewayapi.com" target="_blank" rel="noopener" style="font-weight:600;text-underline-offset:3px">Køb kredit hos GatewayAPI ↗</a></p>
       </section>
 
       <section class="afsnit">
@@ -95,7 +94,6 @@
       <section class="afsnit">
         <h2>Grænser</h2>
         <dl class="adresser" id="graenser"></dl>
-        <p style="margin:10px 0 0"><a id="arkLink" href="#" target="_blank" rel="noopener" style="font-weight:600;text-underline-offset:3px">Ret i driftsarket, fanen Indstillinger ↗</a></p>
         <p class="hint">Opdateret <span id="tid"></span>. <button type="button" class="ghost small" id="opdater">Opdater</button></p>
       </section>
     </div>
@@ -229,8 +227,6 @@ function vis(d) {
   $('saldoHint').textContent = 'Alarm ved saldo under ' + l.saldo + ' kr. Google tillader 100 mails om dagen, indtil prøveperioden i Workspace er slut.';
   $('alarmer').innerHTML = d.alarmer.length ? d.alarmer.map((a) => '<div class="linje" style="justify-content:flex-start;gap:12px;font-size:14px;margin-top:6px"><span style="color:var(--muted);flex-shrink:0;width:120px">' + esc(a.tid) + '</span><span>' + esc(a.tekst) + '</span></div>').join('') : '<p class="hint">Ingen alarmer endnu.</p>';
   $('graenser').innerHTML = [['Sms pr. nummer pr. dag', l.nummer], ['Sms for klubben pr. dag', l.dag], ['Alarm pr. time', l.time], ['Alarm ved saldo under', l.saldo + ' kr.']].map((g) => '<dt>' + g[0] + '</dt><dd>' + esc(g[1]) + '</dd>').join('');
-  if (d.links && d.links.driftsark) $('arkLink').href = d.links.driftsark; else $('arkLink').classList.add('hidden');
-  if (!d.links) $('gwLink').classList.add('hidden');
   $('tid').textContent = d.tid;
   visSik(d.sikkerhed);
 }
