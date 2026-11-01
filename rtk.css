@@ -1125,3 +1125,15 @@ a.ghost.small{display:inline-flex;align-items:center;text-decoration:none}
 .ti-liste{list-style:none;margin:0;padding:0}
 .ti-trin{display:flex;gap:12px;margin:0 0 10px}.ti-n{flex:none;width:26px;height:26px;border-radius:50%;background:#E6F0EE;color:#0B3D3A;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
 .ti-trin b{display:block;font-size:15px}.ti-trin p{margin:2px 0 0;font-size:14px;color:#3a4a55}
+/* Boldregnskab i produktion (1. november 2026): informationsskærm, løse bolde og forbundsbolden */
+.bm-hoved{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.bm-hoved h2{margin:0}
+.bm-trin{display:flex;gap:12px;margin:0 0 10px}
+.bm-n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--soft);color:var(--teal);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+.bm-trin b{display:block;font-size:15px}.bm-trin p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.bm-note{border-left:4px solid var(--bad);background:var(--badbg);padding:10px 12px;border-radius:4px;font-size:14px;line-height:1.4;margin:12px 0 0}
+.bm-lbl{display:block;color:var(--muted);font-size:13px;margin:8px 0 4px;font-weight:500}
+.stepper input.bm-loese{width:72px;text-align:center;font-size:24px;font-weight:700;min-height:48px;padding:4px}
+.bm-opt{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
+.bm-opt label{margin:0;font-weight:500}
+.bm-ind{display:flex;gap:6px;flex:none}.bm-ind input{width:68px;text-align:center}
