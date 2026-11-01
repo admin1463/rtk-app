@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="8f009d5e96d3">
+<meta name="rtk-version" content="c9f694c57a0b">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=0b4e4aa1f7e8">
+<link rel="stylesheet" href="../rtk.css?v=39f9c5622a0f">
 </head>
 <body>
 <header class="top">
@@ -59,7 +59,7 @@
 </footer>
 
 <script src="../konfig.js?v=9f80df47682e"></script>
-<script src="../adminpin.js?v=8d3a690e6e54"></script>
+<script src="../adminpin.js?v=072d3999ca21"></script>
 <script src="../visning.js?v=9cd5651130e5"></script>
 <script>
 // Personer og roller under Administration (Lars 19. oktober kl. 17.36 til 17.47, mockup godkendt 17.46).
@@ -76,7 +76,7 @@ const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())
 let token = hent('rtk.token') || '';
 let person = null;
 const S = { liste: null, filter: 'alle', sog: '', en: Object.create(null), msg: '', ids: Object.create(null) };
-const NAVNE = { admin: 'Administrator', opstrenger: 'Opstrenger', traener: 'Træner', kaptajn: 'Holdkaptajn', cheftraener: 'Cheftræner', boldansvarlig: 'Boldansvarlig', bogholder: 'Bogholder', koordinator: 'Koordinator', oevrige: 'Øvrige' };
+const NAVNE = { admin: 'Administrator', opstrenger: 'Opstrenger', traener: 'Træner', kaptajn: 'Holdkaptajn', cheftraener: 'Cheftræner', boldansvarlig: 'Boldansvarlig', bogholder: 'Bogholder', koordinator: 'Koordinator', oevrige: 'Øvrige', bestyrelse: 'Bestyrelse' };
 const FILTRE = [['alle', 'Alle'], ['traener', 'Trænere'], ['opstrenger', 'Opstrengere'], ['oevrige', 'Øvrige'], ['admin', 'Administration'], ['tidligere', 'Tidligere']];
 const FARVER = ['#0F2537', '#0B3D3A', '#5B2A86', '#8A3B12'];
 const STATUS = { tt: ['Mangler', 'v'], aaben: ['Åben', 'v'], sendt: ['Sendt', 'v'], godkendt: ['Godkendt', 'ok'], bestilt: ['Bestilt', 'ok'], leveret: ['Leveret', 'ok'], modtaget: ['Modtaget', 'ok'], bortfaldet: ['Bortfaldet', 'po-graa'] };
@@ -210,9 +210,9 @@ function vPerson(pid, igen) {
   }
   if (adm) h += '<p class="po-note">Administratorer ændres af klubbens systemansvarlige.</p>';
   // Pinkode til Administration (Lars 1. november 2026, mockup admin_pinkode.png skærm 4): en anden administrator nulstiller
-  if (adm && !mig && p.apin) {
+  if (!mig && p.apin) {
     const ap = p.apin, kl = (t) => datoKort(t) + ' kl. ' + new Date(t).toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
-    h += '<h2 class="po-h">Pinkode til Administration</h2><div class="po-fakta">' + (ap.har
+    h += '<h2 class="po-h">' + (adm ? 'Pinkode til Administration' : 'Pinkode til bestyrelsens sider') + '</h2><div class="po-fakta">' + (ap.har
       ? '<div><span>Lavet</span><b>' + esc(datoKort(ap.lavet)) + '</b></div><div><span>Sidst brugt</span><b>' + esc(ap.brugt ? kl(ap.brugt) : '–') + '</b></div>'
       : '<div><span>Status</span><b>Ikke lavet endnu</b></div>') + '</div>';
     if (ap.har) h += '<p class="po-note">Nulstil, hvis ' + esc(p.navn.split(' ')[0]) + ' har glemt den, eller telefonen er væk. Ingen kan se en pinkode.</p><div class="af-chips" style="margin-top:0"><a class="af-chip lille farlig" href="#p/' + encodeURIComponent(p.pid) + '/pinkode">Nulstil pinkoden</a></div>';
@@ -296,8 +296,9 @@ function bekraeft(pid, slags, rolle) {
     punkter.push({ fed: fornavn + ' beholder sit login som medlem.', t: ' Udmeldelse af klubben sker kun i ForeningsLet.' });
     knap = 'Ja, stop ' + fornavn + ' som medarbejder'; grund = true;
   } else if (slags === 'pinkode') {
-    titel = 'Nulstil ' + p.navn + 's pinkode til Administration?';
-    punkter = [fornavn + ' laver en ny pinkode, næste gang Administration åbnes.', 'Alle ' + fornavn + 's enheder skal taste den nye pinkode. Login er uændret.', fornavn + ' får en sms om, at du har nulstillet den.'];
+    const omr = (p.roller || []).indexOf('admin') >= 0 ? 'Administration' : 'bestyrelsens sider';
+    titel = 'Nulstil ' + p.navn + 's pinkode til ' + omr + '?';
+    punkter = [fornavn + ' laver en ny pinkode, næste gang ' + omr + ' åbnes.', 'Alle ' + fornavn + 's enheder skal taste den nye pinkode. Login er uændret.', fornavn + ' får en sms om, at du har nulstillet den.'];
     knap = 'Ja, nulstil pinkoden';
   } else {
     titel = 'Log ' + p.navn + ' ud på alle enheder?';
@@ -318,7 +319,7 @@ function bekraeft(pid, slags, rolle) {
       if (slags === 'pinkode') {
         await motor('kerne', 'apinNulstil', { pid }, S.ids[noegle]);
         delete S.ids[noegle];
-        S.msg = p.navn + 's pinkode er nulstillet. ' + fornavn + ' laver en ny, næste gang Administration åbnes.'; S.msgType = 'okm'; S.msgRute = '#p/' + encodeURIComponent(pid);
+        S.msg = p.navn + 's pinkode er nulstillet. ' + fornavn + ' laver en ny, næste gang ' + ((p.roller || []).indexOf('admin') >= 0 ? 'Administration' : 'bestyrelsens sider') + ' åbnes.'; S.msgType = 'okm'; S.msgRute = '#p/' + encodeURIComponent(pid);
         location.hash = '#p/' + encodeURIComponent(pid);
         return;
       }
@@ -348,7 +349,8 @@ async function hentEn(pid) {
   try {
     const p = await motor('personer', 'en', { pid });
     // Pinkoden vises kun for andre administratorer (Lars 1. november 2026)
-    if ((p.roller || []).indexOf('admin') >= 0 && !(person && p.pid === person.id)) { try { p.apin = await motor('kerne', 'apinOm', { pid }); } catch (e) { p.apin = null; } }
+    // Administratorer og bestyrelsen har en pinkode, som en administrator kan nulstille (bestyrelsen 1. november 2026)
+    if ((p.roller || []).some((r) => r === 'admin' || r === 'bestyrelse') && !(person && p.pid === person.id)) { try { p.apin = await motor('kerne', 'apinOm', { pid }); } catch (e) { p.apin = null; } }
     S.en[pid] = p;
   }
   catch (err) { if (rute().pid === pid) vis(tilbage() + '<p class="msg err" role="alert">' + esc(err.message) + '</p>', false); return false; }

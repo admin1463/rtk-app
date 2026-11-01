@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="55d00c5eb011">
+<meta name="rtk-version" content="1675e1da79c8">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=0b4e4aa1f7e8">
+<link rel="stylesheet" href="../rtk.css?v=39f9c5622a0f">
 </head>
 <body>
 <header class="top">
@@ -150,17 +150,26 @@ const FELTER = [
     tekst: () => 'Alle grupper med medlemmer, og hvor ofte de spiller. Ikke chat og betalinger.' },
   { afsnit: 'admin', navn: 'Drift og forbrug', side: 'drift.html', ikon: 'drift', roller: ['admin'],
     tekst: () => 'Sms og mail i dag, de sidste 30 dage, saldo og alarmer.' },
+  // Rollen Bestyrelse (Lars 1. november 2026): kun læse, med pinkoden. kun: administratorer ser dem ikke, de har Administration
+  { afsnit: 'bestyrelse', kun: true, navn: 'Arbejdstøj: kontoen', side: 'arbejdstoej.html#bestyrelse', ikon: 'toej', roller: ['bestyrelse'],
+    tekst: () => 'Kontoen hos Sports Group, planen og tildelingerne.' },
+  { afsnit: 'bestyrelse', kun: true, navn: 'Bolde: lager, forbrug og bestilling', side: 'bolde.html#bestyrelse', ikon: 'bold', roller: ['bestyrelse'],
+    tekst: () => 'Lageret på begge steder, forbrug pr. uge og måned, bestillingsforslag.' },
+  { afsnit: 'bestyrelse', kun: true, navn: 'Drift og forbrug', side: 'drift.html', ikon: 'drift', roller: ['bestyrelse'],
+    tekst: () => 'Sms og mail, de sidste 30 dage, saldo og alarmer.' },
   // Ace, klubbens AI-hjælper (Lars 25. oktober 2026 kl. 06.36): hele samtalerne uden navn, kun administratorer
   { afsnit: 'admin', navn: 'Ace: samtaler', side: 'ace.html', ikon: 'ace', roller: ['admin'],
     tekst: () => 'Hvad medlemmerne spørger Ace om, og hvad Ace svarer. Uden navne.' }
 ];
-const AFSNIT = [['arbejde', 'Dit arbejde', ''], ['admin', 'Administration', 'Kun for klubbens administratorer. Trænere og frivillige ser ikke dette afsnit.']];
+const AFSNIT = [['arbejde', 'Dit arbejde', ''], ['bestyrelse', 'Bestyrelsen', 'Overblik over klubbens drift. Kun læse.'], ['admin', 'Administration', 'Kun for klubbens administratorer. Trænere og frivillige ser ikke dette afsnit.']];
 
 const $ = (id) => document.getElementById(id);
 const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
 const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
 const harRolle = (p, roller) => !!p && (p.roller || []).some((r) => r === 'admin' || roller.indexOf(r) >= 0);
+// Et felt med kun: true vises kun for præcis de roller (administratorer har det samme under Administration)
+const harFelt = (p, f) => f.kun ? !!p && (p.roller || []).indexOf('admin') < 0 && (p.roller || []).some((r) => f.roller.indexOf(r) >= 0) : harRolle(p, f.roller);
 
 let enhed = hent('rtk.enhed'); if (!enhed) { enhed = nyId(); gem('rtk.enhed', enhed); }
 let token = hent('rtk.token') || '';
@@ -251,7 +260,7 @@ $('brugPin').addEventListener('click', () => { visTrin('pin'); besked($('loginMs
 function visFelter(p) {
   if (token) gem('rtk.mig', JSON.stringify({ t: token.slice(-16), p: p }));
   // Kom man fra en underside uden at være logget ind, går man direkte tilbage dertil.
-  const kan = (s) => FELTER.some((f) => f.side === s && harRolle(p, f.roller));
+  const kan = (s) => FELTER.some((f) => f.side === s && harFelt(p, f));
   if (til && kan(til)) { location.replace(til); return; }
   if (til && kan(til.split('#')[0])) { location.replace(til.split('#')[0]); return; }
   $('loginKort').classList.add('hidden'); $('omraade').classList.remove('hidden');
@@ -259,8 +268,9 @@ function visFelter(p) {
   // I produktion vises kun de felter, der er gået live (RTK_KONFIG.skjult, 31. oktober 2026)
   const skjult = (window.RTK_KONFIG && window.RTK_KONFIG.skjult) || [];
   const prod = !!(window.RTK_KONFIG && window.RTK_KONFIG.miljoe === 'produktion');
-  const mine = FELTER.filter((f) => harRolle(p, f.roller) && skjult.indexOf(String(f.side || '').split('#')[0]) < 0 && !(prod && f.snart));
-  const toAfsnit = mine.some((f) => f.afsnit === 'admin');
+  const mine = FELTER.filter((f) => harFelt(p, f) && skjult.indexOf(String(f.side || '').split('#')[0]) < 0 && !(prod && f.snart));
+  // Overskrifterne vises, når der er mere end ét afsnit, eller personen er i bestyrelsen
+  const toAfsnit = new Set(mine.map((f) => f.afsnit)).size > 1 || mine.some((f) => f.afsnit === 'bestyrelse');
   $('felter').innerHTML = '';
   AFSNIT.forEach(([id, titel, under]) => {
     const fs = mine.filter((f) => f.afsnit === id);

@@ -19,7 +19,10 @@
   function husk(r) { var til = Date.now() + (Number(r.til) - Number(r.nu || r.til - 12 * 3600000)); gem({ b: r.bevis, til: til, t: tok().slice(-16) }); }
   function prod() { return !!(window.RTK_KONFIG && window.RTK_KONFIG.miljoe === 'produktion'); }
   // Sider kun for administratorer (Personer og roller, Drift): Tilbage går til personalesiden. På sider med andet arbejde lukkes skærmen bare
-  function kunAdmin() { return /\/(personer|drift)\.html$/.test(location.pathname); }
+  function kunAdmin() { return best() || /\/(personer|drift)\.html$/.test(location.pathname); }
+  // Bestyrelsens visning (Lars 1. november 2026): siden sætter RTK_APIN_BEST, så teksterne passer, og Tilbage går til personalesiden
+  function best() { return !!window.RTK_APIN_BEST; }
+  function omr() { return best() ? 'Bestyrelsens sider' : 'Administration'; }
   // Andre dele af siden kan vente på, at pinkoden er tastet (fx administratorens kopier i Arbejdstøj og Privattimer)
   function tastet() { try { window.dispatchEvent(new Event('rtk-apin')); } catch (e) {} }
   // I produktion kræves pinkoden altid. I testen kun, hvis motoren har sagt det (indstillingen admin.pinkode = ja),
@@ -54,11 +57,11 @@
       var lav = !s.har;
       var bag = el('div', 'ap-bag'); bag.setAttribute('role', 'dialog'); bag.setAttribute('aria-modal', 'true'); bag.setAttribute('aria-labelledby', 'apTitel');
       var ind = el('div', 'ap-ind'); bag.appendChild(ind);
-      ind.appendChild(el('p', 'kicker', 'Administration'));
+      ind.appendChild(el('p', 'kicker', best() ? 'Bestyrelsen' : 'Administration'));
       var h = el('h2', '', lav ? 'Lav din pinkode' : 'Tast din pinkode'); h.id = 'apTitel'; h.tabIndex = -1; ind.appendChild(h);
       ind.appendChild(el('p', 'hint', lav
-        ? 'Administration beskyttes af en pinkode med 6 cifre, som kun du kender. Den skal tastes, når du åbner Administration, og gælder derefter i 12 timer på denne enhed.'
-        : 'Pinkoden gælder i 12 timer på denne enhed. Dit eget arbejde (fx opstrengning) kræver ingen pinkode.'));
+        ? omr() + ' beskyttes af en pinkode med 6 cifre, som kun du kender. Den skal tastes, når du åbner ' + (best() ? 'dem' : 'Administration') + ', og gælder derefter i 12 timer på denne enhed.'
+        : 'Pinkoden gælder i 12 timer på denne enhed.' + (best() ? '' : ' Dit eget arbejde (fx opstrengning) kræver ingen pinkode.')));
       var raekker = [], vaerdier = ['', ''], aktiv = 0;
       function raekke(label) {
         if (label) ind.appendChild(el('p', '', label)).style.cssText = 'margin:10px 0 0;font-weight:600;font-size:15px';
@@ -104,9 +107,9 @@
       }
       function laast(t, helt) {
         laasBoks.innerHTML = '';
-        laasBoks.appendChild(el('h3', '', helt ? 'Administration er spærret' : 'Administration er låst'));
+        laasBoks.appendChild(el('h3', '', omr() + (helt ? ' er spærret' : ' er låst')));
         laasBoks.appendChild(el('p', '', t)).style.margin = '0 0 6px';
-        laasBoks.appendChild(el('p', 'hint', 'Klubbens administratorer har fået en mail. ' + (helt ? 'En anden administrator kan nulstille din pinkode under Personer og roller.' : 'Kender du ikke pinkoden, så bed en anden administrator nulstille den under Personer og roller.'))).style.margin = '0';
+        laasBoks.appendChild(el('p', 'hint', 'Klubbens administratorer har fået en mail. ' + (helt ? 'En ' + (best() ? '' : 'anden ') + 'administrator kan nulstille din pinkode under Personer og roller.' : 'Kender du ikke pinkoden, så bed en ' + (best() ? '' : 'anden ') + 'administrator nulstille den under Personer og roller.'))).style.margin = '0';
         if (!helt) { var igen = el('button', 'ghost small', 'Prøv igen'); igen.type = 'button'; igen.addEventListener('click', function () { location.reload(); }); laasBoks.appendChild(igen); }
         laasBoks.hidden = false; msg.textContent = ''; tegn();
       }
@@ -172,7 +175,7 @@
         location.href = i >= 0 ? location.pathname.slice(0, i) + '/personale/' : './';
       });
       glemt.addEventListener('click', function () {
-        msg.className = 'msg'; msg.textContent = 'Bed en anden administrator nulstille din pinkode under Personer og roller. Så laver du en ny, næste gang du åbner Administration.';
+        msg.className = 'msg'; msg.textContent = 'Bed en ' + (best() ? '' : 'anden ') + 'administrator nulstille din pinkode under Personer og roller. Så laver du en ny, næste gang du åbner ' + (best() ? 'bestyrelsens sider' : 'Administration') + '.';
       });
       if (s.spaerret) laast('Der er tastet forkert for mange gange.', true);
       else if (s.laastTil) laast('Der er tastet forkert for mange gange. Prøv igen kl. ' + s.laastTil + '.');

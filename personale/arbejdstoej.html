@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="3c4a7221d382">
+<meta name="rtk-version" content="c19cc8d362e0">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=0b4e4aa1f7e8">
+<link rel="stylesheet" href="../rtk.css?v=39f9c5622a0f">
 </head>
 <body>
 <header class="top">
@@ -60,7 +60,7 @@
 
 <script src="../konfig.js?v=9f80df47682e"></script>
 <script src="../visning.js?v=9cd5651130e5"></script>
-<script src="../adminpin.js?v=8d3a690e6e54"></script>
+<script src="../adminpin.js?v=072d3999ca21"></script>
 <script>
 // Arbejdstøj og udstyr (personale/arbejdstoej.html). Bygges ind af arbejdstoej.py. 16. oktober 2026.
 // Trænerens kurv, hele katalogsiden, sko og størrelse, og for administratorerne kontoen, varerne, personerne,
@@ -886,10 +886,44 @@ function hentCsv() {
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'RTK_konto_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
 }
 
+// ------------------------------------------------------------ bestyrelsen
+// Rollen Bestyrelse (Lars 1. november 2026, mockup bestyrelse.png): kontoen, planen og tildelingerne med navn og beløb. Kun læse,
+// ingen kopi fra Firebase, pinkoden kræves. En person, der også har en anden rolle end bestyrelse, bruger siden som før.
+// Bestyrelsens visning: rollen bestyrelse uden admin, og enten ingen anden rolle, eller siden er åbnet fra feltet (#bestyrelse)
+const erBest = () => !!person && (person.roller || []).indexOf('bestyrelse') >= 0 && person.roller.indexOf('admin') < 0 &&
+  (location.hash === '#bestyrelse' || person.roller.every((r) => r === 'bestyrelse'));
+function vBestyrelse(o) {
+  const k = o.konto;
+  const pct = (x) => Math.max(0, Math.min(100, x / k.ramme * 100)).toFixed(1);
+  let h = '<a class="gr-tilbage" href="./">&#8592; Til forsiden</a>' + hero('Sports Group · Babolat', 'Kontoen');
+  h += '<div class="bs-laes"><b>Kun læse.</b> Du kan se tallene, men ikke ændre noget.</div>';
+  h += '<div class="tt-saldo"><div class="lg">Tilbage at bruge til ' + esc(dagTekst(k.slut).replace(/^\S+ /, '')) + ' 2028</div><div class="stor">' + kr(k.tilbage) + '</div>' +
+    '<div class="tt-maal"><i class="t" style="width:' + pct(k.trukket) + '%"></i><i class="b" style="width:' + pct(k.bestilt) + '%"></i><i class="r" style="width:' + pct(k.valgt) + '%"></i></div>' +
+    '<div class="tt-leg"><span><i class="t"></i>Trukket ' + kr(k.trukket) + '</span><span><i class="b"></i>Bestilt ' + kr(k.bestilt) + '</span><span><i class="r"></i>Valgt, ikke bestilt ' + kr(k.valgt) + '</span></div>' +
+    (k.lovet ? '<div class="lg" style="margin-top:6px">Givet, men ikke valgt endnu: ' + kr(k.lovet) + '</div>' : '') + '</div>';
+  h += trin(1, 'Plan for kontoen', kr(k.ramme) + ' i alt');
+  h += '<div class="card tt-liste">' + o.plan.map((p) => '<div class="tt-post"><div>' + esc(p.navn) + '<span>Plan ' + kr(p.plan) + '</span></div><b>' + kr(p.brugt) + '</b></div>').join('') + '</div>';
+  h += trin(2, 'Tildelinger og træk');
+  o.tildelinger.forEach((t) => {
+    const st = STATUS[t.status] || [t.status, 'n'];
+    h += '<div class="tt-tr"><div class="tt-mid"><b>' + esc(t.navn) + ' · ' + kr(t.beloeb) + '</b><span>' + (t.status === 'aaben' ? 'Frist ' + esc(dagTekst(t.forlaenget || t.frist)) + (t.valgt ? ' · har valgt ' + kr(t.valgt) : ' · ikke valgt endnu') : 'Valgt ' + kr(t.valgt)) + (t.betaler !== 'konto' && o.betalere ? ' · ' + esc(o.betalere[t.betaler] || '') : '') + '</span></div><span class="tt-st ' + st[1] + '">' + esc(st[0]) + '</span></div>';
+  });
+  o.traek.slice(0, 10).forEach((r) => { h += '<div class="tt-tr"><div class="tt-mid"><b>' + esc(r.beskrivelse || r.bilag) + '</b><span>' + esc(dagTekst(r.tid)) + ' · ' + esc(r.bilag) + '</span></div><span class="tt-st ok">Trukket ' + kr(r.beloeb) + '</span></div>'; });
+  if (!o.tildelinger.length && !o.traek.length) h += '<p class="hint">Ingen tildelinger eller træk endnu.</p>';
+  vis(h);
+}
+async function startBestyrelse() {
+  vis('<p class="hint">Henter …</p>');
+  window.RTK_APIN_BEST = true;
+  try { if (window.RTK_APIN) await RTK_APIN.sikr(motor); } catch (e) { if (!(e && e.apinAfbrudt)) vis('<p class="msg err">' + esc(e.message) + '</p>'); return; }
+  try { vBestyrelse(await motor('bestyrelse', 'toej')); } catch (err) { vis('<p class="msg err">' + esc(err.message) + '</p>'); }
+}
+
 // ------------------------------------------------------------ start
 async function start() {
   $('omraade').classList.remove('hidden');
   $('hvem').textContent = 'Logget ind som ' + person.navn;
+  if (erBest()) { startBestyrelse(); return; }
   // Kopien fra Firebase kommer typisk før motoren svarer, og så går siden i gang med den (lytVisninger)
   lytVisninger();
   // Administratorens oversigt hentes i baggrunden kun, når pinkoden allerede er tastet. Ellers spørges der først, når Administration åbnes

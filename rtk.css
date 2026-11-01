@@ -1137,3 +1137,5 @@ a.ghost.small{display:inline-flex;align-items:center;text-decoration:none}
 .bm-opt{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
 .bm-opt label{margin:0;font-weight:500}
 .bm-ind{display:flex;gap:6px;flex:none}.bm-ind input{width:68px;text-align:center}
+/* Rollen Bestyrelse (1. november 2026): kun læse */
+.bs-laes{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:14px;margin:0 0 12px}
