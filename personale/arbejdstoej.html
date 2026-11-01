@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="c70a1b37ebc0">
+<meta name="rtk-version" content="536aaac12f37">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=ea143393276c">
+<link rel="stylesheet" href="../rtk.css?v=4ab60dc6cd62">
 </head>
 <body>
 <header class="top">
@@ -281,11 +281,13 @@ function vStart() {
   ts.forEach((t) => {
     const st = STATUS[t.status] || [t.status, 'n'];
     const hvad = kr(t.beloeb) + ' at vælge for';
-    const link = t.status === 'aaben' ? '#t/' + t.id : '#kurv/' + t.id;
+    const link = t.status === 'aaben' ? (!S.som && !infoSeet(t.id) ? '#info/' : '#t/') + t.id : '#kurv/' + t.id;
     h += '<a class="tt-tr" href="' + link + '"><div class="tt-mid"><b>' + esc(hvad) + '</b><span>' +
       (t.status === 'aaben' ? 'Frist ' + esc(dagTekst(t.forlaenget || t.frist)) + (t.linjer.length ? ' · valgt ' + kr(valgtSum(t)) : '') : 'Valgt ' + kr(t.valgt)) +
       '</span></div><span class="tt-st ' + st[1] + '">' + esc(st[0]) + '</span></a>';
   });
+  const nyeste = ts.find((t) => t.status === 'aaben') || ts[0];
+  h += '<div class="af-chips"><a class="af-chip info" href="#info/' + esc(nyeste.id) + '">Sådan virker det</a></div>';
   vis(h);
 }
 
@@ -328,6 +330,34 @@ function skoGuide() {
     '<div class="card tt-tabel">' + tab.uk.map((u, j) => '<div class="tt-post"><div>UK ' + esc(u.replace('.', ',')) + '<span>EU ' + esc(tab.eu[j]) + '</span></div><b>' + String(tab.cm[j]).replace('.', ',') + ' cm</b></div>').join('') + '</div>' +
     '<p class="hint">Babolats tabel, katalog 2027 side 59. <a href="#side/59">Se siden</a></p></div></details>' +
     '<div class="tt-regel"><b>Prøv skoen først.</b> Sko kan ikke byttes, ligesom tøjet. Prøv modellen og størrelsen hos Racketlife, <a href="https://maps.google.com/?q=%C3%85boulevard+15,+1960+Frederiksberg" target="_blank" rel="noopener">Åboulevard 15, 1960 Frederiksberg</a>, før du vælger. Har du en Babolat-sko i forvejen, så vælg samme størrelse. Ønsker du en anden farve eller Clay i stedet for All Court, så skriv det i kommentaren i kurven.</div>';
+}
+
+// ------------------------------------------------------------ informationsskærmen (Lars 1. november 2026, mockup toej_info.png)
+// Vises første gang en tildeling åbnes på denne enhed. Bagefter under "Sådan virker det".
+// Formandens linje: der loves intet ud over beløbet nu og, for 5.000-gruppen, op til 1.500 kr. i foråret (primært til sko).
+const INFO_NOEGLE = 'rtk.toej.info';
+function infoSet() { try { return JSON.parse(hent(INFO_NOEGLE) || '[]'); } catch (e) { return []; } }
+function infoSeet(tid) { return infoSet().indexOf(String(tid)) >= 0; }
+function infoMaerk(tid) { const a = infoSet(); if (a.indexOf(String(tid)) < 0) { a.push(String(tid)); gem(INFO_NOEGLE, JSON.stringify(a.slice(-20))); } }
+function vInfo(tid) {
+  const t = tildeling(tid);
+  if (!t) return vIkke();
+  const fn = S.start.mig.fornavn || fornavn(S.start.mig.navn);
+  const trinI = (n, ti, tx) => '<div class="ti-trin"><span class="ti-n" aria-hidden="true">' + n + '</span><div><b>' + esc(ti) + '</b><p>' + esc(tx) + '</p></div></div>';
+  let h = tilbage('#', 'Dine tildelinger') + '<p class="kicker" style="margin:14px 0 0">Velkommen, ' + esc(fn) + '</p><h1 class="ti-h">Dit arbejdstøj fra klubben</h1>' +
+    '<div class="ti-boks"><span>Du kan vælge for op til</span><b>' + esc(kr(t.beloeb)) + '</b><small>i listepris inkl. moms</small><span>Frist ' + esc(dagTekst(t.forlaenget || t.frist)) + '</span></div>' +
+    '<ol class="ti-liste">' +
+    '<li>' + trinI(1, 'Vælg tøj og størrelser', 'Babolat Play i klubbens farve. Det, du ikke bruger, bortfalder.') + '</li>' +
+    '<li>' + trinI(2, 'Send dit valg', 'Klubben godkender det eller skriver til dig, hvis noget skal ændres. Du får en sms. Du kan rette, indtil det er godkendt.') + '</li>' +
+    '<li>' + trinI(3, 'Bestilling og tryk', 'Efter fristen bestilles alt samlet. Tøjet trykkes med klubbens logo hos Racketlife, og klubben betaler trykket.') + '</li>' +
+    '<li>' + trinI(4, 'Hent det i klubben', 'Du får en sms, når dit tøj er klar.') + '</li></ol>' +
+    '<p class="hint" style="margin:12px 0 0">' + (Number(t.beloeb) >= 5000 ? 'Til foråret får du op til 1.500 kr. mere, primært til sko. ' : '') + 'Klubben vender tilbage om kommende tildelinger.</p>' +
+    (t.status === 'aaben' ? '<button type="button" id="infoVaelg" style="width:100%;margin-top:16px">Vælg mit tøj</button>' : '<a class="af-chip" style="margin-top:16px" href="#kurv/' + esc(t.id) + '">Se dit valg</a>') +
+    '<p class="hint" style="margin:10px 0 0;text-align:center">Du kan altid læse det igen under "Sådan virker det".</p>';
+  vis(h);
+  const k = $('infoVaelg');
+  if (k) k.addEventListener('click', () => { if (!S.som) infoMaerk(t.id); location.hash = '#t/' + t.id; });
+  const h1 = document.querySelector('#vis .ti-h'); if (h1) { h1.tabIndex = -1; h1.focus({ preventScroll: true }); }
 }
 
 function vVaelg(tid) {
@@ -596,7 +626,9 @@ async function rute() {
   if (admin && !S.adm) { vis('<p class="hint">Henter …</p>'); try { await hentAdm(); } catch (err) { if (!S.adm) { vis('<p class="msg err">' + esc(err.message) + '</p>'); return; } } }
   else if (admin || !navn) friskOp(h, admin);
   if (navn !== 't' && navn !== 'kurv') S.fejl = '';
-  if (navn === 't') vVaelg(a);
+  if (navn === 't' && !S.som && !infoSeet(a) && tildeling(a) && tildeling(a).status === 'aaben') { location.replace('#info/' + a); return; }
+  if (navn === 'info') vInfo(a);
+  else if (navn === 't') vVaelg(a);
   else if (navn === 'kurv') vKurv(a);
   else if (navn === 'side') vSide(a, b);
   else if (navn === 'konto') vKonto();
@@ -627,7 +659,8 @@ function tegn() {
   const navn = location.hash.replace(/^#/, '').split('/')[0];
   const fokus = document.activeElement && document.activeElement.id;
   const sel = fokus && document.activeElement.tagName === 'TEXTAREA' ? [document.activeElement.selectionStart, document.activeElement.selectionEnd] : null;
-  if (navn === 't') vVaelg(location.hash.split('/')[1]);
+  if (navn === 'info') vInfo(location.hash.split('/')[1]);
+  else if (navn === 't') vVaelg(location.hash.split('/')[1]);
   else if (navn === 'kurv') vKurv(location.hash.split('/')[1]);
   else if (navn === 'side') { const p = location.hash.split('/'); vSide(p[1], p[2]); }
   else if (navn === 'giv') vGiv();

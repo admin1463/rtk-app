@@ -1118,3 +1118,10 @@ a.ghost.small{display:inline-flex;align-items:center;text-decoration:none}
 .po-kons ul{margin:6px 0 0 18px;padding:0}
 .po-tidl-boks{border:1.5px solid var(--line2);border-radius:14px;padding:12px 14px;background:#F7F8F9;margin:0 0 12px}
 .po-tidl-boks ul{margin:6px 0 0 18px;padding:0}
+/* Mit arbejdstøj: informationsskærmen første gang (1. november 2026, mockup toej_info.png) */
+.ti-h{margin:4px 0 8px;font-size:24px;outline:none}
+.ti-boks{display:flex;flex-direction:column;align-items:flex-start;background:#0B3D3A;color:#fff;border-radius:14px;padding:14px 16px;margin:6px 0 14px}
+.ti-boks b{font-size:32px;line-height:1.1;margin:2px 0}.ti-boks span{font-size:14px;opacity:.9}.ti-boks small{font-size:12px;opacity:.8;margin:0 0 6px}
+.ti-liste{list-style:none;margin:0;padding:0}
+.ti-trin{display:flex;gap:12px;margin:0 0 10px}.ti-n{flex:none;width:26px;height:26px;border-radius:50%;background:#E6F0EE;color:#0B3D3A;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+.ti-trin b{display:block;font-size:15px}.ti-trin p{margin:2px 0 0;font-size:14px;color:#3a4a55}
