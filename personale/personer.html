@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="47ff931d0286">
+<meta name="rtk-version" content="f0fdee61b1a1">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -59,6 +59,7 @@
 </footer>
 
 <script src="../konfig.js?v=9f80df47682e"></script>
+<script src="../adminpin.js?v=8d3a690e6e54"></script>
 <script src="../visning.js?v=9cd5651130e5"></script>
 <script>
 // Personer og roller under Administration (Lars 19. oktober kl. 17.36 til 17.47, mockup godkendt 17.46).
@@ -84,11 +85,12 @@ if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
 
 async function motor(modul, handling, data, id) {
   let res;
-  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: id || '' }) }); }
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, apin: (window.RTK_APIN ? RTK_APIN.bevis() : ''), id: id || '' }) }); }
   catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
   let svar;
   // Google svarer af og til med en HTML-side. Så er det en forbindelsesfejl, ikke en teknisk fejltekst (ende til ende-testen 20. oktober)
   try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (!svar.ok && svar.apin && window.RTK_APIN) { await RTK_APIN.spoerg(motor); return motor.apply(null, arguments); }
   if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
   SIDST[handling] = svar.tid || 0;
   if (['fjernRolle', 'givRolle', 'stop', 'logudAlle'].indexOf(handling) >= 0) LAEST.liste = Math.max(LAEST.liste || 0, svar.tidSlut || svar.tid || 0);
@@ -207,6 +209,14 @@ function vPerson(pid, igen) {
       '<a class="af-chip' + (p.roller.length || !igen.length ? ' fyldt' : '') + '" href="#p/' + encodeURIComponent(p.pid) + '/giv">' + (!p.roller.length && igen.length ? '+ Giv en anden rolle' : '+ Giv en rolle') + '</a></div>';
   }
   if (adm) h += '<p class="po-note">Administratorer ændres af klubbens systemansvarlige.</p>';
+  // Pinkode til Administration (Lars 1. november 2026, mockup admin_pinkode.png skærm 4): en anden administrator nulstiller
+  if (adm && !mig && p.apin) {
+    const ap = p.apin, kl = (t) => datoKort(t) + ' kl. ' + new Date(t).toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' }).replace(':', '.');
+    h += '<h2 class="po-h">Pinkode til Administration</h2><div class="po-fakta">' + (ap.har
+      ? '<div><span>Lavet</span><b>' + esc(datoKort(ap.lavet)) + '</b></div><div><span>Sidst brugt</span><b>' + esc(ap.brugt ? kl(ap.brugt) : '–') + '</b></div>'
+      : '<div><span>Status</span><b>Ikke lavet endnu</b></div>') + '</div>';
+    if (ap.har) h += '<p class="po-note">Nulstil, hvis ' + esc(p.navn.split(' ')[0]) + ' har glemt den, eller telefonen er væk. Ingen kan se en pinkode.</p><div class="af-chips" style="margin-top:0"><a class="af-chip lille farlig" href="#p/' + encodeURIComponent(p.pid) + '/pinkode">Nulstil pinkoden</a></div>';
+  }
   h += '<h2 class="po-h">Kontakt</h2><div class="po-fakta"><div><span>Mobil</span><b>' + (p.mobil ? '<a href="tel:' + esc(p.mobil.replace(/\s/g, '')) + '">' + esc(mobilTekst(p.mobil)) + '</a>' : '–') + '</b></div><div><span>Mail</span><b>' + (p.mail ? esc(p.mail) : '–') + '</b></div></div>' +
     '<p class="po-note">Navn, mobilnummer og mail rettes af klubbens systemansvarlige. Når importen fra ForeningsLet er bygget, rettes de dér.</p>';
   h += '<h2 class="po-h">Login</h2><div class="po-fakta"><div><span>Sidst logget ind</span><b>' + esc(p.sidstLogin ? datoKort(p.sidstLogin) + ' kl. ' + p.sidstLogin.slice(11).replace(':', '.') : 'Aldrig') + '</b></div><div><span>Husket på</span><b>' + p.enheder + (p.enheder === 1 ? ' enhed' : ' enheder') + '</b></div></div>';
@@ -285,6 +295,10 @@ function bekraeft(pid, slags, rolle) {
     if (p.toej) punkter.push('En tildeling i Arbejdstøj, der ikke er bestilt, annulleres, og beløbet er frit igen. Det bestilte står.');
     punkter.push({ fed: fornavn + ' beholder sit login som medlem.', t: ' Udmeldelse af klubben sker kun i ForeningsLet.' });
     knap = 'Ja, stop ' + fornavn + ' som medarbejder'; grund = true;
+  } else if (slags === 'pinkode') {
+    titel = 'Nulstil ' + p.navn + 's pinkode til Administration?';
+    punkter = [fornavn + ' laver en ny pinkode, næste gang Administration åbnes.', 'Alle ' + fornavn + 's enheder skal taste den nye pinkode. Login er uændret.', fornavn + ' får en sms om, at du har nulstillet den.'];
+    knap = 'Ja, nulstil pinkoden';
   } else {
     titel = 'Log ' + p.navn + ' ud på alle enheder?';
     punkter = [fornavn + ' logges ud på ' + p.enheder + (p.enheder === 1 ? ' enhed' : ' enheder') + ' og skal logge ind igen med en sms-kode.', 'Roller og alt andet er uændret. Brug det fx, hvis en telefon er mistet.'];
@@ -301,6 +315,13 @@ function bekraeft(pid, slags, rolle) {
     try {
       const h2 = slags === 'fjern' ? 'fjernRolle' : slags === 'stop' ? 'stop' : 'logudAlle';
       const d = { pid }; if (rolle) d.rolle = rolle; if (grund) d.grund = $('grund').value;
+      if (slags === 'pinkode') {
+        await motor('kerne', 'apinNulstil', { pid }, S.ids[noegle]);
+        delete S.ids[noegle];
+        S.msg = p.navn + 's pinkode er nulstillet. ' + fornavn + ' laver en ny, næste gang Administration åbnes.'; S.msgType = 'okm'; S.msgRute = '#p/' + encodeURIComponent(pid);
+        location.hash = '#p/' + encodeURIComponent(pid);
+        return;
+      }
       const r = await motor('personer', h2, d, S.ids[noegle]);
       delete S.ids[noegle];
       S.en[pid] = r.person;
@@ -324,12 +345,17 @@ async function hentListe() {
   catch (err) { if ((!location.hash || location.hash === '#') && !S.liste) vis(hero('Administration', 'Personer og roller') + '<p class="msg err" role="alert">' + esc(err.message) + '</p>', false); }
 }
 async function hentEn(pid) {
-  try { S.en[pid] = await motor('personer', 'en', { pid }); }
+  try {
+    const p = await motor('personer', 'en', { pid });
+    // Pinkoden vises kun for andre administratorer (Lars 1. november 2026)
+    if ((p.roller || []).indexOf('admin') >= 0 && !(person && p.pid === person.id)) { try { p.apin = await motor('kerne', 'apinOm', { pid }); } catch (e) { p.apin = null; } }
+    S.en[pid] = p;
+  }
   catch (err) { if (rute().pid === pid) vis(tilbage() + '<p class="msg err" role="alert">' + esc(err.message) + '</p>', false); return false; }
   return true;
 }
 function rute() {
-  const m = /^#p\/([^/]+)(?:\/(fjern|stop|logud|giv)(?:\/([a-z]+))?)?$/.exec(location.hash);
+  const m = /^#p\/([^/]+)(?:\/(fjern|stop|logud|giv|pinkode)(?:\/([a-z]+))?)?$/.exec(location.hash);
   return m ? { pid: decodeURIComponent(m[1]), slags: m[2] || '', rolle: m[3] || '' } : {};
 }
 async function visRute() {
@@ -349,8 +375,8 @@ function start() {
   $('omraade').classList.remove('hidden');
   $('hvem').textContent = 'Logget ind som ' + person.navn;
   if ((person.roller || []).indexOf('admin') < 0) { $('ikkeAdmin').classList.remove('hidden'); return; }
-  lytVisninger();
-  visRute();
+  // Pinkode til Administration (1. november 2026): før noget vises
+  (window.RTK_APIN ? RTK_APIN.sikr(motor) : Promise.resolve()).then(() => { lytVisninger(); visRute(); }).catch((e) => { if (!(e && e.apinAfbrudt)) vis(hero('Administration', 'Personer og roller') + '<p class="msg err" role="alert">' + esc(e.message) + '</p>', false); });
 }
 
 // Personen huskes på telefonen, så siden går i gang med det samme, og motoren tjekker bagefter (Lars 23. oktober kl. 08.41: siderne var for langsomme)

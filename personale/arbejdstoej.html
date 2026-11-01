@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="07945e99b219">
+<meta name="rtk-version" content="c70a1b37ebc0">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -60,6 +60,7 @@
 
 <script src="../konfig.js?v=9f80df47682e"></script>
 <script src="../visning.js?v=9cd5651130e5"></script>
+<script src="../adminpin.js?v=8d3a690e6e54"></script>
 <script>
 // Arbejdstøj og udstyr (personale/arbejdstoej.html). Bygges ind af arbejdstoej.py. 16. oktober 2026.
 // Trænerens kurv, hele katalogsiden, sko og størrelse, og for administratorerne kontoen, varerne, personerne,
@@ -87,11 +88,12 @@ if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
 
 async function motor(modul, handling, data, id) {
   let res;
-  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: id || '' }) }); }
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, apin: (window.RTK_APIN ? RTK_APIN.bevis() : ''), id: id || '' }) }); }
   catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
   let svar;
   // Google svarer af og til med en HTML-side. Så er det en forbindelsesfejl, ikke en teknisk fejltekst (ende til ende-testen 20. oktober)
   try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (!svar.ok && svar.apin && window.RTK_APIN) { await RTK_APIN.spoerg(motor); return motor.apply(null, arguments); }
   if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
   SIDST[handling] = svar.tid || 0;
   // Efter at have gemt regnes kun kopier fra Firebase, der er lavet efter, at handlingen var færdig (tidSlut), for nyere.
@@ -121,6 +123,14 @@ function lytVisninger() {
     if (!S.rutet) { S.rutet = true; rute(); } else tegnHvisRoligt(false);
   }));
   if (!(person.roller || []).includes('admin')) return;
+  // Administratorens kopier vises først, når pinkoden er tastet (produktion, 1. november 2026)
+  // Er den ikke tastet endnu, startes de, når den bliver det (gennemgangen 1. november)
+  if (window.RTK_APIN && !RTK_APIN.aaben()) { window.addEventListener('rtk-apin', lytAdm, { once: true }); return; }
+  lytAdm();
+}
+let admLytter = false;
+function lytAdm() {
+  if (admLytter || !window.RTKV) return; admLytter = true;
   RTKV.lyt(motor, 'toejAdm', (x) => fraVis('adm', x, (a) => { S.adm = a; tegnHvisRoligt(true); }));
   RTKV.lyt(motor, 'toejVarer', (x) => { if (!S.varIgang && !(S.varKoe && S.varKoe.length)) fraVis('varer', x, (v) => { S.varerAdm = v; tegnHvisRoligt(true); }); });
 }
@@ -849,7 +859,9 @@ async function start() {
   $('hvem').textContent = 'Logget ind som ' + person.navn;
   // Kopien fra Firebase kommer typisk før motoren svarer, og så går siden i gang med den (lytVisninger)
   lytVisninger();
-  try { await hentStart(); if (S.start.admin) hentAdm().then(() => { if (!location.hash) tegn(); }).catch(() => {}); }
+  // Administratorens oversigt hentes i baggrunden kun, når pinkoden allerede er tastet. Ellers spørges der først, når Administration åbnes
+  // (en administrator, der kun vil bestille sit eget tøj, skal ikke møde pinkoden, gennemgangen 1. november)
+  try { await hentStart(); if (S.start.admin && (!window.RTK_APIN || RTK_APIN.aaben())) hentAdm().then(() => { if (!location.hash) tegn(); }).catch(() => {}); }
   // Kopien fra Firebase er vist, men motoren fejler: en adgangsfejl skal altid ses, ellers ser siden levende ud uden at virke (gennemgangen M5)
   catch (err) { if (!S.start || /adgang/i.test(err.message)) vis('<p class="msg err">' + esc(err.message) + '</p>'); return; }
   if (!S.rutet) { S.rutet = true; rute(); } else tegnHvisRoligt(false);
