@@ -54,7 +54,8 @@
   if (SKJULT.indexOf(side) >= 0) { location.replace(/\/personale\//.test(location.pathname) ? './' : '/'); return; }
   try {
     var st = document.createElement('style');
-    st.textContent = SKJULT.map(function (s) { return 'a[href*="' + s + '"]'; }).join(',') + '{display:none !important}';
+    // Også feltet "På vej" på medlemmernes forside (Lars 1. november kl. 7.22: det skal ikke stå der)
+    st.textContent = SKJULT.map(function (s) { return 'a[href*="' + s + '"]'; }).concat(['.paa-vej']).join(',') + '{display:none !important}';
     (document.head || document.documentElement).appendChild(st);
   } catch (e) {}
   function ryd() {
