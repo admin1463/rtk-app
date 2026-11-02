@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="aa6a998be5f5">
+<meta name="rtk-version" content="058ef188db22">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -44,7 +44,7 @@
       <h2>Log ind</h2>
       <!-- Login med mobilnummer og engangskode på sms. Besluttet af Lars 11. oktober 2026. -->
       <form id="mobilForm" autocomplete="on">
-        <p class="hint" style="margin:0 0 12px">Skriv dit mobilnummer, så sender vi en kode på sms. Ingen pinkode at huske.</p>
+        <p class="hint" style="margin:0 0 12px">Skriv dit mobilnummer, så sender vi en kode på sms. Ingen pinkode at huske. Når du er logget ind, husker telefonen dig i 30 dage.</p>
         <label for="mobil">Dit mobilnummer</label>
         <input id="mobil" type="tel" inputmode="tel" autocomplete="tel" aria-describedby="landekode" maxlength="22" style="font-size:20px;letter-spacing:.04em">
         <p class="hint" id="landekode" style="margin:6px 0 0">Danske numre skrives uden +45. Udenlandske med landekode, fx +46.</p>
@@ -54,7 +54,7 @@
         <label for="kode" id="kodeLabel">Koden fra sms'en</label>
         <div class="big"><input id="kode" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code"></div>
         <p class="hint" style="margin:6px 0 0">Koden gælder i 10 minutter. Kommer der ingen sms, så tjek nummeret.</p>
-        <label style="display:flex;align-items:center;gap:12px;margin:14px 0 0;font-size:15px;min-height:44px"><input type="checkbox" id="husk" checked style="width:22px;height:22px;min-height:0;margin:0;accent-color:#E6005C"> Husk mig på denne enhed i 30 dage</label>
+        <label style="display:flex;align-items:center;gap:12px;margin:14px 0 0;font-size:15px;min-height:44px"><input type="checkbox" id="husk" checked style="width:22px;height:22px;min-height:0;margin:0;accent-color:#E6005C"> Husk mig på denne telefon i 30 dage. Uden flueben skal du logge ind igen i morgen.</label>
         <button type="submit" style="width:100%;margin-top:10px">Log ind</button>
         <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:8px">
           <button type="button" class="ghost small" id="sendIgen">Send igen</button>
