@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="c78ea1e387a4">
+<meta name="rtk-version" content="a33f2be4973d">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="rtk.css?v=5d9d8ba646d9">
+<style>.os-intro{font-size:17px;line-height:1.5;margin:0 0 14px}.os-intro-trin li div span{display:block;margin-top:2px}</style>
 </head>
 <body>
 <header class="top">
@@ -49,7 +50,22 @@
       <div id="opslagSvar" aria-live="polite"></div>
       <form id="smsBoks" class="os-boks hidden" aria-live="polite" autocomplete="on"></form>
       <p class="hint" data-t="opslagHint">Skriv dit ketsjernummer. Ketsjeren er klar senest tre hverdage efter aflevering og ligger i afhentningsskabet.</p>
-      <div class="af-chips"><a class="af-chip info" href="#priser" data-t="seListe">Se strenge og priser</a><a class="af-chip info" href="#skriv" data-t="skrivTil">Skriv til opstrengeren</a></div>
+      <div class="af-chips"><a class="af-chip info" href="#saadan" data-t="saadanH">Sådan foregår det</a><a class="af-chip info" href="#priser" data-t="seListe">Se strenge og priser</a><a class="af-chip info" href="#skriv" data-t="skrivTil">Skriv til opstrengeren</a></div>
+
+      <!-- Introduktion til servicen og processen, under statusopslaget, fordi sms'en linker hertil (Lars 4. november kl. 21.36) -->
+      <section class="afsnit" id="saadan">
+        <h2 data-t="introH">Opstrengning i klubben</h2>
+        <p class="os-intro" data-t="introT">Klubben strenger ketsjere på sin egen Babolat-maskine. Du afleverer og henter selv i skabene i opvarmningsområdet i RTK-hallen, når det passer dig, og ketsjeren er klar senest tre hverdage efter. Fra 195 kr. med strenge fra Babolat.</p>
+        <h3 class="os-type" data-t="saadanH">Sådan foregår det</h3>
+        <ol class="nr-trin os-intro-trin">
+          <li><span class="n" aria-hidden="true">1</span><div><b data-t="i1">Scan QR-koden på afleveringsskabet</b><span data-t="i1t">Skriv dit mobilnummer. Du får et ketsjernummer og koden til afleveringsskabet på telefonen.</span></div></li>
+          <li><span class="n" aria-hidden="true">2</span><div><b data-t="i2">Udfyld en ketsjerseddel</b><span data-t="i2t">Sedlerne ligger ved skabet. Skriv ketsjernummer, navn, mobilnummer, opstrengningstype (fx B1) og evt. hårdhed i kg. Sæt sedlen fast på ketsjeren med en elastik.</span></div></li>
+          <li><span class="n" aria-hidden="true">3</span><div><b data-t="i3">Betal med MobilePay</b><span data-t="i3t">Scan MobilePay-koden på skabet. Vælg den samme opstrengningstype, og skriv ketsjernummeret i beskeden.</span></div></li>
+          <li><span class="n" aria-hidden="true">4</span><div><b data-t="i4">Læg ketsjeren i afleveringsskabet</b><span data-t="i4t">Lås op med koden fra telefonen, læg ketsjeren ind, og lås igen.</span></div></li>
+          <li><span class="n" aria-hidden="true">5</span><div><b data-t="i5">Hent den i afhentningsskabet</b><span data-t="i5t">Når ketsjeren er strenget, får du en sms med koden til afhentningsskabet, senest tre hverdage efter. Sedlen sidder stadig på ketsjeren. Lås skabet igen, når du har taget den.</span></div></li>
+        </ol>
+        <p class="hint" data-t="introNote">En ketsjer pr. scanning. Har du flere ketsjere med, scanner du én gang for hver.</p>
+      </section>
     </section>
 
     <section class="afsnit" id="priser">
@@ -107,6 +123,14 @@
 <script>
 window.TEKSTER = {
   da: {
+    introH: 'Opstrengning i klubben', saadanH: 'Sådan foregår det',
+    introT: 'Klubben strenger ketsjere på sin egen Babolat-maskine. Du afleverer og henter selv i skabene i opvarmningsområdet i RTK-hallen, når det passer dig, og ketsjeren er klar senest tre hverdage efter. Fra 195 kr. med strenge fra Babolat.',
+    i1: 'Scan QR-koden på afleveringsskabet', i1t: 'Skriv dit mobilnummer. Du får et ketsjernummer og koden til afleveringsskabet på telefonen.',
+    i2: 'Udfyld en ketsjerseddel', i2t: 'Sedlerne ligger ved skabet. Skriv ketsjernummer, navn, mobilnummer, opstrengningstype (fx B1) og evt. hårdhed i kg. Sæt sedlen fast på ketsjeren med en elastik.',
+    i3: 'Betal med MobilePay', i3t: 'Scan MobilePay-koden på skabet. Vælg den samme opstrengningstype, og skriv ketsjernummeret i beskeden.',
+    i4: 'Læg ketsjeren i afleveringsskabet', i4t: 'Lås op med koden fra telefonen, læg ketsjeren ind, og lås igen.',
+    i5: 'Hent den i afhentningsskabet', i5t: 'Når ketsjeren er strenget, får du en sms med koden til afhentningsskabet, senest tre hverdage efter. Sedlen sidder stadig på ketsjeren. Lås skabet igen, når du har taget den.',
+    introNote: 'En ketsjer pr. scanning. Har du flere ketsjere med, scanner du én gang for hver.',
     titel: 'Opstrengning · Mit RTK', sideTitel: 'Opstrengning', side: 'Medlemssiden', tilForsiden: 'Til forsiden',
     klubLink: 'Roskilde Tennis Klubs hjemmeside (åbner i ny fane)', racketlifeLink: 'Racketlife (åbner i ny fane)',
     klarSpm: 'Er min ketsjer klar?', nrLabel: 'Dit ketsjernummer', seStatus: 'Se status',
@@ -152,6 +176,14 @@ window.TEKSTER = {
     smsAndenTlf: 'Du kan bede om en sms på den telefon, der trak ketsjernummeret, eller når ketsjeren er modtaget.'
   },
   en: {
+    introH: 'Racket stringing at the club', saadanH: 'How it works',
+    introT: 'The club strings rackets on its own Babolat machine. You drop off and collect your racket yourself at the lockers in the warm-up area of the RTK hall, whenever it suits you, and it is ready no later than three working days later. From 195 kr. with Babolat strings.',
+    i1: 'Scan the QR code on the drop-off locker', i1t: 'Enter your mobile number. You get a racket number and the code for the drop-off locker on your phone.',
+    i2: 'Fill in a racket slip', i2t: 'The slips are by the locker. Write the racket number, your name, mobile number, stringing type (e.g. B1) and, if you like, the tension in kg. Attach the slip to the racket with a rubber band.',
+    i3: 'Pay with MobilePay', i3t: 'Scan the MobilePay code on the locker. Choose the same stringing type, and put the racket number in the payment note.',
+    i4: 'Put the racket in the drop-off locker', i4t: 'Unlock it with the code from your phone, put the racket in, and lock it again.',
+    i5: 'Collect it from the collection locker', i5t: 'When your racket has been strung, you get a text message with the code for the collection locker, no later than three working days later. The slip is still on the racket. Lock the locker again when you have taken it.',
+    introNote: 'One racket per scan. If you have more than one racket, scan once for each.',
     titel: 'Racket stringing · Mit RTK', sideTitel: 'Racket stringing', side: 'Members’ area', tilForsiden: 'To the front page',
     klubLink: 'Roskilde Tennis Klub website (opens in a new tab)', racketlifeLink: 'Racketlife (opens in a new tab)',
     klarSpm: 'Is my racket ready?', nrLabel: 'Your racket number', seStatus: 'Check status',
