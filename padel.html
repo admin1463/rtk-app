@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="c7732a7377c2">
+<meta name="rtk-version" content="7e7e52fadee2">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -97,15 +97,30 @@ html:not(.aaben) .efter{display:none!important}
 .pv-kort li{padding:7px 0;border-top:1px solid var(--line)}
 .pv-note{margin-top:22px;font-size:15px;color:var(--muted);max-width:820px}
 .pv-regn{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:18px;max-width:640px;font-size:15px}
+/* Noterne og regneeksemplerne står i samme gitter som de tre kort, så kanterne flugter (Lars 12. november 2026 kl. 17.50) */
+.pv-pris-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:28px;align-items:start}
+.pv-pris-g .pv-noter{grid-column:span 2}
+.pv-pris-g .pv-note{max-width:none}
+.pv-pris-g .pv-noter .pv-note:first-child{margin-top:0}
+.pv-pris-g .pv-regn{margin-top:0;max-width:none}
+/* Foldet ud fylder eksemplerne hele bredden med de tre eksempler side om side under hvert sit kort */
+.pv-pris-g .pv-regn[open]{grid-column:1/-1}
+.pv-pris-g .pv-regn[open] .pv-regn-in{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 40px}
+.pv-pris-g .pv-regn[open] .gr+.gr{margin-top:0}
+.pv-pris-g .pv-regn .gr>div{flex-wrap:wrap;column-gap:12px;row-gap:2px}
+.pv-pris-g .pv-regn .gr>div>span:last-child{margin-left:auto;text-align:right}
+@media (max-width:960px){.pv-pris-g{grid-template-columns:minmax(0,1fr)}.pv-pris-g .pv-noter{grid-column:auto}.pv-pris-g .pv-regn[open] .pv-regn-in{display:block}.pv-pris-g .pv-regn[open] .gr+.gr{margin-top:14px}}
 /* Regneeksemplerne er foldet sammen, til man trykker på plusset (Lars 12. november 2026 kl. 17.33) */
 .pv-regn>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;font-weight:700;color:#000}
 .pv-regn>summary::-webkit-details-marker{display:none}
 .pv-regn>summary .plus{flex:none;width:28px;height:28px;border-radius:50%;background:var(--soft);color:#0B3D3A;display:grid;place-items:center;font-size:20px;line-height:1;transition:transform .2s}
 .pv-regn[open]>summary .plus{transform:rotate(45deg)}
 .pv-regn[open]>summary{margin-bottom:14px}
-.pv-regn>summary:focus-visible{outline:2px solid var(--teal);outline-offset:4px;border-radius:6px}
-.pv-regn>div{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-top:1px solid var(--line)}
-.pv-regn>b{display:block;margin-bottom:6px}
+.pv-regn>summary:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:6px}
+.pv-regn>summary:focus:not(:focus-visible){outline:none}
+.pv-regn .gr>div{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-top:1px solid var(--line)}
+.pv-regn .gr>b{display:block;margin-bottom:6px}
+.pv-regn .gr+.gr{margin-top:14px}
 .pv-regn small{display:block;color:var(--muted);margin-top:6px;font-size:13px}
 /* steder og kort */
 .pv-steder{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:start;margin-top:34px}
@@ -221,9 +236,19 @@ html:not(.aaben) .efter{display:none!important}
 .pv-skriv{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:start;margin-top:56px}
 .pv-skriv h2{margin:6px 0 10px}
 .pv-faq .gitter{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
-.pv-faq .gitter>div{border-top:1px solid var(--line);padding:16px 0}
-.pv-faq .gitter b{display:block;margin-bottom:4px}
-.pv-faq .gitter span{color:var(--muted);font-size:15px}
+.pv-faq .gitter{align-items:start}
+/* Spørgsmål og svar foldes ud med plusset ligesom regneeksemplerne (Lars 12. november 2026 kl. 18.06) */
+.pv-faq .gitter .kol>details{border-top:1px solid var(--line)}
+.pv-faq .gitter .kol{min-width:0}
+@media (max-width:760px){.pv-faq .gitter{gap:0}}
+.pv-faq .gitter summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;cursor:pointer;list-style:none}
+.pv-faq .gitter summary::-webkit-details-marker{display:none}
+.pv-faq .gitter summary:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:6px}
+.pv-faq .gitter summary:focus:not(:focus-visible){outline:none}
+.pv-faq .gitter b{display:block}
+.pv-faq .gitter .sv{display:block;color:var(--muted);font-size:15px;padding:0 44px 18px 0;margin-top:-4px}
+.pv-faq .plus,.pv-regn>summary .plus{flex:none;width:28px;height:28px;border-radius:50%;background:var(--soft);color:#0B3D3A;display:grid;place-items:center;font-size:20px;line-height:1;transition:transform .2s}
+.pv-faq details[open]>summary .plus{transform:rotate(45deg)}
 .pv-partnere{padding-top:28px}
 .pv-cta{display:none}
 @media (max-width:760px){
@@ -384,25 +409,32 @@ html:not(.aaben) .efter{display:none!important}
     <div class="pv-kort"><div class="alder">18 år og op</div><h3>Voksen</h3><div class="tid">1,5 time om ugen</div><div class="pris">1.195 kr. <small>pr. kvartal</small></div>
       <ul><li>Onsdag mellem 17 og 19</li><li>Træner med hver anden gang. De andre gange spiller I frit, fx americano med skiftende makkere. Sådan kan de fleste voksne bedst lide at spille padel.</li><li>Kræver padelniveau 1,5: du kender reglerne og grundslagene, kan serve og kan holde bolden i gang over nettet mindst fem gange med en makker i normalt tempo. Er du ikke der endnu, så se <a href="#andre" data-liste="nybegynder">listen for nybegyndere</a></li><li>8 til 10 spillere på 2 baner</li><li>Lørdagshold, hvis der er interesse</li></ul></div>
   </div>
+  <div class="pv-pris-g"><div class="pv-noter">
   <p class="pv-note">Træningsafgiften betales pr. kalenderkvartal i ForeningLet, klubbens medlems- og betalingssystem. Man binder sig for et halvt år ad gangen. Første periode er januar til juni 2027. Vil du stoppe 30. juni, skal du sige op senest 31. marts. Derefter kan du opsige til udgangen af et kvartal med mindst 3 måneders varsel. Første kvartal koster fuld pris, selv om vi starter 13. januar. Når I får tildelt en plads, har I to dage til at betale. Ellers går pladsen videre til en anden på listen.</p>
   <p class="pv-note" style="margin-top:10px">For at gå på et hold skal du være medlem af RTK. Er du ikke medlem i forvejen, skal du have et udemedlemskab oveni, altså et medlemskab af RTK med udendørs tennis: 144 kr. pr. kvartal (3 til 10 år), 214 kr. (11 til 24 år) eller 383 kr. (25 år og op) og et indmeldelsesgebyr på 250 kr. pr. person. Satserne gælder frem til generalforsamlingen i marts 2027. Udemedlemskabet giver også adgang til at spille tennis udendørs på klubbens to anlæg i Roskilde, og du får medlemskabet af PadelPit Roskilde og gratis adgang til udebanerne i Darup med.</p>
+  </div>
   <details class="pv-regn">
     <summary><span>Se, hvad det koster i alt</span><span class="plus" aria-hidden="true">+</span></summary>
+    <div class="pv-regn-in"><div class="gr">
     <b>Eksempel på første kvartal for en, der ikke er medlem</b>
     <div><span>Barn på 9 år, Junior</span><span>595 + 144 + 250 = 989 kr.</span></div>
     <div><span>Barn på 11 år, Junior</span><span>595 + 214 + 250 = 1.059 kr.</span></div>
     <div><span>Ung på 13 år, Junior+</span><span>875 + 214 + 250 = 1.339 kr.</span></div>
     <div><span>Voksen på 42 år</span><span>1.195 + 383 + 250 = 1.828 kr.</span></div>
-    <b style="margin-top:14px">Derefter pr. kvartal</b>
+    </div><div class="gr">
+    <b>Derefter pr. kvartal</b>
     <div><span>Barn på 9 år, Junior</span><span>595 + 144 = 739 kr.</span></div>
     <div><span>Barn på 11 år, Junior</span><span>595 + 214 = 809 kr.</span></div>
     <div><span>Ung på 13 år, Junior+</span><span>875 + 214 = 1.089 kr.</span></div>
     <div><span>Voksen på 42 år</span><span>1.195 + 383 = 1.578 kr.</span></div>
-    <b style="margin-top:14px">Eksempel på en familie, første kvartal</b>
+    </div><div class="gr">
+    <b>Eksempel på en familie, første kvartal</b>
     <div><span>Voksen på 42 år og børn på 9 og 13 år</span><span>1.828 + 989 + 1.339 = 4.156 kr.</span></div>
     <div><span>Depositum, som trækkes fra</span><span>3 × 500 = 1.500 kr.</span></div>
+    </div></div>
     <small>Træning + udemedlemskab + indmeldelse. Depositummet på 500 kr. pr. spiller trækkes fra første kvartal. Er du allerede medlem, betaler du kun træningen. Der er ingen familierabat, så hver spiller betaler sin egen pris.</small>
   </details>
+  </div>
 </div></section>
 
 <section class="sek" id="steder"><div class="w">
@@ -604,25 +636,29 @@ html:not(.aaben) .efter{display:none!important}
 <section class="sek pv-faq"><div class="w">
   <h2>Spørgsmål og svar</h2>
   <div class="gitter">
-    <div><b>Skal man kunne spille i forvejen?</b><span>Ikke som barn eller ung. Junior og Junior+ er også for nybegyndere. Voksenholdet kræver padelniveau 1,5. Det betyder, at du kender reglerne og grundslagene, kan serve og kan holde bolden i gang over nettet mindst fem gange med en makker i normalt tempo. Er du voksen og ikke der endnu, så skriv dig på <a href="#andre" data-liste="nybegynder">listen for voksne nybegyndere</a>. Det initiativ er ikke startet endnu. Bliver vi nok, starter vi det. Det koster ikke noget at stå på listen. Vi skriver til dig, når vi starter initiativet, eller hvis der bliver plads på et hold, du kan passe ind i. Du bestemmer selv, om du vil blive stående på listen eller af den.</span></div>
-    <div><b>Hvornår kan vi skrive os op?</b><span>Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 og lukker 10. december kl. 23.59. Alle får svar senest 15. december. Vil du have en mail, når vi åbner for tilmeldinger, så skriv dig op under <a href="#tilmeld">Forhåndstilmelding 2027</a>. Listerne uden depositum for voksne nybegyndere og Seniorpadel (60+) er åbne allerede nu.</span></div>
-    <div><b>Kan jeg skrive hele familien op på én gang?</b><span>Ja. Skriv alle spillere op i samme tilmelding, så får I ét tilmeldingsnummer og betaler depositummet for alle på én gang i ForeningLet. Der er ingen familierabat, så hver spiller betaler sin egen pris.</span></div>
-    <div><b>Skal jeg være medlem af RTK?</b><span>Ikke for at skrive dig op. Men for at gå på et hold skal du være medlem. Får du plads, melder du dig ind i ForeningLet, og så følger medlemskabet af PadelPit Roskilde, gratis adgang til udebanerne i Darup og udendørs tennis med.</span></div>
-    <div><b>Hvordan booker vi udebanerne i Darup?</b><span>I ForeningLet, klubbens medlemsapp. Du får adgang, når du er blevet medlem, og som medlem spiller du gratis.</span></div>
-    <div><b>Hvorfor et depositum?</b><span>Så vi ved, hvem der er klar til at være med, og kan sætte holdene, før træningen starter i januar. Depositummet er 500 kr. pr. spiller og trækkes fra prisen, når I får plads.</span></div>
-    <div><b>Hvad hvis vi ikke når at betale depositum?</b><span>Betal gerne med det samme. Fristen er 48 timer. Er der ikke betalt inden da, tager vi tilmeldingen af listen og sender en mail om det. Så kan I skrive jer op igen.</span></div>
-    <div><b>Hvorfor skal vi bruge samme mail og mobil i ForeningLet?</b><span>Tilmeldingen her og betalingen i ForeningLet er to systemer. Vi finder jeres betaling ud fra tilmeldingsnummeret, mailen og mobilnummeret. Bruger I de samme, er I sikre på at blive fundet.</span></div>
-    <div><b>Hvordan bliver holdene sat?</b><span>Primært efter alder, niveau, de dage I kan, og frivillighed. Alle får svar senest 15. december.</span></div>
-    <div><b>Kan vi vælge dag?</b><span>I fortæller, hvilke dage I kan. Hvilke hold der træner om lørdagen, afhænger af tilmeldingerne. Kan I begge dage, er chancen større. Det præcise tidspunkt får I sammen med pladsen.</span></div>
-    <div><b>Er der træner med hver gang?</b><span>Juniorerne har træner med hver gang. Voksne har træner med hver anden gang og spiller frit de andre gange, fx americano med skiftende makkere. Sådan kan de fleste voksne bedst lide at spille padel, og det holder prisen nede.</span></div>
-    <div><b>Skal vi hjælpe som frivillige?</b><span>Vi håber det. Det er en forventning, ikke et krav, og det behøver ikke være meget. Det kan være spilleren selv, en forælder eller en anden i familien. Læs mere under <a href="#sammen">Vi bygger det sammen</a>.</span></div>
-    <div><b>Hvad hvis vi ikke får plads?</b><span>Så får I depositummet tilbage senest to uger efter, at I har fået svar. I kan komme på venteliste uden depositum, hvis der bliver en plads senere.</span></div>
-    <div><b>Hvad hvis vi får plads, men ikke vil alligevel?</b><span>Er pladsen på en dag, I har sagt, at I kan, og siger I nej, beholder klubben depositummet. Det er det, depositummet er til, så vi kan regne med de pladser, vi giver. Får I tilbudt en dag, I ikke har valgt, og kan I ikke, får I depositummet tilbage.</span></div>
-    <div><b>Hvor længe binder vi os?</b><span>For et halvt år ad gangen. Første periode er januar til juni 2027. Vil I stoppe 30. juni, skal I sige op senest 31. marts. Træningen betales pr. kvartal i ForeningLet. Derefter kan I opsige til udgangen af et kvartal med mindst 3 måneders varsel.</span></div>
-    <div><b>Træner I i ferierne?</b><span>Ikke i skolernes ferier. Til gengæld kan der være camps i vinter-, påske- og efterårsferien med delvis egenbetaling.</span></div>
-    <div><b>Skal vi have eget udstyr?</b><span>Ja. Tag dit eget padelbat med og sko, der passer til banen, inde eller ude. Har du ikke et bat, kan du låne et til træningen, så langt de rækker. Du afleverer det igen, når træningen er slut. Proshoppen i RTK-hallen har et udvalg af padelbat og andet padeludstyr, og hos klubbens partner Racketlife får du rabat på padeludstyr som medlem.</span></div>
-    <div><b>Hvad er Seniorpadel (60+)?</b><span>Et initiativ, vi gerne vil starte for dig på 60 år og op, der vil spille på hverdage i dagtimerne frem til kl. 15. Det er ikke startet endnu. Skriv dig på <a href="#andre" data-liste="senior">listen for Seniorpadel (60+)</a>. Bliver vi nok, starter vi det, og du hører fra os først. Det koster ikke noget at stå på listen, og du binder dig ikke. Du bestemmer selv, om du vil blive stående på listen eller af den.</span></div>
-    <div><b>Hvad sker der med vores oplysninger?</b><span>De bruges kun til forhåndstilmeldingen, til at sætte holdene og til at finde jeres betaling. Kun Styregruppen, Padel Team og klubbens administratorer ser dem. Får I ikke plads, sletter vi dem senest 12 måneder efter, at holdene er sat. Læs mere i <a href="privatliv.html?side=padel&amp;sprog=da">privatlivsteksten</a>.</span></div>
+    <div class="kol">
+      <details><summary><b>Skal man kunne spille i forvejen?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Ikke som barn eller ung. Junior og Junior+ er også for nybegyndere. Voksenholdet kræver padelniveau 1,5. Det betyder, at du kender reglerne og grundslagene, kan serve og kan holde bolden i gang over nettet mindst fem gange med en makker i normalt tempo. Er du voksen og ikke der endnu, så skriv dig på <a href="#andre" data-liste="nybegynder">listen for voksne nybegyndere</a>. Det initiativ er ikke startet endnu. Bliver vi nok, starter vi det. Det koster ikke noget at stå på listen. Vi skriver til dig, når vi starter initiativet, eller hvis der bliver plads på et hold, du kan passe ind i. Du bestemmer selv, om du vil blive stående på listen eller af den.</span></details>
+      <details><summary><b>Hvornår kan vi skrive os op?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 og lukker 10. december kl. 23.59. Alle får svar senest 15. december. Vil du have en mail, når vi åbner for tilmeldinger, så skriv dig op under <a href="#tilmeld">Forhåndstilmelding 2027</a>. Listerne uden depositum for voksne nybegyndere og Seniorpadel (60+) er åbne allerede nu.</span></details>
+      <details><summary><b>Kan jeg skrive hele familien op på én gang?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Ja. Skriv alle spillere op i samme tilmelding, så får I ét tilmeldingsnummer og betaler depositummet for alle på én gang i ForeningLet. Der er ingen familierabat, så hver spiller betaler sin egen pris.</span></details>
+      <details><summary><b>Skal jeg være medlem af RTK?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Ikke for at skrive dig op. Men for at gå på et hold skal du være medlem. Får du plads, melder du dig ind i ForeningLet, og så følger medlemskabet af PadelPit Roskilde, gratis adgang til udebanerne i Darup og udendørs tennis med.</span></details>
+      <details><summary><b>Hvordan booker vi udebanerne i Darup?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">I ForeningLet, klubbens medlemsapp. Du får adgang, når du er blevet medlem, og som medlem spiller du gratis.</span></details>
+      <details><summary><b>Hvorfor et depositum?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Så vi ved, hvem der er klar til at være med, og kan sætte holdene, før træningen starter i januar. Depositummet er 500 kr. pr. spiller og trækkes fra prisen, når I får plads.</span></details>
+      <details><summary><b>Hvad hvis vi ikke når at betale depositum?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Betal gerne med det samme. Fristen er 48 timer. Er der ikke betalt inden da, tager vi tilmeldingen af listen og sender en mail om det. Så kan I skrive jer op igen.</span></details>
+      <details><summary><b>Hvorfor skal vi bruge samme mail og mobil i ForeningLet?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Tilmeldingen her og betalingen i ForeningLet er to systemer. Vi finder jeres betaling ud fra tilmeldingsnummeret, mailen og mobilnummeret. Bruger I de samme, er I sikre på at blive fundet.</span></details>
+      <details><summary><b>Hvordan bliver holdene sat?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Primært efter alder, niveau, de dage I kan, og frivillighed. Alle får svar senest 15. december.</span></details>
+      <details><summary><b>Kan vi vælge dag?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">I fortæller, hvilke dage I kan. Hvilke hold der træner om lørdagen, afhænger af tilmeldingerne. Kan I begge dage, er chancen større. Det præcise tidspunkt får I sammen med pladsen.</span></details>
+    </div>
+    <div class="kol">
+      <details><summary><b>Er der træner med hver gang?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Juniorerne har træner med hver gang. Voksne har træner med hver anden gang og spiller frit de andre gange, fx americano med skiftende makkere. Sådan kan de fleste voksne bedst lide at spille padel, og det holder prisen nede.</span></details>
+      <details><summary><b>Skal vi hjælpe som frivillige?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Vi håber det. Det er en forventning, ikke et krav, og det behøver ikke være meget. Det kan være spilleren selv, en forælder eller en anden i familien. Læs mere under <a href="#sammen">Vi bygger det sammen</a>.</span></details>
+      <details><summary><b>Hvad hvis vi ikke får plads?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Så får I depositummet tilbage senest to uger efter, at I har fået svar. I kan komme på venteliste uden depositum, hvis der bliver en plads senere.</span></details>
+      <details><summary><b>Hvad hvis vi får plads, men ikke vil alligevel?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Er pladsen på en dag, I har sagt, at I kan, og siger I nej, beholder klubben depositummet. Det er det, depositummet er til, så vi kan regne med de pladser, vi giver. Får I tilbudt en dag, I ikke har valgt, og kan I ikke, får I depositummet tilbage.</span></details>
+      <details><summary><b>Hvor længe binder vi os?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">For et halvt år ad gangen. Første periode er januar til juni 2027. Vil I stoppe 30. juni, skal I sige op senest 31. marts. Træningen betales pr. kvartal i ForeningLet. Derefter kan I opsige til udgangen af et kvartal med mindst 3 måneders varsel.</span></details>
+      <details><summary><b>Træner I i ferierne?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Ikke i skolernes ferier. Til gengæld kan der være camps i vinter-, påske- og efterårsferien med delvis egenbetaling.</span></details>
+      <details><summary><b>Skal vi have eget udstyr?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Ja. Tag dit eget padelbat med og sko, der passer til banen, inde eller ude. Har du ikke et bat, kan du låne et til træningen, så langt de rækker. Du afleverer det igen, når træningen er slut. Proshoppen i RTK-hallen har et udvalg af padelbat og andet padeludstyr, og hos klubbens partner Racketlife får du rabat på padeludstyr som medlem.</span></details>
+      <details><summary><b>Hvad er Seniorpadel (60+)?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Et initiativ, vi gerne vil starte for dig på 60 år og op, der vil spille på hverdage i dagtimerne frem til kl. 15. Det er ikke startet endnu. Skriv dig på <a href="#andre" data-liste="senior">listen for Seniorpadel (60+)</a>. Bliver vi nok, starter vi det, og du hører fra os først. Det koster ikke noget at stå på listen, og du binder dig ikke. Du bestemmer selv, om du vil blive stående på listen eller af den.</span></details>
+      <details><summary><b>Hvad sker der med vores oplysninger?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">De bruges kun til forhåndstilmeldingen, til at sætte holdene og til at finde jeres betaling. Kun Styregruppen, Padel Team og klubbens administratorer ser dem. Får I ikke plads, sletter vi dem senest 12 måneder efter, at holdene er sat. Læs mere i <a href="privatliv.html?side=padel&amp;sprog=da">privatlivsteksten</a>.</span></details>
+    </div>
   </div>
   <!-- Spørg os (Lars 11. november 2026 kl. 15.24). Går til sportschefen via motoren, som Skriv til klubben -->
   <div class="pv-skriv" id="skriv">
