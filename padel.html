@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="e317c7e4e7db">
+<meta name="rtk-version" content="8711626c2fbb">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0B3D3A">
 <title>Padel hele året i Roskilde Tennis Klub · Forhåndstilmelding 2027</title>
-<meta name="description" content="Padeltræning hver uge hele året for børn, unge og voksne. Indendørs hos PadelPit Roskilde og ude i Darup. Forhåndstilmeldingen åbner tirsdag 17. november kl. 10.">
+<meta name="description" content="Padeltræning hver uge hele året for børn, unge og voksne. Indendørs hos PadelPit i Roskilde og ude i Darup. Forhåndstilmeldingen åbner tirsdag 17. november kl. 10.">
 <meta property="og:title" content="Padel hele året. Sammen.">
 <meta property="og:description" content="Træning hver uge fra januar 2027 i Roskilde Tennis Klub. Forhåndstilmeldingen åbner tirsdag 17. november kl. 10.">
 <meta property="og:image" content="https://mitrtk.dk/billeder/padel/hero.jpg">
@@ -135,6 +135,7 @@ html:not(.aaben) .efter{display:none!important}
 .pv-sted .adr{color:var(--muted);font-size:15px;margin:2px 0 8px}
 .pv-sted p{margin:0 0 10px;font-size:15px}
 .pv-sted a{font-size:15px;font-weight:700;color:var(--teal);text-underline-offset:3px}
+.pv-sted .pv-prik{color:var(--muted);font-weight:700}
 /* trin */
 .pv-trin{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:34px}
 .pv-trin>div{border-top:4px solid var(--teal);padding-top:16px}
@@ -286,7 +287,8 @@ html:not(.aaben) .efter{display:none!important}
 /* Ace på padelsiden (Lars 12. november 2026, mockup ace_aaben_desk.png). Knappen vises kun, når motoren siger, at Ace er slået til */
 .pa-knap{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;align-items:center;gap:10px;background:#0B3D3A;color:#fff;border:0;border-radius:999px;padding:10px 18px 10px 10px;font:inherit;font-weight:700;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer}
 .pa-knap[hidden],.pa-panel[hidden]{display:none}
-.pa-ikon{width:32px;height:32px;border-radius:50%;background:#D7F04A;color:#0B3D3A;display:flex;align-items:center;justify-content:center;font-weight:900;flex:none}
+/* Ace er klubbens tennisbold, som i Mit RTK (Lars 12. november 2026 kl. 19.48) */
+.pa-ikon{width:32px;height:32px;border-radius:50%;display:block;flex:none;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .pa-panel{position:fixed;right:20px;bottom:20px;z-index:61;width:390px;max-width:calc(100vw - 24px);height:600px;max-height:calc(100vh - 40px);background:#fff;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.3);display:flex;flex-direction:column;overflow:hidden;font-size:15px}
 .pa-top{background:#0B3D3A;color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
 .pa-top b{display:block;font-size:16px}.pa-top small{opacity:.85;font-size:12px}
@@ -309,7 +311,8 @@ html:not(.aaben) .efter{display:none!important}
 .pa-bund button:disabled{opacity:.5}
 .pa-web{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 @media (max-width:760px){
- .pa-knap{right:12px;bottom:calc(84px + env(safe-area-inset-bottom));padding:6px;font-size:14px}
+ .pa-knap{right:12px;bottom:calc(84px + env(safe-area-inset-bottom));padding:5px;font-size:14px}
+ .pa-knap .pa-ikon{width:46px;height:46px}
  .pa-knap .pa-tekst{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
  .pa-panel{right:8px;left:8px;bottom:8px;width:auto;max-width:none;height:calc(100% - 64px);max-height:none}
 }
@@ -339,7 +342,7 @@ html:not(.aaben) .efter{display:none!important}
   <div class="w">
     <div class="kick">Nyt i Roskilde Tennis Klub · start 13. januar 2027</div>
     <h1>Padel hele året. <em>Sammen.</em></h1>
-    <p>Træning hver uge med trænere, gode makkere og masser af grin. Indendørs hos PadelPit Roskilde og om sommeren også ude på klubbens baner i Darup ved Dyrskuepladsen. For børn, unge og voksne.</p>
+    <p>Træning hver uge med trænere, gode makkere og masser af grin. Indendørs hos PadelPit i Roskilde og om sommeren også ude på klubbens baner i Darup ved Dyrskuepladsen. For børn, unge og voksne.</p>
     <a class="knap foer" href="#tilmeld">Få besked, når vi åbner for tilmeldinger</a><a class="knap efter" href="#tilmeld">Sikr din plads</a>
     <div class="smaa"><b class="foer">Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 · </b>Begrænset antal pladser · Det tager 3 minutter · 500 kr. i depositum pr. spiller, som trækkes fra prisen, eller som I får tilbage, hvis I ikke får plads</div>
   </div>
@@ -348,14 +351,14 @@ html:not(.aaben) .efter{display:none!important}
 <section class="pv-fakta"><div class="w">
   <div><b>1 til 1,5 time</b><span>hver uge, 34 til 40 gange om året</span></div>
   <div><b>Fra 8 år</b><span>Junior, Junior+ og voksen</span></div>
-  <div><b>Ude og inde</b><span>PadelPit Roskilde og Darup ved Dyrskuepladsen</span></div>
+  <div><b>Ude og inde</b><span>PadelPit i Roskilde og Darup ved Dyrskuepladsen</span></div>
   <div><b>Fra 595 kr.</b><span>pr. kvartal for juniorer</span></div>
 </div></section>
 
 <section class="sek"><div class="w pv-to pv-saer">
   <figure class="pv-video">
     <div class="pv-video-ramme">
-      <video id="intro" src="video/padel_intro.mp4" poster="video/padel_intro.jpg" muted playsinline preload="metadata" controls controlslist="nodownload" disablepictureinpicture aria-label="Video på 30 sekunder om fast padeltræning i RTK og PadelPit Roskilde fra januar. Med danske undertekster"></video>
+      <video id="intro" src="video/padel_intro.mp4" poster="video/padel_intro.jpg" muted playsinline preload="metadata" controls controlslist="nodownload" disablepictureinpicture aria-label="Video på 30 sekunder om fast padeltræning i RTK og hos PadelPit fra januar. Med danske undertekster"></video>
       <button type="button" class="pv-lyd" id="introLyd" aria-label="Slå lyd til og se videoen forfra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Slå lyd til</button>
     </div>
     <figcaption>Padel i RTK på 30 sekunder. Tryk på knappen i hjørnet for fuld skærm.</figcaption>
@@ -365,8 +368,8 @@ html:not(.aaben) .efter{display:none!important}
     <h2>Et rigtigt klubtilbud i padel. Til en pris, hvor alle kan være med.</h2>
     <p>Padel er sjovt fra første bold. Man er altid fire på banen, bolden er i spil, og man griner mere end i de fleste andre sportsgrene. Nu kan du spille det hele året i en klub, med faste hold og en træner, der kender dig.</p>
     <ul class="pv-liste">
-      <li><b>Træning hele året, inde og ude</b><span>Faste baner hos PadelPit Roskilde og om sommeren også klubbens egne baner i Darup ved Dyrskuepladsen.</span></li>
-      <li><b>Medlemskab af PadelPit Roskilde uden gebyr</b><span>Som medlem af RTK er du også medlem hos PadelPit Roskilde uden at betale deres medlemsgebyr, og du booker baner til medlemspris. Det gælder, så længe aftalen med PadelPit Roskilde løber. Den gælder hele 2027 og forventes at fortsætte.</span></li>
+      <li><b>Træning hele året, inde og ude</b><span>Faste baner hos PadelPit i Roskilde og om sommeren også klubbens egne baner i Darup ved Dyrskuepladsen.</span></li>
+      <li><b>Medlemskab af PadelPit uden gebyr</b><span>Som medlem af RTK er du også medlem hos PadelPit uden at betale deres medlemsgebyr, og du booker baner til medlemspris, både i Roskilde og i Karlslunde. Det gælder, så længe aftalen med PadelPit løber. Den gælder hele 2027 og forventes at fortsætte.</span></li>
       <li><b>Gratis adgang til udebanerne i Darup</b><span>Book en bane i ForeningLet, klubbens medlemsapp, og spil med dine nye makkere, når det passer jer.</span></li>
       <li><b>Camps i ferierne</b><span>I vinter-, påske-, sommer- og efterårsferien, med delvis egenbetaling. For juniorerne og eventuelt også for voksne.</span></li>
       <li><b>Et fællesskab, ikke et kursus</b><span>Du bliver en del af Roskilde Tennis Klub med alt, hvad det giver.</span></li>
@@ -411,7 +414,7 @@ html:not(.aaben) .efter{display:none!important}
   </div>
   <div class="pv-pris-g"><div class="pv-noter">
   <p class="pv-note">Træningsafgiften betales pr. kalenderkvartal i ForeningLet, klubbens medlems- og betalingssystem. Man binder sig for et halvt år ad gangen. Første periode er januar til juni 2027. Vil du stoppe 30. juni, skal du sige op senest 31. marts. Derefter kan du opsige til udgangen af et kvartal med mindst 3 måneders varsel. Første kvartal koster fuld pris, selv om vi starter 13. januar. Når I får tildelt en plads, har I to dage til at betale. Ellers går pladsen videre til en anden på listen.</p>
-  <p class="pv-note" style="margin-top:10px">For at gå på et hold skal du være medlem af RTK. Er du ikke medlem i forvejen, skal du have et udemedlemskab oveni, altså et medlemskab af RTK med udendørs tennis: 144 kr. pr. kvartal (3 til 10 år), 214 kr. (11 til 24 år) eller 383 kr. (25 år og op) og et indmeldelsesgebyr på 250 kr. pr. person. Satserne gælder frem til generalforsamlingen i marts 2027. Udemedlemskabet giver også adgang til at spille tennis udendørs på klubbens to anlæg i Roskilde, og du får medlemskabet af PadelPit Roskilde og gratis adgang til udebanerne i Darup med.</p>
+  <p class="pv-note" style="margin-top:10px">For at gå på et hold skal du være medlem af RTK. Er du ikke medlem i forvejen, skal du have et udemedlemskab oveni, altså et medlemskab af RTK med udendørs tennis: 144 kr. pr. kvartal (3 til 10 år), 214 kr. (11 til 24 år) eller 383 kr. (25 år og op) og et indmeldelsesgebyr på 250 kr. pr. person. Satserne gælder frem til generalforsamlingen i marts 2027. Udemedlemskabet giver også adgang til at spille tennis udendørs på klubbens to anlæg i Roskilde, og du får medlemskabet af PadelPit og gratis adgang til udebanerne i Darup med.</p>
   </div>
   <details class="pv-regn">
     <summary><span>Se, hvad det koster i alt</span><span class="plus" aria-hidden="true">+</span></summary>
@@ -441,12 +444,12 @@ html:not(.aaben) .efter{display:none!important}
   <div class="kick">Her spiller vi</div>
   <h2>Inde hele året. Også ude om sommeren.</h2>
   <div class="pv-steder">
-    <div class="pv-kortbill"><img src="billeder/padel/kort.jpg" width="1800" height="1120" loading="lazy" alt="Kort over Roskilde med PadelPit Roskilde på Københavnsvej (1) og klubbens udebaner på Darupvej ved Dyrskuepladsen (2)"></div>
+    <div class="pv-kortbill"><img src="billeder/padel/kort.jpg" width="1800" height="1120" loading="lazy" alt="Kort over Roskilde med PadelPit på Københavnsvej (1) og klubbens udebaner på Darupvej ved Dyrskuepladsen (2)"></div>
     <div>
       <div class="pv-sted"><span class="nr">1</span><div>
-        <b>PadelPit Roskilde</b><div class="adr">Københavnsvej 136B, 4000 Roskilde</div>
-        <p>Indendørs baner. Fra september til april træner alle hold her, undtagen i juleferien. Om sommeren er en del af træningen stadig her.</p>
-        <a href="https://www.google.com/maps/search/?api=1&amp;query=K%C3%B8benhavnsvej+136B%2C+4000+Roskilde" target="_blank" rel="noopener">Find vej</a>
+        <b>PadelPit i Roskilde</b><div class="adr">Københavnsvej 136B, 4000 Roskilde</div>
+        <p>To indendørs baner centralt i Roskilde. Her træner holdene. Fra september til april træner alle hold her, undtagen i juleferien. Om sommeren er en del af træningen stadig her. PadelPit har også tre baner i Karlslunde, et kvarters kørsel fra Roskilde, som du kan booke og spille på.</p>
+        <a href="https://www.google.com/maps/search/?api=1&amp;query=K%C3%B8benhavnsvej+136B%2C+4000+Roskilde" target="_blank" rel="noopener">Find vej</a><span class="pv-prik" aria-hidden="true"> · </span><a href="https://padelpit.halbooking.dk/newlook/default.asp" target="_blank" rel="noopener">www.padelpit.dk</a>
       </div></div>
       <div class="pv-sted"><span class="nr">2</span><div>
         <b>RTK's baner i Darup (ved Dyrskuepladsen)</b><div class="adr">Darupvej 52, 4000 Roskilde</div>
@@ -457,7 +460,7 @@ html:not(.aaben) .efter{display:none!important}
   </div>
   <div class="pv-steder pv-billeder2">
     <div class="pv-foto" style="background-image:url(billeder/padel/traening.jpg);background-position:center 55%" role="img" aria-label="Padeltræning indendørs. En spiller slår bolde fra kurven, mens en anden smasher på banen bagved"></div>
-    <div class="pv-foto" style="background-image:url(billeder/padel/junior.jpg)" role="img" aria-label="En junior returnerer bolden, mens træneren ser på, hos PadelPit Roskilde"></div>
+    <div class="pv-foto" style="background-image:url(billeder/padel/junior.jpg)" role="img" aria-label="En junior returnerer bolden, mens træneren ser på, hos PadelPit"></div>
   </div>
 </div></section>
 
@@ -469,7 +472,7 @@ html:not(.aaben) .efter{display:none!important}
     <p>Vi er en klub, der bygger på frivillige. Det er derfor, vi kan holde prisen nede, så alle kan være med. Vi håber, at alle vil give en hånd, hvis de får plads. Det kan være spilleren selv, en forælder eller en anden i familien, og det behøver ikke være meget. Fortæl os i tilmeldingen, hvad I har lyst til at hjælpe med. Det tæller med, når vi sætter holdene.</p>
     <div class="pv-chips"><span>Hjælpe ved arrangementer og camps</span><span>Være hjælpetræner</span><span>Forælder på holdet som støtte for træneren</span><span>Kørsel og praktisk</span><span>Foto og sociale medier</span><span>Sponsorer og netværk</span><span>RTK Padelcircle, frivillige der løfter padel i klubben</span></div>
   </div>
-  <div class="pv-foto" style="background-image:url(billeder/padel/hold.jpg);min-height:560px;background-position:center 30%" role="img" aria-label="Spillere og træner slår battene sammen over nettet hos PadelPit Roskilde"><div class="maerke"><b>RTK, et stærkt fællesskab</b></div></div>
+  <div class="pv-foto" style="background-image:url(billeder/padel/hold.jpg);min-height:560px;background-position:center 30%" role="img" aria-label="Spillere og træner slår battene sammen over nettet hos PadelPit"><div class="maerke"><b>RTK, et stærkt fællesskab</b></div></div>
 </div></section>
 
 
@@ -640,7 +643,7 @@ html:not(.aaben) .efter{display:none!important}
       <details><summary><b>Skal man kunne spille i forvejen?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Ikke som barn eller ung. Junior og Junior+ er også for nybegyndere. Voksenholdet kræver padelniveau 1,5. Det betyder, at du kender reglerne og grundslagene, kan serve og kan holde bolden i gang over nettet mindst fem gange med en makker i normalt tempo. Er du voksen og ikke der endnu, så skriv dig på <a href="#andre" data-liste="nybegynder">listen for voksne nybegyndere</a>. Det initiativ er ikke startet endnu. Bliver vi nok, starter vi det. Det koster ikke noget at stå på listen. Vi skriver til dig, når vi starter initiativet, eller hvis der bliver plads på et hold, du kan passe ind i. Du bestemmer selv, om du vil blive stående på listen eller af den.</span></details>
       <details><summary><b>Hvornår kan vi skrive os op?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 og lukker 10. december kl. 23.59. Alle får svar senest 15. december. Vil du have en mail, når vi åbner for tilmeldinger, så skriv dig op under <a href="#tilmeld">Forhåndstilmelding 2027</a>. Listerne uden depositum for voksne nybegyndere og Seniorpadel (60+) er åbne allerede nu.</span></details>
       <details><summary><b>Kan jeg skrive hele familien op på én gang?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Ja. Skriv alle spillere op i samme tilmelding, så får I ét tilmeldingsnummer og betaler depositummet for alle på én gang i ForeningLet. Der er ingen familierabat, så hver spiller betaler sin egen pris.</span></details>
-      <details><summary><b>Skal jeg være medlem af RTK?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Ikke for at skrive dig op. Men for at gå på et hold skal du være medlem. Får du plads, melder du dig ind i ForeningLet, og så følger medlemskabet af PadelPit Roskilde, gratis adgang til udebanerne i Darup og udendørs tennis med.</span></details>
+      <details><summary><b>Skal jeg være medlem af RTK?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Ikke for at skrive dig op. Men for at gå på et hold skal du være medlem. Får du plads, melder du dig ind i ForeningLet, og så følger medlemskabet af PadelPit, gratis adgang til udebanerne i Darup og udendørs tennis med.</span></details>
       <details><summary><b>Hvordan booker vi udebanerne i Darup?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">I ForeningLet, klubbens medlemsapp. Du får adgang, når du er blevet medlem, og som medlem spiller du gratis.</span></details>
       <details><summary><b>Hvorfor et depositum?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Så vi ved, hvem der er klar til at være med, og kan sætte holdene, før træningen starter i januar. Depositummet er 500 kr. pr. spiller og trækkes fra prisen, når I får plads.</span></details>
       <details><summary><b>Hvad hvis vi ikke når at betale depositum?</b><span class="plus" aria-hidden="true">+</span></summary><span class="sv">Betal gerne med det samme. Fristen er 48 timer. Er der ikke betalt inden da, tager vi tilmeldingen af listen og sender en mail om det. Så kan I skrive jer op igen.</span></details>
@@ -695,9 +698,9 @@ html:not(.aaben) .efter{display:none!important}
 </main>
 
 <div class="pa-boks" id="aceBoks">
-<button type="button" class="pa-knap" id="aceKnap" hidden aria-haspopup="dialog" aria-controls="acePanel"><span class="pa-ikon" aria-hidden="true">A</span><span class="pa-tekst">Spørg Ace om RTK padel</span></button>
+<button type="button" class="pa-knap" id="aceKnap" hidden aria-haspopup="dialog" aria-controls="acePanel"><img class="pa-ikon" src="ikoner/ace-bold.png" alt="" width="32" height="32"><span class="pa-tekst">Spørg Ace om RTK padel</span></button>
 <div class="pa-panel" id="acePanel" role="dialog" aria-modal="false" aria-labelledby="aceTitel" hidden>
-  <div class="pa-top"><span class="pa-ikon" aria-hidden="true">A</span><div><b id="aceTitel">Spørg Ace om RTK padel</b><small>Svarer ud fra denne side og klubbens hjemmeside</small></div><button type="button" class="pa-luk" id="aceLuk" aria-label="Luk Ace">×</button></div>
+  <div class="pa-top"><img class="pa-ikon" src="ikoner/ace-bold.png" alt="" width="32" height="32"><div><b id="aceTitel">Spørg Ace om RTK padel</b><small>Svarer ud fra denne side og klubbens hjemmeside</small></div><button type="button" class="pa-luk" id="aceLuk" aria-label="Luk Ace">×</button></div>
   <div class="pa-strom" id="aceStrom" aria-live="polite">
     <div class="pa-m pa-ace">Hej, jeg er Ace. Spørg mig om holdene, priserne, tiderne eller forhåndstilmeldingen. Jeg kan også regne ud, hvad det koster for jer.
       <div class="pa-forslag"><button type="button">Hvad koster det samlet for et barn på 11 år?</button><button type="button">Hvilket hold passer til mit barn?</button><button type="button">Hvad sker der med depositummet?</button></div></div>
@@ -712,7 +715,7 @@ html:not(.aaben) .efter{display:none!important}
   <div class="wrap">
     <span class="klub">
       <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt=""></a>
-      <span><b>Roskilde Tennis Klub</b> · Padel i samarbejde med PadelPit Roskilde</span>
+      <span><b>Roskilde Tennis Klub</b> · Padel i samarbejde med PadelPit</span>
     </span>
     <span class="hoejre">
       <span class="kun-test">Testversion. Data er opdigtede.</span>
@@ -724,7 +727,7 @@ html:not(.aaben) .efter{display:none!important}
 <script src="konfig.js?v=869b7a78d104"></script>
 <script>window.RTK_SPROG_STANDARD = 'da';</script>
 <script src="sprog.js?v=889007325426"></script>
-<script src="padel_en.js?v=732f6fa379e2"></script>
+<script src="padel_en.js?v=6af9dc1c5db9"></script>
 <script>
 // Sproget (sprog.js) og små ord, der sættes sammen med navne (12. november 2026)
 window.sprogNu = function () { return (window.RTK_SPROG && window.RTK_SPROG.sprog) || 'da'; };
