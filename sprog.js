@@ -13,6 +13,8 @@
     if (q) return q[1];
     var g = hentGemt();
     if (g === 'da' || g === 'en') return g;
+    // En side kan bestemme sproget for nye besøgende, fx padelsiden, som er dansk, indtil man trykker EN (12. november 2026)
+    if (window.RTK_SPROG_STANDARD === 'da' || window.RTK_SPROG_STANDARD === 'en') return window.RTK_SPROG_STANDARD;
     var l = String((navigator.languages && navigator.languages[0]) || navigator.language || 'da').toLowerCase();
     return (l.indexOf('da') === 0 || l.indexOf('nb') === 0 || l.indexOf('no') === 0 || l.indexOf('nn') === 0) ? 'da' : 'en';
   }

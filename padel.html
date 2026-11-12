@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="0b42d0112872">
+<meta name="rtk-version" content="4d5e3c1767b1">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -36,6 +36,7 @@ html:not(.aaben) .efter{display:none!important}
 /* top over billedet */
 .pv-top{position:absolute;left:0;right:0;top:0;z-index:3}
 .pv-top .w{display:flex;align-items:center;justify-content:space-between;height:78px}
+.pv-top .sprog{background:rgba(11,61,58,.55)}
 .pv-top img{height:42px;display:block}
 /* forsiden */
 .pv-hero{position:relative;min-height:720px;background:var(--teal);color:#fff;display:flex;align-items:flex-end;overflow:hidden}
@@ -47,7 +48,8 @@ html:not(.aaben) .efter{display:none!important}
 .pv-hero h1 em{font-style:normal;color:var(--ice)}
 .pv-hero p{font-size:20px;max-width:520px;margin:0 0 28px;color:#EAF2F1}
 .pv-hero .smaa{font-size:14px;color:var(--sub);margin-top:16px;max-width:560px}
-.pv-frist{position:absolute;right:28px;top:110px;z-index:2;background:#fff;color:var(--teal);border-radius:16px;padding:16px 20px;text-align:center;line-height:1.1}
+/* Uret flugter med sidens højre kant og sprogknappen, også på brede skærme (Lars 12. november 2026 kl. 16.18) */
+.pv-frist{position:absolute;right:max(28px, calc((100% - 1180px) / 2 + 28px));top:110px;z-index:2;background:#fff;color:var(--teal);border-radius:16px;padding:16px 20px;text-align:center;line-height:1.1}
 .pv-frist b{display:block;font-size:40px;font-weight:900}
 .pv-frist span{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 /* Nedtælling i boksen, variant B (Lars 11. november 2026 kl. 15.39, mockup padel_nedtaelling_B.png) */
@@ -288,11 +290,16 @@ html:not(.aaben) .efter{display:none!important}
 <main class="side pv">
 <header class="pv-top"><div class="w">
   <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="ikoner/rtk-hvid.png" alt="Roskilde Tennis Klub"></a>
+  <!-- Dansk og engelsk (Lars 12. november 2026 kl. 14.57). Teksterne på engelsk står i padel_en.js -->
+  <div class="sprog" role="group" aria-label="Sprog / Language">
+    <button type="button" data-sprog="da" lang="da" aria-label="Dansk" aria-pressed="true">DA</button>
+    <button type="button" data-sprog="en" lang="en" aria-label="English" aria-pressed="false">EN</button>
+  </div>
 </div></header>
 
 <section class="pv-hero">
   <div class="bill" role="img" aria-label="To padelspillere giver hånd og griner på en blå bane"></div>
-  <div class="pv-frist"><span class="foer">Åbner</span><span class="efter">Lukker</span><b class="foer">17.11</b><b class="efter">10.12</b><span class="foer">kl. 10</span><span class="efter">2026</span>
+  <div class="pv-frist"><span class="foer">Tilmelding åbner</span><span class="efter">Tilmelding lukker</span><b class="foer">17.11</b><b class="efter">10.12</b><span class="foer">kl. 10</span><span class="efter">2026</span>
     <div class="ur" id="ur" role="timer" aria-label="Tid til forhåndstilmeldingen åbner"><div><b data-n="d">&nbsp;</b><span>dage</span></div><div><b data-n="t">&nbsp;</b><span>timer</span></div><div><b data-n="m">&nbsp;</b><span>min</span></div><div><b data-n="s">&nbsp;</b><span>sek</span></div></div></div>
   <div class="w">
     <div class="kick">Nyt i Roskilde Tennis Klub · start 13. januar 2027</div>
@@ -358,7 +365,7 @@ html:not(.aaben) .efter{display:none!important}
 <section class="sek pv-hold" id="hold"><div class="w">
   <div class="kick">Hold og priser</div>
   <h2>Find dit hold</h2>
-  <p class="graa" style="max-width:760px">Første træning er onsdag 13. januar og lørdag 16. januar 2027. Holdene lægges primært efter alder, niveau og de dage, I kan. Det præcise tidspunkt får I sammen med pladsen. Alderen pr. 1. januar 2027 gælder både for hold og udemedlemskab, og 10 til 12-årige vælger selv mellem Junior og Junior+. Passer begge, så sig ja til begge, så finder vi det rigtige efter niveau. Børn og unge, der aldrig har prøvet padel, er meget velkomne. Voksenholdet er for let øvede til øvede.</p>
+  <p class="graa" style="max-width:760px">Første træning er onsdag 13. januar og lørdag 16. januar 2027. Holdene lægges primært efter alder, niveau og de dage, I kan. Det præcise tidspunkt får I sammen med pladsen. Alderen pr. 1. januar 2027 gælder både for hold og udemedlemskab, og 10 til 12-årige vælger selv mellem Junior og Junior+. Passer begge, så sig ja til begge, så finder vi det rigtige efter niveau. Børn og unge, der aldrig har prøvet padel, er meget velkomne. Voksenholdet kræver padelniveau 1,5.</p>
   <div class="pv-kort3">
     <div class="pv-kort"><div class="alder">8 til 12 år</div><h3>Junior</h3><div class="tid">1 time om ugen</div><div class="pris">595 kr. <small>pr. kvartal</small></div>
       <ul><li>Onsdag mellem 15 og 17.30 eller lørdag mellem 9 og 13</li><li>Træner med hver gang: en lønnet træner og en frivillig hjælper</li><li>8 til 10 spillere på 2 baner</li></ul></div>
@@ -668,7 +675,13 @@ html:not(.aaben) .efter{display:none!important}
 </footer>
 
 <script src="konfig.js?v=5d3b61fda9e3"></script>
+<script>window.RTK_SPROG_STANDARD = 'da';</script>
+<script src="sprog.js?v=889007325426"></script>
+<script src="padel_en.js?v=c793c6d98ea8"></script>
 <script>
+// Sproget (sprog.js) og små ord, der sættes sammen med navne (12. november 2026)
+window.sprogNu = function () { return (window.RTK_SPROG && window.RTK_SPROG.sprog) || 'da'; };
+window.sprogOrd = function (da, en) { return window.sprogNu() === 'en' ? en : da; };
 
 // Ace på padelsiden (Lars 12. november 2026). Knappen vises kun, når motoren siger, at Ace er slået til (ace.padelTil)
 (function () {
@@ -717,7 +730,7 @@ html:not(.aaben) .efter{display:none!important}
     historik.push({ fra: 'mig', tekst: tekst });
     var vent = tilfoej('pa-ace', '<span class="pa-tanker" aria-label="Ace tænker"><i></i><i></i><i></i></span>');
     try {
-      var s = await kald('padel', { beskeder: historik.slice(-12), samtale: samtale, b: browser, web: document.getElementById('aceWeb').value }, nyt());
+      var s = await kald('padel', { beskeder: historik.slice(-12), samtale: samtale, b: browser, web: document.getElementById('aceWeb').value, sprog: sprogNu() }, nyt());
       historik.push({ fra: 'ace', tekst: s.svar });
       var k = s.knap && KNAP[s.knap];
       vent.innerHTML = tegn(s.svar) + (k ? '<br><a class="pa-chip" href="' + k[0] + '" data-pa-luk>' + k[1] + '</a>' : '');
@@ -949,13 +962,14 @@ html:not(.aaben) .efter{display:none!important}
     window.__venteliste = data;
     var svar;
     knap.disabled = true; knap.textContent = 'Sender …';
+    data.sprog = sprogNu();
     try { svar = await motor('ventelisteNy', data, vlId); }
     catch (err) { f.textContent = err.message; knap.disabled = false; knap.textContent = 'Sikr din plads'; return; }
     vlId = nyId(); knap.disabled = false; knap.textContent = 'Sikr din plads';
     var nr = svar.nr, antal = svar.antal;
     var erNyb = function (x) { return alder(new Date(x.foed)) >= 18 && x.erfaring === 0; };
     var esc = function (t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); };
-    var fornavne = function (l) { var f = l.map(function (x) { return x.navn.split(' ')[0]; }); return esc(f.length > 1 ? f.slice(0, -1).join(', ') + ' og ' + f[f.length - 1] : f.join('')); };
+    var fornavne = function (l) { var f = l.map(function (x) { return x.navn.split(' ')[0]; }); return esc(f.length > 1 ? f.slice(0, -1).join(', ') + sprogOrd(' og ', ' and ') + f[f.length - 1] : f.join('')); };
     var vl = data.spillere.filter(function (x) { return !erNyb(x); }), il = data.spillere.filter(erNyb);
     document.getElementById('takH').textContent = 'Tak, ' + navn.split(' ')[0];
     document.getElementById('takT').innerHTML = (vl.length ? '<b>' + fornavne(vl) + '</b> er nu forhåndstilmeldt.' : '') +
@@ -1015,6 +1029,7 @@ html:not(.aaben) .efter{display:none!important}
       erfaring: liste === 'senior' ? +iform.querySelector('input[name=iErf]:checked').value : 0, andet: g('iAndet'), kilde: kilde,
       privat: true, web: document.getElementById('kWeb').value };
     iknap.disabled = true; iknap.textContent = 'Sender …';
+    window.__interesse.sprog = sprogNu();
     try { await motor('interesseNy', window.__interesse, ilId); }
     catch (err) { f.textContent = err.message; iknap.disabled = false; iknap.textContent = 'Skriv mig på listen'; return; }
     ilId = nyId(); iknap.disabled = false; iknap.textContent = 'Skriv mig på listen';
@@ -1037,6 +1052,7 @@ html:not(.aaben) .efter{display:none!important}
     f.textContent = '';
     window.__spoerg = { navn: g('qNavn'), mail: g('qMail'), mobil: mobil, tekst: g('qTekst'), kilde: kilde, web: document.getElementById('qWeb').value };
     knap.disabled = true; knap.textContent = 'Sender …';
+    window.__spoerg.sprog = sprogNu();
     try { await motor('spoerg', window.__spoerg, sId); }
     catch (err) { f.textContent = err.message; knap.disabled = false; knap.textContent = 'Send spørgsmålet'; return; }
     sId = nyId(); knap.disabled = false; knap.textContent = 'Send spørgsmålet';
@@ -1058,6 +1074,7 @@ html:not(.aaben) .efter{display:none!important}
     f.textContent = '';
     window.__besked = { navn: g('bNavn'), mail: g('bMail'), privat: true, kilde: kilde, web: document.getElementById('bWeb').value };
     knap.disabled = true; knap.textContent = 'Sender …';
+    window.__besked.sprog = sprogNu();
     try { await motor('beskedNy', window.__besked, bId); }
     catch (err) { f.textContent = err.message; knap.disabled = false; knap.textContent = 'Giv mig besked'; return; }
     bId = nyId(); knap.disabled = false; knap.textContent = 'Giv mig besked';
