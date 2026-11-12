@@ -52,7 +52,7 @@
     'Gratis adgang til udebanerne i Darup': 'Free access to the outdoor courts in Darup',
     'Book en bane i ForeningLet, klubbens medlemsapp, og spil med dine nye makkere, når det passer jer.': 'Book a court in ForeningLet, the club\'s member app, and play with your new partners whenever it suits you.',
     'Camps i ferierne': 'Camps in the school holidays',
-    'I vinter-, påske- og efterårsferien, med delvis egenbetaling. For juniorerne og måske også for voksne.': 'In the winter, Easter and autumn holidays, partly paid by the participants. For juniors and perhaps also for adults.',
+    'I vinter-, påske-, sommer- og efterårsferien, med delvis egenbetaling. For juniorerne og eventuelt også for voksne.': 'In the winter, Easter, summer and autumn holidays, partly paid by the participants. For juniors and potentially also for adults.',
     'Et fællesskab, ikke et kursus': 'A community, not a course',
     'Du bliver en del af Roskilde Tennis Klub med alt, hvad det giver.': 'You become part of Roskilde Tennis Club with everything that comes with it.',
     'En flok venner holder om hinanden i solnedgangen': 'A group of friends with their arms around each other at sunset',
@@ -344,7 +344,7 @@
     'For et halvt år ad gangen. Første periode er januar til juni 2027. Vil I stoppe 30. juni, skal I sige op senest 31. marts. Træningen betales pr. kvartal i ForeningLet. Derefter kan I opsige til udgangen af et kvartal med mindst 3 måneders varsel.':
       'For six months at a time. The first period is January to June 2027. If you want to stop on 30 June, you must cancel by 31 March at the latest. Training is paid per quarter in ForeningLet. After that you can cancel at the end of a quarter with at least 3 months\' notice.',
     'Træner I i ferierne?': 'Do you train in the holidays?',
-    'Ikke i skolernes ferier. Til gengæld kan der være camps i vinter-, påske- og efterårsferien med delvis egenbetaling.': 'Not in the school holidays. Instead there may be camps in the winter, Easter and autumn holidays, partly paid by the participants.',
+    'Ikke i skolernes ferier. Til gengæld kan der være camps i vinter-, påske-, sommer- og efterårsferien med delvis egenbetaling.': 'Not in the school holidays. Instead there may be camps in the winter, Easter, summer and autumn holidays, partly paid by the participants.',
     'Skal vi have eget udstyr?': 'Do we need our own equipment?',
     'Ja. Tag dit eget padelbat med og sko, der passer til banen, inde eller ude. Har du ikke et bat, kan du låne et til træningen, så langt de rækker. Du afleverer det igen, når træningen er slut. Proshoppen i RTK-hallen har et udvalg af padelbat og andet padeludstyr, og hos klubbens partner Racketlife får du rabat på padeludstyr som medlem.':
       'Yes. Bring your own padel racket and shoes suited to the court, indoors or outdoors. If you don\'t have a racket, you can borrow one for training while they last. You hand it back when training is over. The pro shop in the RTK hall has a selection of padel rackets and other padel equipment, and the club\'s partner Racketlife gives members a discount on padel equipment.',
