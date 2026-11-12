@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="dc2e39f2b0a4">
+<meta name="rtk-version" content="a2ea7b054c13">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,14 +14,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=5d9d8ba646d9">
+<link rel="stylesheet" href="rtk.css?v=2de082c9bdad">
 <script>if (/[?&]indlejret=1/.test(location.search)) document.documentElement.classList.add('indlejret');</script>
 <style>
 /* Vist i et vindue fra velkomsten: kun selve teksten. */
 .indlejret .top,.indlejret .bund,.indlejret .partnere,.indlejret .monster{display:none !important}
 .indlejret body{min-height:0}
 .indlejret .indhold{padding-top:20px;padding-bottom:24px}
+/* Fra mitrtk.dk/padel (?side=padel): kun det, der gælder padelsiden (Lars 11. november 2026 kl. 15.25) */
+.kun-padel .afsnit:not([data-padel]),.kun-padel .opbevaring .card:not([data-padel]),.kun-padel .card.kontakt b,.kun-padel .card.kontakt a,.kun-padel .udkast{display:none !important}
+html:not(.kun-padel) .kun-padel-vis{display:none !important}
+/* Fra padelsiden: ingen vej videre til forsiden, personalesiden eller hele teksten om Mit RTK (Lars 11. november 2026 kl. 16.56) */
+.kun-padel a.hjem,.kun-padel a[href="personale/"],.kun-padel a[href="privatliv.html"],.kun-padel .kun-padel-vis{display:none !important}
 </style>
+<script>if (/[?&]side=padel\b/.test(location.search)) document.documentElement.classList.add('kun-padel');</script>
 </head>
 <body>
 <header class="top">
@@ -61,7 +67,29 @@
         <li data-t="gem6"></li>
         <li data-t="gem7"></li>
         <li data-t="gem8"></li>
+        <li data-t="gem9"></li>
       </ul>
+    </section>
+
+    <!-- Venteliste til padel på mitrtk.dk/padel (Lars 11. november 2026 kl. 14.06). Skjules i produktionen, indtil padelsiden går live -->
+    <section class="afsnit" id="padel" data-padel>
+      <h2 data-t="padelH"></h2>
+      <p data-t="padelIntro"></p>
+      <ul>
+        <li data-t="padel1"></li>
+        <li data-t="padel2"></li>
+        <li data-t="padel3"></li>
+        <li data-t="padel4"></li>
+        <li data-t="padel5"></li>
+        <li data-t="padel6"></li>
+        <li data-t="padel7"></li>
+        <li data-t="padel8"></li>
+        <li data-t="padel9"></li>
+        <li data-t="padel10"></li>
+        <li data-t="padel11"></li>
+        <li data-t="padel12"></li>
+      </ul>
+      <p><span data-t="padelSpm"></span> <a href="padel.html#skriv" data-t="padelSpmLink">Spørg os på padelsiden</a>.</p>
     </section>
 
     <section class="afsnit">
@@ -72,6 +100,7 @@
         <li data-t="ace2"></li>
         <li data-t="ace3"></li>
         <li data-t="ace4"></li>
+        <li data-t="ace5"></li>
       </ul>
     </section>
 
@@ -91,7 +120,7 @@
       </ul>
     </section>
 
-    <section class="afsnit">
+    <section class="afsnit" data-padel>
       <h2 data-t="laengeH"></h2>
       <div class="opbevaring">
         <div class="card">
@@ -129,11 +158,21 @@
           <span><span data-t="kanSes"></span><span data-t="o7a"></span></span>
           <span><span data-t="slettet"></span><span data-t="o7b"></span></span>
         </div>
+        <div class="card" data-padel>
+          <b data-t="o8"></b>
+          <span><span data-t="gaelder"></span><span data-t="o8a"></span></span>
+          <span><span data-t="slettet"></span><span data-t="o8b"></span></span>
+        </div>
+        <div class="card" data-padel>
+          <b data-t="o9"></b>
+          <span><span data-t="gaelder"></span><span data-t="o9a"></span></span>
+          <span><span data-t="slettet"></span><span data-t="o9b"></span></span>
+        </div>
       </div>
       <p class="hint" data-t="kopier"></p>
     </section>
 
-    <section class="afsnit">
+    <section class="afsnit" data-padel>
       <h2 data-t="hjaelpH"></h2>
       <p data-t="hjaelp"></p>
     </section>
@@ -143,7 +182,8 @@
       <p data-t="telefon"></p>
     </section>
 
-    <section class="afsnit">
+    <section class="afsnit" data-padel>
+      <p class="kun-padel-vis"><a href="privatliv.html" data-t="heleTeksten">Læs hele teksten om privatliv i Mit RTK</a></p>
       <div class="card kontakt">
         <b data-t="spmH">Spørgsmål til privatliv</b>
         <a href="mailto:privatliv@mitrtk.dk">privatliv@mitrtk.dk</a>
@@ -173,7 +213,7 @@
   </div>
 </footer>
 
-<script src="konfig.js?v=9f80df47682e"></script>
+<script src="konfig.js?v=5d3b61fda9e3"></script>
 <script>
 window.TEKSTER = {
   da: {
@@ -187,7 +227,7 @@ window.TEKSTER = {
     gem1: 'Login: dit navn, dit mobilnummer og evt. din mail. Du logger ind med en kode på sms, og din telefon husker dit login i op til 30 dage.',
     gem2: 'Opstrengning: dine ketsjernumre og status. Når du afleverer en ketsjer, skriver du dit mobilnummer, så du får en sms med koden til afhentningsskabet, når ketsjeren er klar. Mobilnummeret slettes, når ketsjeren er hentet, eller efter 14 dage, hvis ketsjeren aldrig bliver afleveret. Opstrengeren kan tage op til 3 billeder af ketsjeren. De slettes 90 dage efter, at ketsjeren er hentet.',
     gem3: 'Grupper: de grupper, du er med i, chat, spil, tilmeldinger, afstemninger og betalinger, som gruppen selv skriver ind. Andre medlemmer kan kun finde en gruppe, hvis gruppen selv vælger det. Klubbens administratorer kan se navn, beskrivelse, medlemmer og hvor ofte en gruppe spiller, men ikke chat og betalinger.',
-    gem4: 'Profilkort og spillerbørs (frivilligt): et billede, dit niveau og lidt om dig, hvis du selv laver et profilkort. Brug kun billeder, du selv har taget eller må bruge, og billeder af andre kun, hvis de har sagt ja. Billeder af børn må kun være af dine egne.',
+    gem4: 'Profilkort og spillerbørs (frivilligt): et billede, dit niveau, lidt om dig og evt. dit telefonnummer og din mail, hvis du selv laver et profilkort og skriver dem. Andre voksne medlemmer kan se kortet. Brug kun billeder, du selv har taget eller må bruge, og billeder af andre kun, hvis de har sagt ja. Billeder af børn må kun være af dine egne.',
     gem5: 'Privattræning: dine forespørgsler, aftalte timer, beskeder med træneren og betalinger, så klubben kan koble din MobilePay-betaling til timen og betale træneren løn. Trænerens mobilnummer vises aldrig, og jeres beskeder ses kun af jer to og klubbens administratorer.',
     beskH: 'Beskeder fra Mit RTK', driftT: 'Drift:',
     drift: 'beskeder om noget, du selv er med i, fx at din ketsjer er klar, eller at et spil er aflyst. De hører med til medlemskabet og kan ikke slås fra, men du vælger selv, om de kommer som notifikation, sms eller mail.',
@@ -206,15 +246,17 @@ window.TEKSTER = {
     hjaelp: 'Klubben bruger databehandlere til at drive Mit RTK, fx til at opbevare data, sende sms og notifikationer og til AI-hjælperen Ace. De må kun bruge oplysningerne efter klubbens anvisning, og klubben har databehandleraftaler med dem. Nogle af dem kan behandle oplysninger uden for EU. Det sker kun med de garantier, databeskyttelsesreglerne kræver.',
     telefonH: 'På din telefon',
     telefon: 'Mit RTK gemmer dit login, hvem du er (så siden kan gå i gang med det samme), dit valg af sprog, at du har set velkomsten, og i 30 minutter din samtale med Ace. Der er ingen cookies til statistik eller reklame.',
-    spmH: 'Spørgsmål til privatliv', version: 'Udkast 26. oktober 2026. Version 2.',
+    spmH: 'Spørgsmål til privatliv', version: 'Udkast 11. november 2026. Version 2 med forhåndstilmeldingen til padel.',
     gem6: 'Ace, klubbens AI-hjælper: se afsnittet om Ace nedenfor.',
     gem7: 'Beskeder: dine valg af beskeder, og om du har sagt ja til nyheder.',
     gem8: 'Personale og frivillige: din rolle, det du registrerer (fx bolde, opstrengninger og privattimer), og for trænere dit valg af arbejdstøj med størrelser og værdien til skatten. Trænere kan selv lave en profil med billede, som medlemmerne kan se.',
+    gem9: 'Padel for personale og frivillige: kalenderen med årshjul og frister, hvem der er ansvarlig, og hvad der er gjort. Det, I skriver i chatten i grupperne for padel og i idéboksen (med dit navn), billeder, du lægger op under Billeder (kun dem i padel ser dem, og du kan selv slette dem), mødereferater med deltagere og opgaver, filer, du lægger op under Økonomi (kun Styregruppen og Padel Team ser dem), og dit profilkort, hvis du laver et, også telefonnummer og mail, hvis du skriver dem. Et kalenderabonnement er et personligt link, som du selv kan stoppe. Hvad du ser, afhænger af din rolle.',
     aceH: 'Ace, klubbens AI-hjælper',
     aceIntro: 'Ace svarer på spørgsmål om klubben og Mit RTK ud fra klubbens egne tekster. Ace kan ikke se dine data.',
     ace1: 'Dit spørgsmål sendes til en AI-tjeneste hos en databehandler uden for EU. Det sker kun med de garantier, databeskyttelsesreglerne kræver. Mobilnumre, mails og cpr-numre, du skriver, fjernes, før spørgsmålet sendes.',
     ace2: 'Klubben gemmer samtalerne uden dit navn i 90 dage, så administratorerne kan se, om Ace svarer rigtigt.',
     ace3: 'Din telefon husker samtalen i 30 minutter, så du kan fortsætte på en anden side. Den glemmes, når du logger ud.',
+    ace5: 'Ace på personalesiden svarer også ud fra klubbens interne materiale, fx aftaler, kalendere, mødereferater, idéer og økonomiske forudsætninger. Kommentarer og filer får Ace ikke. Hvad Ace ved, afhænger af din rolle i Mit RTK. Ace får aldrig oplysninger, du ikke selv må se.',
     ace4: 'Skriv ikke personlige oplysninger til Ace. Vil du tale med et menneske, kan du sende spørgsmålet til klubben fra Ace. Så får klubben dit navn, din mail og samtalen.',
     ung4: 'Grupper, profilkort og spillerbørs er kun for voksne.',
     o4: 'Chat i grupper',
@@ -229,6 +271,23 @@ window.TEKSTER = {
     o7: 'Profilkort',
     o7a: 'så længe du er voksent medlem',
     o7b: 'senest efter 13 måneder',
+    padelH: 'Forhåndstilmelding til padel',
+    padelIntro: 'Når du tilmelder dig eller dine børn på forhånd til padelholdene på mitrtk.dk/padel, gemmer klubben det, du skriver. Du behøver ikke være medlem eller logge ind. Det er forælderen eller en anden voksen, der skriver børn op og får mailene.',
+    padel1: 'Om spillerne: navn, fødselsdato, køn, hvor meget de har spillet, og det, du skriver om niveau. Køn er frivilligt og bruges kun, når vi sammensætter holdene. Ud fra fødselsdatoen finder vi det hold, der passer til alderen pr. 1. januar 2027.',
+    padel2: 'Om dig, der skriver op: navn, mail og mobilnummer, om I er medlem af klubben, hvilke dage I kan, hvordan I vil give en hånd og hvor ofte, og det, du skriver i fritekst. Ud fra det, I krydser af om frivillighed, giver vi tilmeldingen fra 0 til 3 stjerner, som tæller med, når vi sætter holdene.',
+    padel3: 'Hvorfor: for at holde styr på tilmeldingerne, sætte holdene, finde jeres betaling af depositum og skrive til jer om pladsen. Depositummet betales i klubbens medlems- og betalingssystem, og vi finder betalingen ud fra tilmeldingsnummeret, mailen og mobilnummeret.',
+    padel4: 'Hvem ser det: kun Styregruppen for padel, Padel Team og klubbens administratorer. Oplysningerne gives ikke videre, heller ikke til klubbens partnere. Når nogen ændrer en tilmelding, fx sætter en spiller på et hold, gemmes det med navnet på den, der gjorde det.',
+    padel5: 'Mails: du får en kvittering med det samme og senere en mail om pladsen. Bliver depositummet ikke betalt, får du en mail om, at tilmeldingen er taget af listen. Har du sat flueben ved camps og andre tilbud, kan vi skrive til dig om dem, hvis der ikke er plads.',
+    padel10: 'Spørg os: skriver du til os på padelsiden, sendes dit navn, din mail, dit mobilnummer (hvis du skriver det) og dit spørgsmål til klubbens sportschef, så vi kan svare dig. Det gemmes som andre henvendelser og slettes efter 12 måneder.',
+    padel6: 'Listerne uden depositum (Voksen og helt ny og Seniorpadel (60+)): navn, fødselsår, mail, mobilnummer, hvor meget du har spillet, og det, du skriver. Vi bruger det kun til at skrive til dig, når der bliver en plads ledig, eller når vi starter noget nyt, du kan passe ind i.',
+    padel7: 'Hvor du kom fra: har linket til siden et kampagnenavn, gemmer vi det med tilmeldingen. Vi bruger det kun til at se, hvilke opslag der virker. Siden bruger ingen cookies. For at stoppe misbrug tæller vi i en time, hvor mange tilmeldinger der kommer fra den samme mail, ud fra en forkortet kode af mailen.',
+    padel8: 'Hvor længe: tilmeldingerne slettes senest 12 måneder efter, at holdene er sat. Indtil da kan I stå på venteliste uden depositum, hvis der bliver en plads senere. På listerne uden depositum står du, så længe du vil. Beder du om at komme af listen, sletter vi dig senest en måned efter. Får I plads og melder jer ind, gælder klubbens privatlivspolitik for medlemskabet.',
+    padel9: 'Betalinger: depositummet, og at det er betalt tilbage, står i klubbens regnskab. Det gemmes efter bogføringsreglerne, også efter at tilmeldingerne er slettet.',
+    padel12: 'Besked om åbningen: skriver du dig op til en mail om, at forhåndstilmeldingen åbner, gemmer vi dit navn, din mail og hvor du kom fra. Vi bruger det kun til den mail og en kort bekræftelse og sletter det, når forhåndstilmeldingen lukker 10. december 2026.',
+    padel11: 'Ace på padelsiden: Ace er klubbens AI-hjælper. Dit spørgsmål sendes til en AI-tjeneste, som laver svaret. Vi sender ikke dit navn med, og mails og telefonnumre i spørgsmålet skjules. Spørgsmål og svar gemmes uden navn i 90 dage. Skriv ikke personlige oplysninger til Ace.',
+    padelSpm: 'Spørgsmål om forhåndstilmeldingen? Skriv til os under', padelSpmLink: 'Spørg os på padelsiden',
+    o8: 'Forhåndstilmelding til padel', o8a: 'så længe I er tilmeldt, også hvis I bliver stående på venteliste uden plads', o8b: 'senest 12 måneder efter, at holdene er sat',
+    o9: 'Lister uden depositum til padel', o9a: 'så længe du vil stå på listen', o9b: 'senest en måned efter, at du har bedt om at komme af listen',
     partnere: 'Officielle partnere', test: 'Testversion. Data er opdigtede.', privatliv: 'Privatliv'
   },
   en: {
@@ -242,7 +301,7 @@ window.TEKSTER = {
     gem1: 'Login: your name, your mobile number and, where relevant, your email. You log in with a code sent by text message, and your phone remembers your login for up to 30 days.',
     gem2: 'Racket stringing: your racket numbers and their status. When you drop off a racket, you enter your mobile number so you get a text message with the code for the collection locker when it is ready. The number is deleted when the racket has been collected, or after 14 days if the racket is never dropped off. The stringer may take up to 3 photos of the racket. They are deleted 90 days after the racket has been collected.',
     gem3: 'Groups: the groups you are in, chat, games, sign-ups, polls and payments that the group enters itself. Other members can only find a group if the group chooses so. The club administrators can see the name, description, members and how often a group plays, but not chat and payments.',
-    gem4: 'Profile card and player exchange (optional): a photo, your level and a little about you, if you create a profile card yourself. Only use photos you have taken yourself or may use, and photos of others only if they have said yes. Photos of children may only be of your own.',
+    gem4: 'Profile card and player exchange (optional): a photo, your level, a little about you and possibly your phone number and email, if you create a profile card yourself and add them. Other adult members can see the card. Only use photos you have taken yourself or may use, and photos of others only if they have said yes. Photos of children may only be of your own.',
     gem5: 'Private lessons: your requests, booked lessons, messages with the coach and payments, so the club can match your MobilePay payment to the lesson and pay the coach. The coach’s mobile number is never shown, and your messages are only seen by the two of you and the club administrators.',
     beskH: 'Messages from Mit RTK', driftT: 'Service messages:',
     drift: 'messages about things you take part in, for example that your racket is ready or that a game is cancelled. They are part of your membership and cannot be turned off, but you choose whether they come as a notification, text message or email.',
@@ -261,15 +320,17 @@ window.TEKSTER = {
     hjaelp: 'The club uses data processors to run Mit RTK, for example to store data, send text messages and notifications, and for the AI assistant Ace. They may only use the data as instructed by the club, and the club has data processing agreements with them. Some of them may process data outside the EU. This only happens with the safeguards that data protection rules require.',
     telefonH: 'On your phone',
     telefon: 'Mit RTK stores your login, who you are (so the page can start straight away), your choice of language, that you have seen the welcome and, for 30 minutes, your conversation with Ace. There are no cookies for statistics or advertising.',
-    spmH: 'Questions about privacy', version: 'Draft 26 October 2026. Version 2.',
+    spmH: 'Questions about privacy', version: 'Draft 11 November 2026. Version 2 with padel pre-registration.',
     gem6: 'Ace, the club’s AI assistant: see the section about Ace below.',
     gem7: 'Messages: your message choices and whether you have said yes to news.',
     gem8: 'Staff and volunteers: your role, what you register (for example balls, stringing and private lessons), and for coaches your choice of work clothing with sizes and the value for tax purposes. Coaches can create a profile with a photo that members can see.',
+    gem9: 'Padel for staff and volunteers: the calendar with the year plan and deadlines, who is responsible and what has been done. What you write in the chat in the padel groups and in the idea box (with your name), photos you upload under Photos (only people in padel see them, and you can delete them yourself), meeting minutes with participants and tasks, files you upload under Budget (only the steering group and Padel Team see them), and your profile card if you make one, including phone number and email if you add them. A calendar subscription is a personal link you can stop yourself. What you see depends on your role.',
     aceH: 'Ace, the club’s AI assistant',
     aceIntro: 'Ace answers questions about the club and Mit RTK based on the club’s own texts. Ace cannot see your data.',
     ace1: 'Your question is sent to an AI service at a data processor outside the EU. This only happens with the safeguards that data protection rules require. Mobile numbers, emails and CPR numbers you type are removed before the question is sent.',
     ace2: 'The club keeps the conversations without your name for 90 days, so the administrators can check that Ace answers correctly.',
     ace3: 'Your phone remembers the conversation for 30 minutes, so you can continue on another page. It is forgotten when you log out.',
+    ace5: 'On the staff pages, Ace also answers from the club’s internal material, for example agreements, calendars, meeting minutes, ideas and budget assumptions. Ace does not get comments or files. What Ace knows depends on your role in Mit RTK. Ace never gets information you are not allowed to see yourself.',
     ace4: 'Do not write personal information to Ace. If you want to talk to a person, you can send the question to the club from Ace. The club then gets your name, your email and the conversation.',
     ung4: 'Groups, profile cards and the player exchange are for adults only.',
     o4: 'Chat in groups',
@@ -284,6 +345,23 @@ window.TEKSTER = {
     o7: 'Profile card',
     o7a: 'as long as you are an adult member',
     o7b: 'within 13 months',
+    padelH: 'Padel pre-registration',
+    padelIntro: 'When you pre-register yourself or your children for the padel teams at mitrtk.dk/padel, the club stores what you write. You do not need to be a member or log in. Children are signed up by a parent or another adult, who also receives the emails.',
+    padel1: 'About the players: name, date of birth, gender, how much they have played and what you write about their level. Gender is optional and is only used when we put the teams together. We use the date of birth to find the team that matches the age on 1 January 2027.',
+    padel2: 'About you, the person signing up: name, email and mobile number, whether you are members of the club, which days you can play, how you would like to help and how often, and what you write in the free text. Based on what you tick about volunteering, we give the sign-up 0 to 3 stars, which count when we set the teams.',
+    padel3: 'Why: to keep track of registrations, set the teams, find your deposit payment and write to you about the place. The deposit is paid in the club’s membership and payment system, and we find the payment from the registration number, the email and the mobile number.',
+    padel4: 'Who can see it: only the padel steering group, Padel Team and the club administrators. The data is not passed on, not even to the club’s partners. When someone changes a sign-up, for example puts a player on a team, this is saved with the name of the person who did it.',
+    padel5: 'Emails: you get a receipt straight away and later an email about the place. If the deposit is not paid, you get an email saying that the sign-up has been taken off the list. If you have ticked camps and other offers, we may write to you about them if there is no place.',
+    padel10: 'Ask us: if you write to us on the padel page, your name, email, mobile number (if you give it) and question are sent to the club’s head of sport so we can answer you. It is kept like other enquiries and deleted after 12 months.',
+    padel12: 'Notice of the opening: if you sign up for an email when pre-registration opens, we store your name, your email and where you came from. We only use it for that email and a short confirmation and delete it when pre-registration closes on 10 December 2026.',
+    padel11: 'Ace on the padel page: Ace is the club’s AI assistant. Your question is sent to an AI service, which writes the answer. We do not send your name, and email addresses and phone numbers in the question are hidden. Questions and answers are kept without names for 90 days. Do not write personal information to Ace.',
+    padel6: 'The lists without a deposit (Adult and completely new, and Senior padel (60+)): name, year of birth, email, mobile number, how much you have played and what you write. We only use it to write to you when a place becomes available or when we start something new that might suit you.',
+    padel7: 'Where you came from: if the link to the page has a campaign name, we save it with the sign-up. We only use it to see which posts work. The page uses no cookies. To stop misuse, we count for one hour how many sign-ups come from the same email, using a shortened code of the email.',
+    padel8: 'How long: registrations are deleted within 12 months after the teams have been set. Until then you can stay on the waiting list without a deposit in case a place opens up later. You stay on the lists without a deposit for as long as you want. If you ask to be taken off, we delete you within one month. If you get a place and join, the club’s privacy policy applies to the membership.',
+    padel9: 'Payments: the deposit and any refund are recorded in the club’s accounts. They are kept according to the bookkeeping rules, also after the registrations have been deleted.',
+    padelSpm: 'Questions about pre-registration? Write to us under', padelSpmLink: 'Ask us on the padel page',
+    o8: 'Padel pre-registration', o8a: 'as long as you are registered, also if you stay on the waiting list without a place', o8b: 'within 12 months after the teams are set',
+    o9: 'Padel lists without a deposit', o9a: 'as long as you want to be on the list', o9b: 'within one month after you ask to be taken off',
     partnere: 'Official partners', test: 'Test version. All data is fictitious.', privatliv: 'Privacy'
   }
 };
@@ -309,8 +387,10 @@ if (window.RTK_KONFIG && window.RTK_KONFIG.miljoe === 'produktion') {
   });
   document.addEventListener('DOMContentLoaded', function () {
     var skjul = function (e) { if (e) e.style.display = 'none'; };
-    ['gem3', 'gem4', 'gem5', 'gem6', 'gem7'].forEach(function (k) { skjul(document.querySelector('[data-t="' + k + '"]')); });
+    // Padel og Ace (8. november 2026) er ikke i produktion endnu. Version 4 med dem lægges ud, når de går live
+    ['gem3', 'gem4', 'gem5', 'gem6', 'gem7', 'gem9'].forEach(function (k) { skjul(document.querySelector('[data-t="' + k + '"]')); });
     ['aceH', 'beskH', 'ungH'].forEach(function (k) { var h = document.querySelector('[data-t="' + k + '"]'); skjul(h && h.closest('section')); });
+    // Forhåndstilmeldingen til padel er live på mitrtk.dk/padel fra 12. november 2026, så afsnittet står også i hele teksten
     ['o3', 'o4', 'o5', 'o7'].forEach(function (k) { var b = document.querySelector('b[data-t="' + k + '"]'); skjul(b && b.closest('.card')); });
     skjul(document.querySelector('.udkast'));
     var k = document.querySelector('a[href="mailto:privatliv@mitrtk.dk"]');
@@ -318,7 +398,32 @@ if (window.RTK_KONFIG && window.RTK_KONFIG.miljoe === 'produktion') {
   });
 }
 </script>
-<script src="sprog.js?v=1976d8c45489"></script>
+<script>
+// Visningen fra padelsiden (?side=padel): egen overskrift, indledning og tekst om databehandlere, så den, der kommer fra
+// en kampagne, kun læser det, der gælder padelsiden, og ikke moduler, der ikke er i brug (Lars 11. november 2026 kl. 15.25)
+(function () {
+  var T = window.TEKSTER;
+  T.da.heleTeksten = 'Læs hele teksten om privatliv i Mit RTK';
+  T.en.heleTeksten = 'Read the full privacy text for Mit RTK';
+  if (!/[?&]side=padel\b/.test(location.search)) return;
+  Object.assign(T.da, {
+    titel: 'Privatliv på padelsiden · Mit RTK', h1: 'Privatliv på padelsiden',
+    introA: 'Her står, hvordan Roskilde Tennis Klub bruger det, du skriver på mitrtk.dk/padel. Klubbens',
+    introB: 'gælder også: hvem der er dataansvarlig, dine rettigheder, og hvordan du klager.',
+    hjaelp: 'Klubben bruger databehandlere til at opbevare oplysningerne og sende mails. De må kun bruge oplysningerne efter klubbens anvisning, og klubben har databehandleraftaler med dem. Nogle af dem kan behandle oplysninger uden for EU. Det sker kun med de garantier, databeskyttelsesreglerne kræver.',
+    // Godkendt af Lars som klubbens systemansvarlige 11. november 2026 kl. 15.34, så intet udkastmærke her
+    version: '11. november 2026. Godkendt af klubbens systemansvarlige.'
+  });
+  Object.assign(T.en, {
+    titel: 'Privacy on the padel page · Mit RTK', h1: 'Privacy on the padel page',
+    introA: 'This is how Roskilde Tennis Klub uses what you write on mitrtk.dk/padel. The club’s',
+    introB: 'also applies: who the data controller is, your rights and how to complain.',
+    hjaelp: 'The club uses data processors to store the data and send emails. They may only use the data as instructed by the club, and the club has data processing agreements with them. Some of them may process data outside the EU. This only happens with the safeguards that data protection rules require.',
+    version: '11 November 2026. Approved by the club’s system owner.'
+  });
+})();
+</script>
+<script src="sprog.js?v=03cdff900c4f"></script>
 <script src="ace.js?v=f16258091977"></script>
 </body>
 </html>

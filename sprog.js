@@ -8,6 +8,9 @@
   function hentGemt() { try { return localStorage.getItem(NOEGLE); } catch (e) { return null; } }
   function gem(v) { try { localStorage.setItem(NOEGLE, v); } catch (e) {} }
   function start() {
+    // ?sprog=da i linket vælger sproget uden at gemme det, fx fra den danske padelside til privatlivsteksten (11. november 2026)
+    var q = /[?&]sprog=(da|en)\b/.exec(location.search);
+    if (q) return q[1];
     var g = hentGemt();
     if (g === 'da' || g === 'en') return g;
     var l = String((navigator.languages && navigator.languages[0]) || navigator.language || 'da').toLowerCase();

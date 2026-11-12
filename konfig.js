@@ -51,18 +51,22 @@
   if (miljoe !== 'produktion') return;
   var side = decodeURIComponent(String(location.pathname.split('/').pop() || 'index.html')).toLowerCase();
   if (!/\.html$/.test(side)) side += '.html';
-  if (SKJULT.indexOf(side) >= 0) { location.replace(/\/personale\//.test(location.pathname) ? './' : '/'); return; }
+  // Grupper for personale og frivillige i padel (8. november 2026): chatten og profilkortet åbnes fra Padel med ?padel=1,
+  // selv om Grupper ikke er gået live for medlemmerne. Siden viser så kun det, der hører til padel
+  var padel = side === 'grupper.html' && /(^|[?&])padel=1(&|$)/.test(location.search);
+  if (SKJULT.indexOf(side) >= 0 && !padel) { location.replace(/\/personale\//.test(location.pathname) ? './' : '/'); return; }
   try {
     var st = document.createElement('style');
     // Også feltet "På vej" på medlemmernes forside (Lars 1. november kl. 7.22: det skal ikke stå der)
-    st.textContent = SKJULT.map(function (s) { return 'a[href*="' + s + '"]'; }).concat(['.paa-vej']).join(',') + '{display:none !important}';
+    st.textContent = SKJULT.map(function (s) { return 'a[href*="' + s + '"]:not([href*="padel=1"])'; }).concat(['.paa-vej']).join(',') + '{display:none !important}';
     (document.head || document.documentElement).appendChild(st);
   } catch (e) {}
   function ryd() {
     // Links til sider, der ikke er live (fx felterne på medlemssiden), og mærket "Testversion" i bunden
     Array.prototype.forEach.call(document.querySelectorAll('a[href]'), function (a) {
-      var h = String(a.getAttribute('href') || '').split('#')[0].split('?')[0].split('/').pop();
-      if (SKJULT.indexOf(h) >= 0) a.style.display = 'none';
+      var href = String(a.getAttribute('href') || '');
+      var h = href.split('#')[0].split('?')[0].split('/').pop();
+      if (SKJULT.indexOf(h) >= 0 && !/[?&]padel=1/.test(href)) a.style.display = 'none';
     });
     Array.prototype.forEach.call(document.querySelectorAll('[data-t="test"], .bund span'), function (e) {
       if (e.matches('[data-t="test"]') || (!e.children.length && /^Testversion\./.test(String(e.textContent || '').trim()))) e.style.display = 'none';
