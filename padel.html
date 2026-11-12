@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="8711626c2fbb">
+<meta name="rtk-version" content="c0d862f3e36c">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -287,6 +287,7 @@ html:not(.aaben) .efter{display:none!important}
 /* Ace på padelsiden (Lars 12. november 2026, mockup ace_aaben_desk.png). Knappen vises kun, når motoren siger, at Ace er slået til */
 .pa-knap{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;align-items:center;gap:10px;background:#0B3D3A;color:#fff;border:0;border-radius:999px;padding:10px 18px 10px 10px;font:inherit;font-weight:700;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer}
 .pa-knap[hidden],.pa-panel[hidden]{display:none}
+.pa-knap .pa-kort{display:none}
 /* Ace er klubbens tennisbold, som i Mit RTK (Lars 12. november 2026 kl. 19.48) */
 .pa-ikon{width:32px;height:32px;border-radius:50%;display:block;flex:none;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .pa-panel{position:fixed;right:20px;bottom:20px;z-index:61;width:390px;max-width:calc(100vw - 24px);height:600px;max-height:calc(100vh - 40px);background:#fff;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.3);display:flex;flex-direction:column;overflow:hidden;font-size:15px}
@@ -311,9 +312,14 @@ html:not(.aaben) .efter{display:none!important}
 .pa-bund button:disabled{opacity:.5}
 .pa-web{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 @media (max-width:760px){
- .pa-knap{right:12px;bottom:calc(84px + env(safe-area-inset-bottom));padding:5px;font-size:14px}
- .pa-knap .pa-ikon{width:46px;height:46px}
- .pa-knap .pa-tekst{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+ /* Lagt i hjørnet som en lille knap med kort tekst, som Ace i Mit RTK. Før svævede bolden midt i teksten (Lars 12. november 2026 kl. 21.14) */
+ /* Lodret på mobil: bolden øverst og Ask og Ace på hver sin linje, også på dansk (Lars 12. november 2026 kl. 21.33) */
+ .pa-knap{right:10px;bottom:calc(10px + env(safe-area-inset-bottom));flex-direction:column;gap:3px;padding:5px 7px 6px;font-size:11px;min-height:0;line-height:1.05;border:1.5px solid #fff;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.22)}
+ .pa-knap .pa-ikon{width:26px;height:26px;box-shadow:none}
+ .pa-knap .pa-tekst{display:none}
+ .pa-knap .pa-kort{display:flex;flex-direction:column;align-items:center}
+ html.cta-vist .pa-knap{bottom:calc(var(--cta-h, 84px) + 8px)}
+ .pa-knap{transition:bottom .2s}
  .pa-panel{right:8px;left:8px;bottom:8px;width:auto;max-width:none;height:calc(100% - 64px);max-height:none}
 }
 /* rtk.css giver alle knapper en lys baggrund ved hover, så Aces hvide tekst forsvandt (Lars 12. november 2026 kl. 10.03) */
@@ -698,7 +704,7 @@ html:not(.aaben) .efter{display:none!important}
 </main>
 
 <div class="pa-boks" id="aceBoks">
-<button type="button" class="pa-knap" id="aceKnap" hidden aria-haspopup="dialog" aria-controls="acePanel"><img class="pa-ikon" src="ikoner/ace-bold.png" alt="" width="32" height="32"><span class="pa-tekst">Spørg Ace om RTK padel</span></button>
+<button type="button" class="pa-knap" id="aceKnap" hidden aria-haspopup="dialog" aria-controls="acePanel" aria-label="Spørg Ace om RTK padel"><img class="pa-ikon" src="ikoner/ace-bold.png" alt="" width="32" height="32"><span class="pa-tekst">Spørg Ace om RTK padel</span><span class="pa-kort" aria-hidden="true" translate="no"><span>Ask</span><span>Ace</span></span></button>
 <div class="pa-panel" id="acePanel" role="dialog" aria-modal="false" aria-labelledby="aceTitel" hidden>
   <div class="pa-top"><img class="pa-ikon" src="ikoner/ace-bold.png" alt="" width="32" height="32"><div><b id="aceTitel">Spørg Ace om RTK padel</b><small>Svarer ud fra denne side og klubbens hjemmeside</small></div><button type="button" class="pa-luk" id="aceLuk" aria-label="Luk Ace">×</button></div>
   <div class="pa-strom" id="aceStrom" aria-live="polite">
@@ -727,7 +733,7 @@ html:not(.aaben) .efter{display:none!important}
 <script src="konfig.js?v=869b7a78d104"></script>
 <script>window.RTK_SPROG_STANDARD = 'da';</script>
 <script src="sprog.js?v=889007325426"></script>
-<script src="padel_en.js?v=6af9dc1c5db9"></script>
+<script src="padel_en.js?v=d935fa7e8c02"></script>
 <script>
 // Sproget (sprog.js) og små ord, der sættes sammen med navne (12. november 2026)
 window.sprogNu = function () { return (window.RTK_SPROG && window.RTK_SPROG.sprog) || 'da'; };
@@ -1160,6 +1166,9 @@ window.sprogOrd = function (da, en) { return window.sprogNu() === 'en' ? en : da
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (x) { synlig[x.target.className] = x.isIntersecting; });
       cta.classList.toggle('skjult', Object.keys(synlig).some(function (k) { return synlig[k]; }));
+      // Ace rykker kun op over den faste knap, når den er synlig (Lars 12. november 2026 kl. 21.14)
+      document.documentElement.classList.toggle('cta-vist', !cta.classList.contains('skjult'));
+      if (cta.offsetHeight) document.documentElement.style.setProperty('--cta-h', cta.offsetHeight + 'px');
     });
     ['pv-hero', 'sek pv-tilm', 'sek pv-andre', 'pv-skriv'].forEach(function (c) { var el = document.querySelector('[class="' + c + '"]'); if (el) io.observe(el); });
   }

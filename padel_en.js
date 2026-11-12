@@ -376,6 +376,7 @@
     'Officielle partnere': 'Official partners',
     'Racketlife (åbner i ny fane)': 'Racketlife (opens in a new tab)',
     'Spørg Ace om RTK padel': 'Ask Ace about RTK padel',
+    'Spørg Ace': 'Ask Ace',
     'Svarer ud fra denne side og klubbens hjemmeside': 'Answers based on this page and the club website',
     'Luk Ace': 'Close Ace',
     'Hej, jeg er Ace. Spørg mig om holdene, priserne, tiderne eller forhåndstilmeldingen. Jeg kan også regne ud, hvad det koster for jer.':
