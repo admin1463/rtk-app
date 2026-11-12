@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="4d5e3c1767b1">
+<meta name="rtk-version" content="1ccf27951587">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -31,6 +31,9 @@ html:not(.aaben) .efter{display:none!important}
 .pv .knap:focus-visible,.pv button:focus-visible,.pv input:focus-visible,.pv select:focus-visible,.pv textarea:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
 .pv .kick{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin:0 0 6px}
 .pv h2{font-size:40px;line-height:1.08;font-weight:800;letter-spacing:-.02em;margin:0 0 14px}
+/* Lange ord som "Forhåndstilmeldingen" må ikke stikke ud på smalle telefoner (Lars 12. november 2026 kl. 16.44) */
+.pv h2{overflow-wrap:break-word;hyphens:auto}
+@media (max-width:360px){.pv h2{font-size:25px}}
 .pv .sek{padding:96px 0}
 .pv .graa{color:var(--muted)}
 /* top over billedet */
@@ -196,7 +199,7 @@ html:not(.aaben) .efter{display:none!important}
 .pv-spiller .seniorhint{margin-top:6px;font-size:14px}
 .pv-andre-k b{font-size:20px}
 .pv-andre-k p{margin:6px 0 0;color:var(--muted);font-size:15px}
-.pv-iform{max-width:760px}
+.pv-iform{max-width:none}
 .pv-rtk-intro{max-width:760px;font-size:18px}
 .pv-tal4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:30px 0}
 .pv-tal4>div{background:var(--teal);color:#fff;border-radius:16px;padding:20px}
@@ -305,7 +308,7 @@ html:not(.aaben) .efter{display:none!important}
     <div class="kick">Nyt i Roskilde Tennis Klub · start 13. januar 2027</div>
     <h1>Padel hele året. <em>Sammen.</em></h1>
     <p>Træning hver uge med trænere, gode makkere og masser af grin. Indendørs hos PadelPit Roskilde og om sommeren også ude på klubbens baner i Darup ved Dyrskuepladsen. For børn, unge og voksne.</p>
-    <a class="knap foer" href="#tilmeld">Få besked, når vi åbner</a><a class="knap efter" href="#tilmeld">Sikr din plads</a>
+    <a class="knap foer" href="#tilmeld">Få besked, når vi åbner for tilmeldinger</a><a class="knap efter" href="#tilmeld">Sikr din plads</a>
     <div class="smaa"><b class="foer">Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 · </b>Begrænset antal pladser · Det tager 3 minutter · 500 kr. i depositum pr. spiller, som trækkes fra prisen, eller som I får tilbage, hvis I ikke får plads</div>
   </div>
 </section>
@@ -435,7 +438,7 @@ html:not(.aaben) .efter{display:none!important}
 <section class="sek pv-tilm" id="tilmeld"><div class="w pv-to">
 <div class="pv-tilm-v">
     <div class="kick">Forhåndstilmelding 2027</div>
-    <h2 class="foer">Åbner tirsdag 17. november kl. 10</h2><h2 class="efter">Skriv jer op</h2>
+    <h2 class="foer">Forhåndstilmeldingen åbner tirsdag 17. november kl. 10</h2><h2 class="efter">Skriv jer op</h2>
     <p class="graa">Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 og lukker 10. december 2026. Du kan skrive flere spillere op på én gang, fx dig selv og dine børn. Der er et begrænset antal pladser, kun 8 til 10 på hvert hold. Når I har skrevet jer op, betaler I 500 kr. pr. spiller i depositum i ForeningLet inden for 48 timer. Voksne skal være på padelniveau 1,5. Er du voksen og helt ny, eller er du 60+ og vil spille i dagtimerne, så se <a href="#andre">listerne uden depositum</a>.</p>
     <ol class="pv-trinv">
       <li class="nu"><i class="foer">Fra 17. november kl. 10</i><i class="efter">Nu</i><b>Skriv jer op her</b><span>Spillere, dage og hvordan I vil give en hånd. Du får et tilmeldingsnummer, som vi bruger til at finde jeres betaling.</span></li>
@@ -449,7 +452,7 @@ html:not(.aaben) .efter{display:none!important}
   <!-- Før åbningen: besked på mail (Lars 12. november 2026 kl. 13.11). Formularen nedenfor vises fra 17. november kl. 10 -->
   <form class="pv-form foer" id="bform" novalidate>
     <div data-btrin="1">
-      <h3>Få besked, når vi åbner</h3>
+      <h3>Få besked, når vi åbner for tilmeldinger</h3>
       <p class="graa">Skriv dit navn og din mail, så sender vi dig en mail tirsdag 17. november kl. 10, når forhåndstilmeldingen åbner. Du binder dig ikke til noget.</p>
       <label class="lb" for="bNavn">Navn</label><input type="text" id="bNavn" autocomplete="name">
       <label class="lb" for="bMail">Mail</label><input type="email" id="bMail" autocomplete="email" placeholder="navn@eksempel.dk">
@@ -594,7 +597,7 @@ html:not(.aaben) .efter{display:none!important}
   <h2>Spørgsmål og svar</h2>
   <div class="gitter">
     <div><b>Skal man kunne spille i forvejen?</b><span>Ikke som barn eller ung. Junior og Junior+ er også for nybegyndere. Voksenholdet kræver padelniveau 1,5. Det betyder, at du kender reglerne og grundslagene, kan serve og kan holde bolden i gang over nettet mindst fem gange med en makker i normalt tempo. Er du voksen og ikke der endnu, så skriv dig på <a href="#andre" data-liste="nybegynder">listen for voksne nybegyndere</a>. Det initiativ er ikke startet endnu. Bliver vi nok, starter vi det. Det koster ikke noget at stå på listen. Vi skriver til dig, når vi starter initiativet, eller hvis der bliver plads på et hold, du kan passe ind i. Du bestemmer selv, om du vil blive stående på listen eller af den.</span></div>
-    <div><b>Hvornår kan vi skrive os op?</b><span>Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 og lukker 10. december kl. 23.59. Vil du have en mail, når vi åbner, så skriv dig op under <a href="#tilmeld">Forhåndstilmelding 2027</a>. Listerne uden depositum for voksne nybegyndere og Seniorpadel (60+) er åbne allerede nu.</span></div>
+    <div><b>Hvornår kan vi skrive os op?</b><span>Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 og lukker 10. december kl. 23.59. Vil du have en mail, når vi åbner for tilmeldinger, så skriv dig op under <a href="#tilmeld">Forhåndstilmelding 2027</a>. Listerne uden depositum for voksne nybegyndere og Seniorpadel (60+) er åbne allerede nu.</span></div>
     <div><b>Kan jeg skrive hele familien op på én gang?</b><span>Ja. Skriv alle spillere op i samme tilmelding, så får I ét tilmeldingsnummer og betaler depositummet for alle på én gang i ForeningLet. Der er ingen familierabat, så hver spiller betaler sin egen pris.</span></div>
     <div><b>Skal jeg være medlem af RTK?</b><span>Ikke for at skrive dig op. Men for at gå på et hold skal du være medlem. Får du plads, melder du dig ind i ForeningLet, og så følger medlemskabet af PadelPit Roskilde, gratis adgang til udebanerne i Darup og udendørs tennis med.</span></div>
     <div><b>Hvordan booker vi udebanerne i Darup?</b><span>I ForeningLet, klubbens medlemsapp. Du får adgang, når du er blevet medlem, og som medlem spiller du gratis.</span></div>
@@ -644,7 +647,7 @@ html:not(.aaben) .efter{display:none!important}
   <span>Officielle partnere</span>
   <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="ikoner/racketlife.png" alt=""></a>
 </div>
-<div class="pv-cta" id="cta"><a class="knap foer" href="#tilmeld">Få besked, når vi åbner</a><a class="knap efter" href="#tilmeld">Sikr din plads</a></div>
+<div class="pv-cta" id="cta"><a class="knap foer" href="#tilmeld">Få besked, når vi åbner for tilmeldinger</a><a class="knap efter" href="#tilmeld">Sikr din plads</a></div>
 </main>
 
 <div class="pa-boks" id="aceBoks">
@@ -677,7 +680,7 @@ html:not(.aaben) .efter{display:none!important}
 <script src="konfig.js?v=5d3b61fda9e3"></script>
 <script>window.RTK_SPROG_STANDARD = 'da';</script>
 <script src="sprog.js?v=889007325426"></script>
-<script src="padel_en.js?v=c793c6d98ea8"></script>
+<script src="padel_en.js?v=a73468814377"></script>
 <script>
 // Sproget (sprog.js) og små ord, der sættes sammen med navne (12. november 2026)
 window.sprogNu = function () { return (window.RTK_SPROG && window.RTK_SPROG.sprog) || 'da'; };
