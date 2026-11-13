@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="540f991c1827">
+<meta name="rtk-version" content="ce7bc1b94f97">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1210,10 +1210,15 @@ window.sprogOrd = function (da, en) { return window.sprogNu() === 'en' ? en : da
   window.addEventListener('scroll', maal, { passive: true }); maal();
   // Tid på siden tælles kun, mens fanen ses
   function tael() { if (synlig) aktiv += Date.now() - sidst; sidst = Date.now(); }
+  var sidstSendt = '';
   function slut() {
     tael();
     var liste = Object.keys(h).map(function (k) { return h[k] > 1 ? k + ':' + h[k] : k; }).join(',');
-    send('slut', { scroll: maks, sek: Math.round(aktiv / 1000), h: liste.slice(0, 400) });
+    var sek = Math.round(aktiv / 1000), tegn = maks + '|' + liste + '|' + sek;
+    // visibilitychange og pagehide kommer begge, når man forlader siden. Kun én besked, hvis intet er ændret
+    if (tegn === sidstSendt) return;
+    sidstSendt = tegn;
+    send('slut', { side: location.hostname.replace(/^www\./, ''), scroll: maks, sek: sek, h: liste.slice(0, 400) });
   }
   document.addEventListener('visibilitychange', function () { tael(); synlig = !document.hidden; if (document.hidden) slut(); });
   window.addEventListener('pagehide', function () { if (!document.hidden) slut(); });
