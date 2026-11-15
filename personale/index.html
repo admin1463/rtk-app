@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="8a555624dd5c">
+<meta name="rtk-version" content="725e6e64d37b">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -127,10 +127,6 @@ const IKON = {
 // En person med flere roller ser felterne for alle sine roller. Boldregnskabet er som før for cheftræner og boldansvarlig (Lars 19. oktober).
 const ANSVARLIG = ['admin', 'cheftraener', 'boldansvarlig'];
 const FELTER = [
-  // Turneringer (Lars 14. november 2026): alle på personalesiden ser feltet. Motoren henter fra DTF og DGI hver søndag
-  { afsnit: 'arbejde', navn: 'Turneringer', side: 'turneringer.html', ikon: 'pokal', ny: true,
-    roller: ['opstrenger', 'traener', 'kaptajn', 'cheftraener', 'boldansvarlig', 'bogholder', 'koordinator', 'oevrige', 'bestyrelse', 'padel', 'padelcircle'],
-    tekst: () => 'Find turneringer til dig selv eller dit hold efter alder og niveau. Gem dine favoritter.' },
   { afsnit: 'arbejde', navn: (p) => harRolle(p, ANSVARLIG) ? 'Boldregnskab' : 'Tag bolde', side: 'bolde.html', ikon: 'bold', roller: ['traener', 'cheftraener', 'boldansvarlig'],
     tekst: (p) => harRolle(p, ANSVARLIG) ? 'Tag bolde, lager, forbrug, optælling og bestilling.' : 'Tag bolde til træning, og se lageret.' },
   // Arbejdstøj og udstyr fra kontoen hos Sports Group (Lars 16. oktober kl. 20.58). Alle med en rolle kan få en tildeling.
@@ -165,7 +161,11 @@ const FELTER = [
     tekst: () => 'Sms og mail, de sidste 30 dage, saldo og alarmer.' },
   // Ace, klubbens AI-hjælper (Lars 25. oktober 2026 kl. 06.36): hele samtalerne uden navn, kun administratorer
   { afsnit: 'admin', navn: 'Ace: samtaler', side: 'ace.html', ikon: 'ace', roller: ['admin'],
-    tekst: () => 'Hvad medlemmerne spørger Ace om, og hvad Ace svarer. Uden navne.' }
+    tekst: () => 'Hvad medlemmerne spørger Ace om, og hvad Ace svarer. Uden navne.' },
+  // Turneringer: kun administratorer til at starte med (Lars 15. november 2026 kl. 10.23, før for alle på personalesiden).
+  // Motoren tjekker det også. Motoren henter turneringer torsdag kl. 4
+  { afsnit: 'admin', navn: 'Turneringer', side: 'turneringer.html', ikon: 'pokal', ny: true, roller: ['admin'],
+    tekst: () => 'Find turneringer til dig selv eller dit hold efter alder og niveau. Gem dine favoritter.' }
 ];
 const AFSNIT = [['arbejde', 'Dit arbejde', ''], ['bestyrelse', 'Bestyrelsen', 'Overblik over klubbens drift. Kun læse.'], ['admin', 'Administration', 'Kun for klubbens administratorer. Trænere og frivillige ser ikke dette afsnit.']];
 
