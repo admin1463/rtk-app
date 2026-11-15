@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="eb7782c7c847">
+<script src="/opdater.js?v=f299a739b234" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Holdturneringer · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css?v=cc78992e33b4">
+<style>
+/* Holdturneringer (Lars 15. november 2026, mockup version 2 godkendt kl. 08.15). Søster til Turneringer */
+.tu-faner .tabs{margin:0 0 12px;gap:4px;flex-wrap:nowrap}.tu-faner .tabs button{padding-left:10px;padding-right:10px;white-space:nowrap;min-width:0;flex:0 1 auto}
+@media (max-width:380px){.tu-faner .tabs button{font-size:14px;padding-left:7px;padding-right:7px}}
+.tu-opd{font-size:13px;color:var(--muted);margin:0 0 8px}
+.tu-rtk{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--teal);color:#fff;border-radius:12px;padding:14px 16px;margin:0 0 12px;text-decoration:none;border:0;width:100%;text-align:left;white-space:normal}
+.tu-rtk b{display:block;font-size:17px}.tu-rtk small{font-size:13px;color:var(--sub);font-weight:500}.tu-rtk .pil{font-size:22px}
+.tu-filt{padding:16px}.tu-filt .lab{display:block;font-size:13px;font-weight:700;margin:12px 0 6px;color:var(--teal)}.tu-filt .lab:first-child{margin-top:0}
+.tu-filt .chips{gap:6px}.tu-filt .chips button{min-height:38px;padding:4px 12px;font-size:14px}
+.tu-ant{font-size:15px;margin:4px 0 8px;color:var(--muted)}
+.tu-tip{font-size:14px;margin:0 0 8px;padding:8px 10px;background:#E6F0EE;border-radius:8px;color:var(--teal)}
+.tu-link-knap{border:0;background:none;padding:0;min-height:0;color:var(--pink);font-weight:700;font-size:inherit;white-space:normal;text-align:left}
+.tu-uge{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px}
+.tu-res{position:relative;display:flex;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 8px;cursor:pointer;text-align:left;width:100%;font-weight:400;white-space:normal;min-height:0;color:var(--ink)}
+.tu-res:hover{background:var(--soft)}
+.tu-k{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}.tu-k b{font-size:16px}
+.tu-by,.tu-r{font-size:14px;color:var(--muted)}.tu-f{font-size:13px;color:var(--muted);margin-top:2px}
+.tu-tilbage{font-size:15px;font-weight:600;color:var(--teal);margin:0 0 10px;border:0;background:none;padding:4px 0;min-height:0}
+.tu-hvad{font-size:15px;margin:8px 0 10px;line-height:1.45}
+.tu-tab{width:100%;border-collapse:collapse;font-size:14px}.tu-tab td,.tu-tab th{padding:6px 0;border-bottom:1px solid #E3E7EA;text-align:left;vertical-align:top}.tu-tab td.n,.tu-tab th.n{text-align:right;font-weight:700;padding-left:8px}
+.tu-tab th{font-size:12px;color:var(--muted);font-weight:700;text-transform:none;letter-spacing:0}
+.tu-tab tr.match td{font-weight:700;color:var(--teal);background:#E6F0EE}.tu-tab tr.match td:first-child{padding-left:6px}.tu-tab tr.match td.n:last-child{padding-right:6px}
+.tu-p{font-size:15px;line-height:1.5;margin:0}.tu-tom{color:var(--muted);font-style:italic}
+.tu-h{font-size:17px;margin:0 0 6px;color:var(--ink);text-transform:none;letter-spacing:0;font-weight:700}
+.tu-or{font-size:14px;line-height:1.45;margin:8px 0 0;padding:8px 10px;background:var(--soft);border-radius:8px}
+.tu-msg{width:100%;min-height:260px;font:inherit;font-size:15px;line-height:1.45}
+.tu-cb{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;margin:8px 0}.tu-cb input{width:22px;height:22px;min-height:0;flex:none}
+.tu-kop{display:block;margin:8px 0 0 auto;min-height:36px;padding:4px 12px;font-size:14px}
+.tu-trappe{margin:0;padding-left:22px}.tu-trappe li{margin:0 0 8px;font-size:15px;line-height:1.4}.tu-trappe b{display:block}
+.tu-ord{margin:0}.tu-ord dt{font-weight:700;font-size:15px;margin-top:8px}.tu-ord dd{margin:0;font-size:14px;color:var(--muted)}
+.tu-mere{margin:10px auto 0;display:block}
+.tu-afl{font-size:13px;color:var(--muted);margin:6px 0 0}
+.ho-plc{flex:none;width:44px;text-align:center;line-height:1;color:var(--teal);padding-top:2px}.ho-plc b{display:block;font-size:24px;font-weight:800}.ho-plc small{font-size:11px;color:var(--muted)}
+.ho-kamp{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 8px;cursor:pointer;text-align:left;width:100%;font-weight:400;white-space:normal;min-height:0;color:var(--ink)}
+.ho-kamp:hover{background:var(--soft)}
+.ho-kamp.hj{border-left:4px solid var(--teal)}
+.ho-tid{flex:none;width:72px;font-size:13px;color:var(--muted);line-height:1.3}.ho-tid b{display:block;font-size:14px;color:var(--teal)}.ho-tid small{display:block;font-size:12px;color:var(--pink);font-weight:700}
+.ho-res{flex:none;align-self:center;font-weight:800;font-size:16px;padding:2px 9px;border-radius:8px;white-space:nowrap}
+.ho-res.v{background:#E3F2E8;color:#1E6B3A}.ho-res.t{background:#FCE4EC;color:#B0004A}.ho-res.u{background:#EEF1F3;color:#4A5A66}
+.ho-adv{display:inline-block;margin-left:4px;padding:0 7px;border-radius:999px;background:#FCE4EC;color:#B0004A;font-size:11px;font-weight:700;white-space:nowrap}
+.ho-flyt{display:inline-block;margin-left:4px;padding:0 7px;border-radius:999px;background:#FFF4D6;color:#7A5300;font-size:11px;font-weight:700;white-space:nowrap}
+.ho-warn{background:#FCE4EC;color:#B0004A;border-radius:8px;padding:8px 10px;font-size:14px;font-weight:600;margin:0 0 8px}
+.ho-tider{display:flex;gap:10px;margin:6px 0 4px}.ho-tider div{flex:1;background:#E6F0EE;border-radius:10px;padding:8px 10px}
+.ho-tider small{display:block;font-size:12px;color:var(--muted)}.ho-tider b{font-size:22px;color:var(--teal)}
+.ho-dk{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #E3E7EA}.ho-dk:last-child{border:0}
+.ho-dkn{flex:none;width:36px;font-weight:800;color:var(--teal);font-size:14px}.ho-dks{flex:1;display:flex;flex-direction:column;font-size:14px;min-width:0}.ho-dks span{font-size:13px;color:var(--muted)}
+.ho-dk .ho-res{font-size:13px;text-align:center;line-height:1.25}
+.card .ho-kamp{border-color:#E3E7EA}
+@media (min-width:1000px){
+  .wrap.indhold.tu-bred{max-width:1180px}
+  .tu-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tu-grid .tu-uge{grid-column:1/-1;margin-bottom:0}
+  .tu-grid>.tu-res,.tu-grid>.ho-kamp{margin:0}
+  .tu-smal{max-width:720px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Holdturneringer</b><span>Personale og frivillige</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold tu-bred">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø. Holdene, kampene og resultaterne er rigtige.</div>
+  <div id="omraade" class="hidden">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div id="hentMsg" class="msg" aria-live="polite">Henter …</div>
+    <div id="vis"></div>
+  </div>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script src="../konfig.js?v=869b7a78d104"></script>
+<script>
+// Holdturneringer for personale og frivillige (Lars 15. november 2026). Motoren henter holdene hver nat (moduler/holdturneringer.gs).
+// Spillernes navne vises, også juniorernes. Hjemmeholdets bemærkning vises uden telefon og mail. Siden skriver kun "Opdateret".
+// Kort fortalt bygger på Holdturneringer/generators/sources/regler_hold.txt. Intet er opfundet.
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let token = hent('rtk.token') || '';
+let person = null;
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+
+async function motor(modul, handling, data) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()) }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  let svar;
+  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  return svar.data;
+}
+function logUd(udloebet) {
+  if (window.RTK_UD) return; window.RTK_UD = true;
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null); gem('rtk.mig', null);
+  location.replace(udloebet ? './?til=holdturneringer.html&igen=1' : './');
+}
+$('logud').addEventListener('click', () => logUd(false));
+
+// ---------------------------------------------------------------- Kort fortalt (regler_hold.txt, læst 15. november 2026)
+const KORT = {
+  hvem: "Klubbens hold spiller i to holdturneringer. DTF Holdturneringen er landsdækkende for klubbernes dame- og herrehold. Tennis Øst holdturnering er Sjællands og øernes egen med veteran, junior, motionist, Golden Age og senior mix. Der spilles ude fra maj til september og inde fra oktober til april. Holdene og puljerne er nye hver sæson.",
+  niveauer: [
+    ['DTF: Elitedivisionen, 1., 2., 3. division', 'Klubbens 1. hold for damer og herrer. Elitedivisionen spiller om DM-medaljer. Øst og Vest spiller hver for sig under eliten.'],
+    ['DTF: Liga 1, 2, 3, 4', 'Klubbens øvrige dame- og herrehold.'],
+    ['Tennis Øst: veteran 40+ til 80+, 1., 2., 3. division', 'Man skal fylde mindst 40, 50, 60, 70, 75 eller 80 år i kalenderåret. Inde er der én pulje pr. division: vinderen rykker op, og nr. næstsidst spiller mod nr. 2 fra divisionen under om pladsen. En klub kan kun have ét hold pr. division.'],
+    ['Tennis Øst: junior U12 til U18 og ungsenior', 'Delt efter alder og bold (grøn eller gul) og eventuelt i kategorier efter styrke. Rækkerne er kønsneutrale, og der er også pigerækker. Puljer på 4 til 8 hold, alle mod alle.'],
+    ['Tennis Øst: motionist, Golden Age og senior mix', 'For voksne breddespillere. Golden Age kræver, at man fylder 60 i året.']
+  ],
+  holdkamp: [
+    ['DTF dame og herre', 'Seks kampe: 4 singler og 2 doubler. Står det 3-3, afgøres holdkampen af en golden matchtiebreak til 10, spillet som double. En spiller må spille én single og én double.'],
+    ['Veteran inde', '6 kampe: 3 herresingler, 1 damesingle, 1 herredouble og 1 mixdouble. 70+ spiller 2 herresingler, 2 herredoubler, 1 damedouble og 1 mixdouble.'],
+    ['Junior', 'Antallet af kampe står i Tennis Østs indbydelse til rækken.'],
+    ['Point', 'DTF: vinderen får point efter resultatet, 6-0 giver 7 til 0, 5-1 giver 6 til 1, 4-2 giver 5 til 2 og 4-3 giver 4 til 3. Tennis Øst: 1 point pr. vunden kamp. Et hold, der vinder alle holdkampe, bliver altid nr. 1.']
+  ],
+  hvornaar: [
+    ['DTF', 'DTF fastsætter en spilletermin, normalt fredag til søndag, og hjemmeholdet sætter dag og tid. Uden lang transport: fredag kl. 17 til 18.30 eller lørdag og søndag kl. 9.30 til 18.30. Har udeholdet over en times kørsel: lørdag eller søndag kl. 11 til 16.'],
+    ['Veteran inde', 'Datoen i programmet er den sidste dag i terminen. Hjemmeholdet vælger dag og tid inden for terminen, weekend kl. 9 til 18 og hverdage kl. 17 til 18 (ikke 70+). Datoen kan derfor flytte sig, til hjemmeholdet har lagt den ind.'],
+    ['Junior', 'Søndage, helligdage eller skolefridage med start mellem kl. 9 og 16. Hjemmeholdet kontakter udeholdet senest onsdagen før.']
+  ],
+  ord: [
+    ['Holdkamp og kamp', 'En holdkamp er hele mødet mellem to hold. En kamp er én single eller double i holdkampen.'],
+    ['DS, HS, DD, HD, MD', 'Damesingle, herresingle, damedouble, herredouble og mixdouble. Tallet er rækkefølgen, så HS1 er 1. herresingle. Juniorer skriver S og D.'],
+    ['Mød og start', 'Mød er den tid, holdet skal være der. Start er, når første kamp går i gang. Står der kun start, så mød i god tid til opvarmning.'],
+    ['Pulje, runde og termin', 'Puljen er de hold, man spiller mod i sæsonen. En runde er én holdkamp for alle holdene. Terminen er det vindue, runden skal spilles i.'],
+    ['Hjemmeholdet', 'Hjemmeholdet stiller mindst to baner, sætter tidspunktet, kontakter udeholdet og indtaster resultatet. Der spilles uden dommer i de fleste rækker.'],
+    ['Rtd. og W.O.', 'Rtd. betyder, at en spiller opgav undervejs. W.O. (walkover) betyder, at kampen ikke blev spillet og tæller som 6-0 6-0.']
+  ]
+};
+const TYPE_ORD = { 'Senior': 'Dame og herre i DTF', 'Veteran': 'Veteran', 'Junior': 'Junior', 'Motionist': 'Motionist', 'Golden Age': 'Golden Age', 'Senior mix': 'Senior mix', 'Andet': 'Andre' };
+const TYPE_ORDEN = ['Senior', 'Veteran', 'Golden Age', 'Motionist', 'Senior mix', 'Junior', 'Andet'];
+
+// ---------------------------------------------------------------- Datoer
+const MDR = ['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'];
+const UGEDAG = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
+const dt = (iso) => { const [a, m, d] = String(iso).slice(0, 10).split('-').map(Number); return new Date(Date.UTC(a, m - 1, d)); };
+const kortDag = (iso) => { const d = dt(iso); return UGEDAG[d.getUTCDay()].slice(0, 3) + ' ' + d.getUTCDate() + '. ' + MDR[d.getUTCMonth()].slice(0, 3); };
+const langDag = (iso) => { const d = dt(iso); return UGEDAG[d.getUTCDay()] + ' ' + d.getUTCDate() + '. ' + MDR[d.getUTCMonth()]; };
+const uge = (iso) => { const d = dt(iso); const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 4 - (d.getUTCDay() || 7))); return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7); };
+const plusDage = (iso, n) => { const d = dt(iso); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+// Er tiden 00.00, har hjemmeholdet ikke sat den endnu
+const kl = (t) => { const x = String(t || '').slice(11, 16).replace(':', '.'); return x === '00.00' ? '' : x; };
+const klTekst = (t) => kl(t) ? ' kl. ' + kl(t) : ', tid ikke sat';
+const klK = (s) => String(s || '').replace(':', '.');
+const stor = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+
+// ---------------------------------------------------------------- Data og valg
+let D = null;
+const V = (() => { try { return Object.assign({ saeson: '', hvor: 'Alle', type: 'Alle', periode: '14', vis: 30, kopRes: true, kopNaeste: true, kopNavne: false }, JSON.parse(hent('rtk.hold.valg') || '{}'), { vis: 30 }); } catch (e) { return { saeson: '', hvor: 'Alle', type: 'Alle', periode: '14', vis: 30, kopRes: true, kopNaeste: true, kopNavne: false }; } })();
+const gemValg = () => gem('rtk.hold.valg', JSON.stringify({ saeson: V.saeson, hvor: V.hvor, type: V.type, periode: V.periode, kopRes: V.kopRes, kopNaeste: V.kopNaeste, kopNavne: V.kopNavne }));
+const idag = () => (D && D.idag) || new Date().toISOString().slice(0, 10);
+
+function saesoner() {
+  const s = {};
+  D.ligaer.forEach((l) => { const x = s[l.saeson] = s[l.saeson] || { navn: l.saeson, fra: l.fra, til: l.til, status: l.status }; if (l.fra < x.fra) x.fra = l.fra; if (l.til > x.til) x.til = l.til; if (l.status === 'I gang') x.status = 'I gang'; });
+  return Object.keys(s).map((k) => s[k]).sort((a, b) => (b.fra < a.fra ? -1 : 1));
+}
+function aktivSaeson() {
+  const l = saesoner();
+  if (V.saeson && l.some((s) => s.navn === V.saeson)) return V.saeson;
+  const igang = l.filter((s) => s.status === 'I gang')[0] || l.filter((s) => s.status === 'Kommende').pop() || l[0];
+  return igang ? igang.navn : '';
+}
+const holdI = (s) => D.hold.filter((h) => h.saeson === s);
+const holdAf = (lid, hid) => D.hold.filter((h) => h.lid === lid && h.hid === hid)[0];
+const kampeI = (s) => { const ids = {}; holdI(s).forEach((h) => { ids[h.lid + '|' + h.hid] = 1; }); return D.kampe.filter((k) => ids[k.lid + '|' + k.hid]); };
+const typeOk = (h) => V.type === 'Alle' || (V.type === 'Dame og herre' ? h.type === 'Senior' : V.type === 'Veteran' ? ['Veteran', 'Golden Age', 'Motionist', 'Senior mix'].indexOf(h.type) >= 0 : h.type === V.type);
+
+// ---------------------------------------------------------------- Byggesten
+function opdateret() {
+  const h = D && D.hentet && D.hentet.tid;
+  if (!h) return '<p class="tu-opd">Holdene er ikke hentet endnu. Motoren henter hver nat.</p>';
+  return '<p class="tu-opd">Opdateret ' + esc(kortDag(h)) + ' kl. ' + esc(kl(h)) + '</p>';
+}
+function faner(aktiv) {
+  const f = [['hold', 'Hold'], ['kampe', 'Kampe'], ['res', 'Resultater'], ['kort', 'Kort fortalt']];
+  return '<div class="tu-faner"><div class="tabs" role="tablist">' + f.map(([id, n]) => '<button type="button" role="tab" data-gaa="' + id + '" aria-selected="' + (id === aktiv) + '">' + esc(n) + '</button>').join('') + '</div></div>';
+}
+const chips = (navn, liste, valgt) => '<div class="chips" role="group" aria-label="' + navn + '">' + liste.map((v) => '<button type="button" data-chip="' + navn + '" data-v="' + esc(v) + '" aria-pressed="' + (v === valgt) + '">' + esc(v) + '</button>').join('') + '</div>';
+const tilbage = (t) => '<button type="button" class="tu-tilbage" data-gaa="tilbage">&#8592; ' + esc(t) + '</button>';
+function hvor(k) {
+  if (k.hu === 'Hjemme') return 'Hjemme på Darupvej' + (k.andet ? ' <span class="ho-adv">Se bemærkning</span>' : '');
+  if (k.andet) return 'Ude i ' + esc(k.andet) + ' <span class="ho-adv">Andet sted</span>';
+  return 'Ude' + (k.by ? ' i ' + esc(k.by) : k.sted ? ' hos ' + esc(k.sted) : '');
+}
+function resTag(k) {
+  if (!k.res) return k.st === 'Mangler resultat' ? '<span class="ho-res u">?</span>' : '';
+  return '<span class="ho-res ' + ({ Vundet: 'v', Tabt: 't', Uafgjort: 'u' }[k.udf] || 'u') + '">' + esc(k.res) + '</span>';
+}
+function kampKort(k, visHold) {
+  const h = holdAf(k.lid, k.hid) || {};
+  const tid = k.t ? '<b>' + esc(kortDag(k.t)) + '</b>' + esc(kl(k.t) || 'Tid ikke sat') + (k.moed && kl(k.t) && k.st === 'Kommende' ? '<small>Mød ' + esc(klK(k.moed)) + '</small>' : '') : '<b>Ingen dato</b>';
+  return '<button type="button" class="ho-kamp' + (k.hu === 'Hjemme' ? ' hj' : '') + '" data-gaa="k=' + esc(k.lid + '|' + k.kid) + '"><span class="ho-tid">' + tid + '</span><span class="tu-k">' +
+    (visHold ? '<span class="tu-r">' + esc(h.navn) + ' · ' + esc(h.holdnavn) + '</span>' : '') +
+    '<b>mod ' + esc(k.mod) + (k.flyttet ? ' <span class="ho-flyt">Flyttet</span>' : '') + '</b><span class="tu-by">' + hvor(k) + '</span></span>' + resTag(k) + '</button>';
+}
+function holdKort(h) {
+  const n = h.naeste;
+  const naeste = n ? 'Næste: ' + kortDag(n.t) + klTekst(n.t) + ', ' + (n.hu === 'Hjemme' ? 'hjemme' : 'ude') + ' mod ' + n.mod : (h.status === 'Afsluttet' ? '' : 'Ingen flere kampe i sæsonen');
+  return '<button type="button" class="tu-res" data-gaa="h=' + esc(h.lid + '|' + h.hid) + '"><span class="ho-plc"><b>' + esc(h.plc || '–') + '</b><small>af ' + esc(h.ialt || '?') + '</small></span><span class="tu-k"><b>' + esc(h.navn) + '</b>' +
+    '<span class="tu-by">' + esc([h.holdnavn, h.arr, h.pulje].filter(Boolean).join(' · ')) + '</span><span class="tu-r">' + esc((h.point || '0') + ' point · ' + (h.spillet || '0') + ' spillet') + '</span>' +
+    (naeste ? '<span class="tu-f">' + esc(naeste) + '</span>' : '') + '</span></button>';
+}
+function hvadErDet(h) {
+  if (h.type === 'Senior') {
+    const liga = /^Liga/.test(h.raekke);
+    return (liga ? 'Liga er DTF\'s række for klubbens øvrige hold, under divisionerne for 1. holdet.' : 'Divisionerne er DTF\'s rækker for klubbens 1. hold. Elitedivisionen er øverst.') +
+      ' En holdkamp er 4 singler og 2 doubler. 3-3 afgøres af en golden matchtiebreak.';
+  }
+  if (h.type === 'Veteran') return 'Tennis Østs veteranturnering. Spillerne skal fylde mindst ' + ((/(\d{2})\+/.exec(h.raekke) || [])[1] || '40') + ' år i år. Inde er en holdkamp 6 kampe' + (/70\+/.test(h.raekke) ? ': 2 herresingler, 2 herredoubler, 1 damedouble og 1 mixdouble.' : ': 3 herresingler, 1 damesingle, 1 herredouble og 1 mixdouble.') + ' Vinderen af divisionen rykker op.';
+  if (h.type === 'Junior') return 'Tennis Østs juniorturnering, delt efter alder og bold. Kampene spilles på søndage, helligdage eller skolefridage.';
+  return 'Tennis Østs holdturnering for voksne breddespillere.';
+}
+
+// ---------------------------------------------------------------- Skærmene
+function visHold() {
+  const s = aktivSaeson();
+  const l = saesoner();
+  let h = faner('hold') + opdateret();
+  const t0 = idag(), t1 = plusDage(t0, 13 - ((dt(t0).getUTCDay() + 6) % 7));
+  const snart = kampeI(s).filter((k) => k.st === 'Kommende' && k.t && k.t.slice(0, 10) <= t1);
+  if (snart.length) h += '<button type="button" class="tu-rtk" data-gaa="kampe"><span><b>Denne og næste uge</b><small>' + snart.length + (snart.length === 1 ? ' holdkamp' : ' holdkampe') + ', ' + snart.filter((k) => k.hu === 'Hjemme').length + ' hjemme på Darupvej</small></span><span class="pil" aria-hidden="true">&#8594;</span></button>';
+  if (l.length > 1) h += '<div class="card tu-filt"><span class="lab">Sæson</span>' + chips('saeson', l.map((x) => x.navn), s) + '</div>';
+  const hh = holdI(s);
+  const status = (l.filter((x) => x.navn === s)[0] || {}).status;
+  if (!hh.length) return h + '<div class="card"><p class="tu-p tu-tom">Ingen hold i sæsonen.</p></div>';
+  const arr = {}; hh.forEach((x) => { arr[x.arr] = (arr[x.arr] || 0) + 1; });
+  h += '<p class="tu-ant"><b>' + hh.length + ' hold</b> ' + (status === 'Afsluttet' ? 'spillede ' + esc(s.toLowerCase()) + '. Sæsonen er slut.' : 'i sæsonen, ' + Object.keys(arr).map((a) => arr[a] + ' hos ' + a).join(' og ')) + '</p>';
+  if (status === 'Afsluttet') { const v = hh.filter((x) => x.plc === '1'); if (v.length) h += '<p class="tu-tip"><b>' + v.length + (v.length === 1 ? ' puljevinder' : ' puljevindere') + ':</b> ' + esc(v.map((x) => x.navn).join(', ')) + '</p>'; }
+  TYPE_ORDEN.forEach((typ) => {
+    const g = hh.filter((x) => x.type === typ).sort((a, b) => (a.arr !== b.arr ? (a.arr === 'DTF' ? -1 : 1) : 0) || (a.raekke < b.raekke ? -1 : a.raekke > b.raekke ? 1 : 0) || a.nivTal - b.nivTal || (a.holdnavn < b.holdnavn ? -1 : 1));
+    if (!g.length) return;
+    h += '<p class="tu-uge">' + esc(TYPE_ORD[typ]) + ' · ' + g.length + ' hold</p><div class="tu-grid">' + g.map(holdKort).join('') + '</div>';
+  });
+  return h;
+}
+
+function visHoldet(key) {
+  const [lid, hid] = key.split('|');
+  const h = holdAf(lid, hid);
+  if (!h) return tilbage('Hold') + '<div class="card"><b>Holdet findes ikke længere.</b></div>';
+  let x = '<div class="tu-smal">' + tilbage('Hold') + '<div class="card"><p class="kicker" style="margin:0 0 4px">' + esc([h.arr, h.saeson, h.pulje].filter(Boolean).join(' · ')) + '</p><h2 style="margin:0">' + esc(h.navn) + '</h2>';
+  x += '<p class="tu-hvad">' + esc(h.holdnavn) + (h.plc ? ' · nr. <b>' + esc(h.plc) + ' af ' + esc(h.ialt) + '</b>' : '') + ' · ' + esc(h.point || '0') + ' point' + (h.vut ? ' · ' + esc(h.vut.replace(/-/g, '-')) + ' (V-U-T)' : '') + '</p>';
+  x += '<div class="tu-or"><b>Hvad er det?</b> ' + esc(hvadErDet(h)) + ' <button type="button" class="tu-link-knap" data-gaa="kort">Mere i Kort fortalt</button></div></div>';
+  const st = (D.stillinger[h.lid + '|' + h.did] || []).slice().sort((a, b) => (+a.nr || 99) - (+b.nr || 99));
+  if (st.length) {
+    x += '<div class="card"><h3 class="tu-h">Stillingen</h3><table class="tu-tab"><tr><th>#</th><th>Hold</th><th class="n">K</th><th class="n">V-U-T</th><th class="n">Point</th></tr>';
+    x += st.map((s) => '<tr' + (s.hid === h.hid ? ' class="match"' : '') + '><td>' + esc(s.nr) + '</td><td>' + esc(s.navn) + '</td><td class="n">' + esc(s.s) + '</td><td class="n">' + esc([s.v, s.u, s.t].join('-')) + '</td><td class="n">' + esc(s.p) + '</td></tr>').join('');
+    x += '</table></div>';
+  }
+  const mine = D.kampe.filter((k) => k.lid === h.lid && k.hid === h.hid);
+  x += '<div class="card"><h3 class="tu-h">Kampene</h3>' + (mine.length ? mine.map((k) => kampKort(k, false)).join('') : '<p class="tu-p tu-tom">Ingen kampe endnu.</p>') + '</div>';
+  const sp = (D.spillere[h.lid + '|' + h.hid] || []).filter((s) => s.k > 0).sort((a, b) => b.k - a.k || b.v - a.v || a.n.localeCompare(b.n, 'da'));
+  if (sp.length) x += '<div class="card"><h3 class="tu-h">Spillere på holdet</h3><table class="tu-tab"><tr><th>Spiller</th><th class="n">V-T</th></tr>' + sp.map((s) => '<tr><td>' + esc(s.n) + '</td><td class="n">' + s.v + '-' + s.t + '</td></tr>').join('') + '</table><p class="tu-afl">Alle, der har spillet for holdet i sæsonen. Vundne og tabte kampe.</p></div>';
+  return x + '</div>';
+}
+
+function kampTekst(k) {
+  const h = holdAf(k.lid, k.hid) || {};
+  const l = [h.navn + ' (' + h.holdnavn + ') ' + (k.hu === 'Hjemme' ? 'hjemme' : 'ude') + ' mod ' + k.mod];
+  if (k.t) l.push(stor(langDag(k.t)) + klTekst(k.t) + (k.moed && kl(k.t) ? ', mød ' + klK(k.moed) : ''));
+  if (k.res) l.push('Resultat: ' + k.res + ' (' + k.udf.toLowerCase() + ')');
+  if (k.andet) l.push('Spilles i ' + k.andet + '. Se bemærkningen.');
+  else if (k.sted) l.push(k.sted + (k.adr ? ', ' + k.adr : '') + (k.postnr ? ', ' + k.postnr + ' ' + k.by : ''));
+  if (k.bem) l.push('Bemærkning: ' + k.bem);
+  return l.join('\n');
+}
+function visKamp(key) {
+  const [lid, kid] = key.split('|');
+  const k = D.kampe.filter((x) => x.lid === lid && x.kid === kid)[0];
+  if (!k) return tilbage('Tilbage') + '<div class="card"><b>Holdkampen findes ikke længere.</b></div>';
+  const h = holdAf(k.lid, k.hid) || {};
+  const hj = k.hu === 'Hjemme';
+  let x = '<div class="tu-smal">' + tilbage('Tilbage') + '<div class="card"><p class="kicker" style="margin:0 0 4px">' + esc(h.navn) + (k.runde ? ' · Runde ' + esc(k.runde) : '') + '</p>';
+  x += '<h2 style="margin:0">' + esc(hj ? h.holdnavn + ' mod ' + k.mod : k.mod + ' mod ' + h.holdnavn) + '</h2>';
+  x += '<p class="tu-hvad"><b>' + esc(k.t ? stor(langDag(k.t)) : 'Ingen dato endnu') + '</b> · ' + (hj ? 'Hjemmekamp' : 'Udekamp') + (k.flyttet ? ' <span class="ho-flyt">Flyttet</span>' : '') + '</p>';
+  if (k.res) x += '<div class="ho-tider"><div><small>Resultat</small><b>' + esc(k.res) + '</b></div><div><small>Udfald</small><b style="font-size:18px">' + esc(k.udf) + '</b></div></div>' + (k.point ? '<p class="tu-afl">Point til stillingen: ' + esc(k.point) + '</p>' : '');
+  else if (k.t && kl(k.t)) x += '<div class="ho-tider"><div><small>Mød</small><b>' + esc(k.moed ? klK(k.moed) : '–') + '</b></div><div><small>Start</small><b>' + esc(kl(k.t)) + '</b></div></div>';
+  else if (k.t) x += '<p class="tu-afl">Hjemmeholdet har ikke sat tiden endnu.</p>';
+  if (k.opr && !k.res) x += '<p class="tu-afl">Oprindelig dato i programmet: ' + esc(k.opr) + '</p>';
+  if (k.byttet) x += '<p class="tu-afl">Hjemme- og udehold er byttet om.</p>';
+  x += '</div>';
+  const dk = D.delkampe[k.lid + '|' + k.kid] || [];
+  if (dk.length) {
+    const ord = (a) => (/^[DHM]?S/.test(a.k) ? 0 : 1);
+    x += '<div class="card"><h3 class="tu-h">Kampene</h3>' + dk.slice().sort((a, b) => ord(a) - ord(b) || (a.k < b.k ? -1 : 1)).map((d) => '<div class="ho-dk"><span class="ho-dkn">' + esc(d.k) + '</span><span class="ho-dks"><b>' + esc(d.rtk) + '</b><span>mod ' + esc(d.mod) + (d.besked ? ' · ' + esc(d.besked) : '') + '</span></span>' +
+      (d.saet ? '<span class="ho-res ' + (d.udf === 'Vundet' ? 'v' : d.udf === 'Tabt' ? 't' : 'u') + '">' + esc(d.saet).replace(/ /g, '<br>') + '</span>' : '') + '</div>').join('') + '</div>';
+  }
+  if (!k.res) {
+    x += '<div class="card"><h3 class="tu-h">Hvor</h3>';
+    if (k.andet) x += '<p class="ho-warn">Spilles i ' + esc(k.andet) + ', ikke hos ' + esc(k.sted || 'hjemmeholdet') + '. Se hjemmeholdets bemærkning.</p>';
+    else x += '<p class="tu-p"><b>' + esc(k.sted) + '</b><br>' + esc([k.adr, [k.postnr, k.by].filter(Boolean).join(' ')].filter(Boolean).join(', ')) + '</p>';
+    const q = k.andet ? ((/\(([^)]*\d{4}[^)]*)\)/.exec(k.bem || '') || [])[1] || k.andet) : [k.sted, k.adr, k.postnr, k.by].filter(Boolean).join(', ');
+    if (q) x += '<p style="margin:8px 0 0"><a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) + '" target="_blank" rel="noopener">Vis vej</a></p>';
+    x += '</div>';
+  }
+  if (k.bem) x += '<div class="card"><h3 class="tu-h">Hjemmeholdets bemærkning</h3><p class="tu-p">' + esc(k.bem) + '</p></div>';
+  x += '<button type="button" class="ghost tu-kop" data-kopier="kamp" data-k="' + esc(key) + '">Kopiér som tekst</button><div id="kopMsg" class="msg" aria-live="polite"></div>';
+  return x + '</div>';
+}
+
+function visKampe() {
+  const s = aktivSaeson();
+  let h = faner('kampe') + opdateret();
+  h += '<div class="card tu-filt"><span class="lab">Hvor</span>' + chips('hvor', ['Alle', 'Hjemme', 'Ude'], V.hvor) + '<span class="lab">Hold</span>' + chips('type', ['Alle', 'Dame og herre', 'Veteran', 'Junior'], V.type) + '</div>';
+  const l = kampeI(s).filter((k) => k.st !== 'Spillet' && (V.hvor === 'Alle' || k.hu === V.hvor) && typeOk(holdAf(k.lid, k.hid) || {}));
+  if (!l.length) return h + '<div class="card"><p class="tu-p tu-tom">Ingen kommende holdkampe' + (V.hvor !== 'Alle' || V.type !== 'Alle' ? ' med de valg' : '') + ' i ' + esc(s.toLowerCase()) + '.</p></div>';
+  h += '<p class="tu-ant"><b>' + l.length + (l.length === 1 ? ' holdkamp' : ' holdkampe') + '</b> tilbage' + (V.hvor === 'Hjemme' ? ' på Darupvej' : '') + '</p>';
+  if (V.hvor === 'Hjemme') h += '<p class="tu-tip">Til banebooking og frivillige. Hjemmeholdet sætter tiden og stiller mindst to baner.</p>';
+  const nu = uge(idag());
+  let sidst = null;
+  h += '<div class="tu-grid">';
+  l.slice(0, V.vis).forEach((k) => {
+    const u = k.t ? uge(k.t) + '|' + k.t.slice(0, 4) : 'ingen';
+    if (u !== sidst) { h += '<p class="tu-uge">' + (k.t ? 'Uge ' + uge(k.t) + (uge(k.t) === nu && k.t.slice(0, 10) <= plusDage(idag(), 6) ? ' · denne uge' : '') : 'Uden dato') + '</p>'; sidst = u; }
+    h += kampKort(k, true);
+  });
+  h += '</div>';
+  if (l.length > V.vis) h += '<button type="button" class="ghost tu-mere" id="visMere">Vis ' + Math.min(30, l.length - V.vis) + ' mere</button>';
+  return h;
+}
+
+function spillede(alle) {
+  const s = aktivSaeson();
+  const fra = plusDage(idag(), -14);
+  return kampeI(s).filter((k) => k.st === 'Spillet' && (alle || V.periode !== '14' || (k.t || '').slice(0, 10) >= fra)).sort((a, b) => (a.t < b.t ? 1 : -1));
+}
+function visRes() {
+  let h = faner('res') + opdateret();
+  h += '<div class="card tu-filt"><span class="lab">Periode</span>' + chips('periode', ['Seneste 14 dage', 'Hele sæsonen'], V.periode === '14' ? 'Seneste 14 dage' : 'Hele sæsonen') + '</div>';
+  const l = spillede(false);
+  if (!l.length) return h + '<div class="card"><p class="tu-p tu-tom">Ingen resultater ' + (V.periode === '14' ? 'de seneste 14 dage.' : 'i sæsonen endnu.') + '</p></div>';
+  const n = (u) => l.filter((k) => k.udf === u).length;
+  h += '<p class="tu-ant"><b>' + l.length + (l.length === 1 ? ' holdkamp' : ' holdkampe') + '</b> ' + (V.periode === '14' ? 'de seneste 14 dage' : 'i sæsonen') + ': ' + n('Vundet') + ' vundet, ' + n('Uafgjort') + ' uafgjort, ' + n('Tabt') + ' tabt</p>';
+  h += '<div class="tu-grid">' + l.slice(0, V.vis).map((k) => kampKort(k, true)).join('') + '</div>';
+  if (l.length > V.vis) h += '<button type="button" class="ghost tu-mere" id="visMere">Vis ' + Math.min(30, l.length - V.vis) + ' mere</button>';
+  h += '<p class="tu-afl" style="text-align:center">Tryk på en kamp for at se singler og doubler</p><button type="button" class="ghost tu-kop" data-gaa="kopi">Kopiér resultaterne som tekst</button>';
+  return h;
+}
+
+function kopiTekst() {
+  const s = aktivSaeson();
+  const l = [];
+  const res = spillede(false).slice().reverse();
+  if (V.kopRes && res.length) {
+    l.push('RTK\'s holdkampe ' + (V.periode === '14' ? 'de seneste 14 dage' : s.toLowerCase()));
+    l.push('');
+    res.forEach((k) => {
+      const h = holdAf(k.lid, k.hid) || {};
+      l.push(stor(kortDag(k.t)) + ': ' + h.navn + ' (' + h.holdnavn + ') ' + (k.udf === 'Vundet' ? 'vandt ' + k.res + ' mod ' : k.udf === 'Tabt' ? 'tabte ' + k.res + ' mod ' : 'spillede ' + k.res + ' mod ') + k.mod);
+      if (V.kopNavne) (D.delkampe[k.lid + '|' + k.kid] || []).forEach((d) => l.push('  ' + d.k + ' ' + d.rtk + ' ' + d.saet + (d.udf ? ' (' + d.udf.toLowerCase() + ')' : '')));
+    });
+  }
+  if (V.kopNaeste) {
+    const n = kampeI(s).filter((k) => k.st === 'Kommende').slice(0, 6);
+    if (n.length) {
+      if (l.length) l.push('');
+      l.push('Næste kampe');
+      n.forEach((k) => { const h = holdAf(k.lid, k.hid) || {}; l.push(stor(kortDag(k.t)) + klTekst(k.t) + ': ' + h.navn + ' ' + (k.hu === 'Hjemme' ? 'hjemme' : 'ude') + ' mod ' + k.mod); });
+    }
+  }
+  return l.join('\n');
+}
+function visKopi() {
+  let h = '<div class="tu-smal">' + tilbage('Resultater') + '<div class="card"><h2 style="margin:0 0 8px">Kopiér som tekst</h2><p class="tu-p" style="margin:0 0 10px">Til nyhedsbrev, Facebook eller holdenes grupper.</p>';
+  h += '<label class="tu-cb"><input type="checkbox" data-kop="kopRes"' + (V.kopRes ? ' checked' : '') + '> Resultaterne</label>';
+  h += '<label class="tu-cb"><input type="checkbox" data-kop="kopNaeste"' + (V.kopNaeste ? ' checked' : '') + '> Næste kampe</label>';
+  h += '<label class="tu-cb"><input type="checkbox" data-kop="kopNavne"' + (V.kopNavne ? ' checked' : '') + '> Spillernes navne og sæt</label>';
+  h += '<textarea class="tu-msg" id="kopTekst" aria-label="Teksten">' + esc(kopiTekst()) + '</textarea><button type="button" class="tu-kop" data-kopier="tekst">Kopiér</button><div id="kopMsg" class="msg" aria-live="polite"></div></div></div>';
+  return h;
+}
+
+function visKort() {
+  let h = faner('kort') + '<div class="tu-smal">';
+  h += '<div class="card"><h3 class="tu-h">Hvem arrangerer?</h3><p class="tu-p">' + esc(KORT.hvem) + '</p></div>';
+  h += '<div class="card"><h3 class="tu-h" style="margin-bottom:8px">Niveauerne</h3><ol class="tu-trappe">' + KORT.niveauer.map(([t, b]) => '<li><b>' + esc(t) + '</b>' + esc(b) + '</li>').join('') + '</ol></div>';
+  h += '<div class="card"><h3 class="tu-h">En holdkamp</h3><dl class="tu-ord">' + KORT.holdkamp.map(([t, b]) => '<dt>' + esc(t) + '</dt><dd>' + esc(b) + '</dd>').join('') + '</dl></div>';
+  h += '<div class="card"><h3 class="tu-h">Hvornår spilles der?</h3><dl class="tu-ord">' + KORT.hvornaar.map(([t, b]) => '<dt>' + esc(t) + '</dt><dd>' + esc(b) + '</dd>').join('') + '</dl></div>';
+  h += '<div class="card"><h3 class="tu-h">Ord, man møder</h3><dl class="tu-ord">' + KORT.ord.map(([t, b]) => '<dt>' + esc(t) + '</dt><dd>' + esc(b) + '</dd>').join('') + '</dl></div>';
+  return h + '</div>';
+}
+
+// ---------------------------------------------------------------- Navigation med #, så telefonens tilbage virker
+function rute() { return decodeURIComponent(location.hash.slice(1)) || 'hold'; }
+function tegn() {
+  if (!D) return;
+  const r = rute();
+  $('vis').innerHTML = r.indexOf('h=') === 0 ? visHoldet(r.slice(2)) : r.indexOf('k=') === 0 ? visKamp(r.slice(2)) : r === 'kampe' ? visKampe() : r === 'res' ? visRes() : r === 'kopi' ? visKopi() : r === 'kort' ? visKort() : visHold();
+}
+function gaa(r) {
+  if (r === 'tilbage') { if (history.length > 1 && window.HO_INDE) history.back(); else location.hash = 'hold'; return; }
+  window.HO_INDE = true;
+  V.vis = 30;
+  if ('#' + r === location.hash) tegn(); else location.hash = r;
+  if (/^(h=|k=|kopi)/.test(r)) window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', tegn);
+
+$('vis').addEventListener('click', (e) => {
+  const g = e.target.closest('[data-gaa]');
+  if (g) { gaa(g.dataset.gaa); return; }
+  const c = e.target.closest('[data-chip]');
+  if (c) {
+    const k = c.dataset.chip, v = c.dataset.v;
+    if (k === 'saeson') V.saeson = v;
+    else if (k === 'hvor') V.hvor = v;
+    else if (k === 'type') V.type = v;
+    else if (k === 'periode') V.periode = v === 'Seneste 14 dage' ? '14' : 'alle';
+    V.vis = 30; gemValg(); tegn(); return;
+  }
+  if (e.target.closest('#visMere')) { V.vis += 30; tegn(); return; }
+  const kp = e.target.closest('[data-kopier]');
+  if (kp) {
+    const t = kp.dataset.kopier === 'kamp' ? kampTekst(D.kampe.filter((x) => x.lid + '|' + x.kid === kp.dataset.k)[0]) : $('kopTekst').value;
+    kopier(t, $('kopMsg'), 'Teksten er kopieret.', kp);
+  }
+});
+$('vis').addEventListener('change', (e) => {
+  const k = e.target.dataset && e.target.dataset.kop;
+  if (k) { V[k] = e.target.checked; gemValg(); $('kopTekst').value = kopiTekst(); }
+});
+
+function kopier(tekst, el, ok, knap) {
+  const faerdig = () => { if (el) besked(el, ok, 'ok'); if (knap) { const f = knap.textContent; knap.textContent = 'Kopieret'; setTimeout(() => { knap.textContent = f; }, 1500); } };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tekst).then(faerdig).catch(() => gammel());
+  else gammel();
+  function gammel() { const ta = document.createElement('textarea'); ta.value = tekst; document.body.append(ta); ta.select(); try { document.execCommand('copy'); faerdig(); } catch (err) { if (el) besked(el, 'Kunne ikke kopiere. Markér teksten og kopiér selv.', 'err'); } ta.remove(); }
+}
+
+function huskData() { try { gem('rtk.hold', JSON.stringify({ t: token.slice(-16), d: D })); } catch (e) {} }
+function brug(d) { D = d; tegn(); }
+async function hentData() {
+  try {
+    const d = await motor('holdturneringer', 'liste');
+    besked($('hentMsg'), '');
+    brug(d); huskData();
+  } catch (err) { besked($('hentMsg'), err.message, 'err'); }
+}
+function start() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn;
+  // Den sidste liste vises med det samme, og den nye hentes bagefter
+  try { const g = JSON.parse(hent('rtk.hold') || 'null'); if (g && g.t === token.slice(-16) && g.d) { brug(g.d); besked($('hentMsg'), 'Henter det nyeste …'); } } catch (e) {}
+  hentData();
+}
+function migHusket() { try { const m = JSON.parse(hent('rtk.mig') || 'null'); return m && token && m.t === token.slice(-16) ? m.p : null; } catch (e) { return null; } }
+function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', JSON.stringify({ t: token.slice(-16), p: p })); return p; }); }
+if (!token) location.replace('./?til=holdturneringer.html');
+else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch((e) => besked($('hentMsg'), e.message, 'err')); }
+</script>
+</body>
+</html>
