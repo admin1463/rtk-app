@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="e85db4884a4a">
+<meta name="rtk-version" content="692094f65256">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=2de082c9bdad">
+<link rel="stylesheet" href="../rtk.css?v=cc78992e33b4">
 </head>
 <body>
 <header class="top">
@@ -106,6 +106,24 @@
         <label for="mNr" class="os-lbl" style="margin-top:0">Ketsjernummer</label>
         <input id="mNr" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" required>
         <div id="fraModt"></div>
+        <!-- Omstrengning ved fejl (Lars 14. november 2026): gratis for medlemmet, løn efter trappen, grund og note skal udfyldes -->
+        <b class="os-lbl" id="modusLbl">Hvad er gjort?</b>
+        <div class="os-modus" id="modus" role="group" aria-labelledby="modusLbl">
+          <button type="button" data-modus="betalt" aria-pressed="true">Opstrengning<span>Kode fra sedlen, betalt</span></button>
+          <button type="button" data-modus="om" aria-pressed="false">Omstrengning<span>Fejl fra vores side, gratis</span></button>
+        </div>
+        <div id="omBoks" class="os-boks os-om hidden">
+          <label for="omOrg" class="os-lbl" style="margin-top:0">Den oprindelige opstrengning (ketsjernummer)</label>
+          <input id="omOrg" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6">
+          <div id="omOrgInfo"></div>
+          <p class="po-note" id="omOrgNote" style="margin:6px 0 0">Lad feltet stå tomt, hvis nummeret ikke kan findes.</p>
+          <b class="os-lbl" id="grundLbl">Grund</b>
+          <div class="tt-kat" id="omGrunde" role="group" aria-labelledby="grundLbl" style="flex-wrap:wrap"></div>
+          <div id="ikkeFejlBoks" class="hidden" style="margin-top:12px">
+            <button type="button" class="af-chip info" id="ikkeFejl">Ikke vores fejl</button>
+            <p class="po-note" style="margin:6px 0 0">Medlemmet får en sms om, at opstrengningen koster det normale beløb, og ketsjeren går videre som en almindelig opstrengning.</p>
+          </div>
+        </div>
         <b class="os-lbl" id="kodeLbl">Opstrengningstype fra sedlen</b>
         <div class="os-vaelg" id="koder" role="group" aria-labelledby="kodeLbl"></div>
         <div id="kodeInfo"></div>
@@ -152,7 +170,8 @@
       </div>
       <div class="os-bar" aria-hidden="true"><i id="tMeter" style="width:0"></i></div>
       <div id="tPr" style="margin-top:12px"></div>
-      <p class="po-note">Trappen gælder for alle opstrengere samlet: 65 kr. til nr. 20, 75 kr. fra nr. 21 til 40 og 85 kr. derover.</p>
+      <div id="tOm"></div>
+      <p class="po-note">Trappen gælder for alle opstrengere samlet: 65 kr. til nr. 20, 75 kr. fra nr. 21 til 40 og 85 kr. derover. Omstrengninger tæller med og får samme sats.</p>
     </div>
 
     <!-- Strenge -->
@@ -312,16 +331,23 @@ function raekke(r) {
   const el = document.createElement(klar ? 'div' : 'button'); el.className = 'tt-tr' + (klar ? '' : ' os-knap');
   let st = '', cls = '', b1, b2;
   if (klar) {
-    b1 = (r.kode || r.type || 'Klar') + (r.haardhed ? ' · ' + kg(r.haardhed) : ''); b2 = 'Klar ' + kort(r.klarDato) + ' · ' + r.initialer + (r.smsSendt ? ' · sms sendt' : r.smsFejl ? ' · sms ikke sendt' : '');
+    b1 = (r.kode === 'OM' ? 'Omstrengning' + (r.omAf && r.omAf !== 'ukendt' ? ' af ' + r.omAf : '') : (r.kode || r.type || 'Klar')) + (r.haardhed ? ' · ' + kg(r.haardhed) : ''); b2 = 'Klar ' + kort(r.klarDato) + ' · ' + r.initialer + (r.smsSendt ? ' · sms sendt' : r.smsFejl ? ' · sms ikke sendt' : '');
     // Har ligget i afhentningsskabet i over 14 dage
     if (r.gammel) { st = 'Gammel'; cls = 'bad'; b2 += ' · ' + r.dage + ' dage i skabet'; }
   }
   else {
     if (r.eftersyn) { st = 'Eftersyn'; cls = 'bad'; b1 = 'Problemer med opstrengningen'; b2 = r.note; }
+    else if (r.omOensket) {
+      st = 'Omstrengning'; cls = 'om';
+      const o = r.original;
+      // Korte linjer, så rækken ikke løber ud over kanten. Medlemmets besked står under Fra modtagelsen ved Meld klar
+      b1 = r.omAf === 'ukendt' ? 'Gammelt nr. ukendt' : 'Af nr. ' + r.omAf;
+      b2 = (o ? (o.kode || o.type) + (o.haardhed ? ' ' + kg(o.haardhed) : '') + ' · ' + o.initialer + ' · ' : '') + 'frist ' + kort(r.klarSenest);
+    }
     else if (r.overFrist) { st = 'Over frist'; cls = 'bad'; b1 = 'Frist ' + kort(r.klarSenest); b2 = 'Afleveret ' + kort(r.afleveret); }
     else if (r.senestIdag) { st = 'I dag'; cls = 'v'; b1 = 'Frist i dag'; b2 = 'Afleveret ' + kort(r.afleveret); }
     else { st = 'Modtaget'; cls = 'n'; b1 = 'Frist ' + kort(r.klarSenest); b2 = 'Afleveret ' + kort(r.afleveret); }
-    if (r.sms) b2 += ' · vil have sms';
+    if (r.sms && !r.omOensket) b2 += ' · vil have sms';
     el.type = 'button'; el.setAttribute('aria-label', 'Meld nr. ' + r.nr + ' klar. ' + b1 + '. ' + b2 + '. ' + st);
     el.addEventListener('click', () => aabnKlar(r));
   }
@@ -370,7 +396,7 @@ function visKoeData(k) {
     KOE = {}; k.raekker.forEach((r) => { KOE[r.nr] = r; });
     visModt();
     boks.innerHTML = '';
-    if (ko.length) { const p = document.createElement('p'); p.className = 'po-note'; p.style.margin = '0 0 8px'; p.textContent = 'Eftersyn først, derefter efter frist. Tryk på et ketsjernummer for at melde det klar.'; boks.append(p); }
+    if (ko.length) { const p = document.createElement('p'); p.className = 'po-note'; p.style.margin = '0 0 8px'; p.textContent = 'Eftersyn og omstrengninger først, derefter efter frist. Tryk på et ketsjernummer for at melde det klar.'; boks.append(p); }
     else boks.innerHTML = '<p class="po-note">Køen er tom.</p>';
     ko.forEach((r) => boks.append(raekke(r)));
     hb.innerHTML = '';
@@ -545,7 +571,52 @@ $('qrSkift').addEventListener('click', async () => {
 });
 
 // ---- Meld klar: kode fra sedlen eller Andet. Hårdheden starter ved den vejledende og rettes i halve kg
-const K = { kode: '', kg: null, pris: null };
+const K = { kode: '', kg: null, pris: null, om: false, grund: '', orgRoert: false };
+const OM_GRUNDE = { sprunget: 'Sprunget kort efter', haardhed: 'Forkert hårdhed', streng: 'Forkert streng', loes: 'Løs eller skæv', andet: 'Andet' };
+$('omGrunde').innerHTML = Object.keys(OM_GRUNDE).map((g) => '<button type="button" data-grund="' + g + '" aria-pressed="false">' + esc(OM_GRUNDE[g]) + '</button>').join('');
+function omRaekke() { const v = $('mNr').value.trim().replace(/\D/g, ''); const r = v ? KOE[v.padStart(4, '0')] : null; return r && r.status !== 'Klar' ? r : null; }
+/** Omstrengning: originalens kode og hårdhed bliver forvalgt, så opstrengeren kun retter det, der skal være anderledes */
+// Kode, hårdhed og grund nulstilles ved hvert skift af modus eller nummer, så intet hænger ved fra en anden ketsjer (gennemgangen, fund 4).
+// Et originalnummer, opstrengeren selv har skrevet, overskrives ikke, når ketsjernummeret rettes
+function saetModus(om, r, fraNr) {
+  if (K.om !== om) klarId = nyId();
+  K.om = om; K.grund = ''; K.kode = ''; K.kg = null; K.pris = null;
+  if (!fraNr) K.orgRoert = false;
+  r = r || omRaekke();
+  if (!K.orgRoert) $('omOrg').value = om && r && r.omAf && r.omAf !== 'ukendt' ? r.omAf : '';
+  const o = r && r.original && $('omOrg').value.trim().replace(/\D/g, '').padStart(4, '0') === r.original.nr ? r.original : null;
+  if (om && o && valg && valg.koder[o.kode]) { K.kode = o.kode; K.kg = Number(String(o.haardhed).replace(',', '.')) || valg.koder[o.kode].kg; }
+  visKode();
+}
+function visOm() {
+  $('modus').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.modus === 'om') === K.om)));
+  $('omBoks').classList.toggle('hidden', !K.om);
+  $('omGrunde').querySelectorAll('button').forEach((b) => { const v = b.dataset.grund === K.grund; b.setAttribute('aria-pressed', String(v)); b.classList.toggle('valgt', v); });
+  const r = omRaekke();
+  $('ikkeFejlBoks').classList.toggle('hidden', !(K.om && r && r.omOensket));
+  const o = r && r.original && $('omOrg').value.trim().replace(/\D/g, '').padStart(4, '0') === r.original.nr ? r.original : null;
+  $('omOrgInfo').innerHTML = o ? '<dl><dt>Kode</dt><dd>' + esc((o.kode || o.type) + (o.pris ? ', ' + o.pris + ' kr.' : '')) + '</dd><dt>Streng</dt><dd>' + esc(o.streng + (o.haardhed ? ' · ' + kg(o.haardhed) : '')) + '</dd>' +
+    '<dt>Strenget af</dt><dd>' + esc(o.initialer + ', ' + datoTekst(o.klarDato)) + '</dd>' + (o.hentetDato ? '<dt>Hentet</dt><dd>' + esc(datoTekst(o.hentetDato)) + '</dd>' : '') + '</dl>' : '';
+  $('kodeLbl').textContent = K.om ? 'Strenget om med' : 'Opstrengningstype fra sedlen';
+  $('prisLbl').classList.toggle('hidden', K.om); $('priser').classList.toggle('hidden', K.om);
+  $('noteLbl').textContent = K.om ? 'Note om fejlen (skal udfyldes)' : K.kode === 'Andet' ? 'Hvorfor (skal udfyldes)' : 'Note (valgfri)';
+}
+$('modus').addEventListener('click', (e) => { const b = e.target.closest('button[data-modus]'); if (b) saetModus(b.dataset.modus === 'om'); });
+$('omGrunde').addEventListener('click', (e) => { const b = e.target.closest('button[data-grund]'); if (b) { K.grund = b.dataset.grund; visOm(); } });
+$('omOrg').addEventListener('input', () => { klarId = nyId(); K.orgRoert = true; visOm(); });
+$('ikkeFejl').addEventListener('click', async () => {
+  const r = omRaekke(); if (!r) return;
+  const knap = $('ikkeFejl'); knap.disabled = true;
+  besked($('klarMsg'), 'Gemmer …');
+  try {
+    const x = await motor('opstrengning', 'ikkeFejl', { nr: r.nr, note: $('mNote').value }, nyId());
+    besked($('klarMsg'), 'Nr. ' + x.nr + ' er en almindelig opstrengning' + (x.sms ? ', og medlemmet har fået en sms om at betale' : '. Medlemmet har ikke bedt om sms, så kontakt medlemmet') + '. Meld den klar med koden fra sedlen, når den er strenget.', 'okm');
+    r.omOensket = false; r.omAf = '';
+    $('mNote').value = ''; K.kode = ''; K.kg = null; saetModus(false, r);
+    hentKoe();
+  } catch (err) { besked($('klarMsg'), err.message, 'err'); }
+  knap.disabled = false;
+});
 function fyldValg() {
   if (!valg) return;
   $('koder').innerHTML = Object.keys(valg.koder).map((k) => '<button type="button" data-kode="' + esc(k) + '" aria-pressed="false" aria-label="' + esc(k + ', ' + valg.koder[k].pris + ' kr.') + '">' + esc(k) + '<span>' + valg.koder[k].pris + ' kr.</span></button>').join('') +
@@ -562,7 +633,7 @@ function visKode() {
   $('koder').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.kode === K.kode)));
   $('priser').querySelectorAll('button').forEach((b) => { const v = Number(b.dataset.pris) === K.pris; b.setAttribute('aria-pressed', String(v)); b.classList.toggle('valgt', v); });
   $('andet').classList.toggle('hidden', K.kode !== 'Andet');
-  $('noteLbl').textContent = K.kode === 'Andet' ? 'Hvorfor (skal udfyldes)' : 'Note (valgfri)';
+  visOm();
   const k = valg && valg.koder[K.kode];
   $('kodeInfo').innerHTML = k ? '<div class="os-boks"><b>' + esc(K.kode + ' ' + k.type) + '</b><div class="po-note" style="margin:4px 0 0">' +
     esc(k.langs === k.tvaers ? k.langs + ' · 1 stykke á 12 m' : k.langs + ' langs · ' + k.tvaers + ' tværs · 2 stykker á 6 m') + ' · Ingen forstrækning</div></div>' : '';
@@ -571,7 +642,8 @@ function visKode() {
   const s = strenge();
   $('traek').textContent = !s.length ? '' : s[0] === s[1] ? 'Trækkes fra lageret: 1 opstrengning ' + s[0] + '.' : 'Trækkes fra lageret: ½ opstrengning ' + s[0] + ' og ½ ' + s[1] + '.';
   const nr = $('mNr').value.trim();
-  $('klarKnap').textContent = nr ? 'Meld nr. ' + nr.padStart(4, '0') + ' klar' : 'Meld klar';
+  $('klarKnap').textContent = (nr ? 'Meld nr. ' + nr.padStart(4, '0') + ' klar' : 'Meld klar') + (K.om ? ' som omstrengning' : '');
+  if (K.om && s.length) $('traek').textContent += ' Medlemmet betaler 0 kr. Du får løn efter trappen.';
 }
 $('koder').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-kode]'); if (!b) return;
@@ -586,7 +658,7 @@ $('priser').addEventListener('click', (e) => { const b = e.target.closest('butto
 $('kgNed').addEventListener('click', () => { if (!K.kode) return; if (K.kg === null) K.kg = 24; else if (K.kg > 15) K.kg -= 0.5; visKode(); });
 $('kgOp').addEventListener('click', () => { if (!K.kode) return; if (K.kg === null) K.kg = 24; else if (K.kg < 35) K.kg += 0.5; visKode(); });
 ['aLangs', 'aTvaers'].forEach((id) => $(id).addEventListener('change', visKode));
-$('mNr').addEventListener('input', () => { klarId = nyId(); visKode(); visModt(); });
+$('mNr').addEventListener('input', () => { klarId = nyId(); const r = omRaekke(); if (K.om || (r && r.omOensket)) saetModus(K.om || !!(r && r.omOensket), r, true); else visKode(); visModt(); });
 function aabnKlar(r) {
   // Køen står på samme fane som formularen: vælg nummeret og gå ned til formularen
   $('mNr').value = r.nr;
@@ -594,26 +666,29 @@ function aabnKlar(r) {
   K.kode = ''; K.kg = null; K.pris = null; klarId = nyId();
   $('mNote').value = '';
   FOTOS.m = []; visFotos('m');
-  besked($('klarMsg'), r.eftersyn ? 'Eftersyn: ' + r.note : '');
-  visKode(); visModt();
-  setTimeout(() => { const b = $('koder').querySelector('button'); if (b) b.focus(); }, 50);
+  besked($('klarMsg'), r.eftersyn ? 'Eftersyn: ' + r.note : r.omOensket ? 'Medlemmet beder om omstrengning af ' + (r.omAf === 'ukendt' ? 'en tidligere opstrengning' : 'nr. ' + r.omAf) + '. Vælg Omstrengning, hvis det er vores fejl, eller Ikke vores fejl.' : '');
+  K.om = false; saetModus(!!r.omOensket, r); visModt();
+  setTimeout(() => { const b = (K.om ? $('omGrunde') : $('koder')).querySelector('button'); if (b) b.focus(); }, 50);
 }
 let klarId = nyId();
 $('klarForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   if (fotoTravl) return;
-  if (!K.kode) { besked($('klarMsg'), 'Vælg opstrengningstypen fra sedlen', 'err'); return; }
+  if (K.om && !K.grund) { besked($('klarMsg'), 'Vælg grunden til omstrengningen', 'err'); $('omGrunde').querySelector('button').focus(); return; }
+  if (K.om && !$('mNote').value.trim()) { besked($('klarMsg'), 'Skriv en note om fejlen', 'err'); $('mNote').focus(); return; }
+  if (!K.kode) { besked($('klarMsg'), K.om ? 'Vælg, hvad ketsjeren er strenget om med' : 'Vælg opstrengningstypen fra sedlen', 'err'); return; }
   if (K.kg === null) { besked($('klarMsg'), 'Vælg hårdheden', 'err'); return; }
   const knap = $('klarKnap'); knap.disabled = true;
   besked($('klarMsg'), FOTOS.m.length ? 'Gemmer med billeder …' : 'Gemmer …');
   const d = { nr: $('mNr').value, kode: K.kode, haardhed: K.kg, note: $('mNote').value, billeder: FOTOS.m.slice() };
   if (K.kode === 'Andet') Object.assign(d, { langs: $('aLangs').value, tvaers: $('aTvaers').value, pris: K.pris });
+  if (K.om) Object.assign(d, { kode: 'OM', brugtKode: K.kode, grund: K.grund, original: $('omOrg').value.trim() });
   try {
     const r = await motor('opstrengning', 'meldKlar', d, klarId);
     klarId = nyId();
     const t = r.taeller;
-    besked($('klarMsg'), 'Nr. ' + r.nr + ' er klar' + billedTekst(r) + (r.sms ? ', og medlemmet har fået en sms' : '') + '. Måneden: ' + t.udenTimer + (t.tilNaesteTrin ? ', ' + t.tilNaesteTrin + ' til ' + t.naesteSats + ' kr.' : '') + '.' + billedFejlTekst(r, 'm'), r.billedFejl ? 'err' : 'okm');
-    $('mNr').value = ''; $('mNote').value = ''; K.kode = ''; K.kg = null; K.pris = null; FOTOS.m = []; visFotos('m'); visKode(); visModt();
+    besked($('klarMsg'), 'Nr. ' + r.nr + ' er klar' + (r.omstrengning ? ' som omstrengning. Medlemmet betaler ikke, og Lars har fået besked' : '') + billedTekst(r) + (r.sms ? ', og medlemmet har fået en sms' : '') + '. Måneden: ' + t.udenTimer + (t.tilNaesteTrin ? ', ' + t.tilNaesteTrin + ' til ' + t.naesteSats + ' kr.' : '') + '.' + billedFejlTekst(r, 'm'), r.billedFejl ? 'err' : 'okm');
+    $('mNr').value = ''; $('mNote').value = ''; K.kode = ''; K.kg = null; K.pris = null; FOTOS.m = []; visFotos('m'); $('omOrg').value = ''; K.om = false; K.grund = ''; visKode(); visModt();
     hentKoe(); // rækken flytter til afhentning med det samme (gennemgangen M3)
   } catch (err) { besked($('klarMsg'), err.message, 'err'); if (!err.net) klarId = nyId(); }
   knap.disabled = false;
@@ -786,7 +861,13 @@ function visTaeller(t) {
     const maal = t.tilNaesteTrin ? t.udenTimer + t.tilNaesteTrin : Math.max(t.udenTimer, 1);
     $('tMeter').style.width = Math.min(100, Math.round(100 * t.udenTimer / maal)) + '%';
     const pr = Object.entries(t.prOpstrenger);
-    $('tPr').innerHTML = pr.map(([k, v]) => '<div class="tt-tr"><span class="os-k">' + esc(k) + '</span><div class="tt-mid"><b>' + v + (v === 1 ? ' opstrengning' : ' opstrengninger') + '</b></div></div>').join('');
+    const prOm = t.prOm || {};
+    $('tPr').innerHTML = pr.map(([k, v]) => '<div class="tt-tr"><span class="os-k">' + esc(k) + '</span><div class="tt-mid"><b>' + v + (v === 1 ? ' opstrengning' : ' opstrengninger') + '</b>' +
+      (prOm[k] ? '<span>heraf ' + prOm[k] + (prOm[k] === 1 ? ' omstrengning' : ' omstrengninger') + '</span>' : '') + '</div></div>').join('');
+    // Omstrengninger tæller med på trappen og vises for sig (Lars 14. november 2026)
+    const om = t.omListe || [];
+    $('tOm').innerHTML = !om.length ? '' : '<h3 class="po-h" style="font-size:16px;margin:16px 0 6px">Omstrengninger: ' + om.length + ' af ' + t.ialt + '</h3>' +
+      om.map((o) => '<div class="tt-tr"><span class="os-k nr">' + esc(o.nr) + '</span><div class="tt-mid"><b>' + esc(o.grund) + '</b><span>' + esc((o.af && o.af !== 'ukendt' ? 'Af nr. ' + o.af : 'Gammelt nr. ukendt') + ' · ' + o.initialer + ' · ' + kort(o.klarDato)) + '</span></div><span class="tt-st om">Gratis</span></div>').join('');
   }
 }
 

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="9abcb201c394">
+<meta name="rtk-version" content="8a555624dd5c">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../rtk.css?v=2de082c9bdad">
+<link rel="stylesheet" href="../rtk.css?v=cc78992e33b4">
 </head>
 <body>
 <header class="top">
@@ -116,6 +116,8 @@ const IKON = {
   toej: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5" stroke-linejoin="round"><path d="M16 6l-10 6 4 8 5-2v20h14V18l5 2 4-8-10-6c-1 3-3.5 5-6 5s-5-2-6-5z"/><line x1="19" y1="28" x2="25" y2="28"/></svg>',
   // Privattimer (22. oktober 2026): en træner og en spiller ved nettet
   privat: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="9" r="3.5"/><path d="M11 13v13M11 17l-5 5M11 17l6-3M11 26l-4 10M11 26l4 10"/><circle cx="33" cy="11" r="3"/><path d="M33 14v11M33 18l5 4M33 18l-5 3M33 25l-3 9M33 25l3 9"/><line x1="22" y1="20" x2="22" y2="38" stroke-dasharray="2 2"/><circle cx="22" cy="14" r="1.6"/></svg>',
+  // Turneringer (14. november 2026): en pokal
+  pokal: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><path d="M14 6h16v9a8 8 0 0 1-16 0z"/><path d="M14 9H8a5 5 0 0 0 6 7"/><path d="M30 9h6a5 5 0 0 1-6 7"/><line x1="22" y1="23" x2="22" y2="31"/><path d="M15 38h14l-2-7H17z"/></svg>',
   ketsjer: '<svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true" fill="none" stroke="#0F2537" stroke-width="1.5"><ellipse cx="17" cy="16" rx="11" ry="13"/><line x1="9" y1="10" x2="25" y2="10"/><line x1="7" y1="16" x2="27" y2="16"/><line x1="9" y1="22" x2="25" y2="22"/><line x1="12" y1="4" x2="12" y2="28"/><line x1="17" y1="3" x2="17" y2="29"/><line x1="22" y1="4" x2="22" y2="28"/><line x1="24" y1="27" x2="38" y2="41" stroke-width="3"/></svg>'
 };
 
@@ -125,6 +127,10 @@ const IKON = {
 // En person med flere roller ser felterne for alle sine roller. Boldregnskabet er som før for cheftræner og boldansvarlig (Lars 19. oktober).
 const ANSVARLIG = ['admin', 'cheftraener', 'boldansvarlig'];
 const FELTER = [
+  // Turneringer (Lars 14. november 2026): alle på personalesiden ser feltet. Motoren henter fra DTF og DGI hver søndag
+  { afsnit: 'arbejde', navn: 'Turneringer', side: 'turneringer.html', ikon: 'pokal', ny: true,
+    roller: ['opstrenger', 'traener', 'kaptajn', 'cheftraener', 'boldansvarlig', 'bogholder', 'koordinator', 'oevrige', 'bestyrelse', 'padel', 'padelcircle'],
+    tekst: () => 'Find turneringer til dig selv eller dit hold efter alder og niveau. Gem dine favoritter.' },
   { afsnit: 'arbejde', navn: (p) => harRolle(p, ANSVARLIG) ? 'Boldregnskab' : 'Tag bolde', side: 'bolde.html', ikon: 'bold', roller: ['traener', 'cheftraener', 'boldansvarlig'],
     tekst: (p) => harRolle(p, ANSVARLIG) ? 'Tag bolde, lager, forbrug, optælling og bestilling.' : 'Tag bolde til træning, og se lageret.' },
   // Arbejdstøj og udstyr fra kontoen hos Sports Group (Lars 16. oktober kl. 20.58). Alle med en rolle kan få en tildeling.
@@ -291,6 +297,8 @@ function visFelter(p) {
       if (f.snart) a.querySelector('svg').style.opacity = '.45';
       const tk = document.createElement('span'); tk.className = 'tk';
       const b = document.createElement('b'); b.textContent = navnPaa(f, p);
+      // Et nyt felt får et lille mærke "Ny" (Turneringer, 14. november 2026)
+      if (f.ny) { const n = document.createElement('span'); n.textContent = 'Ny'; n.style.cssText = 'display:inline-block;margin-left:8px;padding:1px 8px;border-radius:999px;background:var(--pink);color:#fff;font-size:12px;font-weight:700;vertical-align:4px'; b.append(n); }
       const s = document.createElement('span'); s.className = 'tekst'; s.textContent = f.tekst(p);
       tk.append(b, s);
       if (f.snart) { const sn = document.createElement('span'); sn.className = 'snart'; sn.textContent = 'Kommer snart'; tk.append(sn); a.append(tk); g.append(a); return; }

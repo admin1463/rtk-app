@@ -34,6 +34,7 @@
     'Login med kode er midlertidigt spærret. Prøv igen om 15 minutter.': 'Login with a code is temporarily blocked. Please try again in 15 minutes.',
     'Login med pinkode er slået fra. Brug dit mobilnummer og en kode på sms.': 'Login with a PIN is turned off. Use your mobile number and a code by text message.',
     'Du har sendt mange fejlmeldinger. Prøv igen om en time, eller skriv til kontakt@roskildetennisklub.dk.': 'You have sent many error reports. Please try again in an hour, or write to kontakt@roskildetennisklub.dk.',
+    'Skriv kort, hvad der er galt med opstrengningen': 'Briefly describe what is wrong with the stringing.',
     'Du har skrevet mange gange til opstrengeren. Prøv igen om en time, eller skriv til kontakt@roskildetennisklub.dk.': 'You have written to the stringer many times. Please try again in an hour, or write to kontakt@roskildetennisklub.dk.',
     'Forkert kode. Prøv igen.': 'Wrong code. Please try again.',
     'Kontoen er ikke aktiv. Skriv til kontakt@roskildetennisklub.dk.': 'The account is not active. Please write to kontakt@roskildetennisklub.dk.',

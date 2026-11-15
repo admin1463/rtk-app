@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="99e75c71e2e4">
+<meta name="rtk-version" content="51f5e32ca90b">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rtk.css?v=2de082c9bdad">
+<link rel="stylesheet" href="rtk.css?v=cc78992e33b4">
 <style>.os-intro{font-size:17px;line-height:1.5;margin:0 0 14px}.os-intro-trin li div span{display:block;margin-top:2px}</style>
 </head>
 <body>
@@ -65,6 +65,7 @@
           <li><span class="n" aria-hidden="true">5</span><div><b data-t="i5">Hent den i afhentningsskabet</b><span data-t="i5t">Når ketsjeren er strenget, får du en sms med koden til afhentningsskabet, senest tre hverdage efter. Sedlen sidder stadig på ketsjeren. Lås skabet igen, når du har taget den.</span></div></li>
         </ol>
         <p class="hint" data-t="introNote">En ketsjer pr. scanning. Har du flere ketsjere med, scanner du én gang for hver.</p>
+        <p class="hint" data-t="introOm">Er en opstrengning ikke i orden, eller springer strengen kort efter, strenger vi den om uden beregning. Sæt kryds i "Omstrengning af fejl", når du scanner QR-koden.</p>
       </section>
     </section>
 
@@ -131,6 +132,14 @@ window.TEKSTER = {
     i4: 'Læg ketsjeren i afleveringsskabet', i4t: 'Lås op med koden fra telefonen, læg ketsjeren ind, og lås igen.',
     i5: 'Hent den i afhentningsskabet', i5t: 'Når ketsjeren er strenget, får du en sms med koden til afhentningsskabet, senest tre hverdage efter. Sedlen sidder stadig på ketsjeren. Lås skabet igen, når du har taget den.',
     introNote: 'En ketsjer pr. scanning. Har du flere ketsjere med, scanner du én gang for hver.',
+    introOm: 'Er en opstrengning ikke i orden, eller springer strengen kort efter, strenger vi den om uden beregning. Sæt kryds i "Omstrengning af fejl", når du scanner QR-koden.',
+    omH: 'Omstrengning af fejl', omT: 'Strengen er sprunget kort tid efter, eller ketsjeren er ikke strenget, som den skulle. Du skal ikke betale igen.',
+    omGl: 'Det gamle ketsjernummer', omGlSmaa: '(hvis du har det)', omHv: 'Hvad er der galt?', omHvMangler: 'Skriv kort, hvad der er galt med opstrengningen.',
+    omMaerke: 'Omstrengning af nr. {nr}', omMaerkeU: 'Omstrengning af fejl',
+    omNote: 'Opstrengeren ser på ketsjeren. Er det ikke en fejl fra vores side, hører du fra os, før vi strenger.',
+    t1om: 'Udfyld en seddel fra skabet', t1omt: 'Skriv ketsjernummeret, "Omstrengning" og opstrengningstypen (fx B1) på sedlen.',
+    t2om: 'Du skal ikke betale', t2omt: 'Vi strenger ketsjeren om uden beregning. Er det ikke en fejl fra vores side, sender opstrengeren dig en sms, før vi går i gang.',
+    omSendt: 'Opstrengeren har fået besked om, at ketsjeren er på vej, og hvad der er galt.',
     titel: 'Opstrengning · Mit RTK', sideTitel: 'Opstrengning', side: 'Medlemssiden', tilForsiden: 'Til forsiden',
     klubLink: 'Roskilde Tennis Klubs hjemmeside (åbner i ny fane)', racketlifeLink: 'Racketlife (åbner i ny fane)',
     klarSpm: 'Er min ketsjer klar?', nrLabel: 'Dit ketsjernummer', seStatus: 'Se status',
@@ -184,6 +193,14 @@ window.TEKSTER = {
     i4: 'Put the racket in the drop-off locker', i4t: 'Unlock it with the code from your phone, put the racket in, and lock it again.',
     i5: 'Collect it from the collection locker', i5t: 'When your racket has been strung, you get a text message with the code for the collection locker, no later than three working days later. The slip is still on the racket. Lock the locker again when you have taken it.',
     introNote: 'One racket per scan. If you have more than one racket, scan once for each.',
+    introOm: 'If a stringing is not right, or a string breaks shortly after, we restring it free of charge. Tick "Restring a fault" when you scan the QR code.',
+    omH: 'Restring a fault', omT: 'A string broke shortly after, or the racket was not strung as it should have been. You do not pay again.',
+    omGl: 'The old racket number', omGlSmaa: '(if you have it)', omHv: 'What is wrong?', omHvMangler: 'Briefly describe what is wrong with the stringing.',
+    omMaerke: 'Restring of no. {nr}', omMaerkeU: 'Restring a fault',
+    omNote: 'The stringer will look at the racket. If it is not a fault on our side, we will contact you before we string it.',
+    t1om: 'Fill in a slip from the locker', t1omt: 'Write the racket number, "Restring" and the stringing type (e.g. B1) on the slip.',
+    t2om: 'You do not pay', t2omt: 'We restring the racket free of charge. If it is not a fault on our side, the stringer will text you before we start.',
+    omSendt: 'The stringer has been told that the racket is on its way and what is wrong.',
     titel: 'Racket stringing · Mit RTK', sideTitel: 'Racket stringing', side: 'Members’ area', tilForsiden: 'To the front page',
     klubLink: 'Roskilde Tennis Klub website (opens in a new tab)', racketlifeLink: 'Racketlife (opens in a new tab)',
     klarSpm: 'Is my racket ready?', nrLabel: 'Your racket number', seStatus: 'Check status',
@@ -472,18 +489,42 @@ function kodeBoks(lbl, smaa, kode) {
 }
 // Mobilnummeret er obligatorisk ved scanningen, så sms'en med koden kan sendes, når ketsjeren er klar (Lars 21. oktober kl. 19.46)
 let nrMobil = '';
+// Omstrengning af fejl (Lars 14. november 2026): kryds, det gamle nummer og hvad der er galt. Medlemmet betaler ikke
+const OM = { til: false, gl: '', hv: '' };
+function omLaes() { if ($('nrOm')) { OM.til = $('nrOm').checked; OM.gl = $('nrGl').value; OM.hv = $('nrHv').value; } }
+function omBoks() {
+  return '<div class="os-boks" id="omBoks" style="margin:0 0 12px' + (OM.til ? ';border-color:var(--pink)' : '') + '">' +
+    '<label for="nrOm" style="display:flex;gap:12px;align-items:flex-start;font-weight:700;font-size:16px;cursor:pointer">' +
+    '<input type="checkbox" id="nrOm" aria-controls="omFelter" aria-expanded="' + OM.til + '"' + (OM.til ? ' checked' : '') + ' style="width:24px;height:24px;min-height:0;margin:0;padding:0;flex:0 0 24px;accent-color:var(--pink)">' +
+    '<span>' + esc(t('omH')) + '<span style="display:block;font-weight:400;font-size:14px;color:var(--muted);margin-top:3px">' + esc(t('omT')) + '</span></span></label>' +
+    '<div id="omFelter"' + (OM.til ? '' : ' class="hidden"') + '>' +
+    '<label for="nrGl" class="os-lbl">' + esc(t('omGl')) + ' <span style="font-weight:400;color:var(--muted)">' + esc(t('omGlSmaa')) + '</span></label>' +
+    '<input id="nrGl" class="os-felt" inputmode="numeric" pattern="[0-9]*" maxlength="6" style="width:100%" value="' + esc(OM.gl) + '">' +
+    '<label for="nrHv" class="os-lbl">' + esc(t('omHv')) + '</label>' +
+    '<textarea id="nrHv" class="os-felt" rows="3" maxlength="200" style="width:100%;resize:vertical">' + esc(OM.hv) + '</textarea></div></div>';
+}
 function visMobil(fejl) {
   const boks = $('nummerVis');
   if ($('nrMobil')) nrMobil = $('nrMobil').value;
+  omLaes();
   $('heroH').setAttribute('data-t', 'afleverH'); $('heroH').textContent = t('afleverH');
   boks.innerHTML = '<form id="nrForm" autocomplete="on"><p style="margin:0 0 12px;font-size:16px">' + esc(t('mobilIntro')) + '</p>' +
     '<label for="nrMobil" class="os-lbl" style="margin-top:0">' + esc(t('mobilLbl')) + '</label>' +
     '<input id="nrMobil" class="os-felt" type="tel" inputmode="tel" autocomplete="tel" required style="width:100%;margin-bottom:12px" value="' + esc(nrMobil) + '">' +
+    omBoks() +
     '<button type="submit" class="af-chip fyldt os-stor" id="nrFaa" style="width:100%;justify-content:center">' + esc(t('faaNr')) + '</button>' +
     '<div id="nrMsg" class="msg' + (fejl ? ' err' : '') + '" aria-live="polite">' + esc(fejl ? fejlTekst(fejl) : '') + '</div>' +
     '<p class="po-note" style="margin:10px 0 0">' + esc(t('mobilNote')) + '</p></form>';
-  $('nrForm').addEventListener('submit', (e) => { e.preventDefault(); nrMobil = $('nrMobil').value.trim(); if (nrMobil) hentNummer(); });
-  if (fejl) $('nrMobil').focus();
+  $('nrOm').addEventListener('change', () => {
+    omLaes(); $('omFelter').classList.toggle('hidden', !OM.til); $('omBoks').style.borderColor = OM.til ? 'var(--pink)' : ''; $('nrOm').setAttribute('aria-expanded', String(OM.til));
+    if (OM.til) $('nrGl').focus();
+  });
+  $('nrForm').addEventListener('submit', (e) => {
+    e.preventDefault(); nrMobil = $('nrMobil').value.trim(); omLaes();
+    if (OM.til && !OM.hv.trim()) { const m = $('nrMsg'); m.textContent = t('omHvMangler'); m.className = 'msg err'; $('nrHv').focus(); return; }
+    if (nrMobil) hentNummer();
+  });
+  if (fejl) (/galt/.test(fejl) && OM.til ? $('nrHv') : /for langt/.test(fejl) && OM.til ? $('nrGl') : $('nrMobil')).focus();
 }
 function visNummer() {
   const boks = $('nummerVis');
@@ -497,18 +538,23 @@ function visNummer() {
   }
   const n = nummer.nr;
   boks.innerHTML = '<div class="nr-stor"><div class="lbl">' + esc(t('ditNrLbl')) + '</div><div class="tal" id="nrTal">' + esc(n) + '</div>' +
-    '<div class="tid">' + esc(t('trukket', { dato: datoTekst(nummer.trukket.slice(0, 10)), kl: kl(nummer.trukket) })) + '</div></div>' +
+    '<div class="tid">' + esc(t('trukket', { dato: datoTekst(nummer.trukket.slice(0, 10)), kl: kl(nummer.trukket) })) + '</div>' +
+    (nummer.omstrengning ? '<span class="nr-om" style="display:inline-block;margin-top:8px;font-size:13px;font-weight:700;border-radius:99px;padding:4px 12px;background:#FDE6EF;color:#B0004A">' +
+      esc(nummer.omAf ? t('omMaerke', { nr: nummer.omAf }) : t('omMaerkeU')) + '</span>' : '') + '</div>' +
     (nummer.kode ? kodeBoks('kodeAfl', 'kodeAflSmaa', nummer.kode) : '') +
     '<ol class="nr-trin">' +
-    '<li><span class="n" aria-hidden="true">1</span><div><b>' + esc(t('t1')) + '</b><span>' + esc(t('t1t')) + '</span></div></li>' +
-    '<li><span class="n" aria-hidden="true">2</span><div><b>' + esc(t('t2')) + '</b><span>' + esc(t('t2t')) + '</span>' +
-    '<div class="nr-mp"><span>' + esc(t('besked')) + '</span><code>' + esc(n) + '</code><button type="button" class="af-chip lille info" id="nrKopier" aria-label="' + esc(t('kopierNr', { nr: n })) + '">' + esc(t('kopier')) + '</button></div></div></li>' +
+    (nummer.omstrengning
+      ? '<li><span class="n" aria-hidden="true">1</span><div><b>' + esc(t('t1om')) + '</b><span>' + esc(t('t1omt')) + '</span></div></li>' +
+        '<li><span class="n" aria-hidden="true" style="background:var(--ok)">2</span><div><b>' + esc(t('t2om')) + '</b><span>' + esc(t('t2omt')) + '</span></div></li>'
+      : '<li><span class="n" aria-hidden="true">1</span><div><b>' + esc(t('t1')) + '</b><span>' + esc(t('t1t')) + '</span></div></li>' +
+        '<li><span class="n" aria-hidden="true">2</span><div><b>' + esc(t('t2')) + '</b><span>' + esc(t('t2t')) + '</span>' +
+        '<div class="nr-mp"><span>' + esc(t('besked')) + '</span><code>' + esc(n) + '</code><button type="button" class="af-chip lille info" id="nrKopier" aria-label="' + esc(t('kopierNr', { nr: n })) + '">' + esc(t('kopier')) + '</button></div></div></li>') +
     (nummer.kode ? '<li><span class="n" aria-hidden="true">3</span><div><b>' + esc(t('t3k')) + '</b><span>' + esc(t('t3kt')) + '</span></div></li>'
       : '<li><span class="n" aria-hidden="true">3</span><div><b>' + esc(t('t3')) + '</b><span>' + esc(t('t3t', { dato: datoTekst(nummer.klarSenest) })) + '</span></div></li>') +
-    '</ol>' + (nummer.mobil ? '<p class="po-note">' + esc(t('smsTil', { mobil: nummer.mobil, dato: datoTekst(nummer.klarSenest) })) + '</p>' : '') +
+    '</ol>' + (nummer.omstrengning ? '<p class="po-note">' + esc(t('omSendt')) + '</p>' : '') + (nummer.mobil ? '<p class="po-note">' + esc(t('smsTil', { mobil: nummer.mobil, dato: datoTekst(nummer.klarSenest) })) + '</p>' : '') +
     '<p class="po-note">' + esc(t(nummer.kode ? 'skaermbilledeK' : 'skaermbillede')) + '</p>' +
     '<div class="af-chips"><button type="button" class="af-chip info" id="nrStatus">' + esc(t('klarSpm')) + '</button><a class="af-chip info" href="#priser">' + esc(t('seListe')) + '</a></div>';
-  $('nrKopier').addEventListener('click', async () => {
+  if ($('nrKopier')) $('nrKopier').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(n); $('nrKopier').textContent = t('kopieret'); } catch (e) { /* uden adgang til udklipsholderen står nummeret stadig synligt */ }
   });
   $('nrStatus').addEventListener('click', () => { visTilstand(false); $('nr').value = n; $('opslagForm').requestSubmit(); $('nr').focus(); });
@@ -517,8 +563,10 @@ async function hentNummer() {
   if (!nrMobil) { nummer = { spoerg: true }; visNummer(); return; }
   nummer = null; visNummer();
   // Samme id ved "Prøv igen", så et kald, der nåede frem, ikke trækker et nummer mere
-  try { nummer = await motor('opstrengning', 'nytNummer', { qr: qrKode, mobil: nrMobil }, nummerId); nummerId = nyId(); if (nummer.noegle) noegleGem(nummer.nr, nummer.noegle); }
-  catch (err) { nummer = /mobilnummer/.test(err.message) ? { spoerg: true, fejlMobil: err.message } : { fejl: err.message }; }
+  const d = { qr: qrKode, mobil: nrMobil };
+  if (OM.til) Object.assign(d, { omstrengning: true, gammelNr: OM.gl.trim(), besked: OM.hv.trim() });
+  try { nummer = await motor('opstrengning', 'nytNummer', d, nummerId); nummerId = nyId(); if (nummer.noegle) noegleGem(nummer.nr, nummer.noegle); }
+  catch (err) { nummer = /mobilnummer|galt|for langt/i.test(err.message) ? { spoerg: true, fejlMobil: err.message } : { fejl: err.message }; }
   visNummer();
   const tal = $('nrTal'); if (tal) { tal.setAttribute('tabindex', '-1'); tal.focus(); }
 }

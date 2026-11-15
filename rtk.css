@@ -855,6 +855,17 @@ a.af-chip{display:inline-flex;align-items:center;text-decoration:none}
 .tt-st.ok{background:var(--okbg);color:var(--ok)}
 .tt-st.v{background:var(--waitbg);color:var(--wait)}
 .tt-st.n{background:var(--soft);color:var(--muted)}
+/* Omstrengning ved fejl (Lars 14. november 2026) */
+.tt-st.om{background:#FDE6EF;color:#B0004A}
+.os-modus{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:6px 0 4px}
+.os-modus button{min-height:54px;border:1.5px solid var(--line2);border-radius:10px;background:#FFFFFF;font-weight:800;font-size:15px;color:inherit;line-height:1.15;padding:6px}
+.os-modus button span{display:block;font-size:12px;font-weight:600;color:var(--muted)}
+.os-modus button[aria-pressed="true"]{border-color:var(--pink);background:#FDE6EF;color:#B0004A}
+.os-modus button[aria-pressed="true"] span{color:#B0004A}
+.os-om{border-color:var(--pink)}
+.os-om dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:8px 0 0;font-size:14px}
+.os-om dt{color:var(--muted)}
+.os-om dd{margin:0}
 .tt-tom{border:2px dashed var(--line2);border-radius:12px;padding:18px;color:var(--muted)}
 .tt-tom b{display:block;color:var(--ink);font-size:17px;margin:0 0 4px}
 details.af-mere.tt-valg summary,details.af-mere.tt-gruppe summary{display:flex;align-items:center;gap:10px;list-style:none}
