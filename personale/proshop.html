@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="03aa693e02c9">
+<script src="/opdater.js?v=f299a739b234" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Pro shop: lager · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css?v=cc78992e33b4">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Pro shop: lager</b><span>Administration</span></span>
+    </div>
+  </div>
+</header>
+
+<style>
+/* Pro shop: lager (15. november 2026). Mockup kilder/mockup/proshop_lager.png, version 3 */
+.ps-kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
+.ps-kpi div{background:#E6F0EE;border-radius:10px;padding:10px 12px}.ps-kpi small{display:block;font-size:13px;color:var(--muted)}.ps-kpi b{font-size:22px;color:var(--teal)}
+.ps-alarm,.ps-frist,.ps-info{border-radius:10px;padding:10px 12px;font-size:15px;margin:0 0 8px;line-height:1.4}
+.ps-alarm b,.ps-frist b,.ps-info b{display:block}
+.ps-alarm{background:#FCE4EC;color:#B0004A}.ps-frist{background:#FFF4D6;color:#6B4E00}.ps-info{background:#E6F0EE;color:var(--teal)}
+.ps-uge{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:16px 0 6px}
+.ps-rk{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:0 0 6px;font-weight:400;min-height:0;white-space:normal}
+.ps-n{flex:none;width:52px;text-align:center;font-weight:800;font-size:22px;line-height:1;color:var(--teal)}.ps-n.nul{color:#B0004A}
+.ps-n small{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-top:3px}
+.ps-k{flex:1;display:flex;flex-direction:column;min-width:0}.ps-k b{font-size:16px}.ps-k small{font-size:13px;color:var(--muted)}
+.ps-tag{flex:none;display:inline-block;white-space:nowrap;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700}
+.ps-tag.min{background:#FCE4EC;color:#B0004A}.ps-tag.rest{background:#EEF1F3;color:#4A5A66}.ps-tag.ok{background:#E3F2E8;color:#1E6B3A}
+.ps-tab{width:100%;border-collapse:collapse;font-size:14px}.ps-tab td,.ps-tab th{padding:6px 4px 6px 0;border-bottom:1px solid #E3E7EA;text-align:left;vertical-align:top}
+.ps-tab th{font-size:12px;color:var(--muted);font-weight:700}.ps-tab td.n,.ps-tab th.n{text-align:right}
+.ps-step{display:flex;align-items:center;gap:6px;flex:none}
+.ps-step button{width:40px;height:40px;min-height:40px;padding:0;border-radius:50%;border:1.5px solid var(--teal);font-size:20px;line-height:1}
+.ps-step input{width:64px;min-height:40px;padding:6px;text-align:center;font-size:18px;font-weight:700}
+.ps-e{flex:none;width:44px;font-size:13px;font-weight:700;color:var(--muted)}
+.ps-mod{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #E3E7EA}.ps-mod:last-child{border:0}
+.ps-tl div{position:relative;padding:0 0 10px 20px;font-size:14px}.ps-tl i{position:absolute;left:2px;top:5px;width:10px;height:10px;border-radius:50%;background:#C9D3D1}
+.ps-tl i.plus{background:#1E6B3A}.ps-tl i.minus{background:#E6005C}
+.ps-fl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ps-knapper{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.ps-knapper button{flex:1 1 auto}
+.ps-tilbage{display:inline-block;font-size:15px;font-weight:600;color:var(--teal);margin:0 0 10px;text-decoration:none}
+.ps-plus{color:#1E6B3A;font-weight:700}.ps-minus{color:#B0004A;font-weight:700}
+.ps-kd{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted)}
+.ps-cb{display:flex!important;align-items:center;gap:10px;font-weight:600;margin:12px 0}.ps-cb input{width:22px;height:22px;min-height:0;accent-color:var(--pink)}
+.card h3{margin:0 0 8px;font-size:17px}
+.ps-lin{display:grid;grid-template-columns:1fr 1fr 48px;gap:6px 8px;align-items:end;margin:0 0 14px;padding:0 0 12px;border-bottom:1px solid #E3E7EA}.ps-lin .hel{grid-column:1/-1}
+.ps-lin button{min-height:50px;padding:0}
+/* Markedspriser (15. november 2026 kl. 22.51) */
+/* Fem faner skal kunne ses på en telefon uden at rulle (Lars 16. november kl. 6.25) */
+@media (max-width:480px){#faner{gap:4px}#faner button{padding-left:8px;padding-right:8px;font-size:14px}}
+.ps-mk{font-size:12px;color:var(--muted)}.ps-mk .over{color:#B0004A;font-weight:700}.ps-mk .op{color:#1E6B3A;font-weight:700}
+.ps-fs{border-bottom:1px solid #E3E7EA;padding:10px 0}.ps-fs:last-child{border:0}.ps-fs button{margin-top:8px}
+</style>
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold smal">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+  <div id="omraade" class="hidden">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div id="ikkeAdmin" class="card hidden"><b>Kun for administratorer</b><p class="hint">Pro shoppens lager, ordrer, optælling, salg og markedspriser.</p></div>
+    <div id="indhold" class="hidden">
+      <div class="tabs" role="tablist" id="faner">
+        <button type="button" role="tab" data-fane="lager">Lager</button>
+        <button type="button" role="tab" data-fane="ordrer">Ordrer</button>
+        <button type="button" role="tab" data-fane="optael">Optælling</button>
+        <button type="button" role="tab" data-fane="salg">Salg</button>
+        <button type="button" role="tab" data-fane="marked">Priser</button>
+      </div>
+      <div id="hentMsg" class="msg" aria-live="polite">Henter …</div>
+      <div id="vis"></div>
+    </div>
+  </div>
+  </div>
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script src="../konfig.js?v=869b7a78d104"></script>
+<script src="../adminpin.js?v=072d3999ca21"></script>
+<script>
+// Adressen til motoren står i konfig.js (fælles for alle sider)
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
+
+// Pro shop: lager (Lars 15. november 2026 kl. 20.12 til 20.26). Kun administratorer med pinkoden.
+// Faner: Lager, Ordrer, Optælling og Salg. Enheden (stk., rør, pakke) står ved hvert tal (Lars kl. 20.24).
+// Optællingen er blind: det forventede vises først, når der er talt. Motoren tjekker alt igen (moduler/proshop.gs).
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const kr = (n) => Number(n || 0).toLocaleString('da-DK', { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + ' kr.';
+const kr2 = (n) => Number(n || 0).toLocaleString('da-DK', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' kr.';
+const talTekst = (n) => String(n).replace('.', ',');
+const flertal = (e, n) => (Math.abs(n) === 1 ? e : ({ pakke: 'pakker', pose: 'poser' }[e] || e));
+const mgd = (n, e) => talTekst(n) + ' ' + flertal(e || 'stk.', n);
+const kortE = (e) => ({ pakke: 'pk.', pose: 'pose', par: 'par', 'stk.': 'stk.', 'rør': 'rør' }[e] || e);
+const dag = (iso) => { if (!iso) return ''; const [a, m, d] = iso.split('-').map(Number); return new Date(a, m - 1, d).toLocaleDateString('da-DK', { weekday: 'short', day: 'numeric', month: 'short', year: a !== new Date().getFullYear() ? 'numeric' : undefined }); };
+const idag = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+let token = hent('rtk.token') || '';
+let person = null;
+let O = null; // seneste oversigt
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+
+async function motor(modul, handling, data) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, apin: (window.RTK_APIN ? RTK_APIN.bevis() : ''), id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()) }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  let svar;
+  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (!svar.ok && svar.apin && window.RTK_APIN) { await RTK_APIN.spoerg(motor); return motor.apply(null, arguments); }
+  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  return svar.data;
+}
+const ps = (h, d) => motor('proshop', h, d);
+
+function logUd(udloebet) {
+  if (window.RTK_UD) return; window.RTK_UD = true;
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null); gem('rtk.mig', null);
+  (window.RTKV ? RTKV.logUd() : Promise.resolve()).then(() => location.replace(udloebet ? './?til=proshop.html&igen=1' : './'));
+}
+$('logud').addEventListener('click', () => logUd(false));
+
+// ------------------------------------------------------------ navigation
+const vis = (html) => { $('vis').innerHTML = html; };
+function fane(navn) { document.querySelectorAll('#faner button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.fane === navn))); }
+document.querySelectorAll('#faner button').forEach((b) => b.addEventListener('click', () => { location.hash = b.dataset.fane; }));
+function gaa(h) { if (location.hash === '#' + h) route(); else location.hash = h; }
+addEventListener('hashchange', route);
+async function route() {
+  const h = decodeURIComponent(location.hash.replace(/^#/, '')) || 'lager';
+  const [a, b] = h.split('/');
+  besked($('hentMsg'), 'Henter …');
+  try {
+    if (a === 'lager' || a === 'udgaaede') { fane('lager'); await visLager(a === 'udgaaede'); }
+    else if (a === 'vare') { fane('lager'); await visVare(b); }
+    else if (a === 'ny-vare') { fane('lager'); await visVareForm(null); }
+    else if (a === 'ret') { fane('lager'); await visVareForm(b); }
+    else if (a === 'lagerpr') { fane('lager'); await visLagerPr(); }
+    else if (a === 'marked') { fane('marked'); await visMarked(); }
+    else if (a === 'ordrer') { fane('ordrer'); await visOrdrer(); }
+    else if (a === 'ny-ordre') { fane('ordrer'); await visNyOrdre(); }
+    else if (a === 'ordre') { fane('ordrer'); await visOrdre(b); }
+    else if (a === 'modtag') { fane('ordrer'); await visModtag(b); }
+    else if (a === 'optael') { fane('optael'); await (b ? visOptaelling(b) : visOptael()); }
+    else if (a === 'salg') { fane('salg'); await visSalg(); }
+    else { fane('lager'); await visLager(false); }
+    besked($('hentMsg'), '');
+    window.scrollTo(0, 0);
+  } catch (e) { if (!(e && e.apinAfbrudt)) besked($('hentMsg'), e.message, 'err'); }
+}
+
+// Fælles bindinger efter hver visning
+function knap(id, fn) { const el = $(id); if (el) el.addEventListener('click', fn); }
+async function gemMed(btn, msgEl, fn) {
+  btn.disabled = true; besked(msgEl, 'Gemmer …');
+  try { await fn(); } catch (e) { besked(msgEl, e.message, 'err'); } finally { btn.disabled = false; }
+}
+function stepper(id, v) {
+  return '<span class="ps-step"><button type="button" class="ghost" data-step="-1" data-for="' + id + '" aria-label="En mindre">&#8722;</button>'
+    + '<input id="' + id + '" inputmode="numeric" pattern="[0-9]*" value="' + (v === null || v === undefined ? '' : esc(v)) + '" aria-label="Antal">'
+    + '<button type="button" class="ghost" data-step="1" data-for="' + id + '" aria-label="En mere">+</button></span>';
+}
+function bindSteppers() {
+  document.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => {
+    const f = $(b.dataset.for); const v = Number(f.value || 0) + Number(b.dataset.step); f.value = Math.max(0, v); f.dispatchEvent(new Event('input'));
+  }));
+}
+function chips(navn, liste, valgt) {
+  return '<div class="chips" data-chips="' + navn + '">' + liste.map((x) => '<button type="button" aria-pressed="' + (x === valgt) + '" data-v="' + esc(x) + '">' + esc(x) + '</button>').join('') + '</div>';
+}
+function bindChips(navn, fn) {
+  const c = document.querySelector('[data-chips="' + navn + '"]'); if (!c) return;
+  c.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { c.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); if (fn) fn(b.dataset.v); }));
+}
+const chipVal = (navn) => { const b = document.querySelector('[data-chips="' + navn + '"] button[aria-pressed="true"]'); return b ? b.dataset.v : ''; };
+
+// ------------------------------------------------------------ Lager
+async function visLager(udgaaede) {
+  O = await ps('oversigt', { udgaaede });
+  let h = '';
+  if (!udgaaede) {
+    h += '<div class="ps-kpi"><div><small>Lager til kostpris</small><b>' + kr(O.lagerKost) + '</b></div><div><small>Til medlemspris</small><b>' + kr(O.lagerSalg) + '</b></div></div>';
+    if (!O.start) h += '<div class="ps-alarm"><b>Startoptællingen mangler</b>Tæl hylden under Optælling, før varerne fra Racketlife lægges op. Salget kan først læses ind bagefter.</div>';
+    O.igangOptaelling.forEach((o) => { h += '<a class="ps-info" style="display:block;text-decoration:none" href="#optael/' + esc(o.id) + '"><b>Optælling i gang (' + esc(o.type.toLowerCase()) + ')</b>' + (o.status === 'Talt' ? 'Talt. Mangler godkendelse.' : 'Ikke talt færdig.') + ' Åbn &#8594;</a>'; });
+    const under = O.varer.filter((v) => v.underMin);
+    if (under.length && O.start) h += '<div class="ps-alarm"><b>' + under.length + (under.length === 1 ? ' vare' : ' varer') + ' under minimum</b>' + under.slice(0, 4).map((v) => esc(v.navn) + ': ' + esc(v.antalTekst)).join(' · ') + (under.length > 4 ? ' og ' + (under.length - 4) + ' mere' : '') + '</div>';
+    O.frister.forEach((f) => { if (f.snart || f.overskredet) h += '<div class="ps-frist"><b>' + esc(f.leverandoer) + (f.ordrenr ? ' ' + esc(f.ordrenr) : '') + (f.overskredet ? ': klarmeldingen er overskredet' : '') + '</b>Dag 75 ' + dag(f.dag75) + ' · klarmelding dag 80 ' + dag(f.dag80) + ' · forfald ' + dag(f.forfald) + '</div>'; });
+    if (O.bolde && O.bolde.mangler.length) h += '<div class="ps-alarm"><b>Bolde fra Boldlager uden vare</b>' + O.bolde.mangler.map((m) => esc(m.dato + ': ' + m.bold + ', ' + m.antal + '. ' + m.grund)).join('<br>') + '</div>';
+    if (O.start && O.salg.huller.length) h += '<div class="ps-alarm"><b>Salg mangler fra MobilePay</b>' + esc(O.salg.huller.join(' og ')) + '</div>';
+    if (O.markedDato) {
+      const over = O.varer.filter((v) => v.marked && v.marked.regel === 'Over').length;
+      h += '<a class="' + (over ? 'ps-alarm' : 'ps-info') + '" style="display:block;text-decoration:none" href="#marked"><b>Markedspriser ' + esc(dag(O.markedDato)) + (over ? ': ' + over + (over === 1 ? ' vare over markedet' : ' varer over markedet') : '') + '</b>' + (O.markedForslag.length ? O.markedForslag.length + (O.markedForslag.length === 1 ? ' forslag' : ' forslag') + ' til justering.' : 'Ingen forslag.') + ' Åbn &#8594;</a>';
+    } else h += '<a class="ps-info" style="display:block;text-decoration:none" href="#marked"><b>Markedspriser</b>' + (O.markedOpsat ? 'Ingen priser hentet endnu.' : 'Ingen links endnu.') + ' Åbn &#8594;</a>';
+    if (O.start) h += '<p class="hint" style="margin:0 0 10px">Salget er læst ind ' + (O.salg.til ? 'til og med ' + dag(O.salg.til) : 'fra startoptællingen ' + dag(O.start) + ': intet endnu').replace(/\.$/, '') + '.</p>';
+  } else h += '<a class="ps-tilbage" href="#lager">&#8592; Lager</a><h2 style="margin:0 0 10px">Udgåede varer</h2>';
+  h += '<input id="soeg" type="search" placeholder="Søg vare eller varenummer" aria-label="Søg vare eller varenummer" style="margin:0 0 6px">';
+  h += '<div id="liste"></div>';
+  if (!udgaaede) h += '<div class="ps-knapper"><button type="button" id="nyVare">+ Ny vare</button></div><div class="ps-knapper"><button type="button" class="ghost" id="udg">Udgåede varer</button><button type="button" class="ghost" id="lagerpr">Lagerstatus pr. dato</button></div>';
+  h += '<p class="hint">Opdateret ' + esc(O.tid) + '.</p>';
+  vis(h);
+  const tegn = () => {
+    const q = ($('soeg').value || '').trim().toLowerCase();
+    let ud = '';
+    O.kategorier.forEach((k) => {
+      const vv = O.varer.filter((v) => v.kategori === k && (!q || (v.navn + ' ' + v.varenr).toLowerCase().indexOf(q) >= 0));
+      if (!vv.length) return;
+      ud += '<p class="ps-uge">' + esc(k) + '</p>';
+      vv.forEach((v) => {
+        const tag = v.underMin && O.start ? '<span class="ps-tag min">Under min.</span>' : (v.restordre ? '<span class="ps-tag rest">' + esc(mgd(v.restordre, v.enhed)) + ' på vej</span>' : (v.status === 'Udgået' ? '<span class="ps-tag rest">Udgået</span>' : ''));
+        ud += '<button type="button" class="ps-rk" data-vare="' + esc(v.varenr) + '"><span class="ps-n' + (v.antal <= 0 ? ' nul' : '') + '">' + esc(talTekst(v.antal)) + '<small>' + esc(kortE(v.enhed)) + '</small></span>'
+          + '<span class="ps-k"><b>' + esc(v.navn) + '</b><small>' + esc((v.indhold ? v.indhold + ' · ' : '') + v.varenr + ' · min. ' + v.minimum + ' · ' + kr(v.pris) + ' pr. ' + (v.enhed === 'pakke' ? 'pakke' : v.enhed.replace('.', ''))) + '</small>' + mkLinje(v) + '</span>' + tag + '</button>';
+      });
+    });
+    $('liste').innerHTML = ud || '<p class="hint">' + (udgaaede ? 'Ingen udgåede varer.' : 'Ingen varer endnu. Opret den første med "+ Ny vare".') + '</p>';
+    document.querySelectorAll('[data-vare]').forEach((b) => b.addEventListener('click', () => gaa('vare/' + b.dataset.vare)));
+  };
+  $('soeg').addEventListener('input', tegn); tegn();
+  knap('nyVare', () => gaa('ny-vare')); knap('udg', () => gaa('udgaaede')); knap('lagerpr', () => gaa('lagerpr'));
+}
+
+// ------------------------------------------------------------ markedspriser
+const mkKr = (n) => (n === '' || n === null || n === undefined ? '<span class="hint">–</span>' : esc(talTekst(n)));
+function mkLinje(v) {
+  const m = v.marked;
+  if (!m) return '';
+  const del = [];
+  if (m.rtkv10 !== '') del.push('RTKV10 ' + talTekst(m.rtkv10));
+  if (m.dk !== '') del.push(m.dkButik ? m.dkButik + ' ' + talTekst(m.dk) : 'DK ' + talTekst(m.dk));
+  if (m.tp !== '') del.push('TP ' + talTekst(m.tp) + (m.tpKoeb ? '' : ' (udsolgt)'));
+  let t = esc(del.join(' · '));
+  if (m.regel === 'Over') t += ' · <span class="over">over markedet</span>';
+  else if (m.forslag !== '') t += ' · <span class="op">plads op</span>';
+  return '<small class="ps-mk">' + t + '</small>';
+}
+async function visMarked() {
+  O = await ps('oversigt', {});
+  let h = '<div class="card"><h2 style="margin:0 0 6px">Markedspriser</h2>';
+  h += '<p class="hint" style="margin:0 0 10px">' + (O.markedDato ? 'Seneste runde ' + esc(dag(O.markedDato).replace(/\.$/, '')) + '. ' : 'Ingen runde hentet endnu. ') + 'Motoren henter priserne hver mandag kl. 6 fra Racketlife, de danske netbutikker og Tennis-Point ud fra links på hver vare. Alle priser inkl. moms.</p>';
+  h += '<div class="ps-knapper"><button type="button" class="ghost" id="mkHent">Hent nu</button></div><div class="msg" id="mkMsg" aria-live="polite"></div></div>';
+  if (O.markedForslag.length) {
+    h += '<div class="card"><h3>Forslag</h3>' + O.markedForslag.map((f) => '<div class="ps-fs"><b>' + esc(f.navn) + '</b> <span class="hint" style="font-size:13px">nu ' + kr(f.pris) + ', indkøb ' + kr2(f.indkoeb) + '</span><br>'
+      + (f.grund ? '<span class="' + (f.regel === 'Over' ? 'ps-minus' : 'ps-plus') + '" style="font-size:14px">' + esc(f.grund) + '</span><br>' : '')
+      + (f.tpUnder ? '<span class="hint" style="font-size:13px">Tennis-Point sælger den til ' + esc(talTekst(f.tp)) + ' kr.</span><br>' : '')
+      + (f.note ? '<span class="hint" style="font-size:13px">' + esc(f.note) + '</span><br>' : '')
+      + (f.forslag !== '' ? '<button type="button" class="ghost small" data-brug="' + esc(f.varenr) + '" data-pris="' + esc(f.forslag) + '">Brug ' + esc(talTekst(f.forslag)) + ' kr.</button>' : '') + '</div>').join('') + '<div class="msg" id="fsMsg" aria-live="polite"></div></div>';
+  }
+  const mv = O.varer.filter((v) => v.marked);
+  if (mv.length) {
+    h += '<div class="card"><h3>Alle varer</h3><table class="ps-tab"><tr><th>Vare</th><th class="n">Vores</th><th class="n">RTKV10</th><th class="n">Anden DK</th><th class="n">Tennis-P.</th></tr>'
+      + mv.map((v) => { const m = v.marked; return '<tr><td><a href="#vare/' + esc(v.varenr) + '">' + esc(v.navn) + '</a></td><td class="n' + (m.regel === 'Over' ? ' ps-minus' : '') + '">' + esc(talTekst(v.pris)) + '</td><td class="n">' + mkKr(m.rtkv10) + '</td><td class="n">' + mkKr(m.dk) + '</td><td class="n">' + mkKr(m.tp) + (m.tp !== '' && !m.tpKoeb ? '<br><span class="hint" style="font-size:11px">udsolgt</span>' : '') + '</td></tr>'; }).join('')
+      + '</table><p class="hint">Rød pris: ikke under både RTKV10 og billigste anden danske netbutik (prisreglen 15. november). Tennis-Point er til orientering.</p></div>';
+  }
+  vis(h);
+  knap('mkHent', (e) => gemMed(e.target, $('mkMsg'), async () => {
+    const r = await ps('markedHent', {});
+    besked($('mkMsg'), (r.allerede ? 'Alle varer er allerede hentet i dag.' : r.nye + (r.nye === 1 ? ' vare' : ' varer') + ' hentet.') + (r.fejl && r.fejl.length ? ' Kunne ikke læses: ' + r.fejl.join(' · ') : ''), r.fejl && r.fejl.length ? 'err' : 'ok');
+    if (!(r.fejl && r.fejl.length)) setTimeout(route, 1500); else setTimeout(() => { const t = $('mkMsg').textContent; route().then(() => { if ($('mkMsg')) besked($('mkMsg'), t, 'err'); }); }, 2500);
+  }));
+  document.querySelectorAll('[data-brug]').forEach((b) => b.addEventListener('click', (e) => gemMed(e.target, $('fsMsg'), async () => {
+    const pris = Number(b.dataset.pris);
+    const vd = await ps('vare', { varenr: b.dataset.brug });
+    if (!confirm('Sæt ' + vd.vare.navn + ' til ' + talTekst(pris) + ' kr.? Husk at rette prisen i MobilePay samme dag.')) { besked($('fsMsg'), ''); return; }
+    const data = Object.assign({}, vd.vare, { pris, prisNote: 'Markedspriser ' + dag(O.markedDato).replace(/\.$/, '') });
+    let r = await ps('vareGem', data);
+    if (r.advarsel) { if (!confirm(r.advarsel)) { besked($('fsMsg'), ''); return; } r = await ps('vareGem', Object.assign(data, { underGulvOk: true })); }
+    besked($('fsMsg'), r.mobilepay || 'Gemt.', 'ok');
+    setTimeout(route, 1800);
+  })));
+}
+
+async function visVare(nr) {
+  const d = await ps('vare', { varenr: nr });
+  const v = d.vare;
+  let h = '<a class="ps-tilbage" href="#lager">&#8592; Lager</a><div class="card"><p class="kicker" style="margin:0 0 4px">' + esc(v.kategori + ' · ' + v.leverandoer) + (v.status === 'Udgået' ? ' · udgået' : '') + '</p>';
+  h += '<h2 style="margin:0 0 6px">' + esc(v.navn) + '</h2><p class="hint" style="margin:0 0 10px">Varenr. ' + esc(v.varenr) + ' · enhed: <b>' + esc(v.indhold || v.enhed) + '</b>. Sælges, tælles og bestilles i ' + esc(flertal(v.enhed, 2)) + '.' + (v.boldtype ? '<br>Kommer fra Boldlager som ' + esc(v.boldtype) + '.' : '') + '</p>';
+  h += '<div class="ps-kpi"><div><small>På lager</small><b>' + esc(d.antalTekst) + '</b></div><div><small>Min. / bestil op til</small><b>' + v.minimum + ' / ' + esc(mgd(v.bestilOpTil, v.enhed)) + '</b></div></div>';
+  h += '<table class="ps-tab"><tr><td>Medlemspris pr. ' + esc(v.enhed.replace('.', '')) + '</td><td class="n">' + kr2(v.pris) + '</td></tr><tr><td>Indkøbspris nu</td><td class="n">' + kr2(v.indkoeb) + '</td></tr>'
+    + '<tr><td>Kostpris, vægtet gennemsnit</td><td class="n">' + kr2(d.kostpris) + '</td></tr><tr><td>Margin pr. ' + esc(v.enhed.replace('.', '')) + '</td><td class="n">' + kr2(d.margin.kr) + ' (' + talTekst(d.margin.pct) + ' %)' + (d.margin.underGulv ? ' <span class="ps-minus">under 10 %</span>' : '') + '</td></tr>'
+    + '<tr><td>Lagerværdi</td><td class="n">' + kr2(d.vaerdi) + '</td></tr><tr><td>Navn i MobilePay</td><td class="n">' + esc(d.mobilepayNavne.join(', ')) + '</td></tr></table>';
+  if (v.note) h += '<p class="hint">' + esc(v.note) + '</p>';
+  h += '<div class="ps-knapper"><button type="button" class="ghost" id="ret">Ret vare og pris</button>' + (v.status === 'Udgået' ? '<button type="button" class="ghost" id="genakt">Genaktivér</button>' : '<button type="button" class="ghost" id="udgaa">Sæt til udgået</button>') + (d.kanSlettes ? '<button type="button" class="ghost" id="slet">Slet</button>' : '') + '</div>';
+  h += '<div id="udgBoks"></div><div class="msg" id="vMsg" aria-live="polite"></div></div>';
+  h += '<div class="card"><h3>Bevægelser</h3><div class="ps-tl">' + (d.bevaegelser.length ? d.bevaegelser.map((b) => '<div><i class="' + (b.antal > 0 ? 'plus' : b.antal < 0 ? 'minus' : '') + '"></i><b>' + esc(dag(b.dato)) + '</b> ' + esc(b.type) + ': ' + esc((b.antal > 0 ? '+' : '') + b.tekst) + (b.kostpris ? ' à ' + kr2(b.kostpris) : '') + (b.grund ? ' · ' + esc(b.grund) : '') + '<br><span class="hint" style="font-size:13px">' + esc([b.kilde, b.note, b.navn].filter(Boolean).join(' · ')) + '</span></div>').join('') : '<p class="hint">Ingen endnu. Lageret går op, når en ordre modtages, eller bolde tages ud til pro shoppen.</p>') + '</div></div>';
+  h += '<div class="card"><h3>Prishistorik</h3><table class="ps-tab"><tr><th>Fra</th><th class="n">Indkøb</th><th class="n">Medlem</th><th>Af</th></tr>' + d.priser.map((p) => '<tr><td>' + esc(dag(p.dato)) + '</td><td class="n">' + kr2(p.indkoeb) + '</td><td class="n">' + kr2(p.pris) + '</td><td>' + esc(p.af) + (p.note ? '<br><span class="hint" style="font-size:12px">' + esc(p.note) + '</span>' : '') + '</td></tr>').join('') + '</table>'
+    + '<p class="hint">Ret også prisen i MobilePay samme dag. Navnet skal stå præcis som i MobilePay.</p></div>';
+  const lk = d.markedLinks || { racketlife: '', tennispoint: '', danske: [], note: '' };
+  h += '<div class="card"><h3>Links til markedspriser</h3><p class="hint" style="margin:0 0 8px">Indsæt adressen på varens side i butikken. Motoren henter prisen derfra hver mandag.</p>'
+    + '<label for="lkRl">Racketlife</label><input id="lkRl" inputmode="url" value="' + esc(lk.racketlife) + '" placeholder="https://racketlife.dk/products/…">'
+    + '<label for="lkTp">Tennis-Point</label><input id="lkTp" inputmode="url" value="' + esc(lk.tennispoint) + '" placeholder="https://www.tennis-point.dk/products/…">'
+    + [0, 1, 2].map((i) => '<label for="lkDk' + i + '">Anden dansk butik ' + (i + 1) + '</label><input id="lkDk' + i + '" inputmode="url" value="' + esc((lk.danske[i] || {}).link || '') + '" placeholder="fx https://tennisshoppen.dk/produkt/…">').join('')
+    + '<label for="lkNote">Note</label><input id="lkNote" maxlength="200" value="' + esc(lk.note || '') + '">'
+    + '<div class="ps-knapper"><button type="button" class="ghost" id="lkGem">Gem links</button></div><div class="msg" id="lkMsg" aria-live="polite"></div></div>';
+  if (d.marked && d.marked.length) {
+    h += '<div class="card"><h3>Markedspriser</h3><table class="ps-tab"><tr><th>Uge</th><th class="n">RTKV10</th><th class="n">Anden DK</th><th class="n">Tennis-P.</th><th class="n">Vores</th></tr>'
+      + d.marked.map((m) => '<tr><td>' + esc(dag(m.dato)) + '</td><td class="n">' + mkKr(m.rtkv10) + '</td><td class="n">' + mkKr(m.dk) + (m.dkButik ? '<br><span class="hint" style="font-size:11px">' + esc(m.dkButik) + '</span>' : '') + '</td><td class="n">' + mkKr(m.tp) + (m.tpNormal && m.tpNormal !== m.tp ? '<br><span class="hint" style="font-size:11px">normal ' + mkKr(m.tpNormal) + '</span>' : '') + '</td><td class="n' + (m.regel === 'Over' ? ' ps-minus' : '') + '">' + kr(m.pris) + '</td></tr>').join('')
+      + '</table><p class="hint">Alle priser inkl. moms. RTKV10 er Racketlifes pris minus 10 %. Vores pris skal ligge under både RTKV10 og den billigste anden danske netbutik.</p></div>';
+  }
+  vis(h);
+  knap('lkGem', (e) => gemMed(e.target, $('lkMsg'), async () => {
+    await ps('markedLinksGem', { varenr: v.varenr, racketlife: $('lkRl').value.trim(), tennispoint: $('lkTp').value.trim(), danske: [0, 1, 2].map((i) => $('lkDk' + i).value.trim()), note: $('lkNote').value });
+    besked($('lkMsg'), 'Gemt. Prisen hentes næste mandag, eller med "Hent nu" under Markedspriser.', 'ok');
+  }));
+  knap('ret', () => gaa('ret/' + v.varenr));
+  knap('genakt', (e) => gemMed(e.target, $('vMsg'), async () => { await ps('vareGenaktiver', { varenr: v.varenr }); route(); }));
+  knap('slet', (e) => { if (!confirm('Slet ' + v.navn + '? Det kan kun gøres, fordi varen aldrig har haft en bevægelse.')) return; gemMed(e.target, $('vMsg'), async () => { await ps('vareSlet', { varenr: v.varenr }); gaa('lager'); }); });
+  knap('udgaa', () => {
+    if (d.antal !== 0) {
+      $('udgBoks').innerHTML = '<p class="ps-alarm" style="margin-top:12px">Der er ' + esc(d.antalTekst) + ' på lager. Lageret skal være 0, før varen kan udgå. Send dem retur under Ordrer, sælg dem først eller skriv dem af ved en optælling.</p>';
+      return;
+    }
+    $('udgBoks').innerHTML = '<label for="udgGrund" style="margin-top:12px">Hvorfor (valgfri)</label><input id="udgGrund" maxlength="100"><div class="ps-knapper"><button type="button" id="udgOk">Sæt til udgået</button></div>';
+    knap('udgOk', (e) => gemMed(e.target, $('vMsg'), async () => { await ps('vareUdgaa', { varenr: v.varenr, grund: $('udgGrund').value }); gaa('lager'); }));
+  });
+}
+
+async function visVareForm(nr) {
+  if (!O) O = await ps('oversigt', {});
+  const d = nr ? (await ps('vare', { varenr: nr })).vare : { kategori: '', leverandoer: 'Racketlife', enhed: 'stk.', servicevare: false, minimum: 1, bestilOpTil: 1 };
+  let h = '<a class="ps-tilbage" href="' + (nr ? '#vare/' + esc(nr) : '#lager') + '">&#8592; ' + (nr ? esc(d.navn) : 'Lager') + '</a><h2 style="margin:0 0 4px">' + (nr ? 'Ret vare' : 'Ny vare') + '</h2>';
+  h += '<div class="card">';
+  h += '<label for="fNavn">Navn i MobilePay (præcis som i kurven)</label><input id="fNavn" maxlength="60" value="' + esc(d.navn || '') + '">';
+  h += '<label for="fNr" style="margin-top:12px">Varenummer</label><input id="fNr" maxlength="40" value="' + esc(d.varenr || '') + '" autocapitalize="characters">';
+  h += '<label style="margin-top:12px">Kategori</label>' + chips('kat', O.kategorier, d.kategori);
+  h += '<label style="margin-top:12px">Leverandør</label>' + chips('lev', O.leverandoerer, d.leverandoer);
+  h += '<div id="boldBoks" class="hidden"><label for="fBold" style="margin-top:12px">Boldtype i Boldlager</label><select id="fBold"><option value="">Vælg</option>' + O.boldtyper.map((b) => '<option' + (b === d.boldtype ? ' selected' : '') + '>' + esc(b) + '</option>').join('') + '</select><p class="hint">Hvert "Ud" med formålet Pro shop af denne bold kommer på hylden.</p></div>';
+  h += '<label style="margin-top:12px">Enhed (det, der sælges i MobilePay)</label>' + chips('enh', O.enheder, d.enhed);
+  h += '<label for="fInd" style="margin-top:12px">Indhold pr. enhed</label><input id="fInd" maxlength="60" placeholder="fx rør à 4 bolde, pakke à 3 greb, 1 ketsjer" value="' + esc(d.indhold || '') + '">';
+  h += '<div class="ps-fl" style="margin-top:12px"><div><label for="fIndk">Indkøbspris inkl. moms</label><input id="fIndk" inputmode="decimal" value="' + esc(d.indkoeb !== undefined ? talTekst(d.indkoeb) : '') + '"></div><div><label for="fPris">Medlemspris</label><input id="fPris" inputmode="decimal" value="' + esc(d.pris !== undefined ? talTekst(d.pris) : '') + '"></div></div>';
+  h += '<p class="ps-info" id="margin" style="margin-top:10px"></p>';
+  h += '<label class="ps-cb"><input type="checkbox" id="fServ"' + (d.servicevare ? ' checked' : '') + '> Servicevare (gulvet på 10 % gælder ikke, fx bolde og Pro Tour)</label>';
+  h += '<div class="ps-fl"><div><label for="fMin">Minimum</label><input id="fMin" inputmode="numeric" value="' + esc(d.minimum) + '"></div><div><label for="fOp">Bestil op til</label><input id="fOp" inputmode="numeric" value="' + esc(d.bestilOpTil) + '"></div></div>';
+  if (nr) h += '<label for="fPN" style="margin-top:12px">Hvorfor ændres prisen (valgfri)</label><input id="fPN" maxlength="200" placeholder="fx Kaspers nye pris, kvartalsmødet">';
+  h += '<label for="fNote" style="margin-top:12px">Note (valgfri)</label><input id="fNote" maxlength="200" value="' + esc(d.note || '') + '">';
+  h += '<div class="ps-knapper"><button type="button" id="gemVare">' + (nr ? 'Gem' : 'Opret vare') + '</button></div><div class="msg" id="fMsg" aria-live="polite"></div>';
+  h += '<p class="hint">' + (nr ? 'Varenummer og enhed kan ikke ændres, når varen har bevægelser. ' : 'Lageret er 0, til varen er modtaget. ') + 'Læg ' + (nr ? 'en ny pris' : 'varen') + ' i MobilePay samme dag med præcis samme navn.</p></div>';
+  vis(h);
+  const boldVis = (lev) => $('boldBoks').classList.toggle('hidden', lev !== 'Boldlager' && !$('fBold').value);
+  bindChips('kat'); bindChips('enh'); bindChips('lev', boldVis); boldVis(d.leverandoer);
+  const n = (id) => Number(String($(id).value).replace(/\./g, '').replace(',', '.'));
+  const marg = () => {
+    const i = n('fIndk'), p = n('fPris');
+    if (!(p > 0) || isNaN(i)) { $('margin').textContent = 'Skriv indkøbspris og medlemspris.'; return; }
+    const m = p - i, pct = Math.round(m / p * 1000) / 10;
+    $('margin').textContent = 'Margin ' + kr2(m) + ' (' + talTekst(pct) + ' %). ' + (pct < 10 && !$('fServ').checked ? 'Under gulvet på 10 %.' : 'Over gulvet på 10 %.');
+    $('margin').className = pct < 10 && !$('fServ').checked ? 'ps-alarm' : 'ps-info';
+  };
+  ['fIndk', 'fPris'].forEach((id) => $(id).addEventListener('input', marg)); $('fServ').addEventListener('change', marg); marg();
+  let underOk = false;
+  knap('gemVare', (e) => gemMed(e.target, $('fMsg'), async () => {
+    const data = { raekke: d.raekke, varenr: $('fNr').value, navn: $('fNavn').value, kategori: chipVal('kat'), leverandoer: chipVal('lev'), enhed: chipVal('enh'), indhold: $('fInd').value,
+      boldtype: $('fBold').value, indkoeb: String(n('fIndk')), pris: String(n('fPris')), minimum: $('fMin').value, bestilOpTil: $('fOp').value, servicevare: $('fServ').checked, note: $('fNote').value,
+      prisNote: $('fPN') ? $('fPN').value : '', underGulvOk: underOk };
+    if (isNaN(n('fIndk')) || $('fIndk').value === '') data.indkoeb = ''; if (isNaN(n('fPris')) || $('fPris').value === '') data.pris = '';
+    const r = await ps('vareGem', data);
+    if (r.advarsel) { underOk = true; besked($('fMsg'), r.advarsel + ' Tryk igen for at gemme.', 'err'); e.target.textContent = 'Gem alligevel'; return; }
+    besked($('fMsg'), 'Gemt. ' + (r.mobilepay || ''), 'okm');
+    setTimeout(() => gaa('vare/' + r.varenr), r.mobilepay ? 1800 : 400);
+  }));
+}
+
+async function visLagerPr() {
+  let h = '<a class="ps-tilbage" href="#lager">&#8592; Lager</a><h2 style="margin:0 0 4px">Lagerstatus pr. dato</h2><p class="hint" style="margin:0 0 10px">Regnet ud fra bevægelserne til kostpris. Fx til revisoren pr. 31. december.</p>';
+  h += '<div class="card"><label for="lpDato">Dato</label><input type="date" id="lpDato" value="' + idag() + '" max="' + idag() + '"><div class="ps-knapper"><button type="button" id="lpVis">Vis</button></div><div class="msg" id="lpMsg"></div><div id="lpUd"></div></div>';
+  vis(h);
+  const hentLp = async () => {
+    besked($('lpMsg'), 'Henter …');
+    try {
+      const d = await ps('lagerPr', { dato: $('lpDato').value });
+      besked($('lpMsg'), '');
+      $('lpUd').innerHTML = '<table class="ps-tab" style="margin-top:10px"><tr><th>Vare</th><th class="n">Antal</th><th class="n">Kostpris</th><th class="n">Værdi</th></tr>' + d.linjer.map((l) => '<tr><td>' + esc(l.navn) + '<br><span class="ps-kd">' + esc(l.varenr) + '</span></td><td class="n">' + esc(l.antalTekst) + '</td><td class="n">' + kr2(l.kostpris) + '</td><td class="n">' + kr2(l.vaerdi) + '</td></tr>').join('') + '<tr><td colspan="3"><b>I alt pr. ' + esc(dag(d.dato)) + '</b></td><td class="n"><b>' + kr2(d.ialt) + '</b></td></tr></table>';
+    } catch (e) { besked($('lpMsg'), e.message, 'err'); }
+  };
+  knap('lpVis', hentLp); hentLp();
+}
+
+// ------------------------------------------------------------ Ordrer
+const statusTag = (s) => '<span class="ps-tag ' + ({ 'Modtaget': 'ok', 'Lukket': 'ok', 'Bestilt': 'rest', 'Delvist modtaget': 'min', 'Annulleret': 'rest' }[s] || 'rest') + '">' + esc(s) + '</span>';
+async function visOrdrer() {
+  const ordrer = await ps('ordrer');
+  let h = '<div class="ps-knapper" style="margin-top:0"><button type="button" id="nyOrdre">+ Ny ordre</button></div>';
+  h += '<p class="hint">Bolde kommer på hylden fra Boldlager ved hvert "Ud" med formålet Pro shop. De står ikke som ordrer her.</p>';
+  if (!ordrer.length) h += '<p class="hint">Ingen ordrer endnu.</p>';
+  ordrer.forEach((o) => {
+    h += '<button type="button" class="ps-rk" data-ordre="' + esc(o.id) + '" style="display:block"><span style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b style="font-size:16px">' + esc(o.leverandoer) + (o.ordrenr ? ' ' + esc(o.ordrenr) : '') + '</b>' + statusTag(o.status) + '</span>'
+      + '<small class="hint" style="display:block;margin:2px 0 0">Bestilt ' + esc(dag(o.bestilt)) + (o.modtaget ? ' · modtaget ' + esc(dag(o.modtaget)) : '') + ' · ' + kr(o.beloeb) + (o.kredit ? ' · kreditnota ' + kr(o.kredit) : '') + '</small>'
+      + (o.dag75 && ['Modtaget', 'Delvist modtaget'].indexOf(o.status) >= 0 ? '<small style="display:block;color:#6B4E00">Dag 75 ' + esc(dag(o.dag75)) + ' · klarmelding dag 80 ' + esc(dag(o.dag80)) + ' · forfald ' + esc(dag(o.forfald)) + '</small>' : '') + '</button>';
+  });
+  vis(h);
+  knap('nyOrdre', () => gaa('ny-ordre'));
+  document.querySelectorAll('[data-ordre]').forEach((b) => b.addEventListener('click', () => gaa('ordre/' + b.dataset.ordre)));
+}
+
+async function visNyOrdre() {
+  O = await ps('oversigt', {});
+  let h = '<a class="ps-tilbage" href="#ordrer">&#8592; Ordrer</a><h2 style="margin:0 0 4px">Ny ordre</h2><p class="hint" style="margin:0 0 10px">Lageret går først op, når en linje er modtaget.</p><div class="card">';
+  h += '<label>Leverandør</label>' + chips('olev', O.leverandoerer.filter((l) => l !== 'Boldlager'), 'Racketlife');
+  h += '<div class="ps-fl" style="margin-top:12px"><div><label for="oNr">Ordrenr. (valgfri)</label><input id="oNr" maxlength="40"></div><div><label for="oDato">Bestilt</label><input type="date" id="oDato" value="' + idag() + '" max="' + idag() + '"></div></div>';
+  h += '<h3 style="margin-top:16px">Linjer</h3><div id="linjer"></div><button type="button" class="ghost small" id="plus">+ Linje</button>';
+  h += '<p class="ps-info" id="sum" style="margin-top:12px"></p>';
+  h += '<label for="oNote">Note (valgfri)</label><input id="oNote" maxlength="200">';
+  h += '<div class="ps-knapper"><button type="button" id="gemO">Gem ordre</button></div><div class="msg" id="oMsg"></div></div>';
+  vis(h);
+  const varer = () => O.varer.filter((v) => v.status === 'Aktiv' && v.leverandoer === chipVal('olev'));
+  let linjer = [{}];
+  const tegn = () => {
+    $('linjer').innerHTML = linjer.map((l, i) => '<div class="ps-lin"><div class="hel"><label for="lv' + i + '">Vare</label><select id="lv' + i + '"><option value="">Vælg</option>' + varer().map((v) => '<option value="' + esc(v.varenr) + '"' + (v.varenr === l.varenr ? ' selected' : '') + '>' + esc(v.navn + ' (' + (v.indhold || v.enhed) + ')') + '</option>').join('') + '</select></div>'
+      + '<div><label for="la' + i + '">Antal <span id="le' + i + '"></span></label><input id="la' + i + '" inputmode="numeric" value="' + esc(l.antal || '') + '"></div><div><label for="lp' + i + '">Pris pr. enhed</label><input id="lp' + i + '" inputmode="decimal" value="' + esc(l.pris !== undefined ? talTekst(l.pris) : '') + '"></div>'
+      + '<button type="button" class="ghost" data-fjern="' + i + '" aria-label="Fjern linje">&#215;</button></div>').join('');
+    linjer.forEach((l, i) => {
+      const opd = () => { const v = O.varer.filter((x) => x.varenr === $('lv' + i).value)[0]; l.varenr = $('lv' + i).value; if (v && (l.pris === undefined || l.fra !== v.varenr)) { l.pris = v.indkoeb; l.fra = v.varenr; $('lp' + i).value = talTekst(v.indkoeb); } $('le' + i).textContent = v ? '(' + flertal(v.enhed, 2) + ')' : ''; sum(); };
+      $('lv' + i).addEventListener('change', opd); $('la' + i).addEventListener('input', () => { l.antal = $('la' + i).value; sum(); }); $('lp' + i).addEventListener('input', () => { l.pris = Number($('lp' + i).value.replace(',', '.')); sum(); });
+      const v = O.varer.filter((x) => x.varenr === l.varenr)[0]; if (v) $('le' + i).textContent = '(' + flertal(v.enhed, 2) + ')';
+    });
+    document.querySelectorAll('[data-fjern]').forEach((b) => b.addEventListener('click', () => { linjer.splice(Number(b.dataset.fjern), 1); if (!linjer.length) linjer = [{}]; tegn(); }));
+    sum();
+  };
+  const sum = () => { const s = linjer.reduce((a, l) => a + (Number(l.antal) || 0) * (Number(l.pris) || 0), 0); $('sum').textContent = 'I alt ' + kr2(s) + (chipVal('olev') === 'Racketlife' ? (s >= 2500 ? ' Over 2.500 kr.: fri fragt.' : ' ' + kr2(2500 - s).replace(' kr.', ' kr') + ' fra fri fragt.') : ''); };
+  bindChips('olev', () => { linjer = [{}]; tegn(); });
+  knap('plus', () => { linjer.push({}); tegn(); });
+  tegn();
+  knap('gemO', (e) => gemMed(e.target, $('oMsg'), async () => {
+    const r = await ps('ordreGem', { leverandoer: chipVal('olev'), ordrenr: $('oNr').value, bestilt: $('oDato').value, note: $('oNote').value, linjer: linjer.filter((l) => l.varenr).map((l) => ({ varenr: l.varenr, antal: l.antal, pris: l.pris })) });
+    gaa('ordre/' + r.id);
+  }));
+}
+
+async function visOrdre(id) {
+  const o = (await ps('ordrer')).filter((x) => x.id === id)[0];
+  if (!o) throw new Error('Ordren findes ikke');
+  const aaben = ['Bestilt', 'Delvist modtaget'].indexOf(o.status) >= 0;
+  let h = '<a class="ps-tilbage" href="#ordrer">&#8592; Ordrer</a><div class="card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h2 style="margin:0">' + esc(o.leverandoer) + (o.ordrenr ? ' ' + esc(o.ordrenr) : '') + '</h2>' + statusTag(o.status) + '</div>';
+  h += '<p class="hint" style="margin:4px 0 10px">Bestilt ' + esc(dag(o.bestilt)) + (o.modtaget ? ' · modtaget ' + esc(dag(o.modtaget)) : '') + ' · ' + kr2(o.beloeb) + '</p>';
+  if (o.dag75) h += '<table class="ps-tab"><tr><td>Dag 75, gennemgang og retur</td><td class="n">' + esc(dag(o.dag75)) + '</td></tr><tr><td>Dag 80, klarmelding til Hans-Henrik</td><td class="n">' + esc(dag(o.dag80)) + '</td></tr><tr><td>Forfald dag 90</td><td class="n">' + esc(dag(o.forfald)) + '</td></tr></table>';
+  h += '<table class="ps-tab" style="margin-top:10px"><tr><th>Vare</th><th class="n">Bestilt</th><th class="n">Modtaget</th><th class="n">Pris</th></tr>' + o.linjer.map((l) => '<tr><td>' + esc(l.navn) + '<br><span class="hint" style="font-size:12px">' + esc(l.indhold || l.enhed) + (l.retur ? ' · retur ' + esc(mgd(l.retur, l.enhed)) : '') + '</span></td><td class="n">' + esc(l.bestiltTekst) + '</td><td class="n' + (l.rest > 0 ? ' ps-minus' : '') + '">' + esc(l.modtagetTekst) + '</td><td class="n">' + kr2(l.pris) + '</td></tr>').join('') + '</table>';
+  if (o.kredit) h += '<p class="ps-info" style="margin-top:10px">Kreditnota forventet: ' + kr2(o.kredit) + ' for varer sendt retur.</p>';
+  if (aaben) h += '<div class="ps-knapper"><button type="button" id="modtag">Modtag varer</button></div>';
+  h += '<div class="ps-fl" style="margin-top:12px"><div><label for="oFakt">Fakturanr.</label><input id="oFakt" maxlength="40" value="' + esc(o.faktura) + '"></div><div><label for="oNr2">Ordrenr.</label><input id="oNr2" maxlength="40" value="' + esc(o.ordrenr) + '"></div></div>';
+  h += '<div class="ps-knapper"><button type="button" class="ghost" id="gemF">Gem numre</button>' + (o.status === 'Modtaget' || o.status === 'Delvist modtaget' ? '<button type="button" class="ghost" id="luk">Luk ordren</button>' : '') + (o.status === 'Bestilt' ? '<button type="button" class="ghost" id="annuller">Annullér</button>' : '') + '</div>';
+  h += '<div class="msg" id="oMsg"></div></div>';
+  const kanRetur = o.linjer.filter((l) => l.modtaget > l.retur);
+  if (kanRetur.length) {
+    h += '<div class="card"><h3>Retur til ' + esc(o.leverandoer) + '</h3><p class="hint" style="margin:0 0 8px">Ubrugte ketsjere, bats og varer over 500 kr. sendes retur på dag 75, før fakturaen betales. Lageret går ned, og ordren viser kreditnotaen.</p>';
+    h += '<label for="rLinje">Vare</label><select id="rLinje">' + kanRetur.map((l) => '<option value="' + l.linje + '">' + esc(l.navn + ' (højst ' + mgd(l.modtaget - l.retur, l.enhed) + ')') + '</option>').join('') + '</select>';
+    h += '<label for="rAntal" style="margin-top:10px">Antal</label>' + stepper('rAntal', 1) + '<div class="ps-knapper"><button type="button" class="ghost" id="retur">Registrér retur</button></div><div class="msg" id="rMsg"></div></div>';
+  }
+  vis(h); bindSteppers();
+  knap('modtag', () => gaa('modtag/' + o.id));
+  knap('gemF', (e) => gemMed(e.target, $('oMsg'), async () => { await ps('ordreFaktura', { id: o.id, faktura: $('oFakt').value, ordrenr: $('oNr2').value }); besked($('oMsg'), 'Gemt.', 'okm'); }));
+  knap('luk', (e) => { if (!confirm('Luk ordren? Det, der ikke er modtaget, kommer ikke.')) return; gemMed(e.target, $('oMsg'), async () => { await ps('ordreFaktura', { id: o.id, faktura: $('oFakt').value, luk: true }); route(); }); });
+  knap('annuller', (e) => { if (!confirm('Annullér ordren?')) return; gemMed(e.target, $('oMsg'), async () => { await ps('ordreFaktura', { id: o.id, annuller: true }); route(); }); });
+  knap('retur', (e) => gemMed(e.target, $('rMsg'), async () => { const r = await ps('ordreRetur', { id: o.id, linje: $('rLinje').value, antal: $('rAntal').value }); besked($('rMsg'), 'Registreret. Kreditnota forventet ' + kr2(r.kredit) + '.', 'okm'); setTimeout(route, 900); }));
+}
+
+async function visModtag(id) {
+  const o = (await ps('ordrer')).filter((x) => x.id === id)[0];
+  if (!o) throw new Error('Ordren findes ikke');
+  let h = '<a class="ps-tilbage" href="#ordre/' + esc(o.id) + '">&#8592; Ordren</a><h2 style="margin:0 0 4px">Modtag ' + esc(o.leverandoer) + (o.ordrenr ? ' ' + esc(o.ordrenr) : '') + '</h2><p class="hint" style="margin:0 0 10px">Tæl hver linje i kassen. ' + (o.modtaget ? '' : 'Leveringsdatoen sætter fristerne.') + '</p><div class="card">';
+  h += '<label for="mDato">Modtaget</label><input type="date" id="mDato" value="' + idag() + '" max="' + idag() + '">';
+  o.linjer.forEach((l) => { const rest = l.bestilt - l.modtaget; if (rest <= 0) return; h += '<div class="ps-mod"><span class="ps-k"><b>' + esc(l.navn) + '</b><small>' + esc((l.indhold || l.enhed) + ' · mangler ' + mgd(rest, l.enhed)) + '</small></span>' + stepper('m' + l.linje, rest) + '<span class="ps-e">' + esc(kortE(l.enhed)) + '</span></div>'; });
+  h += '<label class="ps-cb"><input type="checkbox" id="mMP"> Varerne er lagt i MobilePay med de rigtige navne</label>';
+  h += '<div class="ps-knapper"><button type="button" id="mOk">Læg på lager</button></div><div class="msg" id="mMsg"></div></div>';
+  vis(h); bindSteppers();
+  knap('mOk', (e) => {
+    if (!$('mMP').checked) { besked($('mMsg'), 'Sæt flueben, når varerne er lagt i MobilePay. Ellers kan medlemmerne ikke betale for dem.', 'err'); return; }
+    gemMed(e.target, $('mMsg'), async () => {
+      const linjer = o.linjer.filter((l) => $('m' + l.linje)).map((l) => ({ linje: l.linje, antal: $('m' + l.linje).value || 0 }));
+      const r = await ps('ordreModtag', { id: o.id, dato: $('mDato').value, linjer });
+      besked($('mMsg'), 'Lagt på lager: ' + r.modtaget.join(', ') + '.', 'okm');
+      setTimeout(() => gaa('ordre/' + o.id), 1200);
+    });
+  });
+}
+
+// ------------------------------------------------------------ Optælling
+async function visOptael() {
+  const d = await ps('optaellinger');
+  if (!O) O = await ps('oversigt', {});
+  const igang = d.liste.filter((o) => o.status === 'I gang' || o.status === 'Talt')[0];
+  let h = '';
+  if (igang) h += '<a class="ps-info" style="display:block;text-decoration:none" href="#optael/' + esc(igang.id) + '"><b>Optælling i gang: ' + esc(igang.type.toLowerCase()) + ', ' + esc(igang.omfang.toLowerCase()) + '</b>' + (igang.status === 'Talt' ? 'Talt. Mangler godkendelse.' : 'Ikke talt færdig.') + ' Åbn &#8594;</a>';
+  else {
+    const typer = d.start ? ['Fast', 'Kvartal', 'Ekstra', 'Årsafslutning'] : ['Start'];
+    const navne = { 'Start': 'Startoptælling', 'Fast': 'Fast, første mandag', 'Kvartal': 'Før kvartalsmødet', 'Ekstra': 'Ekstra', 'Årsafslutning': 'Årsafslutning 31. december' };
+    h += '<div class="card"><h3>Ny optælling</h3>' + (d.start ? '' : '<p class="hint" style="margin:0 0 8px">Først en startoptælling af hele hylden. Den sætter lageret, og salget i MobilePay læses ind fra den dag.</p>');
+    h += '<label>Hvilken optælling</label><div class="chips" data-chips="type">' + typer.map((t, i) => '<button type="button" aria-pressed="' + (i === 0 && !d.start ? 'true' : 'false') + '" data-v="' + esc(t) + '">' + esc(navne[t]) + '</button>').join('') + '</div>';
+    h += '<div id="ekstra" class="hidden"><label style="margin-top:12px">Hvad tælles</label>' + chips('omf', ['Hele shoppen', 'En kategori', 'Udvalgte varer'], 'Hele shoppen');
+    h += '<div id="katBoks" class="hidden" style="margin-top:10px">' + chips('kat', O.kategorier.filter((k) => O.varer.some((v) => v.kategori === k)), '') + '</div>';
+    h += '<div id="varBoks" class="hidden" style="margin-top:10px">' + O.varer.filter((v) => v.status === 'Aktiv').map((v) => '<label class="ps-cb" style="margin:6px 0"><input type="checkbox" value="' + esc(v.varenr) + '" data-tvare> ' + esc(v.navn) + '</label>').join('') + '</div>';
+    h += '<label style="margin-top:12px">Hvorfor</label>' + chips('hv', ['Mistanke om svind', 'Før genbestilling', 'Efter en fejl', 'Andet'], '') + '<input id="hvTekst" maxlength="100" placeholder="Uddyb (valgfri)" style="margin-top:8px"></div>';
+    h += '<div class="ps-knapper"><button type="button" id="startO">Start optælling</button></div><div class="msg" id="sMsg"></div>';
+    h += '<p class="hint">Fast: første mandag i måneden. Før kvartalsmødet med Racketlife. Årsafslutning: én tæller, en anden administrator godkender. Ekstra: når som helst, hele shoppen, en kategori eller udvalgte varer.</p></div>';
+  }
+  h += '<div class="card"><h3>Seneste</h3>' + (d.liste.length ? '<div class="ps-tl">' + d.liste.map((o) => '<div><i class="' + (o.status === 'Godkendt' ? 'plus' : '') + '"></i><a href="#optael/' + esc(o.id) + '"><b>' + esc(dag(o.dato)) + '</b> ' + esc(o.type) + ', ' + esc(o.omfang.toLowerCase()) + '</a> · ' + esc(o.status.toLowerCase()) + (o.taltAf ? ' · ' + esc(o.taltAf) : '') + '</div>').join('') + '</div>' : '<p class="hint">Ingen optællinger endnu.</p>') + '</div>';
+  vis(h);
+  if (igang) return;
+  const opd = () => { const t = chipVal('type'); $('ekstra').classList.toggle('hidden', t !== 'Ekstra'); const o = chipVal('omf'); $('katBoks').classList.toggle('hidden', o !== 'En kategori'); $('varBoks').classList.toggle('hidden', o !== 'Udvalgte varer'); };
+  bindChips('type', opd); bindChips('omf', opd); bindChips('kat'); bindChips('hv'); opd();
+  knap('startO', (e) => gemMed(e.target, $('sMsg'), async () => {
+    const type = chipVal('type'); if (!type) throw new Error('Vælg hvilken optælling');
+    const grund = [chipVal('hv'), $('hvTekst') ? $('hvTekst').value.trim() : ''].filter(Boolean).join(': ');
+    const r = await ps('optaelStart', { type, omfang: chipVal('omf'), kategori: chipVal('kat'), varer: Array.from(document.querySelectorAll('[data-tvare]:checked')).map((x) => x.value), grund });
+    gaa('optael/' + r.id);
+  }));
+}
+
+async function visOptaelling(id) {
+  const d = await ps('optaellinger');
+  const o = d.liste.filter((x) => x.id === id)[0];
+  if (!o) throw new Error('Optællingen findes ikke');
+  let h = '<a class="ps-tilbage" href="#optael">&#8592; Optælling</a>';
+  if (o.status === 'I gang') return visTael(o, h, null);
+  h += '<h2 style="margin:0 0 4px">' + (o.status === 'Talt' ? 'Forskellen' : 'Optælling ' + esc(dag(o.dato))) + '</h2><p class="hint" style="margin:0 0 10px">' + esc(o.type + ', ' + o.omfang.toLowerCase() + (o.grund ? '. ' + o.grund : '') + '. Talt af ' + (o.taltAf || 'ingen') + (o.godkendtAf ? ', ' + (o.status === 'Annulleret' ? 'annulleret' : 'godkendt') + ' af ' + o.godkendtAf : '')) + '.</p>';
+  const diff = o.linjer.filter((l) => l.forskel);
+  h += '<div class="card"><table class="ps-tab"><tr><th>Vare</th><th class="n">Forv.</th><th class="n">Talt</th><th class="n">Forskel</th></tr>' + o.linjer.filter((l) => o.status === 'Talt' ? true : true).map((l) => '<tr><td>' + esc(l.navn) + ' <span class="hint" style="font-size:12px">' + esc(kortE(l.enhed)) + '</span></td><td class="n">' + esc(talTekst(l.forventet)) + '</td><td class="n">' + esc(talTekst(l.talt)) + '</td><td class="n ' + (l.forskel > 0 ? 'ps-plus' : l.forskel < 0 ? 'ps-minus' : '') + '">' + (l.forskel ? esc((l.forskel > 0 ? '+' : '') + mgd(l.forskel, l.enhed)) : '0') + (l.grund && o.status === 'Godkendt' && l.forskel ? '<br><span class="hint" style="font-size:12px">' + esc(l.grund) + '</span>' : '') + '</td></tr>').join('') + '</table></div>';
+  if (o.status === 'Talt') {
+    if (o.type === 'Start') h += '<p class="ps-info">Startoptællingen sætter lageret til det talte. Forskellen bogføres som startlager uden grund.</p>';
+    else if (diff.length) {
+      h += '<div class="card"><h3>Grund til hver forskel</h3>';
+      diff.forEach((l) => {
+        const kost = l.kostpris ? ' (' + kr2(Math.abs(l.forskel) * l.kostpris) + ' til kostpris)' : '';
+        h += '<label style="margin-top:10px">' + esc(l.navn + ': ' + (l.forskel > 0 ? '+' : '') + mgd(l.forskel, l.enhed) + kost) + '</label>' + chips('g_' + l.varenr, l.forskel < 0 ? d.grundeMinus : d.grundePlus, '');
+        if (l.forskel > 0 && /\bBA50/.test(l.varenr)) h += '<p class="hint" style="margin:4px 0 0">Bolde: "Udtag mangler i boldlageret" sender en besked til Anders. Hylden passer, når udtaget er registreret.</p>';
+      });
+      h += '</div>';
+    } else h += '<p class="ps-info">Ingen forskelle. Lageret passer.</p>';
+    if (d.salg && o.type !== 'Start') {
+      const s = d.salg; const mangler = s.huller.length || !s.til || s.til < o.dato;
+      if (mangler) h += '<p class="ps-alarm"><b>Salget er ikke læst ind til og med ' + esc(dag(o.dato)) + '</b>' + (s.huller.length ? 'Der mangler salg for ' + esc(s.huller.join(' og ')) + '. ' : 'Læst ind til ' + esc(s.til ? dag(s.til) : 'ingenting') + '. ') + 'Hent salget fra MobilePay og læs det ind under Salg, før optællingen godkendes, ellers bliver salget regnet som svind.</p>';
+    }
+    h += '<label for="gNote">Note (valgfri)</label><input id="gNote" maxlength="200">';
+    h += '<div class="ps-knapper"><button type="button" id="godkend">Godkend optælling</button></div><div class="ps-knapper"><button type="button" class="ghost" id="igen">Tæl igen</button><button type="button" class="ghost" id="annuller">Annullér</button></div><div class="msg" id="gMsg"></div>';
+    h += '<p class="hint">Godkendt sætter lageret til det talte. Svind bogføres til kostpris.' + (o.type === 'Årsafslutning' ? ' Årsafslutningen godkendes af en anden administrator end den, der talte.' : '') + '</p>';
+  }
+  vis(h);
+  diff.forEach((l) => bindChips('g_' + l.varenr));
+  let salgOk = false;
+  knap('godkend', (e) => gemMed(e.target, $('gMsg'), async () => {
+    const grunde = {}; diff.forEach((l) => { grunde[l.varenr] = chipVal('g_' + l.varenr); });
+    const r = await ps('optaelGodkend', { id: o.id, grunde, note: $('gNote').value, salgOk });
+    if (r.advarsel) { salgOk = true; besked($('gMsg'), r.advarsel + ' Tryk igen for at godkende alligevel.', 'err'); e.target.textContent = 'Godkend alligevel'; return; }
+    besked($('gMsg'), 'Godkendt.', 'okm'); setTimeout(route, 700);
+  }));
+  knap('igen', () => visTael(o, '<a class="ps-tilbage" href="#optael">&#8592; Optælling</a>', o.linjer));
+  knap('annuller', (e) => { if (!confirm('Annullér optællingen? Intet bogføres.')) return; gemMed(e.target, $('gMsg'), async () => { await ps('optaelAnnuller', { id: o.id }); gaa('optael'); }); });
+}
+
+function visTael(o, h, tidl) {
+  const tal = {}; (tidl || []).forEach((l) => { tal[l.varenr] = l.talt; });
+  h += '<h2 style="margin:0 0 4px">Tæl hylden</h2><p class="hint" style="margin:0 0 10px">' + esc(o.type + ', ' + o.omfang.toLowerCase()) + ', ' + o.linjer.length + (o.linjer.length === 1 ? ' vare' : ' varer') + '. Det forventede antal vises først, når du er færdig, så tallet ikke styrer optællingen. Skriv 0, hvis der ingen er.</p><div class="card">';
+  o.linjer.forEach((l, i) => { h += '<div class="ps-mod"><span class="ps-k"><b>' + esc(l.navn) + '</b><small>' + esc((l.indhold ? l.indhold + ' · ' : '') + 'tæl ' + flertal(l.enhed, 2) + (l.enhed === 'rør' ? ', ikke bolde' : '')) + '</small></span>' + stepper('t' + i, tal[l.varenr] !== undefined ? tal[l.varenr] : (l.talt !== null && l.talt !== undefined ? l.talt : '')) + '<span class="ps-e">' + esc(kortE(l.enhed)) + '</span></div>'; });
+  h += '</div><div class="ps-knapper"><button type="button" id="faerdig">Færdig, vis forskellen</button></div><div class="msg" id="tMsg"></div>';
+  vis(h); bindSteppers();
+  knap('faerdig', (e) => gemMed(e.target, $('tMsg'), async () => {
+    const linjer = o.linjer.map((l, i) => ({ varenr: l.varenr, talt: $('t' + i).value.trim() }));
+    const tom = linjer.filter((l) => l.talt === ''); if (tom.length) throw new Error('Skriv det talte ved alle varer, også 0. Mangler: ' + o.linjer.filter((l, i) => linjer[i].talt === '').map((l) => l.navn).join(', '));
+    await ps('optaelTael', { id: o.id, linjer });
+    if (location.hash === '#optael/' + o.id) route(); else gaa('optael/' + o.id);
+  }));
+}
+
+// ------------------------------------------------------------ Salg
+async function visSalg() {
+  const d = await ps('salgListe');
+  const s = d.status;
+  let h = '<div class="card"><h3>Salg fra MobilePay #' + esc(s.nummer) + '</h3>';
+  h += '<p class="tu-p" style="margin:0 0 8px">' + (s.til ? 'Læst ind til og med <b>' + esc(dag(s.til)) + '</b>.' : 'Intet læst ind endnu.') + '</p>';
+  if (s.huller.length) h += '<p class="ps-alarm"><b>Der mangler salg</b>' + esc(s.huller.join(' og ')) + '</p>';
+  h += '<p class="hint" style="margin:0 0 10px">Brug filen "salg pr. vare" for pro shoppens nummer (Rapporter, fanen MobilePay-nummer-salg). Perioden skal starte dagen efter det, der er læst ind. En fil, der dækker en periode, der allerede er læst ind (fx hele måneden), bogfører kun det nye. Filen gemmes i arkivet med fingeraftryk.</p>';
+  h += '<label for="sFil">Fil (xlsx)</label><input type="file" id="sFil" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">';
+  h += '<div class="ps-knapper"><button type="button" id="sLaes">Læs salget ind</button></div><div class="msg" id="sMsg"></div><div id="sUd"></div></div>';
+  h += '<div class="card"><h3>Indlæst</h3>' + (d.liste.length ? '<table class="ps-tab"><tr><th>Periode</th><th class="n">Antal</th><th class="n">Beløb</th></tr>' + d.liste.map((x) => '<tr><td>' + esc(dag(x.fra) + ' til ' + dag(x.til)) + '<br><span class="ps-kd">' + esc(x.fingeraftryk) + '</span> <span class="hint" style="font-size:12px">' + esc(x.status === 'Indlæst' ? x.af : x.status.toLowerCase()) + '</span></td><td class="n">' + esc(x.antal) + '</td><td class="n">' + kr(x.beloeb) + '</td></tr>').join('') + '</table>' : '<p class="hint">Intet endnu.</p>') + '</div>';
+  vis(h);
+  let filData = null;
+  const laes = async (btn) => {
+    const f = $('sFil').files[0]; if (!f && !filData) throw new Error('Vælg filen');
+    if (f) filData = { navn: f.name, b64: await new Promise((ok, nej) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = () => nej(new Error('Filen kunne ikke læses')); r.readAsDataURL(f); }) };
+    const r = await ps('salgIndlaes', { filnavn: filData.navn, fil: filData.b64 });
+    if (r.ukendte) {
+      besked($('sMsg'), '');
+      $('sUd').innerHTML = '<p class="ps-alarm" style="margin-top:10px"><b>' + r.ukendte.length + (r.ukendte.length === 1 ? ' ukendt navn' : ' ukendte navne') + ' i MobilePay</b>Kobl ' + (r.ukendte.length === 1 ? 'det' : 'dem') + ' til en vare. Koblingen gælder fremover.</p>'
+        + r.ukendte.map((n, i) => '<label for="k' + i + '">"' + esc(n) + '" er</label><select id="k' + i + '" data-navn="' + esc(n) + '"><option value="">Vælg vare</option>' + r.varer.map((v) => '<option value="' + esc(v.varenr) + '">' + esc(v.navn) + '</option>').join('') + '</select>').join('')
+        + '<div class="ps-knapper"><button type="button" id="kobl">Kobl og læs ind</button></div>';
+      knap('kobl', (e) => gemMed(e.target, $('sMsg'), async () => {
+        for (const s of document.querySelectorAll('[data-navn]')) { if (!s.value) throw new Error('Vælg en vare for "' + s.dataset.navn + '"'); await ps('salgKobl', { navn: s.dataset.navn, varenr: s.value }); }
+        await laes();
+      }));
+      return;
+    }
+    besked($('sMsg'), 'Læst ind: ' + dag(r.fra) + ' til ' + dag(r.til) + ', ' + kr(r.beloeb) + '. Fingeraftryk ' + r.fingeraftryk + '.', 'okm');
+    $('sUd').innerHTML = '<table class="ps-tab" style="margin-top:10px"><tr><th>Vare</th><th class="n">Solgt</th><th class="n">Bogført nu</th></tr>' + r.linjer.map((l) => '<tr><td>' + esc(l.navn) + '</td><td class="n">' + esc(l.tekst) + '</td><td class="n">' + esc(l.bogfoertTekst) + '</td></tr>').join('') + '</table>'
+      + (r.daekker ? '<p class="hint">Filen dækker ' + r.daekker + (r.daekker === 1 ? ' tidligere indlæsning' : ' tidligere indlæsninger') + '. Kun det nye er bogført.</p>' : '') + '<div class="ps-knapper"><button type="button" class="ghost" id="opd">Opdater listen</button></div>';
+    knap('opd', () => route());
+  };
+  knap('sLaes', (e) => gemMed(e.target, $('sMsg'), () => laes()));
+}
+
+// ------------------------------------------------------------ start
+function start() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn;
+  if ((person.roller || []).indexOf('admin') < 0) { $('ikkeAdmin').classList.remove('hidden'); return; }
+  $('indhold').classList.remove('hidden');
+  (window.RTK_APIN ? RTK_APIN.sikr(motor) : Promise.resolve()).then(route).catch((e) => { if (!(e && e.apinAfbrudt)) besked($('hentMsg'), e.message, 'err'); });
+}
+function migHusket() { try { const m = JSON.parse(hent('rtk.mig') || 'null'); return m && token && m.t === token.slice(-16) ? m.p : null; } catch (e) { return null; } }
+function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', JSON.stringify({ t: token.slice(-16), p: p })); return p; }); }
+if (!token) location.replace('./?til=proshop.html');
+else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().then((p) => { if (JSON.stringify(husket.roller || []) !== JSON.stringify(p.roller || [])) location.reload(); }).catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
+</script>
+<script src="../velkomst.js?v=0c6d2cc815a7"></script>
+<script src="../ace.js?v=f16258091977"></script>
+</body>
+</html>
