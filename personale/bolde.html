@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="e600e5899d8a">
+<meta name="rtk-version" content="2ed0d72e2640">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -15,6 +15,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../rtk.css?v=cc78992e33b4">
+<style>
+/* Indholdet pr. enhed står under boldens navn overalt (Lars 17. november 2026) */
+.bm-ih{display:block;font-size:12px;font-weight:400;color:var(--muted);line-height:1.3}
+#cBold button .bm-ih{color:inherit;opacity:.8}
+td small.bm-ih{margin-top:1px}
+.bm-lr{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.bm-lr:last-child{border-bottom:0}
+.bm-ls{display:block;font-size:13px;color:var(--ink,inherit);margin-top:4px;line-height:1.45}
+.bm-ls .minus{color:var(--bad);font-weight:700}
+.bm-li{text-align:right;white-space:nowrap}
+.bm-li b{font-size:17px}
+.bm-li .pill{display:inline-block;margin-top:4px}
+#forbrugUd td.n,#bestilUd td.n b{white-space:nowrap}
+</style>
 </head>
 <body>
 <header class="top">
@@ -66,6 +80,7 @@
         <div class="bm-hoved"><h2>Tag bolde</h2><button type="button" class="ghost small" id="infoVis">Sådan virker det</button></div>
         <label>Lager</label><div class="chips" id="cSted" role="group" aria-label="Lager"></div>
         <h3>Bold</h3><div class="chips" id="cBold" role="group" aria-label="Bold"></div>
+        <p class="hint" id="boldIndh" style="margin:6px 0 0"></p>
         <div id="forbundNote" class="bm-note hidden" role="note"></div>
         <h3>Antal</h3>
         <small id="heleLbl" class="bm-lbl hidden">Hele poser</small>
@@ -323,10 +338,27 @@ function chips(el, liste, aktiv, vaelg) {
   });
 }
 function boldInfo(navn) { return (valg && valg.bolde.find((x) => x.bold === (navn || valgt.bold))) || {}; }
+/** Enheden i ental eller flertal: rør, pose eller poser (og fx stk., hvis arket siger det). */
 function enhedTekst(n, navn) {
-  const b = boldInfo(navn);
-  const pose = String(b.enhed || '').toLowerCase() === 'pose';
-  return pose ? (n === 1 ? 'pose' : 'poser') : 'rør';
+  const e = String(boldInfo(navn).enhed || 'Rør').toLowerCase();
+  return e === 'pose' && n !== 1 ? 'poser' : e;
+}
+/** "rør à 4 bolde" eller "pose à 72 bolde". Motoren sender det, og kopier fra før 17. november regnes her. */
+function indhold(navn, x) {
+  if (x && x.indhold) return x.indhold;
+  const b = boldInfo(navn), e = String(b.enhed || 'Rør').toLowerCase();
+  return b.boldePrEnhed > 1 ? e + ' à ' + b.boldePrEnhed + ' bolde' : e;
+}
+/** Boldens navn med indholdet på linjen under. */
+function navnHtml(navn, x) { return esc(navn) + '<small class="bm-ih">' + esc(indhold(navn, x)) + '</small>'; }
+/** Enheder som tekst ("6 rør", "2 poser og 40 bolde"), som boldTekst_ i motoren. */
+function enhTekst(antal, navn) {
+  const b = boldInfo(navn), bpe = b.boldePrEnhed > 1 ? b.boldePrEnhed : 0;
+  const a = Math.abs(Number(antal) || 0), minus = Number(antal) < 0;
+  let hele = Math.round(a), loese = 0;
+  if (bpe) { const n = Math.round(a * bpe); hele = Math.floor(n / bpe); loese = n - hele * bpe; if (!hele && !loese) return '0 ' + enhedTekst(0, navn); }
+  else if (Math.abs(a - Math.round(a)) > 1e-6) return (minus ? '-' : '') + tal1(a) + ' ' + enhedTekst(2, navn);
+  return (minus ? '-' : '') + maengdeTekst(hele, loese, navn);
 }
 /** "1 pose og 30 bolde", "30 bolde" eller "3 rør". Samme regel som boldTekst_ i motoren. */
 function maengdeTekst(hele, loese, navn) {
@@ -346,6 +378,11 @@ function tegnTag() {
   if (!loeseOk) { valgt.loese = 0; if (valgt.antal < 1) valgt.antal = 1; }
   chips($('cSted'), valg.steder, valgt.sted, (v) => { valgt.sted = v; gem('rtk.bold.sted', v); tegnTag(); });
   chips($('cBold'), valg.bolde.map((x) => x.bold), valgt.bold, (v) => { valgt.bold = v; gem('rtk.bold.bold', v); valgt.loese = 0; valgt.antal = 1; besked($('tagMsg'), ''); tegnTag(); });
+  // Hver bold viser sit indhold, fx "rør à 4 bolde", så man kan se, hvad man tæller
+  [...$('cBold').children].forEach((k, i) => { const s = document.createElement('small'); s.className = 'bm-ih'; s.textContent = indhold(valg.bolde[i].bold, valg.bolde[i]); k.append(s); k.setAttribute('aria-label', valg.bolde[i].bold + ', ' + indhold(valg.bolde[i].bold, valg.bolde[i])); });
+  // Ved poser står det, hvordan løse bolde skrives. Rør og andet står allerede på knappen
+  $('boldIndh').textContent = loeseOk ? 'Hele poser à ' + b.boldePrEnhed + ' bolde. Løse bolde skrives for sig.' : '';
+  $('boldIndh').classList.toggle('hidden', !loeseOk);
   chips($('cFormaal'), formaal, valgt.formaal, (v) => { valgt.formaal = v; tegnTag(); });
   $('forbundNote').innerHTML = forbund ? FORBUND_NOTE : ''; $('forbundNote').classList.toggle('hidden', !forbund);
   $('noteBoks').classList.toggle('hidden', !forbund);
@@ -362,8 +399,10 @@ function tegnTag() {
   const h = $('hold'); const forrige = h.value || hent('rtk.bold.hold') || '';
   h.innerHTML = '<option value="">Vælg hold</option>' + valg.hold.map((x) => '<option>' + esc(x) + '</option>').join('');
   if (valg.hold.indexOf(forrige) >= 0) h.value = forrige;
-  $('tagKnap').textContent = 'Tag ' + maengdeTekst(valgt.antal, valgt.loese) + ' ' + valgt.bold;
+  $('tagKnap').textContent = 'Tag ' + maengdeTekst(valgt.antal, valgt.loese) + ' ' + valgt.bold + boldeIalt();
 }
+/** " (12 bolde)" efter antallet på knappen, når typen har bolde pr. enhed. */
+function boldeIalt() { const b = boldInfo(); const n = b.boldePrEnhed > 1 ? valgt.antal * b.boldePrEnhed + (valgt.loese || 0) : 0; return n ? ' (' + n + ' bolde)' : ''; }
 function minHele() { return boldInfo().loese && valgt.loese > 0 ? 0 : 1; }
 $('minus').addEventListener('click', () => { valgt.antal = Math.max(minHele(), valgt.antal - 1); tegnTag(); });
 $('plus').addEventListener('click', () => { valgt.antal = Math.min(60, valgt.antal + 1); tegnTag(); });
@@ -377,7 +416,7 @@ $('lMinus').addEventListener('click', () => saetLoese(valgt.loese - 1));
 $('lPlus').addEventListener('click', () => saetLoese(valgt.loese + 1));
 $('loese').addEventListener('input', () => {
   const n = loeseTal(); const maks = (boldInfo().boldePrEnhed || 1) - 1;
-  if (Number.isInteger(n) && n >= 0 && n <= maks) { valgt.loese = n; $('tagKnap').textContent = 'Tag ' + maengdeTekst(valgt.antal, valgt.loese) + ' ' + valgt.bold; }
+  if (Number.isInteger(n) && n >= 0 && n <= maks) { valgt.loese = n; $('tagKnap').textContent = 'Tag ' + maengdeTekst(valgt.antal, valgt.loese) + ' ' + valgt.bold + boldeIalt(); }
 });
 // Et forkert tal rettes ikke i stilhed: siden siger det og venter (gennemgangen 1. november)
 $('loese').addEventListener('change', () => {
@@ -415,7 +454,7 @@ $('tagKnap').addEventListener('click', async () => {
     const r = await motor('bold', 'tag', { sted: valgt.sted, bold: valgt.bold, antal: valgt.antal, loese: valgt.loese, formaal: valgt.formaal, hold: visHold ? $('hold').value : '', note: forbund ? $('tagNote').value.trim() : '' }, tagId);
     tagId = nyId(); besked($('tagMsg'), '');
     const tekst = r.tekst || (r.antal + ' ' + enhedTekst(r.antal, r.bold));
-    $('kvit').innerHTML = '<div class="kvit' + (r.advarsel ? ' adv' : '') + '"><span>Registreret: ' + esc(tekst) + ' ' + esc(r.bold) + '. ' + (r.advarsel ? esc(r.advarsel) : 'Tilbage på ' + esc(r.sted) + ': ' + esc(r.tilbageTekst || r.tilbage) + '.') + '</span></div>';
+    $('kvit').innerHTML = '<div class="kvit' + (r.advarsel ? ' adv' : '') + '"><span>Registreret: ' + esc(tekst) + ' ' + esc(r.bold) + ' (' + esc(indhold(r.bold, r)) + '). ' + (r.advarsel ? esc(r.advarsel) : 'Tilbage på ' + esc(r.sted) + ': ' + esc(r.tilbageTekst || r.tilbage) + '.') + '</span></div>';
     valgt.antal = 1; valgt.loese = 0; $('tagNote').value = ''; tegnTag(); hentMine();
   } catch (err) { besked($('tagMsg'), err.message, 'err'); if (!err.net) tagId = nyId(); }
   knap.disabled = false;
@@ -431,7 +470,7 @@ function visMine(l) {
     l.forEach((r) => { if (r.udloeber && r.udloeber < Date.now()) r.kanFortrydes = false; });
     // Dansk dato: 25/10 kl. 19.08 (testagenten 25. oktober, før stod der 10/25 19:08)
     function kortTid(s) { const m = /(\d{4})-(\d\d)-(\d\d)[ T](\d\d):(\d\d)/.exec(String(s || '')); return m ? Number(m[3]) + '/' + Number(m[2]) + ' kl. ' + m[4] + '.' + m[5] : String(s || ''); }
-    $('mine').innerHTML = l.length ? '<table>' + l.map((r) => '<tr><td>' + esc(kortTid(r.tid)) + '</td><td>' + esc(r.tekst || r.antal) + ' × ' + esc(r.bold) + '<br><small style="color:var(--muted)">' + esc(r.formaal) + (r.hold ? ', ' + esc(r.hold) : '') + ', ' + esc(r.sted) + (r.note ? ', ' + esc(r.note) : '') + '</small></td><td class="n">' +
+    $('mine').innerHTML = l.length ? '<table>' + l.map((r) => '<tr><td>' + esc(kortTid(r.tid)) + '</td><td>' + esc(r.tekst || enhTekst(r.antal, r.bold)) + ' ' + esc(r.bold) + '<br><small style="color:var(--muted)">' + esc(indhold(r.bold, r)) + ' · ' + esc(r.formaal) + (r.hold ? ', ' + esc(r.hold) : '') + ', ' + esc(r.sted) + (r.note ? ', ' + esc(r.note) : '') + '</small></td><td class="n">' +
       (r.fortrudt ? '<small>fortrudt</small>' : r.kanFortrydes ? '<button class="ghost small" data-r="' + r.raekke + '">Fortryd</button>' : '') + '</td></tr>').join('') + '</table>' : 'Ingen endnu.';
     $('mine').querySelectorAll('button[data-r]').forEach((b) => b.addEventListener('click', async () => {
       b.disabled = true;
@@ -454,14 +493,14 @@ function vaelgFane(navn) {
 $('faner').addEventListener('click', (e) => { const b = e.target.closest('button[data-fane]'); if (b) vaelgFane(b.dataset.fane); });
 
 // ---------------- lager
-/** Hele tal vises som tal, løse bolde som tekst (fx 2 poser og 40 bolde). */
-function lagerCelle(tal, tekst) { return Math.abs(tal - Math.round(tal)) < 1e-6 ? String(Math.round(tal)) : (tekst || tal1(tal)); }
+/** Altid med enheden: "6 rør", "2 poser og 40 bolde" (Lars 17. november 2026: før stod der kun et tal). */
+function lagerCelle(tal, tekst, navn) { return tekst || enhTekst(tal, navn); }
 function lagerHtml(l) {
   const steder = valg.steder;
-  // Tabellen ruller inde i sig selv på telefonen, så siden ikke ruller vandret (gennemgangen 1. november)
-  return '<div class="bm-rul"><table><tr><th>Bold</th>' + steder.map((s) => '<th class="n">' + esc(s.split(' ')[0]) + '</th>').join('') + '<th class="n">I alt</th><th></th></tr>' +
-    l.map((b) => '<tr><td>' + esc(b.bold) + '</td>' + steder.map((s) => '<td class="n' + (b.prSted[s] < 0 ? ' minus' : '') + '">' + esc(lagerCelle(b.prSted[s], b.prStedTekst && b.prStedTekst[s])) + '</td>').join('') +
-      '<td class="n"><b>' + esc(lagerCelle(b.ialt, b.ialtTekst)) + '</b></td><td>' + (b.bestil ? '<span class="pill">bestil</span>' : '') + '</td></tr>').join('') + '</table></div>';
+  // En linje pr. bold: navn og indhold, i alt til højre og hvert lager under. Så kan enheden stå ved alle tal, også på telefonen (Lars 17. november 2026)
+  return '<div class="bm-lg">' + l.map((b) => '<div class="bm-lr"><div class="bm-lt"><b>' + esc(b.bold) + '</b><small class="bm-ih">' + esc(indhold(b.bold, b)) + '</small>' +
+      '<small class="bm-ls">' + steder.map((s) => esc(s) + ': <span class="' + (b.prSted[s] < 0 ? 'minus' : '') + '">' + esc(lagerCelle(b.prSted[s], b.prStedTekst && b.prStedTekst[s], b.bold)) + '</span>').join('<br>') + '</small></div>' +
+      '<div class="bm-li"><b>' + esc(lagerCelle(b.ialt, b.ialtTekst, b.bold)) + '</b>' + (b.ialtBolde ? '<small class="bm-ih">' + b.ialtBolde + ' bolde</small>' : '') + (b.bestil ? '<span class="pill">bestil</span>' : '') + '</div></div>').join('') + '</div>';
 }
 async function hentLager() {
   try { const l = await motor('bold', 'lager'); if (nyereEnd('lager', 'lager')) $('lagerTabel').innerHTML = lagerHtml(l); } catch (err) { if (!LAEST.lager) $('lagerTabel').textContent = err.message; }
@@ -473,9 +512,14 @@ $('cPeriode').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-p]'); if (!b) return; periode = b.dataset.p;
   $('cPeriode').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); hentForbrug();
 });
+/** Pr. træner, hold og formål: bolde i alt og pr. bold med enheden. Rør og poser lægges ikke sammen (Lars 17. november 2026). */
 function sumTabel(titel, o) {
   const k = Object.keys(o).sort((a, b) => o[b].bolde - o[a].bolde);
-  return '<h3>' + titel + '</h3>' + (k.length ? '<table>' + k.map((n) => '<tr><td>' + esc(n) + '</td><td class="n">' + tal1(o[n].enheder) + '</td><td class="n">' + o[n].bolde + ' bolde</td></tr>').join('') + '</table>' : '<div class="total">Intet</div>');
+  return '<h3>' + titel + '</h3>' + (k.length ? '<table>' + k.map((n) => '<tr><td>' + esc(n) + (o[n].dele ? '<small class="bm-ih">' + esc(o[n].dele.join(', ')) + '</small>' : '') + '</td><td class="n">' + o[n].bolde + ' bolde</td></tr>').join('') + '</table>' : '<div class="total">Intet</div>');
+}
+function boldTabel(o) {
+  const k = Object.keys(o).sort((a, b) => o[b].bolde - o[a].bolde);
+  return '<h3>Pr. bold</h3>' + (k.length ? '<table>' + k.map((n) => '<tr><td>' + navnHtml(n, o[n]) + '</td><td class="n">' + esc(o[n].tekst || enhTekst(o[n].enheder, n)) + '</td><td class="n">' + ((o[n].tekst || '') === o[n].bolde + ' bolde' ? '' : o[n].bolde + ' bolde') + '</td></tr>').join('') + '</table>' : '<div class="total">Intet</div>');
 }
 async function hentForbrug() {
   const ud = $('forbrugUd'), p = periode;
@@ -490,7 +534,7 @@ async function hentForbrug() {
 }
 function visForbrug(f) {
   $('forbrugUd').innerHTML = '<div class="total">' + esc(f.fra) + ' til ' + esc(f.til) + ': <b>' + f.bolde + ' bolde</b></div>' +
-    sumTabel('Pr. træner', f.prTraener) + sumTabel('Pr. hold', f.prHold) + sumTabel('Pr. formål', f.prFormaal) + sumTabel('Pr. bold', f.prBold);
+    sumTabel('Pr. træner', f.prTraener) + sumTabel('Pr. hold', f.prHold) + sumTabel('Pr. formål', f.prFormaal) + boldTabel(f.prBold);
 }
 
 // ---------------- optælling
@@ -499,8 +543,9 @@ function tegnOptael() {
   if (!optSted) optSted = valg.steder[0];
   chips($('cOptSted'), valg.steder, optSted, (v) => { optSted = v; tegnOptael(); });
   // Poser har et felt til løse bolde ved siden af (Lars 1. november 2026)
-  $('optLinjer').innerHTML = valg.bolde.map((b, i) => '<div class="bm-opt"><label for="o' + i + '">' + esc(b.bold) + '</label><span class="bm-ind"><input id="o' + i + '" data-bold="' + esc(b.bold) + '" inputmode="numeric" placeholder="' + (b.loese ? 'poser' : 'rør') + '" aria-label="' + esc(b.bold) + ', ' + (b.loese ? 'hele poser' : 'rør') + '">' +
-    (b.loese ? '<input id="ol' + i + '" data-loese="' + esc(b.bold) + '" inputmode="numeric" placeholder="løse" aria-label="' + esc(b.bold) + ', løse bolde">' : '') + '</span></div>').join('');
+  // Indholdet står under navnet, og enheden i feltet (Lars 17. november 2026)
+  $('optLinjer').innerHTML = valg.bolde.map((b, i) => { const e = b.loese ? 'hele poser' : enhedTekst(2, b.bold); return '<div class="bm-opt"><label for="o' + i + '">' + navnHtml(b.bold, b) + '</label><span class="bm-ind"><input id="o' + i + '" data-bold="' + esc(b.bold) + '" inputmode="numeric" placeholder="' + esc(b.loese ? 'poser' : enhedTekst(2, b.bold)) + '" aria-label="' + esc(b.bold) + ', ' + esc(e) + '">' +
+    (b.loese ? '<input id="ol' + i + '" data-loese="' + esc(b.bold) + '" inputmode="numeric" placeholder="løse" aria-label="' + esc(b.bold) + ', løse bolde">' : '') + '</span></div>'; }).join('');
   $('optUd').innerHTML = ''; besked($('optMsg'), '');
 }
 let optId = nyId();
@@ -518,14 +563,15 @@ $('optForm').addEventListener('submit', async (e) => {
   try {
     const r = await motor('bold', 'optael', { sted: optSted, linjer }, optId); optId = nyId();
     besked($('optMsg'), 'Optællingen er gemt.', 'okm');
-    $('optUd').innerHTML = '<table><tr><th>Bold</th><th class="n">Talt</th><th class="n">Bogført</th><th class="n">Forskel</th></tr>' + r.map((x) => '<tr><td>' + esc(x.bold) + '</td><td class="n">' + esc(x.taltTekst || x.talt) + '</td><td class="n">' + esc(x.beregnetTekst || x.beregnet) + '</td><td class="n' + (x.forskel < 0 ? ' minus' : '') + '">' + esc(x.forskelTekst || ((x.forskel > 0 ? '+' : '') + x.forskel)) + '</td></tr>').join('') + '</table>';
+    $('optUd').innerHTML = '<table><tr><th>Bold</th><th class="n">Talt</th><th class="n">Bogført</th><th class="n">Forskel</th></tr>' + r.map((x) => '<tr><td>' + navnHtml(x.bold, x) + '</td><td class="n">' + esc(x.taltTekst || x.talt) + '</td><td class="n">' + esc(x.beregnetTekst || x.beregnet) + '</td><td class="n' + (x.forskel < 0 ? ' minus' : '') + '">' + esc(x.forskelTekst || ((x.forskel > 0 ? '+' : '') + x.forskel)) + '</td></tr>').join('') + '</table>';
   } catch (err) { besked($('optMsg'), err.message, 'err'); if (!err.net) optId = nyId(); }
 });
 
 // ---------------- modtag og flyt
 function fyldSelects() {
   const steder = valg.steder.map((s) => '<option>' + esc(s) + '</option>').join('');
-  const bolde = valg.bolde.map((b) => '<option>' + esc(b.bold) + '</option>').join('');
+  // Indholdet står i valget, fx "Green X3 (rør à 3 bolde)". Værdien er stadig boldens navn
+  const bolde = valg.bolde.map((b) => '<option value="' + esc(b.bold) + '">' + esc(b.bold + ' (' + indhold(b.bold, b) + ')') + '</option>').join('');
   $('iSted').innerHTML = steder; $('fFra').innerHTML = steder; $('fTil').innerHTML = steder;
   if (valg.steder[1]) $('fTil').value = valg.steder[1];
   $('iBold').innerHTML = bolde; $('fBold').innerHTML = bolde;
@@ -536,7 +582,7 @@ function modtagFelter() {
   [['i', 'Antal rør eller poser'], ['f', 'Antal']].forEach(([k, std]) => {
     const b = boldInfo($(k + 'Bold').value);
     $(k + 'LoeseBoks').classList.toggle('hidden', !b.loese);
-    $(k + 'AntalLbl').textContent = b.loese ? 'Hele poser' : std;
+    $(k + 'AntalLbl').textContent = b.loese ? 'Antal hele poser' : (b.bold ? 'Antal ' + enhedTekst(2, b.bold) : std);
     if (!b.loese) $(k + 'Loese').value = '';
   });
 }
@@ -564,11 +610,14 @@ function visBestil(b) {
   {
     if (!b.linjer.length) { ud.textContent = 'Intet under minimum. Ingen bestilling nu.'; return; }
     const kr = (n) => n.toLocaleString('da-DK', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-    ud.innerHTML = '<table><tr><th>Bold</th><th class="n">Lager</th><th class="n">Bestil</th><th class="n">Kr. ekskl. moms</th></tr>' +
-      b.linjer.map((l) => '<tr><td>' + esc(l.bold) + '</td><td class="n">' + esc(lagerCelle(l.lager, l.lagerTekst)) + '</td><td class="n"><b>' + l.antal + '</b></td><td class="n">' + (l.beloeb ? kr(l.beloeb) : 'pris mangler') + '</td></tr>').join('') + '</table>' +
+    // Lager og bestil altid med enheden, og bolde i alt under (Lars 17. november 2026)
+    const bst = (l) => l.antalTekst || enhTekst(l.antal, l.bold);
+    const bolde = (l) => l.bolde || (boldInfo(l.bold).boldePrEnhed > 1 ? l.antal * boldInfo(l.bold).boldePrEnhed : 0);
+    ud.innerHTML = '<div class="bm-rul"><table><tr><th>Bold</th><th class="n">Lager</th><th class="n">Bestil</th><th class="n">Kr. ekskl. moms</th></tr>' +
+      b.linjer.map((l) => '<tr><td>' + navnHtml(l.bold, l) + '</td><td class="n">' + esc(lagerCelle(l.lager, l.lagerTekst, l.bold)) + '</td><td class="n"><b>' + esc(bst(l)) + '</b>' + (bolde(l) ? '<small class="bm-ih">' + bolde(l) + ' bolde</small>' : '') + '</td><td class="n">' + (l.beloeb ? kr(l.beloeb) + (l.pris ? '<small class="bm-ih">' + kr(l.pris) + ' pr. ' + esc(enhedTekst(1, l.bold)) + '</small>' : '') : 'pris mangler') + '</td></tr>').join('') + '</table></div>' +
       '<div class="total">I alt ' + kr(b.ialtEkslMoms) + ' kr. ekskl. moms. ' + (b.fragtfri ? 'Fri fragt.' : 'Mangler ' + kr(b.mangler) + ' kr. til fri fragt ved ' + kr(b.fragtfriGraense) + ' kr.') + '</div>';
     if (erBest()) return;
-    const tekst = 'Hej\n\nRoskilde Tennis Klub vil gerne bestille:\n\n' + b.linjer.map((l) => l.antal + ' ' + (String(l.enhed).toLowerCase() === 'pose' ? (l.antal === 1 ? 'pose' : 'poser') : 'rør') + ' ' + l.bold).join('\n') + '\n\nVenlig hilsen\n' + person.navn;
+    const tekst = 'Hej\n\nRoskilde Tennis Klub vil gerne bestille:\n\n' + b.linjer.map((l) => bst(l) + ' ' + l.bold + ' (' + indhold(l.bold, l) + ')').join('\n') + '\n\nVenlig hilsen\n' + person.navn;
     const a = document.createElement('a');
     a.href = 'mailto:' + encodeURIComponent(b.modtager || '') + '?subject=' + encodeURIComponent('Boldbestilling Roskilde Tennis Klub') + (b.kopi ? '&cc=' + encodeURIComponent(b.kopi) : '') + '&body=' + encodeURIComponent(tekst);
     a.textContent = 'Lav mail med bestillingen'; a.className = 'ghost'; a.style.cssText = 'display:inline-block;margin-top:12px;color:var(--accent)';
