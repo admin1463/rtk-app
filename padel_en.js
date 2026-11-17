@@ -23,7 +23,7 @@
       'Weekly training with coaches, good partners and lots of fun. Indoors at PadelPit in Roskilde and, in summer, outdoors on the club\'s courts in Darup by Dyrskuepladsen. For children, young people and adults.',
     'Få besked, når vi åbner for tilmeldinger': 'Get notified when sign-up opens',
     'Sikr din plads': 'Secure your place',
-    'Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 ·': 'Pre-registration opens Tuesday 17 November at 10 am ·',
+    'Forhåndstilmeldingen åbner onsdag 18. november kl. 10 ·': 'Pre-registration opens Wednesday 18 November at 10 am ·',
     'Begrænset antal pladser · Det tager 3 minutter · 500 kr. i depositum pr. spiller, som trækkes fra prisen, eller som I får tilbage, hvis I ikke får plads':
       'Limited places · Takes 3 minutes · DKK 500 deposit per player, deducted from the price or refunded if you don\'t get a place',
     '1 til 1,5 time': '1 to 1.5 hours',
@@ -143,12 +143,12 @@
     'RTK, et stærkt fællesskab': 'RTK, a strong community',
     // Forhåndstilmelding
     'Forhåndstilmelding 2027': 'Pre-registration 2027',
-    'Forhåndstilmeldingen åbner tirsdag 17. november kl. 10': 'Pre-registration opens Tuesday 17 November at 10 am',
+    'Forhåndstilmeldingen åbner onsdag 18. november kl. 10': 'Pre-registration opens Wednesday 18 November at 10 am',
     'Skriv jer op': 'Sign up',
-    'Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 og lukker 10. december 2026. Alle får svar senest 15. december. Du kan skrive flere spillere op på én gang, fx dig selv og dine børn. Der er et begrænset antal pladser, kun 8 til 10 på hvert hold. Når I har skrevet jer op, betaler I 500 kr. pr. spiller i depositum i ForeningLet inden for 48 timer. Voksne skal være på padelniveau 1,5. Er du voksen og helt ny, eller er du 60+ og vil spille i dagtimerne, så se':
-      'Pre-registration opens Tuesday 17 November at 10 am and closes 10 December 2026. Everyone gets an answer by 15 December. You can sign up several players at once, e.g. yourself and your children. Places are limited, only 8 to 10 on each team. After signing up, you pay a DKK 500 deposit per player in ForeningLet within 48 hours. Adults must be at padel level 1.5. If you are an adult beginner, or 60+ and want to play during the daytime, see',
+    'Forhåndstilmeldingen åbner onsdag 18. november kl. 10 og lukker 10. december 2026. Alle får svar senest 15. december. Du kan skrive flere spillere op på én gang, fx dig selv og dine børn. Der er et begrænset antal pladser, kun 8 til 10 på hvert hold. Når I har skrevet jer op, betaler I 500 kr. pr. spiller i depositum i ForeningLet inden for 48 timer. Voksne skal være på padelniveau 1,5. Er du voksen og helt ny, eller er du 60+ og vil spille i dagtimerne, så se':
+      'Pre-registration opens Wednesday 18 November at 10 am and closes 10 December 2026. Everyone gets an answer by 15 December. You can sign up several players at once, e.g. yourself and your children. Places are limited, only 8 to 10 on each team. After signing up, you pay a DKK 500 deposit per player in ForeningLet within 48 hours. Adults must be at padel level 1.5. If you are an adult beginner, or 60+ and want to play during the daytime, see',
     'listerne uden depositum': 'the lists without a deposit',
-    'Fra 17. november kl. 10': 'From 17 November, 10 am',
+    'Fra 18. november kl. 10': 'From 18 November, 10 am',
     'Nu': 'Now',
     'Skriv jer op her': 'Sign up here',
     'Spillere, dage og hvordan I vil give en hånd. Du får et tilmeldingsnummer, som vi bruger til at finde jeres betaling.': 'Players, days and how you would like to help. You get a registration number that we use to match your payment.',
@@ -165,7 +165,7 @@
       'If you get a place, you get the exact time and have two days to pay the first quarter in ForeningLet. The deposit is deducted. Otherwise the place goes to someone else on the list. If you don\'t get a place, your deposit is refunded no later than two weeks after the answer, and you can go on a waiting list in case a place opens up later. If you turn down a place on a day you chose, the club keeps the deposit.',
     'I tvivl om holdet?': 'Not sure which team?',
     'Se hold, tider og priser igen': 'See teams, times and prices again',
-    'Skriv dit navn og din mail, så sender vi dig en mail tirsdag 17. november kl. 10, når forhåndstilmeldingen åbner. Du binder dig ikke til noget.': 'Enter your name and email and we will email you on Tuesday 17 November at 10 am when pre-registration opens. You are not committing to anything.',
+    'Skriv dit navn og din mail, så sender vi dig en mail onsdag 18. november kl. 10, når forhåndstilmeldingen åbner. Du binder dig ikke til noget.': 'Enter your name and email and we will email you on Wednesday 18 November at 10 am when pre-registration opens. You are not committing to anything.',
     'Navn': 'Name', 'Mail': 'Email', 'navn@eksempel.dk': 'name@example.com',
     'Lad dette felt være tomt': 'Leave this field empty', 'Lad feltet stå tomt': 'Leave this field empty',
     'Jeg har læst,': 'I have read',
@@ -274,7 +274,7 @@
       'are on the list for adult beginners and pay nothing. There is nothing to pay on that list, and you are not committing to anything. We will write to you when we start the initiative, or if a place opens up on a team that suits you. You decide whether to stay on the list or come off it. If you have questions or want to come off the list,',
     'skriv til os': 'write to us',
     'Vi sender en mail til': 'We will send an email to',
-    'tirsdag 17. november kl. 10, når forhåndstilmeldingen åbner. Du får også en kort bekræftelse nu.': 'on Tuesday 17 November at 10 am when pre-registration opens. You will also get a short confirmation now.',
+    'onsdag 18. november kl. 10, når forhåndstilmeldingen åbner. Du får også en kort bekræftelse nu.': 'on Wednesday 18 November at 10 am when pre-registration opens. You will also get a short confirmation now.',
     // Listerne uden depositum
     'Lister uden depositum': 'Lists without a deposit',
     'Passer holdene ikke til dig lige nu?': 'Are the teams not right for you yet?',
@@ -304,8 +304,8 @@
     '. Det initiativ er ikke startet endnu. Bliver vi nok, starter vi det. Det koster ikke noget at stå på listen. Vi skriver til dig, når vi starter initiativet, eller hvis der bliver plads på et hold, du kan passe ind i. Du bestemmer selv, om du vil blive stående på listen eller af den.':
       '. That initiative has not started yet. If there is enough interest, we will start it. It costs nothing to be on the list. We will write to you when we start the initiative, or if a place opens up on a team that suits you. You decide whether to stay on the list or come off it.',
     'Hvornår kan vi skrive os op?': 'When can we sign up?',
-    'Forhåndstilmeldingen åbner tirsdag 17. november kl. 10 og lukker 10. december kl. 23.59. Alle får svar senest 15. december. Vil du have en mail, når vi åbner for tilmeldinger, så skriv dig op under':
-      'Pre-registration opens Tuesday 17 November at 10 am and closes 10 December at 11.59 pm. Everyone gets an answer by 15 December. If you want an email when sign-up opens, sign up under',
+    'Forhåndstilmeldingen åbner onsdag 18. november kl. 10 og lukker 10. december kl. 23.59. Alle får svar senest 15. december. Vil du have en mail, når vi åbner for tilmeldinger, så skriv dig op under':
+      'Pre-registration opens Wednesday 18 November at 10 am and closes 10 December at 11.59 pm. Everyone gets an answer by 15 December. If you want an email when sign-up opens, sign up under',
     '. Listerne uden depositum for voksne nybegyndere og Seniorpadel (60+) er åbne allerede nu.': '. The lists without a deposit for adult beginners and Senior padel (60+) are open now.',
     'Kan jeg skrive hele familien op på én gang?': 'Can I sign up the whole family at once?',
     'Ja. Skriv alle spillere op i samme tilmelding, så får I ét tilmeldingsnummer og betaler depositummet for alle på én gang i ForeningLet. Der er ingen familierabat, så hver spiller betaler sin egen pris.':
@@ -414,7 +414,7 @@
     'Du har sendt mange spørgsmål. Prøv igen om en time.': 'You have sent a lot of questions. Try again in an hour.',
     'Forhåndstilmeldingen er lukket. Skriv dig på listerne uden depositum, så hører du fra os.': 'Pre-registration is closed. Put your name on the lists without a deposit and you will hear from us.',
     'Forhåndstilmeldingen er åben. Skriv jer op her på siden.': 'Pre-registration is open. Sign up here on the page.',
-    'Forhåndstilmeldingen åbner tirsdag 17. november kl. 10. Skriv dig op, så får du en mail, når vi åbner for tilmeldinger.': 'Pre-registration opens Tuesday 17 November at 10 am. Sign up for an email when sign-up opens.',
+    'Forhåndstilmeldingen åbner onsdag 18. november kl. 10. Skriv dig op, så får du en mail, når vi åbner for tilmeldinger.': 'Pre-registration opens Wednesday 18 November at 10 am. Sign up for an email when sign-up opens.',
     'Genindlæs siden og prøv igen.': 'Reload the page and try again.',
     'Holdene er for spillere fra 8 år.': 'The teams are for players from age 8.',
     'Skriv mindst én spiller op.': 'Sign up at least one player.',
