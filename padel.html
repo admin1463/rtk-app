@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="bb44f61a2e22">
+<meta name="rtk-version" content="cd8cd5dbd4f0">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -349,7 +349,7 @@ html:not(.aaben) .efter{display:none!important}
     <div class="kick">Nyt i Roskilde Tennis Klub · start 13. januar 2027</div>
     <h1>Padel hele året. <em>Sammen.</em></h1>
     <p>Træning hver uge med trænere, gode makkere og masser af grin. Indendørs hos PadelPit i Roskilde og om sommeren også ude på klubbens baner i Darup ved Dyrskuepladsen. For børn, unge og voksne.</p>
-    <a class="knap foer" href="#tilmeld">Få besked, når vi åbner for tilmeldinger</a><a class="knap efter" href="#tilmeld">Sikr din plads</a>
+    <a class="knap foer" href="#tilmeld">Få besked, når vi åbner for tilmeldinger</a><a class="knap efter" href="#tilmeld">Skriv dig op</a>
     <div class="smaa"><b class="foer">Forhåndstilmeldingen åbner onsdag 18. november kl. 10 · </b>Begrænset antal pladser · Det tager 3 minutter · 500 kr. i depositum pr. spiller, som trækkes fra prisen, eller som I får tilbage, hvis I ikke får plads</div>
   </div>
 </section>
@@ -582,7 +582,7 @@ html:not(.aaben) .efter{display:none!important}
         <label class="pv-cb"><input type="checkbox" id="kCamps"><span>Fortæl mig om camps og andre tilbud, hvis der ikke er plads</span></label>
       </div>
       <div class="pv-fejl" id="fejl2" role="alert"></div>
-      <button type="submit" class="knap" id="send">Sikr din plads</button>
+      <button type="submit" class="knap" id="send">Skriv dig op</button>
       <button type="button" class="pv-tilbage" data-videre="1">Tilbage</button>
     </div>
 
@@ -700,7 +700,7 @@ html:not(.aaben) .efter{display:none!important}
   <span>Officielle partnere</span>
   <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="ikoner/racketlife.png" alt=""></a>
 </div>
-<div class="pv-cta" id="cta"><a class="knap foer" href="#tilmeld">Få besked, når vi åbner for tilmeldinger</a><a class="knap efter" href="#tilmeld">Sikr din plads</a></div>
+<div class="pv-cta" id="cta"><a class="knap foer" href="#tilmeld">Få besked, når vi åbner for tilmeldinger</a><a class="knap efter" href="#tilmeld">Skriv dig op</a></div>
 </main>
 
 <div class="pa-boks" id="aceBoks">
@@ -733,7 +733,7 @@ html:not(.aaben) .efter{display:none!important}
 <script src="konfig.js?v=869b7a78d104"></script>
 <script>window.RTK_SPROG_STANDARD = 'da';</script>
 <script src="sprog.js?v=889007325426"></script>
-<script src="padel_en.js?v=9073abf67a96"></script>
+<script src="padel_en.js?v=68c5e5ef6201"></script>
 <script>
 // Sproget (sprog.js) og små ord, der sættes sammen med navne (12. november 2026)
 window.sprogNu = function () { return (window.RTK_SPROG && window.RTK_SPROG.sprog) || 'da'; };
@@ -1021,8 +1021,8 @@ window.sprogOrd = function (da, en) { return window.sprogNu() === 'en' ? en : da
     knap.disabled = true; knap.textContent = 'Sender …';
     data.sprog = sprogNu();
     try { svar = await motor('ventelisteNy', data, vlId); }
-    catch (err) { f.textContent = err.message; knap.disabled = false; knap.textContent = 'Sikr din plads'; return; }
-    vlId = nyId(); knap.disabled = false; knap.textContent = 'Sikr din plads';
+    catch (err) { f.textContent = err.message; knap.disabled = false; knap.textContent = 'Skriv dig op'; return; }
+    vlId = nyId(); knap.disabled = false; knap.textContent = 'Skriv dig op';
     var nr = svar.nr, antal = svar.antal;
     var erNyb = function (x) { return alder(new Date(x.foed)) >= 18 && x.erfaring === 0; };
     var esc = function (t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;'); };

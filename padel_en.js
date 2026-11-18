@@ -22,7 +22,7 @@
     'Træning hver uge med trænere, gode makkere og masser af grin. Indendørs hos PadelPit i Roskilde og om sommeren også ude på klubbens baner i Darup ved Dyrskuepladsen. For børn, unge og voksne.':
       'Weekly training with coaches, good partners and lots of fun. Indoors at PadelPit in Roskilde and, in summer, outdoors on the club\'s courts in Darup by Dyrskuepladsen. For children, young people and adults.',
     'Få besked, når vi åbner for tilmeldinger': 'Get notified when sign-up opens',
-    'Sikr din plads': 'Secure your place',
+    'Skriv dig op': 'Sign up',
     'Forhåndstilmeldingen åbner onsdag 18. november kl. 10 ·': 'Pre-registration opens Wednesday 18 November at 10 am ·',
     'Begrænset antal pladser · Det tager 3 minutter · 500 kr. i depositum pr. spiller, som trækkes fra prisen, eller som I får tilbage, hvis I ikke får plads':
       'Limited places · Takes 3 minutes · DKK 500 deposit per player, deducted from the price or refunded if you don\'t get a place',
