@@ -164,7 +164,7 @@
     'Får I plads, får I det præcise tidspunkt og har to dage til at betale første kvartal i ForeningLet. Depositummet trækkes fra. Ellers går pladsen videre til en anden på listen. Får I ikke plads, får I depositummet tilbage senest to uger efter svaret og kan komme på venteliste, hvis der bliver en plads senere. Siger I nej til en plads på en dag, I har valgt, beholder klubben depositummet.':
       'If you get a place, you get the exact time and have two days to pay the first quarter in ForeningLet. The deposit is deducted. Otherwise the place goes to someone else on the list. If you don\'t get a place, your deposit is refunded no later than two weeks after the answer, and you can go on a waiting list in case a place opens up later. If you turn down a place on a day you chose, the club keeps the deposit.',
     'I tvivl om holdet?': 'Not sure which team?',
-    'Se hold, tider og priser igen': 'See teams, times and prices again',
+    'Se hold, tider og priser lige herunder': 'See teams, times and prices just below',
     'Skriv dit navn og din mail, så sender vi dig en mail onsdag 18. november kl. 10, når forhåndstilmeldingen åbner. Du binder dig ikke til noget.': 'Enter your name and email and we will email you on Wednesday 18 November at 10 am when pre-registration opens. You are not committing to anything.',
     'Navn': 'Name', 'Mail': 'Email', 'navn@eksempel.dk': 'name@example.com',
     'Lad dette felt være tomt': 'Leave this field empty', 'Lad feltet stå tomt': 'Leave this field empty',
