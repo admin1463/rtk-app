@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="99042e4480bb">
+<meta name="rtk-version" content="955c15132836">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -68,6 +68,7 @@ html:not(.kun-padel) .kun-padel-vis{display:none !important}
         <li data-t="gem7"></li>
         <li data-t="gem8"></li>
         <li data-t="gem9"></li>
+        <li data-t="gem10"></li>
       </ul>
     </section>
 
@@ -252,6 +253,7 @@ window.TEKSTER = {
     gem7: 'Beskeder: dine valg af beskeder, og om du har sagt ja til nyheder.',
     gem8: 'Personale og frivillige: din rolle, det du registrerer (fx bolde, opstrengninger og privattimer), og for trænere dit valg af arbejdstøj med størrelser og værdien til skatten. Trænere kan selv lave en profil med billede, som medlemmerne kan se.',
     gem9: 'Padel for personale og frivillige: kalenderen med årshjul og frister, hvem der er ansvarlig, og hvad der er gjort. Det, I skriver i chatten i grupperne for padel og i idéboksen (med dit navn), billeder, du lægger op under Billeder (kun dem i padel ser dem, og du kan selv slette dem), mødereferater med deltagere og opgaver, filer, du lægger op under Økonomi (kun Styregruppen og Padel Team ser dem), og dit profilkort, hvis du laver et, også telefonnummer og mail, hvis du skriver dem. Et kalenderabonnement er et personligt link, som du selv kan stoppe. Hvad du ser, afhænger af din rolle.',
+    gem10: 'Turneringer: klubbens administratorer kan i Mit RTK se kampene for RTK-spillere i turneringer de næste 7 dage med navn, række, spillested, tidspunkt og resultat. Oplysningerne hentes fra Dansk Tennis Forbunds Tournament Software, hvor de i forvejen er offentlige. Modstanderen vises kun med klub. Kampene gemmes kun for i dag og de næste 7 dage.',
     aceH: 'Ace, klubbens AI-hjælper',
     aceIntro: 'Ace svarer på spørgsmål om klubben og Mit RTK ud fra klubbens egne tekster. Ace kan ikke se dine data.',
     ace1: 'Dit spørgsmål sendes til en AI-tjeneste hos en databehandler uden for EU. Det sker kun med de garantier, databeskyttelsesreglerne kræver. Mobilnumre, mails og cpr-numre, du skriver, fjernes, før spørgsmålet sendes.',
@@ -327,6 +329,7 @@ window.TEKSTER = {
     gem7: 'Messages: your message choices and whether you have said yes to news.',
     gem8: 'Staff and volunteers: your role, what you register (for example balls, stringing and private lessons), and for coaches your choice of work clothing with sizes and the value for tax purposes. Coaches can create a profile with a photo that members can see.',
     gem9: 'Padel for staff and volunteers: the calendar with the year plan and deadlines, who is responsible and what has been done. What you write in the chat in the padel groups and in the idea box (with your name), photos you upload under Photos (only people in padel see them, and you can delete them yourself), meeting minutes with participants and tasks, files you upload under Budget (only the steering group and Padel Team see them), and your profile card if you make one, including phone number and email if you add them. A calendar subscription is a personal link you can stop yourself. What you see depends on your role.',
+    gem10: 'Tournaments: the club administrators can see in Mit RTK the matches of RTK players in tournaments over the next 7 days with name, event, venue, time and result. The information comes from the Danish Tennis Federation’s Tournament Software, where it is already public. Opponents are only shown by club. Matches are only kept for today and the next 7 days.',
     aceH: 'Ace, the club’s AI assistant',
     aceIntro: 'Ace answers questions about the club and Mit RTK based on the club’s own texts. Ace cannot see your data.',
     ace1: 'Your question is sent to an AI service at a data processor outside the EU. This only happens with the safeguards that data protection rules require. Mobile numbers, emails and CPR numbers you type are removed before the question is sent.',
@@ -379,14 +382,14 @@ if (window.RTK_KONFIG && window.RTK_KONFIG.miljoe === 'produktion') {
     gem8: 'Personale og frivillige: din rolle, det du registrerer (fx bolde og opstrengninger), og for trænere dit valg af arbejdstøj med størrelser og værdien til skatten.',
     hjaelp: 'Klubben bruger databehandlere til at drive Mit RTK, fx til at opbevare data og sende sms og mails. De må kun bruge oplysningerne efter klubbens anvisning, og klubben har databehandleraftaler med dem. Nogle af dem kan behandle oplysninger uden for EU. Det sker kun med de garantier, databeskyttelsesreglerne kræver.',
     telefon: 'Mit RTK gemmer dit login, hvem du er (så siden kan gå i gang med det samme), dit valg af sprog og at du har set velkomsten. Der er ingen cookies til statistik eller reklame.',
-    version: '1. november 2026. Version 3.'
+    version: '21. november 2026. Version 3.1 med turneringer.'
   });
   Object.assign(window.TEKSTER.en, {
     gem1: 'Login for staff and volunteers: your name, your mobile number and possibly your email. You log in with a code sent by text message, and your phone remembers your login for up to 30 days.',
     gem8: 'Staff and volunteers: your role, what you register (for example balls and stringings), and for coaches your choice of work clothing with sizes and the value for tax purposes.',
     hjaelp: 'The club uses data processors to run Mit RTK, for example to store data and send text messages and emails. They may only use the data as instructed by the club, and the club has data processing agreements with them. Some of them may process data outside the EU. This only happens with the safeguards that data protection rules require.',
     telefon: 'Mit RTK stores your login, who you are (so the page can start straight away), your choice of language and that you have seen the welcome. There are no cookies for statistics or advertising.',
-    version: '1 November 2026. Version 3.'
+    version: '21 November 2026. Version 3.1 with tournaments.'
   });
   document.addEventListener('DOMContentLoaded', function () {
     var skjul = function (e) { if (e) e.style.display = 'none'; };
