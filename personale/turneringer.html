@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="3772ff7145f8">
+<meta name="rtk-version" content="51e9de03c3e8">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -24,6 +24,13 @@
 .tu-sog button{min-height:36px;padding:4px 10px;border:1px solid var(--line2);font-weight:600}
 .tu-rtk{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--teal);color:#fff;border-radius:12px;padding:14px 16px;margin:0 0 12px;text-decoration:none;border:0;width:100%;text-align:left;white-space:normal}
 .tu-rtk b{display:block;font-size:17px}.tu-rtk small{font-size:13px;color:var(--sub);font-weight:500}.tu-rtk .pil{font-size:22px}
+/* RTK-spillere, så trænere og medspillere kan heppe (Lars 21. november 2026 kl. 22.13, mockup_rtk_spillere) */
+.tu-rtk.sp{background:#0f4f3a}.tu-rtk.sp ul{margin:6px 0 0;padding-left:18px;font-size:14px;font-weight:500}
+.ms-dag{font-weight:700;margin:14px 0 4px;padding-top:10px;border-top:1px solid var(--line2)}.ms-dag:first-of-type{border-top:0;padding-top:0}
+.ms-k{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:8px 0;border-bottom:1px solid #f0f2f1}.ms-n{grid-column:1;font-size:15px}.ms-s{grid-column:1;font-size:14px;color:var(--muted)}
+.ms-t,.ms-r{grid-column:2;grid-row:1/3;align-self:center;font-size:13px;white-space:nowrap;text-align:right}.ms-t{background:#EEF3F1;border-radius:999px;padding:2px 9px;font-weight:600}.ms-t.ikke{background:#fff4c7;color:#7a5d00;font-weight:500}
+.ms-r{font-weight:600;color:var(--teal)}.ms-r.tabt{color:var(--muted)}.ms-r small{display:block;font-weight:500;color:var(--muted)}
+.ms-mere summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--teal);padding:8px 0;min-height:40px}
 .tu-filt{padding:16px}.tu-filt .lab{display:block;font-size:13px;font-weight:700;margin:12px 0 6px;color:var(--teal)}.tu-filt .lab:first-child{margin-top:0}
 .tu-filt .chips{gap:6px}.tu-filt .chips button{min-height:38px;padding:4px 12px;font-size:14px}
 .tu-sw{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;margin-top:14px;background:none;border:0;padding:0;min-height:40px;width:100%;text-align:left;white-space:normal}
@@ -43,6 +50,10 @@
 .tu-naer{display:inline-block;margin-left:4px;padding:0 7px;border-radius:999px;background:#E6F0EE;color:var(--teal);font-size:11px;font-weight:700;white-space:nowrap}
 .tu-st{display:inline-block;white-space:nowrap;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700}
 .tu-st.aaben{background:#E3F2E8;color:#1E6B3A}.tu-st.snart{background:#FCE4EC;color:#B0004A}.tu-st.ikke{background:#EEF1F3;color:#4A5A66}
+.tu-st.plan{background:#FFF3D6;color:#7A5200}
+.tu-plan{background:#FFF8E6;border:1px solid #F0D9A0;border-radius:10px;padding:10px 12px;margin:12px 0 0;font-size:14px;line-height:1.45}.tu-plan b{display:block;margin-bottom:2px}
+.tu-nyt{border-left:4px solid var(--teal)}.tu-nyt ul{margin:6px 0 0;padding-left:18px}.tu-nyt li{margin:3px 0;font-size:14px}.tu-nyt .rtk{font-weight:700}
+.tu-adv{border-left:4px solid #C98A00}.tu-adv ul{margin:6px 0 0;padding-left:18px}.tu-adv li{margin:2px 0}.tu-adv .tu-p{margin:0}
 .tu-stj{position:absolute;top:4px;right:4px;font-size:26px;line-height:1;color:#7F8C93;background:none;border:0;padding:6px;min-height:0;min-width:0}.tu-stj[aria-pressed="true"]{color:var(--pink)}
 .tu-hoved{position:relative;padding-right:40px}.tu-hoved .tu-stj{top:-6px;right:-6px;font-size:30px}
 .tu-tilbage{font-size:15px;font-weight:600;color:var(--teal);margin:0 0 10px;border:0;background:none;padding:4px 0;min-height:0}
@@ -116,8 +127,9 @@
 
 <script src="../konfig.js?v=869b7a78d104"></script>
 <script>
-// Turneringer for personale og frivillige (Lars 14. november 2026). Motoren henter turneringerne hver søndag fra
+// Turneringer for personale og frivillige (Lars 14. november 2026). Motoren henter turneringerne hver torsdag fra
 // Tournament Software og DGI (moduler/turneringer.gs). Status og orientering regner motoren ud, når listen hentes.
+// Planlagte turneringer fra DTF's terminsliste og advarsler til administratorerne kommer også fra motoren (18. november 2026).
 // Alt på siden kommer fra kilderne eller fra regellaget (Turneringer/generators/sources/regler_og_begreber.txt). Intet er opfundet.
 const MILJOE = window.RTK_KONFIG.miljoe;
 const URL_MOTOR = window.RTK_KONFIG.motor;
@@ -161,10 +173,12 @@ const TRAPPE = [
   ['Kat. 3', 'For spillere i den nederste del af ranglisten.'],
   ['Kat. 2', 'For de næstbedste.'], ['Kat. 1', 'For de bedste.'],
   ['Kat. G', 'Grand Prix for de bedste.'], ['Kat. A', 'DM for seniorer og UM for juniorer.']];
-// Hvor melder man sig til (Lars 14. november kl. 22.56). Kilder: Tennis Øst afsnit 1.6 og 8, DTF's Vinter Tour og Tennis10-side, DGI
+// Hvor melder man sig til (Lars 14. november kl. 22.56). Kilder: Tennis Øst afsnit 1.6 og 8, DTF's Vinter Tour og Tennis10-side, DGI.
+// Terminslisten tilføjet 18. november 2026 (Lars kl. 07.42), regellaget B23.
 const STEDER = [
   ['Tennis Øst og DTF i Tournament Software', 'Næsten alle tennisturneringer: ranglisteturneringer, Tennis10, veteraner, GameOn og Sjællandsmesterskaberne. Man tilmelder sig med en gratis profil i Tournament Software. Søg på turneringens kode.', 'https://dtf.tournamentsoftware.com'],
-  ['DGI', 'De fleste skumstævner, som Tennis Øst holder sammen med DGI. Man tilmelder sig hos DGI og kan deltage uden at være medlem af en klub. Søg på arrangementets nummer.', 'https://www.dgi.dk/idraet/idraetter-i-dgi/tennis/skumtennis']];
+  ['DGI', 'De fleste skumstævner, som Tennis Øst holder sammen med DGI. Man tilmelder sig hos DGI og kan deltage uden at være medlem af en klub. Søg på arrangementets nummer.', 'https://www.dgi.dk/idraet/idraetter-i-dgi/tennis/skumtennis'],
+  ['DTF\'s terminsliste', 'DTF\'s plan for hele sæsonen: alle turneringer med kategori på Vinter og Sommer Tour med dato, arrangør, rækker og gebyr. Man tilmelder sig ikke her. Klubberne opretter selv turneringerne i Tournament Software, nogle først tæt på datoen, så en turnering kan stå i planen, før man kan melde sig til. Skumstævner hos DGI, GameOn og TiD Tour står ikke i planen.', 'https://tennis.dk/spiller/turneringer-2/individuelle-turneringer/vinter-tour/']];
 const FORKLAR = {
   'Skum': 'Det blødeste sted at starte. Badmintonbane og skumbold, puljer på tid, så alle får mange kampe. Primært for juniorer, men også for voksne, fx Tennis Østs åbne SM i skumtennis. Man kan deltage uden at være medlem af en klub.',
   'Rød': 'Tennis10 for U10: rød bold på rød bane, så orange bold på orange bane og grøn bold på almindelig bane. Rækkerne er kønsneutrale, og der er ingen rangliste i U10.',
@@ -174,7 +188,7 @@ const FORKLAR = {
 };
 FORKLAR['Orange'] = FORKLAR['Grøn'] = FORKLAR['Rød'];
 const ORD = [['Pulje', '3 til 8 spillere, hvor alle møder alle.'], ['Bonusrunde', 'En ekstra kamp til dem, der taber i første runde.'],
-  ['Next Gen', 'Korte sæt til 4.'], ['Termin', 'Normalt en uge. Kun én turnering pr. termin.'],
+  ['Next Gen', 'Korte sæt til 4.'], ['Termin', 'Normalt en uge. På Vinter Tour må man kun spille én række i én turnering pr. termin.'],
   ['Licens', 'Giver point på ranglisten. Se Licens ovenfor.']];
 // Turneringstyper, veteraner og licens (Lars 14. november kl. 22.27). Kilder: DTF's reglementer for individuelle turneringer og for
 // veteranturneringer (november 2025, sektion 16, 25, 27, 30 og 39), tennis.dk "Licens og klubskifte", tennis.dk om UM ude og Tennis Øst. Læst 14. november 2026.
@@ -182,7 +196,7 @@ const TYPER = {
   'Ranglisteturnering': ['Ranglisteturnering', 'En turnering, som DTF har givet en kategori (Kat. 4, 3, 2, 1, G eller A). Den giver point til DTF\'s rangliste til spillere med licens.'],
   'Veteranturnering': ['Veteranturnering', 'For voksne i aldersgrupper med 5 års spring. Vinter Tour 2026/27 har rækker fra 35+ til 75+, og reglementet går fra 30+ til 90+. Man hører til en gruppe fra det år, man fylder alderen. Veteranerne har deres eget reglement med Kat. 3, 2 og 1 og DM.'],
   'Skumtennis': ['Skumtennis', 'Skumbold på badmintonbane, puljer på tid, så alle får mange kampe. Primært for juniorer, men skum er for alle aldre, og Tennis Øst holder åbent SM i skumtennis for både juniorer og voksne. Ingen licens, og man kan deltage uden klub.'],
-  'GameOn double': ['GameOn double', 'DTF\'s doubleturneringer for breddespillere og motionister. Rækkerne deles efter WTN, og man kan melde sig alene og finde en makker.']
+  'GameOn double': ['GameOn double', 'DTF\'s doublestævner for motionister. Man vælger selv niveau fra A (meget øvet) til D (nybegynder) og er sikret mindst 3 kampe. Ingen ranglistepoint, men kampene tæller i WTN. Man kan melde sig alene og finde en makker.']
 };
 // Ranglisten (Lars 14. november kl. 23.00). Kilder: DTF's regler for pointtildeling (oktober 2023, punkt 1, 2 og 4), DTF's side
 // Ranglister (læst 14. november 2026), reglementet sektion 16 og 18, Vinter Tour 2026/27 (kategorier og doubler til WTN).
@@ -192,7 +206,7 @@ const RANGLISTE = [
   ['Hvordan får man point?', 'Kun singlekampe tæller. Ranglisten lægger de 10 bedste individuelle turneringer fra de sidste 52 uger sammen med point fra holdkampe og internationale turneringer. I en cupturnering får man point for den runde, man taber i, og intet for at tabe første runde (undtagen U12 i Kat. 3). I en pulje får man point for hver vundet kamp. Jo højere kategori, jo flere point.'],
   ['Hvornår opdateres den?', 'Hver uge med resultaterne fra ugen før. Internationale point cirka hver anden uge. Point forsvinder igen efter 52 uger.'],
   ['Hvad bruges den til?', 'Til at fordele spillerne: hvem kommer med, når der er flere tilmeldte end pladser, og hvem må spille Kat. 2 og 3. Den bruges også til seedning.'],
-  ['Og WTN?', 'World Tennis Number er noget andet: ITF\'s niveaumål for alle spillere, også uden licens, hvor doubler også tæller. GameOn og DM for veteraner bruger WTN.']
+  ['Og WTN?', 'World Tennis Number er noget andet: ITF\'s niveaumål for alle spillere, også uden licens, hvor doubler også tæller. GameOn-kampe og doubler tæller i WTN, og DM for veteraner bruger det.']
 ];
 const RANGLISTE_LINK = [['DTF\'s side om ranglisterne (med link til listerne)', 'https://tennis.dk/spiller/ranglister-2/'], ['DTF\'s regler for point', 'https://tennis.dk/wp-content/uploads/2023/10/Regler-pointtildeling_oktober2023.pdf']];
 const LICENS = [
@@ -257,7 +271,7 @@ function filtrer(hvor) {
 }
 function soeg(q) {
   const ord = q.toLowerCase().split(/\s+/).filter(Boolean);
-  return D.turneringer.filter((t) => { const s = [t.navn, t.by, t.kode, t.arrangoer, t.spillested, t.postnr].join(' ').toLowerCase(); return ord.every((o) => s.indexOf(o) >= 0); });
+  return D.turneringer.filter((t) => { const s = [t.navn, t.by, t.kode, t.arrangoer, t.spillested, t.spillesteder, t.postnr].join(' ').toLowerCase(); return ord.every((o) => s.indexOf(o) >= 0); });
 }
 
 // Et menneskeligt navn på en række: "U14 drenge single Kat. 3"
@@ -275,8 +289,9 @@ function linjeOm(t) {
   return [t.aldre, katKort(t.kategorier), +t.tilmeldte > 0 ? t.tilmeldte + ' tilmeldt' : t.pris].filter(Boolean).join(' · ');
 }
 function statusChip(t) {
-  const k = { 'Lukker snart': 'snart', 'Aflyst': 'snart', 'Åben': 'aaben' }[t.status] || 'ikke';
-  return '<span class="tu-st ' + k + '">' + esc(t.status === 'Ikke åbnet' && t.aabner ? 'Åbner ' + dagMd(t.aabner) : t.status) + '</span>';
+  const k = { 'Lukker snart': 'snart', 'Aflyst': 'snart', 'Åben': 'aaben', 'Planlagt': 'plan' }[t.status] || 'ikke';
+  // Planlagt: står i DTF's terminsliste, men ikke i Tournament Software endnu (Lars 18. november kl. 08.13)
+  return '<span class="tu-st ' + k + '">' + esc(t.status === 'Ikke åbnet' && t.aabner ? 'Åbner ' + dagMd(t.aabner) : t.status === 'Planlagt' ? 'Ej i Tournament Software endnu' : t.status) + '</span>';
 }
 // "Kat. 2, Kat. 3, Kat. 4" bliver til "Kat. 2, 3 og 4"
 function katKort(s) {
@@ -285,18 +300,73 @@ function katKort(s) {
   const og = (x) => x.length === 1 ? x[0] : x.slice(0, -1).join(', ') + ' og ' + x[x.length - 1];
   return l.every((x) => /^Kat\. /.test(x)) ? 'Kat. ' + og(l.map((x) => x.slice(5))) : og(l);
 }
+// RTK-spillere og deres kampe fra i dag og 7 dage frem (Lars 21. november 2026 kl. 22.13). Motoren henter dem hver morgen kl. 6.
+// Modstanderen vises kun med klub (Lars kl. 22.10)
+const rtkD = () => (D && D.rtk) || { hentet: '', antal: {}, kampe: [] };
+const rtkKampe = (id) => rtkD().kampe.filter((k) => k.id === id);
+const rtkAntal = (id) => +rtkD().antal[id] || new Set(rtkKampe(id).flatMap((k) => k.sp.split(' og '))).size;
+function rtkKamp(k) {
+  const sted = /darup|roskilde\s+tennis/i.test(k.sted) ? '<b>' + esc(k.sted) + '</b>' : esc(k.sted);
+  const hoejre = k.ud ? '<span class="ms-r' + (k.ud === 'Tabt' ? ' tabt' : '') + '">' + esc(k.ud) + (k.res ? '<small>' + esc(k.res) + '</small>' : '') + '</span>'
+    : k.tid ? '<span class="ms-t">kl. ' + esc(k.tid.replace(':', '.')) + '</span>' : '<span class="ms-t ikke">Tid ikke sat</span>';
+  return '<div class="ms-k"><div class="ms-n"><b>' + esc(k.sp) + '</b> · ' + esc([k.r, k.ru].filter(Boolean).join(', ')) + '</div><div class="ms-s">' + [sted, k.mod ? 'mod spiller fra ' + esc(k.mod) : 'modstander ikke fundet endnu'].filter(Boolean).join(' · ') + '</div>' + hoejre + '</div>';
+}
+function rtkDage(kampe) {
+  const pr = {};
+  kampe.forEach((k) => { (pr[k.dato] = pr[k.dato] || []).push(k); });
+  return Object.keys(pr).sort().map((d) => {
+    const l = pr[d];
+    return '<div class="ms-dag">' + esc(d === D.idag ? 'I dag, ' + langDag(d) : stor(langDag(d))) + ' · ' + l.length + (l.length === 1 ? ' kamp' : ' kampe') + '</div>' +
+      l.slice(0, 8).map(rtkKamp).join('') + (l.length > 8 ? '<details class="ms-mere"><summary>Vis ' + (l.length - 8) + ' kampe mere</summary>' + l.slice(8).map(rtkKamp).join('') + '</details>' : '');
+  }).join('');
+}
+const rtkOpd = () => rtkD().hentet ? 'Opdateret ' + langDag(rtkD().hentet) + ' kl. ' + rtkD().hentet.slice(11, 16).replace(':', '.') + '. ' : '';
+function rtkAfsnit(t) {
+  const n = rtkAntal(t.id), l = rtkKampe(t.id);
+  if (!n && !l.length) return '';
+  return '<div class="card"><h3 class="tu-h">RTK-spillere (' + n + ')</h3><p class="tu-p" style="margin:0 0 6px">Kampene for spillere fra Roskilde Tennis Klub de næste 7 dage, også på andre spillesteder. ' +
+    esc(rtkOpd()) + 'Tiden kommer med, når turneringslederen har sat den.</p>' + (l.length ? rtkDage(l) : '<p class="tu-p tu-tom">Kampene er ikke lagt i Tournament Software endnu.</p>') + '</div>';
+}
+function rtkKortFind() {
+  const slut = (() => { const d = dt(D.idag); d.setUTCDate(d.getUTCDate() + 7); return d.toISOString().slice(0, 10); })();
+  const l = rtkD().kampe.filter((k) => k.dato <= slut);
+  if (!l.length) return '';
+  const ider = [...new Set(l.map((k) => k.id))];
+  const navn = (id) => (D.turneringer.filter((t) => t.id === id)[0] || {}).navn || 'Turnering';
+  const dage = (id) => dageKort([...new Set(l.filter((k) => k.id === id).map((k) => k.dato))].map((d) => ({ d })));
+  return '<button type="button" class="tu-rtk sp" data-gaa="spillere"><span><b>RTK-spillere i turnering de næste 7 dage</b><small>' + l.length + (l.length === 1 ? ' kamp' : ' kampe') + ' i ' + ider.length + (ider.length === 1 ? ' turnering' : ' turneringer') + '</small>' +
+    '<ul>' + ider.slice(0, 4).map((id) => '<li>' + esc(navn(id)) + ': ' + rtkAntal(id) + ' spillere, ' + esc(dage(id)) + '</li>').join('') + '</ul></span><span class="pil" aria-hidden="true">&#8594;</span></button>';
+}
+function visSpillere() {
+  const slut = (() => { const d = dt(D.idag); d.setUTCDate(d.getUTCDate() + 7); return d.toISOString().slice(0, 10); })();
+  const l = rtkD().kampe.filter((k) => k.dato <= slut);
+  let h = '<div class="tu-smal"><button type="button" class="tu-tilbage" data-gaa="find">&#8592; Find</button><h2 style="margin:0 0 4px">RTK-spillere i turnering</h2><p class="tu-opd">' + esc(rtkOpd() || 'Hentes hver morgen kl. 6.') + '</p>';
+  h += '<p class="tu-ant">Kampene de næste 7 dage for spillere fra Roskilde Tennis Klub. Kom og hep.</p>';
+  if (!l.length) h += '<p class="tu-p tu-tom">Ingen RTK-spillere i turnering de næste 7 dage.</p>';
+  [...new Set(l.map((k) => k.id))].forEach((id) => {
+    const t = D.turneringer.filter((x) => x.id === id)[0] || { navn: 'Turnering' };
+    h += '<div class="card"><button type="button" class="tu-link-knap" style="font-size:17px;font-weight:700;text-align:left" data-gaa="t=' + esc(id) + '">' + esc(t.navn) + ' &#8594;</button><p class="tu-p" style="margin:2px 0 6px">' + rtkAntal(id) + ' RTK-spillere</p>' + rtkDage(l.filter((k) => k.id === id)) + '</div>';
+  });
+  return h + '</div>';
+}
+// Dagene med kampe i Roskilde (Darup) i turneringer, der spilles mange steder, fx SM (Lars 21. november kl. 21.25). Kun dage fra i dag
+const dageRtk = (t) => String(t.dageRtk || '').split('; ').filter(Boolean).map((x) => { const [d, n] = x.split(':'); return { d, n: +n || 0 }; }).filter((o) => o.d >= D.idag);
+function dageKort(dd) {
+  if (!dd.length) return '';
+  return dd.map((o, i) => { const d = dt(o.d), n = dd[i + 1] && dt(dd[i + 1].d); return d.getUTCDate() + '.' + (n && n.getUTCMonth() === d.getUTCMonth() ? '' : ' ' + MDR[d.getUTCMonth()].slice(0, 3)); }).join(', ');
+}
 const kodeTekst = (t) => t.kode ? (t.kilde === 'DGI' ? 'DGI ' + t.kode : t.kode) : '';
 const stjerne = (id) => { const on = FAV.indexOf(id) >= 0; return '<button type="button" class="tu-stj" data-fav="' + esc(id) + '" aria-pressed="' + on + '" aria-label="' + (on ? 'Fjern fra favoritter' : 'Gem som favorit') + '">' + (on ? '&#9733;' : '&#9734;') + '</button>'; };
 function kort(t, linje) {
   const d = dt(t.fra);
   return '<div class="tu-res" role="link" tabindex="0" data-t="' + esc(t.id) + '"><div class="tu-d">' + d.getUTCDate() + '<small>' + MDR[d.getUTCMonth()].slice(0, 3) + '</small></div>' +
-    '<div class="tu-k"><b>' + esc(t.navn) + '</b><span class="tu-by">' + esc(t.irtk ? 'Roskilde Tennis Klub' : t.by || t.omraade) + (+t.km > 0 && t.naer ? ' <span class="tu-naer">ca. ' + esc(t.km) + ' km</span>' : '') + '</span>' +
-    '<span class="tu-r">' + esc(linje === undefined ? linjeOm(t) : linje) + '</span><span class="tu-f">' + statusChip(t) + (t.lukker && t.status !== 'Aflyst' ? ' Frist ' + esc(kortDag(t.lukker)) : '') + '</span>' +
-    (t.kode ? '<span class="tu-kd">' + esc(kodeTekst(t)) + '</span>' : '') + '</div>' + stjerne(t.id) + '</div>';
+    '<div class="tu-k"><b>' + esc(t.navn) + '</b><span class="tu-by">' + esc(t.irtk ? (t.spillesteder && !t.spillested ? (dageRtk(t).length ? 'I Roskilde ' + dageKort(dageRtk(t)) : 'Bl.a. i Roskilde Tennis Klub') : 'Roskilde Tennis Klub') : t.by || t.omraade) + (+t.km > 0 && t.naer ? ' <span class="tu-naer">ca. ' + esc(t.km) + ' km</span>' : '') + '</span>' +
+    '<span class="tu-r">' + esc([linje === undefined ? linjeOm(t) : linje, rtkAntal(t.id) ? rtkAntal(t.id) + ' RTK-spillere' : ''].filter(Boolean).join(' · ')) + '</span><span class="tu-f">' + statusChip(t) + (t.lukker && t.status !== 'Aflyst' ? ' Frist ' + esc(kortDag(t.lukker)) : '') + '</span>' +
+    (t.kode ? '<span class="tu-kd">' + esc(kodeTekst(t)) + '</span>' : '') + '</div>' + (t.planlagt ? '' : stjerne(t.id)) + '</div>';
 }
 function opdateret() {
   const h = D && D.hentet && D.hentet.tid;
-  if (!h) return '<p class="tu-opd">Turneringerne er ikke hentet endnu. Motoren henter hver søndag morgen.</p>';
+  if (!h) return '<p class="tu-opd">Turneringerne er ikke hentet endnu. Motoren henter hver torsdag morgen.</p>';
   return '<p class="tu-opd">Opdateret ' + esc(langDag(h)) + ' kl. ' + esc(h.slice(11, 16).replace(':', '.')) + '</p>';
 }
 function faner(aktiv) {
@@ -304,6 +374,48 @@ function faner(aktiv) {
   return '<div class="tu-faner"><div class="tabs" role="tablist">' + f.map(([id, n]) => '<button type="button" role="tab" data-gaa="' + id + '" aria-selected="' + (id === aktiv) + '">' + esc(n) + '</button>').join('') + '</div></div>';
 }
 const chips = (navn, liste, valgt) => '<div class="chips" role="group" aria-label="' + navn + '">' + liste.map((x) => { const [v, t] = Array.isArray(x) ? x : [x, x]; return '<button type="button" data-chip="' + navn + '" data-v="' + esc(v) + '" aria-pressed="' + (v === valgt) + '">' + esc(t) + '</button>'; }).join('') + '</div>';
+
+// Advarsler fra DTF's terminsliste, kun for administratorer (Lars 18. november 2026 kl. 07.42: kun i appen, ingen push og ingen mail)
+function advarsler() {
+  const a = (D && D.advarsler) || [];
+  if (!a.length) return '';
+  return '<div class="card tu-adv" role="note"><h3 class="tu-h" style="margin-bottom:4px">DTF\'s terminsliste</h3>' + a.map((x) => '<p class="tu-p">' + esc(x.tekst) + '</p>' +
+    (x.turneringer ? '<ul>' + x.turneringer.slice(0, 8).map((t) => '<li><button type="button" class="tu-link-knap" data-t="' + esc(t.id) + '">' + esc(t.navn) + '</button> · ' + esc(t.arrangoer) + ' · ' + esc(kortDag(t.fra)) + '</li>').join('') + (x.turneringer.length > 8 ? '<li>og ' + (x.turneringer.length - 8) + ' flere. Søg på navnet.</li>' : '') + '</ul>' : '')).join('') +
+    '<p class="hint" style="margin:8px 0 0">Kun administratorer ser dette, og kun for turneringer i Roskilde Tennis Klub.</p></div>';
+}
+
+// Nyt fra DTF: en ny version af terminslisten med det, der er ændret (Lars 18. november 2026 kl. 08.58). Kun administratorer, i 14 dage
+const erAdmin = () => !!(person && (person.roller || []).indexOf('admin') >= 0);
+function nytKort() {
+  const n = (D && D.nyt) || [];
+  if (!n.length) return '';
+  return '<div class="card tu-nyt" id="nyt" role="note"><h3 class="tu-h" style="margin-bottom:4px">Nyt fra DTF</h3>' + n.map((x) => '<p class="tu-p" style="margin:6px 0 0"><b>Ny terminsliste.</b> ' + esc(x.tekst) + '</p>' +
+    (x.linjer && x.linjer.length ? '<ul>' + x.linjer.slice(0, 8).map((l) => '<li class="' + (l.rtk ? 'rtk' : '') + '">' + esc(l.navn) + ' · ' + esc(kortDag(l.fra)) + ': ' + esc(l.tekst) + '</li>').join('') +
+      (x.linjer.length + (x.flere || 0) > 8 ? '<li>og ' + (x.linjer.length + (x.flere || 0) - 8) + ' turneringer mere</li>' : '') + '</ul>' : '')).join('') + pushKontakt() + '</div>';
+}
+// Push som tilvalg: "Ny terminsliste fra DTF". Valget gemmes i motoren (push.gemValg) og gælder alle ens telefoner
+let PUSH = null;
+function pushKontakt() {
+  if (!erAdmin()) return '';
+  if (!PUSH) { pushHent(); return '<p class="hint" style="margin:10px 0 0">Henter dine notifikationer …</p>'; }
+  if (PUSH.fejl) return '<p class="hint" style="margin:10px 0 0">' + esc(PUSH.fejl) + '</p>';
+  let h = '<button type="button" class="tu-sw" id="tlPush" role="switch" aria-checked="' + !!PUSH.valg.terminsliste + '" style="margin-top:10px"><span class="tu-tog" aria-hidden="true"></span> Giv mig besked på telefonen, når DTF lægger en ny terminsliste op</button>';
+  if (!PUSH.enheder) h += '<p class="hint" style="margin:4px 0 0">Notifikationer er ikke slået til på nogen af dine enheder. Slå dem til under <a href="../beskeder.html">Beskeder</a>.</p>';
+  return h;
+}
+async function pushHent() {
+  if (window.TU_PUSH_HENTER) return; window.TU_PUSH_HENTER = true;
+  try { const r = await motor('push', 'status'); PUSH = { valg: r.valg || {}, enheder: (r.enheder || []).length }; }
+  catch (e) { PUSH = { fejl: 'Kunne ikke hente dine notifikationer: ' + e.message }; }
+  window.TU_PUSH_HENTER = false; tegn();
+}
+async function pushSkift() {
+  const ny = !PUSH.valg.terminsliste;
+  PUSH.valg.terminsliste = ny; tegn();
+  try { const r = await motor('push', 'gemValg', { valg: { terminsliste: ny } }); PUSH.valg = r.valg; }
+  catch (e) { PUSH.valg.terminsliste = !ny; besked($('hentMsg'), 'Kunne ikke gemme valget: ' + e.message, 'err'); }
+  tegn();
+}
 
 // ---------------------------------------------------------------- Skærmene
 function visFind() {
@@ -316,7 +428,7 @@ function visFind() {
     return h;
   }
   const irtk = D.turneringer.filter((t) => t.irtk);
-  let ven = '';
+  let ven = advarsler() + nytKort() + rtkKortFind();
   if (irtk.length) ven += '<button type="button" class="tu-rtk" data-gaa="rtk"><span><b>I Roskilde Tennis Klub</b><small>' + irtk.length + (irtk.length === 1 ? ' turnering' : ' turneringer') + ' på Darupvej frem til ' + esc(dagMd(irtk[irtk.length - 1].fra).replace(/\.\s/, '. ')) + '</small></span><span class="pil" aria-hidden="true">&#8594;</span></button>';
   ven += '<div class="card tu-filt"><span class="lab">Alder</span>' + chips('alder', ALDRE, V.alder) + '<span class="lab">Niveau</span>' + chips('niveau', NIVEAU, V.niveau) +
     '<span class="lab">Hvor</span>' + chips('hvor', HVOR, V.hvor) + '<span class="lab">Køn</span>' + chips('koen', KOEN, V.koen) +
@@ -351,9 +463,16 @@ function visTurnering(id) {
   if (!t) return '<button type="button" class="tu-tilbage" data-gaa="tilbage">&#8592; Tilbage</button><div class="card"><b>Turneringen findes ikke længere i kalenderen.</b><p class="tu-p">Den kan være aflyst eller overstået.</p></div>';
   const kat = katKort(t.kategorier);
   let h = '<div class="tu-smal"><button type="button" class="tu-tilbage" data-gaa="tilbage">&#8592; Tilbage</button>';
-  h += '<div class="card"><div class="tu-hoved"><div><p class="kicker" style="margin:0 0 4px">' + esc([t.type, kat].filter(Boolean).join(' · ')) + '</p><h2 style="margin:0">' + esc(t.navn) + '</h2></div>' + stjerne(t.id) + '</div>';
+  h += '<div class="card"><div class="tu-hoved"><div><p class="kicker" style="margin:0 0 4px">' + esc([t.type, kat].filter(Boolean).join(' · ')) + '</p><h2 style="margin:0">' + esc(t.navn) + '</h2></div>' + (t.planlagt ? '' : stjerne(t.id)) + '</div>';
   h += '<p class="tu-hvad">' + esc(datoer(t)) + ' · uge ' + uge(t.fra) + '<br>' + esc([t.spillested, t.adresse, t.by].filter(Boolean).join(', ') || t.omraade) + (t.naer && +t.km > 0 ? ' <span class="tu-naer">ca. ' + esc(t.km) + ' km</span>' : '') + '</p>';
+  // Turneringer, der spilles mange steder (fx SM): spillestederne fra Tournament Software, Roskilde fremhævet (Lars 21. november kl. 20.59)
+  if (t.spillesteder && !t.spillested) h += '<p class="tu-p" style="margin:6px 0 0"><b>Spillesteder:</b> ' + t.spillesteder.split('; ').map((x) => /darup|roskilde\s+tennis/i.test(x) ? '<b>' + esc(x) + '</b>' : esc(x)).join(', ') + '</p>';
+  if (t.spillesteder && !t.spillested && t.irtk) {
+    const dd = dageRtk(t);
+    h += '<p class="tu-p" style="margin:6px 0 0"><b>Kampe i Roskilde (Darup):</b> ' + (dd.length ? dd.map((o) => esc(langDag(o.d)) + ' (' + o.n + (o.n === 1 ? ' kamp' : ' kampe') + ')').join(', ') : 'Kampprogrammet for Roskilde er ikke lagt i Tournament Software endnu') + '</p>';
+  }
   const idag = D.idag;
+  if (t.planlagt) return h + visPlanlagt(t) + '</div>';
   h += '<div class="tu-tl">';
   if (t.status === 'Aflyst') h += '<div><i class="nu"></i><b>Turneringen er aflyst</b></div>';
   if (t.aabner) h += '<div><i class="' + (t.aabner <= idag ? 'ok' : '') + '"></i>Tilmelding ' + (t.aabner <= idag ? 'åbnede ' + esc(dagMd(t.aabner)) : 'åbner ' + esc(langDag(t.aabner))) + '</div>';
@@ -384,12 +503,31 @@ function visTurnering(id) {
   if (TYPER[t.type]) h += '<div class="card tu-forkl"><h3 class="tu-h">' + esc(TYPER[t.type][0]) + ' kort fortalt</h3><p class="tu-p">' + esc(TYPER[t.type][1]) + '</p>' +
     (t.kilde === 'DTF' && t.type !== 'GameOn double' ? '<p style="margin:8px 0 0"><button type="button" class="tu-link-knap" data-gaa="kort#rangliste">Ranglisten og licens &#8594;</button></p>' : '') + '</div>';
   if (nivF && FORKLAR[nivF] && !(TYPER[t.type] && nivF === 'Skum')) h += '<div class="card tu-forkl"><h3 class="tu-h">' + esc(['Rød', 'Orange', 'Grøn'].indexOf(nivF) >= 0 ? 'Tennis10' : nivF === 'Skum' ? 'Skumtennis' : nivF) + ' kort fortalt</h3><p class="tu-p">' + esc(FORKLAR[nivF]) + '</p><p style="margin:8px 0 0"><button type="button" class="tu-link-knap" data-gaa="kort">Alle kategorier og årgange i Kort fortalt &#8594;</button></p></div>';
+  h += rtkAfsnit(t);
   h += '<button type="button" style="width:100%" data-gaa="kopi=' + esc(t.id) + '">Kopiér som tekst</button></div>';
   return h;
 }
 
+// En turnering, der står i DTF's terminsliste, men ikke er oprettet i Tournament Software endnu (Lars 18. november 2026 kl. 07.42)
+function visPlanlagt(t) {
+  const v = t.version ? ' (version fra ' + dagMd(t.version) + ')' : '';
+  let h = '<div class="tu-plan" role="note"><b>Endnu ikke åben i Tournament Software</b>Turneringen står i DTF\'s terminsliste' + esc(v) + ', men arrangøren har ikke oprettet den i Tournament Software endnu. Derfor er der ingen frist og ingen tilmeldte. Datoer og rækker kan ændre sig.</div>';
+  const m = raekkeFilter();
+  const rr = t.raekker.slice().sort((a, b) => (m ? raekkePasser(b) - raekkePasser(a) : 0) || (a.dag < b.dag ? -1 : a.dag > b.dag ? 1 : 0));
+  if (rr.length) {
+    h += '<p class="tu-ant" style="margin:14px 0 6px"><b>Rækkerne i terminslisten</b> · ' + rr.length + (rr.length === 1 ? ' række' : ' rækker') + '</p><table class="tu-tab">';
+    rr.slice(0, 12).forEach((r) => { h += '<tr class="' + (m && raekkePasser(r) ? 'match' : '') + '"><td>' + esc(raekkeNavn(r)) + '<br><span class="hint" style="font-size:12px">' + esc([stor(kortDag(r.dag)), r.fo, r.pl ? r.pl + ' pladser' : '', r.bo === 'Ja' ? 'bonusrunde' : ''].filter(Boolean).join(' · ')) + '</span></td><td class="n">' + esc(r.ge ? r.ge + ' kr.' : '') + '</td></tr>'; });
+    if (rr.length > 12) h += '<tr><td colspan="2" class="hint" style="padding-top:6px">og ' + (rr.length - 12) + ' rækker mere</td></tr>';
+    h += '</table>';
+  }
+  h += '<p class="tu-p" style="margin-top:10px">Arrangør: ' + esc(t.arrangoer) + '. Når turneringen er oprettet, står den her med frist og tilmeldte efter næste hentning (torsdag).</p>';
+  h += '<p style="margin:8px 0 0"><button type="button" class="tu-link-knap" data-gaa="kort#steder">Terminslisten, Tournament Software og DGI &#8594;</button></p>';
+  h += '<button type="button" style="width:100%;margin-top:14px" data-gaa="kopi=' + esc(t.id) + '">Kopiér som tekst</button>';
+  return h;
+}
+
 function tekstTil(t) {
-  let s = t.navn + ', ' + datoer(t).replace(/^./, (c) => c.toLowerCase()) + (t.spillested ? ' i ' + t.spillested : t.by ? ' i ' + t.by : '') + '.\n';
+  let s = t.navn + ', ' + datoer(t).replace(/^./, (c) => c.toLowerCase()) + (t.spillested ? ' i ' + t.spillested : t.irtk && t.spillesteder ? (dageRtk(t).length ? ', i Roskilde (Darup) ' + dageRtk(t).map((o) => langDag(o.d)).join(', ') : ', bl.a. i Roskilde (Darup)') : t.by ? ' i ' + t.by : '') + '.\n';
   if (t.orientering) s += t.orientering + '\n';
   const m = raekkeFilter() ? t.raekker.filter(raekkePasser).filter((r) => +r.ti > 0) : [];
   if (m.length === 1) s += stor(raekkeNavn(m[0])) + ' har ' + m[0].ti + ' tilmeldt indtil nu.\n';
@@ -449,6 +587,7 @@ function visRtk() {
 function visKort() {
   let h = faner('kort') + '<div class="tu-smal">';
   h += '<div class="card" id="steder"><h3 class="tu-h" style="margin-bottom:8px">Hvor melder man sig til?</h3><dl class="tu-ord">' + STEDER.map(([o, t, u]) => '<dt>' + esc(o) + '</dt><dd>' + esc(t) + ' <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(u.replace('https://', '').replace(/\/.*$/, '')) + '</a></dd>').join('') + '</dl></div>';
+  if (erAdmin()) h += '<div class="card"><h3 class="tu-h" style="margin-bottom:4px">Besked om nye terminslister</h3><p class="tu-p" style="margin:0">DTF lægger en ny terminsliste op et par gange i hver sæson. Mit RTK læser den om torsdagen og viser, hvad der er ændret, under Find i 14 dage. Kun for administratorer.</p>' + pushKontakt() + '</div>';
   h += '<div class="card"><h3 class="tu-h" style="margin-bottom:8px">Hvor starter man?</h3><p class="tu-p" style="margin:0 0 8px">Boldene, man bevæger sig igennem:</p><ol class="tu-trappe">' + BOLDE.map(([t, b]) => '<li><b>' + esc(t) + '</b>' + esc(b) + '</li>').join('') + '</ol><p class="tu-p" style="margin:12px 0 8px">Kategorierne på stor bane, fra U12:</p><ol class="tu-trappe">' + TRAPPE.map(([t, b]) => '<li><b>' + esc(t) + '</b>' + esc(b) + '</li>').join('') + '</ol></div>';
   // Årgangene skifter selv ved nytår: det år, man fylder 10, 12, 14, 16 eller 18, er sidste år i gruppen
   const y = +D.idag.slice(0, 4);
@@ -473,7 +612,7 @@ function rute() { return (decodeURIComponent(location.hash.slice(1)) || 'find').
 function tegn() {
   if (!D) return;
   const r = rute();
-  const ud = r.indexOf('t=') === 0 ? visTurnering(r.slice(2)) : r.indexOf('kopi=') === 0 ? visKopi(r.slice(5)) : r === 'fav' ? visFavoritter() : r === 'kort' ? visKort() : r === 'rtk' ? visRtk() : visFind();
+  const ud = r.indexOf('t=') === 0 ? visTurnering(r.slice(2)) : r.indexOf('kopi=') === 0 ? visKopi(r.slice(5)) : r === 'fav' ? visFavoritter() : r === 'kort' ? visKort() : r === 'rtk' ? visRtk() : r === 'spillere' ? visSpillere() : visFind();
   const fokus = document.activeElement && document.activeElement.id === 'sog';
   const pos = fokus ? document.activeElement.selectionStart : 0;
   $('vis').innerHTML = ud;
@@ -486,7 +625,7 @@ function gaa(r) {
   if (r === 'tilbage') { if (history.length > 1 && window.TU_INDE) history.back(); else location.hash = 'find'; return; }
   window.TU_INDE = true;
   if ('#' + r === location.hash) tegn(); else location.hash = r;
-  if (r.indexOf('t=') === 0 || r.indexOf('kopi=') === 0 || r === 'rtk') window.scrollTo(0, 0);
+  if (r.indexOf('t=') === 0 || r.indexOf('kopi=') === 0 || r === 'rtk' || r === 'spillere') window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', tegn);
 
@@ -505,6 +644,7 @@ $('vis').addEventListener('click', (e) => {
     V.vis = 30; gemValg(); tegn(); return;
   }
   if (e.target.closest('#nu')) { V.nu = !V.nu; V.vis = 30; gemValg(); tegn(); return; }
+  if (e.target.closest('#tlPush')) { pushSkift(); return; }
   if (e.target.closest('#visMere')) { V.vis += 30; tegn(); return; }
   if (e.target.closest('#rydSog') || e.target.closest('#rydSog2')) { V.sog = ''; tegn(); return; }
   const k = e.target.closest('[data-kopier]');
