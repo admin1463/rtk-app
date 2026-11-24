@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="51e9de03c3e8">
+<meta name="rtk-version" content="bab2aaa191a7">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -31,6 +31,7 @@
 .ms-t,.ms-r{grid-column:2;grid-row:1/3;align-self:center;font-size:13px;white-space:nowrap;text-align:right}.ms-t{background:#EEF3F1;border-radius:999px;padding:2px 9px;font-weight:600}.ms-t.ikke{background:#fff4c7;color:#7a5d00;font-weight:500}
 .ms-r{font-weight:600;color:var(--teal)}.ms-r.tabt{color:var(--muted)}.ms-r small{display:block;font-weight:500;color:var(--muted)}
 .ms-mere summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--teal);padding:8px 0;min-height:40px}
+.tu-kilde{display:block;font-size:12.5px;color:var(--muted);margin-top:3px;font-weight:400}
 .tu-filt{padding:16px}.tu-filt .lab{display:block;font-size:13px;font-weight:700;margin:12px 0 6px;color:var(--teal)}.tu-filt .lab:first-child{margin-top:0}
 .tu-filt .chips{gap:6px}.tu-filt .chips button{min-height:38px;padding:4px 12px;font-size:14px}
 .tu-sw{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;margin-top:14px;background:none;border:0;padding:0;min-height:40px;width:100%;text-align:left;white-space:normal}
@@ -584,8 +585,29 @@ function visRtk() {
   return h + '</div>';
 }
 
+// Fra tilmelding til plads (Lars 24. november 2026 kl. 14.00, mockup_tilmelding_til_plads version 3). Kilder: DTF's reglement
+// september 2026, DTF's side om Comwell Vinter Tour, mailen "Tilmelding bekræftet" fra Tournament Software og stævneleder Mads Christensen.
+// Eksemplerne (RTK Cup 50) skifter ikke af sig selv og skal rettes, når de bliver for gamle
+const PLADS = [
+  ['Tilmeld i Tournament Software inden fristen', 'Fristen er forskellig fra turnering til turnering og står på turneringen i Mit RTK og i Tournament Software. Eksempel: Ved RTK Cup 50 (lørdag 12. og søndag 13. december 2026) lukker tilmeldingen onsdag 25. november kl. 23.59, altså 17 dage før.', 'Tournament Software'],
+  ['Én turnering og én række pr. weekend', 'En termin er en uge, og terminen har ugens nummer (RTK Cup 50 spilles i uge 50). Man må kun spille én turnering pr. termin og højst én singlerække i den. På Vinter Tour ligger doublerne i egne weekender (termin 46 og 8), så i praksis er det én række pr. weekend.',
+    'DTF\'s reglement, sektion 11, 51 og 62, og DTF, Comwell Vinter Tour (Regler og retningslinjer, Fordeling af spillere, Reserver)',
+    [['Flere tilmeldinger samme weekend', 'giver flere chancer. Giv dem hver sit nummer: prioritet 1, 2 og 3. DTF sætter dig først ind i den højeste kategori, hvor der er plads, uanset prioritet. Kun hvis turneringerne har samme kategori, bruges din prioritet. Melder du dig kun til én turnering, er prioriteten ligegyldig. Hvad der sker ved to ens prioriteter, beskriver DTF ikke.'],
+     ['Bagefter:', 'Er du med i én turnering, og ringer en anden arrangør senere med en reserveplads eller et wildcard samme weekend, skal du sige nej. Spiller man to turneringer samme weekend, mister man ranglistepointene og får karantænepoint.']]],
+  ['Mailen "Tilmelding bekræftet" er ikke en plads', 'Mailen kommer fra notifications@tournamentsoftware.com og viser "At betale 275,00 kr." og "Betalt 0,00 kr.". Der er ikke noget at betale endnu, og man er ikke sikker på en plads. Indtil fristen kan man ændre eller trække sig under "Min tilmelding".', 'Mailen fra Tournament Software'],
+  ['Efter fristen fordeles pladserne efter ranglisten', 'DTF laver en acceptanceliste. Kat. 4: spillere sættes ind nederst fra ranglisten, så nye og spillere med få point kommer først, og spillere med licens før spillere uden. Kat. 3 og Kat. 2: spillere over grænsen må ikke være med (øverste tredjedel i Kat. 3, top 15 i Kat. 2 for juniorer), resten fordeles efter ranglistepoint. Kat. 1: de bedste. Tennis10: lodtrækning.', 'DTF, Comwell Vinter Tour (Kategorier og Fordeling af spillere)'],
+  ['Én plads kan være et wildcard', 'I en række med plads til 8 kan turneringsledelsen give 1 wildcard. I Roskilde går det som regel til en spiller fra RTK.', 'DTF\'s reglement, sektion 31 og 70. Roskildes praksis efter stævneleder Mads Christensen'],
+  ['Ikke med? Så er man reserve', 'Reservelisten hedder "Alternates" i Tournament Software. Arrangøren kontakter reserverne, hvis der bliver plads, men man skal selv holde øje. Vil man ikke være reserve, melder man afbud til arrangøren.', 'DTF, Comwell Vinter Tour (Reserver)'],
+  ['Med? Så kommer betalingen fra klubben', 'Når lodtrækningen er lavet, sender arrangøren besked med gebyret. Gebyret er forskelligt fra turnering til turnering. Eksempel: Ved RTK Cup 50 er det 275 kr. for U12 Kat. 4. Står man på deltagerlisten, er tilmeldingen bindende, også ved afbud.', 'DTF, Comwell Vinter Tour (Betaling), reglementet sektion 63. Roskildes praksis efter Mads Christensen'],
+  ['Lodtrækning og kampprogram', 'Kommer på turneringens side i Tournament Software og under turneringen i Mit RTK. Afbud efter fristen går direkte til arrangøren, ikke til Tournament Software. Eksempel: Ved RTK\'s stævner er det stævneleder Mads Christensen på turnering@roskildetennisklub.dk eller 30 65 29 65. Arrangørens kontakt står på turneringens side i Tournament Software. Afbud senere end 48 timer før start giver karantænepoint.', 'Mailen fra Tournament Software, DTF, Comwell Vinter Tour (Afbud til turneringer) og RTK Cup 50 i Tournament Software (Kontakt)']
+];
+function pladsKort() {
+  return '<div class="card" id="plads"><h3 class="tu-h" style="margin-bottom:8px">Fra tilmelding til plads</h3><p class="tu-p" style="margin:0 0 10px">En tilmelding er ikke en plads. Sådan foregår det i DTF\'s turneringer, fx RTK Cup:</p><ol class="tu-trappe">' +
+    PLADS.map(([t, b, k, ekstra]) => '<li><b>' + esc(t) + '</b>' + esc(b) + (ekstra || []).map(([o, x]) => '<br><br><b style="display:inline">' + esc(o) + '</b> ' + esc(x)).join('') + '<span class="tu-kilde">Kilde: ' + esc(k) + '</span></li>').join('') +
+    '</ol><p class="tu-p" style="margin:10px 0 0">Eksempel: RTK Cup 50 har 26 tilmeldte til 2 rækker med plads til 8 i hver (24. november).</p></div>';
+}
 function visKort() {
-  let h = faner('kort') + '<div class="tu-smal">';
+  let h = faner('kort') + '<div class="tu-smal">' + pladsKort();
   h += '<div class="card" id="steder"><h3 class="tu-h" style="margin-bottom:8px">Hvor melder man sig til?</h3><dl class="tu-ord">' + STEDER.map(([o, t, u]) => '<dt>' + esc(o) + '</dt><dd>' + esc(t) + ' <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(u.replace('https://', '').replace(/\/.*$/, '')) + '</a></dd>').join('') + '</dl></div>';
   if (erAdmin()) h += '<div class="card"><h3 class="tu-h" style="margin-bottom:4px">Besked om nye terminslister</h3><p class="tu-p" style="margin:0">DTF lægger en ny terminsliste op et par gange i hver sæson. Mit RTK læser den om torsdagen og viser, hvad der er ændret, under Find i 14 dage. Kun for administratorer.</p>' + pushKontakt() + '</div>';
   h += '<div class="card"><h3 class="tu-h" style="margin-bottom:8px">Hvor starter man?</h3><p class="tu-p" style="margin:0 0 8px">Boldene, man bevæger sig igennem:</p><ol class="tu-trappe">' + BOLDE.map(([t, b]) => '<li><b>' + esc(t) + '</b>' + esc(b) + '</li>').join('') + '</ol><p class="tu-p" style="margin:12px 0 8px">Kategorierne på stor bane, fra U12:</p><ol class="tu-trappe">' + TRAPPE.map(([t, b]) => '<li><b>' + esc(t) + '</b>' + esc(b) + '</li>').join('') + '</ol></div>';
