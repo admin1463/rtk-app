@@ -13,7 +13,8 @@ self.addEventListener('push', (e) => {
   const titel = String(p.titel || 'Mit RTK');
   const valg = {
     body: String(p.tekst || ''),
-    icon: '/ikon-medlem-192.png',
+    // Julefrokosten har sit eget ikon (Lars 23. november 2026)
+    icon: /^\/jul\.html/.test(String(p.link || '')) ? '/ikoner/jul-192.png' : '/ikon-medlem-192.png',
     badge: '/ikon-maerke-96.png',
     data: { link: String(p.link || '/') },
     lang: 'da'

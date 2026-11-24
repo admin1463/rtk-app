@@ -1,0 +1,29 @@
+{
+ "name": "Julefrokost",
+ "short_name": "Julefrokost",
+ "lang": "da",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#FFFFFF",
+ "theme_color": "#0B3D3A",
+ "icons": [
+  {
+   "src": "ikoner/jul-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "ikoner/jul-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "ikoner/jul-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

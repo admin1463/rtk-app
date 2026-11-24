@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="b36d46502583">
+<script src="/opdater.js?v=f299a739b234" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="Julefrokost">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<link rel="manifest" href="jul.webmanifest">
+<link rel="apple-touch-icon" href="ikoner/jul-180.png">
+<link rel="icon" type="image/svg+xml" href="ikoner/jul-logo.svg">
+<title>Julefrokost 3. december</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="rtk.css?v=cc78992e33b4">
+<style>
+/* Julefrokost-appen (Lars 23. november 2026). Mockup: rtk-app/kilder/mockup/jul.png */
+.top .navn.jf-titel>span{text-transform:none!important;letter-spacing:0!important;font-size:12px;line-height:1.25;white-space:normal;display:block;max-width:250px}
+.top .logo img{width:44px;height:44px}
+.jf-tabs{display:flex;gap:4px;margin:0 0 14px;position:sticky;top:0;z-index:5;background:#fff;padding:8px 0}
+.jf-tabs a{flex:1 1 0;min-width:0;text-align:center;text-decoration:none;color:var(--ink);border:1px solid var(--line2);border-radius:10px;padding:8px 2px;font-weight:600;font-size:14px;position:relative}
+.jf-tabs a i{display:block;font-style:normal;font-size:18px;line-height:1.2}
+.jf-tabs a[aria-current="page"]{border-color:var(--pink);border-width:2px;padding:7px 1px}
+.jf-ul{position:absolute;top:-7px;right:-4px;background:var(--pink);color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:1px 6px}
+.jf-hero{position:relative;height:190px;border-radius:0 0 22px 22px;margin:-16px -16px 14px;background:linear-gradient(180deg,rgba(11,61,58,.1),rgba(11,61,58,.88)),url(billeder/grupper-top.jpg) center/cover;display:flex;align-items:flex-end;padding:16px;color:#fff}
+.jf-hero b{display:block;font-size:30px;line-height:1.1}.jf-hero .u{display:block;font-size:14px;font-weight:600;margin:4px 0}
+.jf-hero img{position:absolute;right:16px;top:18px;width:64px}
+.jf-boks{padding:12px 14px;margin:12px 0}
+.jf-push{border:2px solid var(--teal)}
+.jf-lille{font-size:13px;color:var(--muted);margin:4px 0;line-height:1.4}
+.jf-ned{background:var(--teal);color:#fff;border-radius:12px;padding:10px 14px;font-size:15px}
+.jf-frist{margin:4px 0 0;font-size:14px;color:var(--pink);font-weight:600}
+.jf-valg{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+.jf-valg button{min-height:44px;padding:4px 14px;font-size:16px;text-align:left;border-radius:10px;border:1px solid var(--line2);background:#fff;color:var(--ink);font-weight:600}
+.jf-valg button[aria-pressed="true"]{background:var(--pink);color:#fff;border-color:var(--pink)}
+.jf-valg button:disabled{opacity:.55}
+.jf-taeller{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:14px;color:var(--muted)}.jf-taeller b{color:var(--ink)}
+.jf-bar{height:8px;background:var(--soft);border-radius:99px;margin:8px 0 4px;overflow:hidden}.jf-bar i{display:block;height:100%;background:var(--teal)}
+.jf-min{font-weight:600;margin:8px 0 0}
+.jf-h{font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:18px 0 4px}
+.jf-p{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.jf-kl{width:52px;flex:0 0 52px;font-weight:700;font-size:15px}.jf-ik{font-size:20px;width:26px;flex:0 0 26px}
+.jf-p b{display:block;font-size:16px}.jf-p span{display:block;font-size:14px;color:var(--muted)}.jf-p a{font-size:14px}
+.jf-menu{margin:4px 0 8px 88px;padding:10px 12px}
+.jf-chat{list-style:none;padding:0;margin:0 0 8px}
+.jf-skriv{position:sticky;bottom:0;z-index:4;display:flex;align-items:flex-end;gap:8px;padding:10px 0 calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line)}
+.jf-skriv textarea{flex:1;min-height:48px;max-height:150px;resize:none;border-radius:24px;padding:12px 16px;line-height:1.35}
+.jf-gr .gr-boble{cursor:pointer}
+.jf-hand{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px 44px}.gr-b.egen .jf-hand{margin:6px 44px 4px 0}
+.jf-hand button{min-height:36px;padding:2px 10px;font-size:18px;border-radius:99px;border:1px solid var(--line2);background:#fff}
+.jf-hand button.tekst{font-size:14px}
+.jf-emojier{flex-basis:100%;background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 8px;max-height:260px;overflow:auto}
+#skrivEmoji{position:sticky;bottom:76px;z-index:4;margin-bottom:6px;box-shadow:0 -4px 14px rgba(0,0,0,.08)}
+.jf-eg b{display:block;font-size:12px;color:var(--muted);margin:6px 0 2px}.jf-eg div{display:flex;flex-wrap:wrap;gap:2px}
+.jf-eg button{min-height:40px;min-width:40px;padding:0;font-size:22px;border:0;background:none;border-radius:8px}
+.jf-eg button:active,.jf-eg button[aria-pressed="true"]{background:var(--soft)}
+.jf-ekn{flex:0 0 44px;width:44px;height:48px;min-height:48px;padding:0;border:0;background:none;font-size:24px}
+.gr-av{color:#fff;background-size:cover;background-position:center}
+.jf-gitter{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.jf-gitter button{aspect-ratio:1;border:0;padding:0;border-radius:6px;background:var(--soft) center/cover;min-height:0}
+.jf-d{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);width:100%;text-align:left;background:none;border-left:0;border-right:0;border-bottom:0;border-radius:0;min-height:0;color:var(--ink);font-weight:400}
+.jf-d>div>b{display:block;font-size:15px}.jf-d>div>span{display:block;font-size:13px;color:var(--muted)}
+.jf-d .gr-av{width:40px;height:40px;flex:0 0 40px}
+.jf-tag{display:inline-block;font-size:11px;font-weight:700;background:var(--soft);color:var(--muted);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.jf-ark{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+.jf-ark>div{background:#fff;border-radius:20px 20px 0 0;max-height:88vh;overflow:auto;width:100%;max-width:560px;padding:10px 16px calc(18px + env(safe-area-inset-bottom))}
+.jf-greb{width:44px;height:5px;border-radius:99px;background:var(--line2);margin:0 auto 10px}
+.jf-pk-h{display:flex;gap:12px;align-items:center}.jf-pk-b{width:76px;height:76px;flex:0 0 76px;border-radius:99px;background:var(--soft) center/cover;border:0;padding:0;min-height:0;color:#fff;font-weight:700;font-size:22px;display:flex;align-items:center;justify-content:center}
+.jf-pk-n{font-size:20px;font-weight:700}.jf-pk h3{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+.jf-pk-g{display:flex;gap:6px}.jf-pk-g button{width:84px;height:84px;border-radius:8px;border:0;padding:0;min-height:0;background:var(--soft) center/cover}
+.jf-fuld{position:fixed;inset:0;z-index:60;background:#000;display:flex;align-items:center;justify-content:center}
+.jf-fuld img{max-width:100vw;max-height:100vh;object-fit:contain}
+.jf-fuld .k{position:absolute;top:calc(10px + env(safe-area-inset-top));display:flex;gap:8px}
+.jf-fuld .k.v{left:10px}.jf-fuld .k.h{right:10px}
+.jf-fuld button{background:rgba(255,255,255,.9);color:#000;border:0;min-height:40px;padding:4px 14px;border-radius:99px;font-weight:700}
+.jf-fuld .pil{position:absolute;top:50%;transform:translateY(-50%);font-size:24px}.jf-fuld .pil.f{left:8px}.jf-fuld .pil.n{right:8px}
+.jf-ret label{display:block;font-weight:600;font-size:14px;margin:12px 0 6px}
+.jf-ret input,.jf-ret textarea,.jf-ret select{width:100%;box-sizing:border-box}
+.jf-prog{display:grid;grid-template-columns:64px 1fr 52px 40px;gap:6px;margin-bottom:10px}
+.jf-prog textarea{grid-column:1 / -1;min-height:44px}
+.jf-ekstra{display:flex;gap:8px;flex-wrap:wrap}.jf-ekstra div{position:relative}.jf-ekstra span{display:block;width:84px;height:84px;border-radius:8px;background:var(--soft) center/cover}
+.jf-ekstra button{position:absolute;top:-6px;right:-6px;min-height:26px;width:26px;padding:0;border-radius:99px;font-size:14px}
+.jf-skjult{display:none!important}
+.jf-arr{margin-top:14px}.jf-arr summary{cursor:pointer;color:var(--teal);font-weight:600;font-size:14px}
+.jf-guide{margin:4px 0 6px;font-size:14px}.jf-guide summary{cursor:pointer;color:var(--teal);font-weight:600;padding:4px 0}
+.jf-guide dl{margin:6px 0}.jf-guide dt{font-weight:700;margin-top:8px}.jf-guide dd{margin:2px 0 0;color:var(--muted);line-height:1.4}
+.jf-nivtekst{background:var(--soft);border-radius:8px;padding:8px 10px;margin:6px 0}
+.jf-msg{min-height:20px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <span class="logo"><img src="ikoner/jul-logo.svg" alt=""></span>
+      <span class="navn titel jf-titel"><b>Julefrokost 3. december</b><span id="topUnder">Roskilde Tennis Gentlemen møder Onsdags Padel &amp; Pils</span></span>
+    </div>
+  </div>
+</header>
+<main class="side">
+  <div class="wrap indhold smal" style="padding-top:16px">
+    <div id="vent"><p class="hint">Henter …</p></div>
+    <section id="login" class="jf-skjult"></section>
+    <section id="app" class="jf-skjult">
+      <nav class="jf-tabs" aria-label="Faner">
+        <a href="#program"><i aria-hidden="true">🎄</i>Program</a><a href="#chat"><i aria-hidden="true">💬</i>Chat<span class="jf-ul jf-skjult" id="ulaest"></span></a><a href="#billeder"><i aria-hidden="true">📸</i>Billeder</a><a href="#deltagere"><i aria-hidden="true">👥</i>Deltagere</a><a href="#links" id="fLinks" class="jf-skjult"><i aria-hidden="true">🔗</i>Links</a>
+      </nav>
+      <div id="vis"></div>
+    </section>
+  </div>
+</main>
+<input type="file" id="filer" accept="image/*" multiple hidden aria-hidden="true" tabindex="-1">
+<script src="konfig.js?v=869b7a78d104"></script>
+<script src="niveauer.js?v=4cc686edce45"></script>
+<script>
+(function () {
+'use strict';
+const KONFIG = window.RTK_KONFIG;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const gem = (k, v) => { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} };
+const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+let enhed = hent('rtk.enhed'); if (!enhed) { enhed = nyId(); gem('rtk.enhed', enhed); }
+// Gæsten har sit eget login (rtk.jul.token), så det aldrig blandes med Mit RTK. Arrangøren bruger sit almindelige login
+const KODE_URL = (/[?&]k=([A-Za-z0-9]{6,24})/.exec(location.search) || [])[1] || '';
+const token = () => hent('rtk.jul.token') || hent('rtk.token') || '';
+
+async function motor(modul, handling, data, id, forsoeg) {
+  let res, svar;
+  try {
+    res = await fetch(KONFIG.motor, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ modul, handling, data: data || {}, token: token(), id: id || '' }) });
+    svar = await res.json();
+  } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (!svar.ok) {
+    if (svar.igen && (forsoeg || 0) < 2) { await new Promise((ok) => setTimeout(ok, 500)); return motor(modul, handling, data, id, (forsoeg || 0) + 1); }
+    if (svar.login) { const e = new Error(svar.fejl || 'Log ind igen'); e.login = true; throw e; }
+    throw new Error(svar.fejl || 'Noget gik galt');
+  }
+  return svar.data;
+}
+
+// ---------- Tilstand
+const S = { bid: '', pid: '', arr: false, b: null, del: {}, besk: [], bill: [], mini: {}, aaben: null, lyt: [], fb: null, gaester: null, profiler: {} };
+
+// ---------- Login
+function visLogin(fejl) {
+  $('vent').classList.add('jf-skjult'); $('app').classList.add('jf-skjult');
+  const l = $('login'); l.classList.remove('jf-skjult');
+  l.innerHTML = '<div class="jf-hero"><img src="ikoner/jul-logo.svg" alt=""><div><b>Julefrokost 🎄</b><span class="u">Roskilde Tennis Gentlemen møder Onsdags Padel &amp; Pils</span><span>Torsdag 3. december</span></div></div>' +
+    '<p>Siden er kun for de 16 til julefrokosten. Brug linket, du har fået fra Lars. Står der en kode i beskeden, kan du skrive den her.</p>' +
+    '<form id="kodeForm" class="card jf-boks" novalidate><label for="kode" style="font-weight:600">Din kode</label>' +
+    '<input id="kode" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="fx ABCD-2345" style="width:100%;box-sizing:border-box;margin:6px 0 10px;text-transform:uppercase;letter-spacing:.1em">' +
+    '<button class="primary" style="width:100%">Log ind</button><div class="msg jf-msg" id="kodeMsg" role="status"></div></form>' +
+    '<details class="jf-arr"><summary>Er du arrangør? Log ind med dit mobilnummer</summary>' +
+    '<form id="smsForm" class="card jf-boks" novalidate><label for="mobil" style="font-weight:600">Dit mobilnummer</label>' +
+    '<input id="mobil" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" style="width:100%;box-sizing:border-box;margin:6px 0 10px">' +
+    '<div id="smsKodeDel" class="jf-skjult"><label for="smsKode" style="font-weight:600">Koden fra sms\'en</label>' +
+    '<input id="smsKode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" style="width:100%;box-sizing:border-box;margin:6px 0 10px"></div>' +
+    '<button class="ghost" id="smsKnap" style="width:100%">Send kode på sms</button><div class="msg jf-msg" id="smsMsg" role="status"></div></form></details>';
+  if (fejl) { $('kodeMsg').textContent = fejl; $('kodeMsg').className = 'msg err jf-msg'; }
+  $('kodeForm').addEventListener('submit', (e) => { e.preventDefault(); logIndMedKode($('kode').value, $('kodeMsg')); });
+  // Arrangøren er en almindelig person i Mit RTK og logger ind med sms. På en anden adresse end mitrtk.dk (racketcircle.dk)
+  // kender siden ikke Mit RTK's login, så det kan gøres her (Lars 23. november kl. 21.37)
+  let kodeSendt = false;
+  $('smsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const m = $('smsMsg'); m.className = 'msg jf-msg';
+    try {
+      if (!kodeSendt) {
+        m.textContent = 'Sender koden …';
+        const r = await motor('kerne', 'sendKode', { mobil: $('mobil').value, kanal: 'sms', enhed });
+        kodeSendt = true; $('smsKodeDel').classList.remove('jf-skjult'); $('smsKnap').textContent = 'Log ind';
+        m.textContent = 'Koden er sendt' + (r && r.til ? ' til ' + r.til : '') + '. Den gælder i 10 minutter.'; $('smsKode').focus();
+      } else {
+        m.textContent = 'Logger ind …';
+        const s2 = await motor('kerne', 'kodeLogin', { mobil: $('mobil').value, kode: $('smsKode').value, enhed, husk: true });
+        gem('rtk.jul.token', null); gem('rtk.token', s2.token);
+        await start(false);
+      }
+    } catch (err) { m.textContent = err.message; m.className = 'msg err jf-msg'; }
+  });
+}
+async function logIndMedKode(kode, msg, fraUrl) {
+  if (msg) { msg.textContent = 'Logger ind …'; msg.className = 'msg jf-msg'; }
+  try {
+    const s = await motor('jul', 'kodeLogin', { kode, enhed });
+    gem('rtk.jul.token', s.token);
+    // Koden bliver stående i adressen (?k=), så siden på hjemmeskærmen kan logge ind selv. På iPhone har den sit eget lager
+    // adskilt fra Safari (gennemgangen 23. november, fund 6)
+    S.kode = String(kode).toUpperCase().replace(/[^A-Z0-9]/g, '');
+    history.replaceState(null, '', location.pathname + '?k=' + S.kode + '#program');
+    await start(true);
+  } catch (err) {
+    if (msg) { msg.textContent = err.message; msg.className = 'msg err jf-msg'; return; }
+    // En kode, der ikke virker, fjernes fra adressen, så den ikke prøves igen ved næste åbning
+    if (/passer ikke/.test(err.message)) history.replaceState(null, '', location.pathname + '#program');
+    visLogin(fraUrl && /passer ikke/.test(err.message) ? 'Dit link er ikke gyldigt længere. Bed Lars om et nyt.' : err.message);
+  }
+}
+
+// ---------- Firebase
+async function hentFirebase() {
+  if (S.fb) return S.fb;
+  const base = 'https://www.gstatic.com/firebasejs/' + KONFIG.firebaseVersion + '/';
+  const [app, auth, fs] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
+  const emu = window.RTK_EMULATOR;
+  // En egen Firebase-app, så julefrokostens login aldrig blandes med Grupper på samme telefon
+  const a = app.getApps().find((x) => x.name === 'jul') || app.initializeApp(emu && emu.projekt ? Object.assign({}, KONFIG.firebase, { projectId: emu.projekt }) : KONFIG.firebase, 'jul');
+  const au = auth.initializeAuth(a, { persistence: [auth.indexedDBLocalPersistence, auth.browserLocalPersistence] });
+  const db = fs.getFirestore(a);
+  if (emu) { auth.connectAuthEmulator(au, 'http://127.0.0.1:9099', { disableWarnings: true }); fs.connectFirestoreEmulator(db, '127.0.0.1', 8080); }
+  S.fb = { app, auth, fs, au, db };
+  return S.fb;
+}
+async function logIndFirebase() {
+  const F = await hentFirebase();
+  await F.au.authStateReady();
+  const binding = String(token()).slice(-12);
+  let u = F.au.currentUser;
+  if (u && (u.uid !== S.pid || hent('rtk.jul.fb') !== binding)) { await F.auth.signOut(F.au).catch(() => {}); u = null; }
+  if (!u) {
+    const t = await motor('kerne', 'firebase');
+    await F.auth.signInWithCustomToken(F.au, t.token);
+    gem('rtk.jul.fb', binding);
+  }
+}
+
+// ---------- Start
+async function start(fraLink) {
+  if (!token()) { visLogin(); return; }
+  let s;
+  try { s = await motor('jul', 'start'); }
+  catch (err) {
+    if (err.login && hent('rtk.jul.token') && KODE_URL && !S.provetUrl) { S.provetUrl = true; gem('rtk.jul.token', null); return logIndMedKode(KODE_URL, null, true); }
+    if (err.login || /ikke med/.test(err.message)) { gem('rtk.jul.token', null); visLogin(err.login ? 'Dit link er ikke gyldigt længere. Bed Lars om et nyt.' : (hent('rtk.token') ? 'Du er logget ind på Mit RTK, men du er ikke med i julefrokosten.' : '')); return; }
+    $('login').classList.add('jf-skjult'); $('vent').classList.remove('jf-skjult');
+    $('vent').innerHTML = '<p class="msg err">' + esc(err.message) + '</p><button class="ghost" onclick="location.reload()">Prøv igen</button>'; return;
+  }
+  S.bid = s.bid; S.pid = s.pid; S.arr = !!s.arrangoer; S.navn = s.navn;
+  try { await logIndFirebase(); }
+  catch (err) { console.warn('firebase', err); $('login').classList.add('jf-skjult'); $('vent').classList.remove('jf-skjult'); $('vent').innerHTML = '<p class="msg err">Chatten kan ikke åbnes lige nu. Prøv igen om lidt.</p><button class="ghost" onclick="location.reload()">Prøv igen</button>'; return; }
+  $('login').classList.add('jf-skjult'); $('vent').classList.add('jf-skjult'); $('app').classList.remove('jf-skjult');
+  $('fLinks').classList.toggle('jf-skjult', !S.arr);
+  lyt();
+  if (fraLink) S.velkommen = true;
+  rute();
+}
+
+function lyt() {
+  const F = S.fb, fs = F.fs, db = F.db, b = 'jul/' + S.bid;
+  S.lyt.forEach((x) => x()); S.lyt = [];
+  const fejl = (e) => { console.warn(e); if (/permission/i.test(String(e && e.code || e))) { gem('rtk.jul.token', null); visLogin('Dit link er ikke gyldigt længere. Bed Lars om et nyt.'); } };
+  S.lyt.push(fs.onSnapshot(fs.doc(db, b), (d) => { S.b = d.data() || null; if (S.b && S.b.under) $('topUnder').textContent = S.b.under; tegn(); }, fejl));
+  S.lyt.push(fs.onSnapshot(fs.collection(db, b + '/deltagere'), (q) => { S.del = {}; q.forEach((d) => { S.del[d.id] = d.data(); }); tegn(); }, fejl));
+  S.lyt.push(fs.onSnapshot(fs.query(fs.collection(db, b + '/beskeder'), fs.orderBy('tid', 'desc'), fs.limit(300)), (q) => {
+    S.besk = []; q.forEach((d) => { const x = d.data({ serverTimestamps: 'estimate' }); x.id = d.id; S.besk.unshift(x); });
+    tegnUlaest(); if (fane() === 'chat') tegnChat();
+  }, fejl));
+  S.lyt.push(fs.onSnapshot(fs.query(fs.collection(db, b + '/billeder'), fs.orderBy('tid', 'desc')), (q) => {
+    S.bill = []; q.forEach((d) => { const x = d.data({ serverTimestamps: 'estimate' }); x.id = d.id; S.bill.push(x); }); if (fane() === 'billeder') tegnBilleder();
+  }, fejl));
+  S.lyt.push(fs.onSnapshot(fs.collection(db, b + '/mini'), (q) => { S.mini = {}; q.forEach((d) => { S.mini[d.id] = d.data().mini; }); if (['chat', 'deltagere'].indexOf(fane()) >= 0) tegn(); }, fejl));
+}
+
+// ---------- Ruter
+const fane = () => (location.hash.replace(/^#/, '').split('/')[0] || 'program');
+function rute() {
+  if (!S.bid) return;
+  const f = fane();
+  document.querySelectorAll('.jf-tabs a').forEach((a) => { const h = a.getAttribute('href').slice(1); if (h === f || (f === 'profil' && h === 'deltagere') || (f === 'p' && h === 'deltagere')) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  tegn(true);
+}
+addEventListener('hashchange', rute);
+function tegn(ny) {
+  if (!S.bid || !S.b) return;
+  const f = fane();
+  if (f !== 'links') S.linksVist = false;
+  if (S.travlt && !ny) return; // man er i gang med en formular
+  S.travlt = false;
+  if (f === 'chat') tegnChat(ny);
+  else if (f === 'billeder') tegnBilleder();
+  else if (f === 'deltagere' || f === 'p') tegnDeltagere();
+  else if (f === 'profil') tegnProfilRet();
+  else if (f === 'links' && S.arr) { if (ny || !S.linksVist) { S.linksVist = true; tegnLinks(true); } } // ikke forfra ved hver ændring, så valg og "Tryk igen" bevares (fund 4)
+  else tegnProgram();
+}
+
+// ---------- Avatarer og navne
+const JPG = /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/;
+const FARVER = ['#0B3D3A', '#3B6E8F', '#6B3FA0', '#C0392B', '#5A8F3C', '#E08A00', '#7A5C1E', '#4A5560'];
+const farve = (pid) => FARVER[Math.abs(String(pid).split('').reduce((a, c) => a * 31 + c.charCodeAt(0) | 0, 7)) % FARVER.length];
+const navnPaa = (pid) => (S.del[pid] && S.del[pid].navn) || '';
+const ini = (pid) => (S.del[pid] && S.del[pid].initialer) || '?';
+function avatar(pid, st) {
+  const m = S.mini[pid];
+  return '<span class="gr-av" aria-hidden="true" style="' + (st ? 'width:' + st + 'px;height:' + st + 'px;flex:0 0 ' + st + 'px;' : '') + (m && JPG.test(m) ? 'background-image:url(' + m + ');color:transparent;' : 'background-color:' + farve(pid) + ';') + '">' + esc(ini(pid)) + '</span>';
+}
+function statusTekst(x) {
+  if (!x) return '';
+  if (x.valg === 'padel' && x.status === 'plads') return '🎾 Padel og middag';
+  if (x.valg === 'padel') return '🎾 Venteliste til padel · middag';
+  if (x.valg === 'middag') return '🍽️ Kun middag';
+  if (x.valg === 'efter') return '🌙 Kommer efter middagen';
+  return 'Middag · har ikke valgt padel';
+}
+
+// ---------- Program
+function dageTil(dag) {
+  const d = new Date(dag + 'T12:00:00'), n = new Date(); n.setHours(12, 0, 0, 0);
+  return Math.round((d - n) / 86400000);
+}
+function tegnProgram() {
+  const b = S.b, mig = S.del[S.pid] || {};
+  const alle = b.deltagerIder || [];
+  const padel = alle.filter((p) => S.del[p] && S.del[p].valg === 'padel' && S.del[p].status === 'plads').length;
+  const vente = alle.filter((p) => S.del[p] && S.del[p].valg === 'padel' && S.del[p].status === 'venteliste').sort((x, y) => (S.del[x].nr || 0) - (S.del[y].nr || 0));
+  const ikke = alle.filter((p) => S.del[p] && !S.del[p].valg).length;
+  // Thomas W. kommer først efter middagen (Lars 23. november kl. 22.27): han tæller ikke med til middagen
+  const efter = alle.filter((p) => S.del[p] && S.del[p].valg === 'efter');
+  const middag = alle.length - efter.length;
+  const pladser = b.padelPladser || 8;
+  const frist = b.frist && b.frist.toDate ? b.frist.toDate() : null;
+  const efterFrist = frist && Date.now() > frist.getTime();
+  const d = dageTil(b.dato || '2026-12-03');
+  let h = '';
+  if (S.velkommen) h += '<div class="card jf-boks"><b>👋 Hej ' + esc(S.navn) + '</b><p class="jf-lille">Du er logget ind. Telefonen husker dig i 30 dage.' + (S.kode ? ' Din kode er <b>' + esc(S.kode.slice(0, 4) + '-' + S.kode.slice(4)) + '</b>, hvis du skulle få brug for den.' : '') + '</p>' + hjemTekst() + '</div>';
+  h += '<div class="jf-ned">🎅 <b>' + (d > 1 ? 'Om ' + d + ' dage' : d === 1 ? 'I morgen' : d === 0 ? 'I dag!' : 'Tak for i aftes') + '</b> · torsdag 3. december</div>';
+  // Notifikationer er slået til fra start (Lars 23. november kl. 19.59 og 24. november kl. 6.30): telefonen kræver ét tryk, så knappen står øverst, til det er gjort
+  if (!pushSlaaet()) h += '<div class="card jf-boks jf-push" id="pushBoks"></div>';
+  h += '<div class="card jf-boks"><b style="font-size:18px">🎾 Padel og middag 🍽️</b><p class="jf-lille">Middagen er bestilt til ' + (efter.length ? middag + ' (' + efter.map((p) => esc(S.del[p].navn)).join(' og ') + ' kommer efter middagen)' : 'alle ' + middag) + '. Vælg, om du også spiller padel.</p>';
+  if (frist) h += '<p class="jf-frist">' + (efterFrist ? 'Fristen er overskredet. Skriv til Lars, hvis du vil ændre det.' : 'Vælg senest ' + frist.toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' })) + '</p>';
+  // Padel er bindende, når man har valgt det, også på ventelisten (Lars 23. november kl. 21.10 og 24. november kl. 6.05). Kun Lars kan melde fra
+  const bundet = mig.valg === 'padel' || mig.valg === 'efter';
+  h += '<div class="jf-valg"><button type="button" data-v="padel" aria-pressed="' + (mig.valg === 'padel') + '"' + (efterFrist || bundet ? ' disabled' : '') + '>🎾 Padel og middag</button><button type="button" data-v="middag" aria-pressed="' + (mig.valg === 'middag') + '"' + (efterFrist || bundet ? ' disabled' : '') + '>🍽️ Kun middag</button></div>';
+  if (!mig.valg && !efterFrist) h += '<p class="jf-lille">⚠️ Padel er bindende. Når du har valgt padel, også på ventelisten, kan du ikke melde fra igen.</p>';
+  if (mig.valg === 'padel' && mig.status === 'plads') h += '<p class="jf-min">✅ Du har plads til padel kl. 17.</p><p class="jf-lille">Padel er bindende. Skriv til Lars, hvis du ikke kan alligevel.</p>' + (b.padelBetaling ? '<p class="jf-lille">' + esc(b.padelBetaling) + '</p>' : '');
+  else if (mig.valg === 'padel') h += '<p class="jf-min">⏳ Du er nr. ' + (vente.indexOf(S.pid) + 1) + ' på ventelisten til padel.</p><p class="jf-lille">Du får besked, hvis du rykker op. Padel er bindende, også på ventelisten. Skriv til Lars, hvis du ikke kan alligevel.</p>';
+  else if (mig.valg === 'middag') h += '<p class="jf-min">✅ Du kommer til middagen kl. 19.</p>';
+  else if (mig.valg === 'efter') h += '<p class="jf-min">🌙 Du kommer efter middagen. Vi ses i byen! 🍻</p><p class="jf-lille">Skriv til Lars, hvis det er ændret.</p>';
+  h += '<div class="jf-taeller"><span>🎾 Padel <b>' + padel + ' af ' + pladser + '</b></span>' + (vente.length ? '<span>Venteliste <b>' + vente.length + '</b></span>' : '') + '<span>🍽️ Middag <b>' + middag + '</b></span>' + (efter.length ? '<span>🌙 Efter middagen <b>' + efter.length + '</b></span>' : '') + '<span>Har ikke valgt <b>' + ikke + '</b></span></div>';
+  h += '<div class="jf-bar"><i style="width:' + Math.min(100, Math.round(padel / pladser * 100)) + '%"></i></div>';
+  h += '<p class="jf-lille">Er padel fuld, kommer du på venteliste og rykker op, hvis nogen melder fra.</p><div class="msg jf-msg" id="valgMsg" role="status"></div></div>';
+  h += '<h3 class="jf-h">🗓️ Programmet</h3>';
+  (b.program || []).forEach((p) => {
+    const sted = String(p.tekst || '').split('·')[0].trim();
+    const kort = /^(Racket|Bryggerg|.*\d{4}|.*gade|.*vej)/i.test(sted) ? ' <a href="https://maps.google.com/?q=' + encodeURIComponent(sted + ', Roskilde') + '" target="_blank" rel="noopener">Kort</a>' : '';
+    h += '<div class="jf-p"><div class="jf-kl">' + esc(p.kl) + '</div><div class="jf-ik">' + esc(p.ikon) + '</div><div><b>' + esc(p.titel) + '</b>' + (p.tekst ? '<span>' + esc(p.tekst) + kort + '</span>' : '') + '</div></div>';
+  });
+  if (b.menu && (b.menu.titel || b.menu.tekst)) h += '<div class="card jf-boks"><b>🍽️ ' + esc(b.menu.titel) + '</b><p class="jf-lille">' + esc(b.menu.tekst) + '</p></div>';
+  if (pushSlaaet()) h += '<div class="card jf-boks" id="pushBoks"></div>';
+  $('vis').innerHTML = h;
+  document.querySelectorAll('.jf-valg button').forEach((k) => k.addEventListener('click', async () => {
+    const v = k.getAttribute('data-v');
+    if ((S.del[S.pid] || {}).valg === v) return;
+    // Padel er bindende: to tryk, før det gemmes
+    if (v === 'padel' && !k.dataset.ok) { k.dataset.ok = '1'; k.textContent = '🎾 Tryk igen: padel er bindende'; return; }
+    $('valgMsg').textContent = 'Gemmer …'; $('valgMsg').className = 'msg jf-msg';
+    try { await motor('jul', 'valg', { valg: v }, nyId()); $('valgMsg').textContent = ''; }
+    catch (err) { $('valgMsg').textContent = err.message; $('valgMsg').className = 'msg err jf-msg'; }
+  }));
+  tegnPush();
+}
+const erIos = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const erHjem = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+function hjemTekst() {
+  if (erHjem()) return '';
+  return '<p class="jf-lille"><b>Læg siden på hjemmeskærmen.</b> ' + (erIos() ? 'På iPhone: tryk på Del og "Føj til hjemmeskærm".' : 'På Android: tryk på de tre prikker og "Føj til startskærm".') + '</p>';
+}
+
+// ---------- Notifikationer (slået til fra start, Lars kl. 19.59: man bliver spurgt med det samme, telefonen kræver et tryk)
+const pushKan = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+const pushSlaaet = () => pushKan() && Notification.permission === 'granted' && !!hent('rtk.jul.push');
+function tegnPush() {
+  const bx = $('pushBoks'); if (!bx) return;
+  // Slået til: i chatten forsvinder boksen, i programmet står status nederst
+  if (pushSlaaet() && bx.classList.contains('jf-push')) { if (fane() === 'program') tegn(); else bx.remove(); return; }
+  let h = pushSlaaet() ? '<b>🔔 Besked, når der skrives</b>' : '<b>🔔 Slå notifikationer til</b>';
+  if (erIos() && !erHjem()) h += '<p class="jf-lille">På iPhone skal siden først på hjemmeskærmen: tryk på Del og "Føj til hjemmeskærm", og åbn den derfra. Så kan du få besked, når nogen skriver.</p>';
+  else if (!pushKan()) h += '<p class="jf-lille">Denne browser kan ikke vise notifikationer. Kig i chatten en gang imellem.</p>';
+  else if (Notification.permission === 'denied') h += '<p class="jf-lille">Telefonen har sagt nej til notifikationer fra siden. ' + (erIos() ? 'Slå dem til under Indstillinger, Notifikationer, Julefrokost.' : 'Slå dem til ved at trykke på ikonet til venstre for adressen, vælge Notifikationer og Tillad. Genindlæs siden bagefter.') + '</p>';
+  else if (Notification.permission === 'granted' && hent('rtk.jul.push')) h += '<p class="jf-lille">Slået til på denne telefon. Du får højst én besked pr. kvarter, og ingen mellem kl. 22 og 7.</p>';
+  else h += '<p class="jf-lille">Så får du besked, når nogen skriver eller du rykker op til padel. Telefonen spørger én gang.</p><button type="button" class="primary" id="pushTil" style="width:100%">Slå notifikationer til</button>';
+  h += '<div class="msg jf-msg" id="pushMsg" role="status"></div>';
+  bx.innerHTML = h;
+  if ($('pushTil')) $('pushTil').addEventListener('click', slaaPushTil);
+}
+async function slaaPushTil() {
+  const msg = $('pushMsg'); msg.textContent = 'Slår til …'; msg.className = 'msg jf-msg';
+  try {
+    const svar = await Notification.requestPermission();
+    if (svar !== 'granted') { msg.textContent = 'Telefonen sagde nej til notifikationer.'; msg.className = 'msg err jf-msg'; return; }
+    const reg = await navigator.serviceWorker.register('firebase-messaging-sw.js', { scope: '/' });
+    await navigator.serviceWorker.ready;
+    const base = 'https://www.gstatic.com/firebasejs/' + KONFIG.firebaseVersion + '/';
+    const [a, m] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-messaging.js')]);
+    const app = a.getApps().find((x) => x.name === 'push') || a.initializeApp(KONFIG.firebase, 'push');
+    const t = await m.getToken(m.getMessaging(app), { vapidKey: KONFIG.vapid, serviceWorkerRegistration: reg });
+    if (!t) throw new Error('ingen nøgle');
+    const ua = navigator.userAgent;
+    const r = await motor('push', 'registrer', { token: t, enhed: /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) ? 'iPad' : /Android/.test(ua) ? 'Android' : 'Computer' }, nyId());
+    gem('rtk.jul.push', r.id); // rtk.push.id hører til Mit RTK og røres ikke (gennemgangen, fund 3)
+    tegnPush();
+  } catch (err) { console.warn('push', err); msg.textContent = 'Det lykkedes ikke. Prøv igen om lidt.'; msg.className = 'msg err jf-msg'; }
+}
+
+// ---------- Chat
+const dato = (t) => (t && t.toDate ? t.toDate() : t instanceof Date ? t : null);
+const kl = (d) => d ? String(d.getHours()).padStart(2, '0') + '.' + String(d.getMinutes()).padStart(2, '0') : '';
+function dagNavn(d) {
+  const i = new Date(); i.setHours(0, 0, 0, 0); const x = new Date(d); x.setHours(0, 0, 0, 0);
+  const n = Math.round((i - x) / 86400000);
+  return n === 0 ? 'I dag' : n === 1 ? 'I går' : d.toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+function tegnUlaest() {
+  const sidst = Number(hent('rtk.jul.laest.' + S.bid) || 0);
+  const n = S.besk.filter((b) => b.fra !== S.pid && b.fra !== 'system' && (dato(b.tid) || new Date()).getTime() > sidst).length;
+  const u = $('ulaest'); u.textContent = n > 9 ? '9+' : String(n); u.classList.toggle('jf-skjult', !n || fane() === 'chat');
+}
+// Emojis til reaktioner og til beskeder (Lars 23. november kl. 21.27: får, isbjørn, fest og flere). De første otte står fremme
+const REAK = ['👍', '❤️', '😂', '🎉', '🍻', '🎄', '🐑', '🐻‍❄️'];
+const EMOJI = [
+  ['Jul', ['🎄', '🎅', '🤶', '🦌', '⛄', '❄️', '🎁', '🔔', '⭐', '🕯️', '🍪', '🥶']],
+  ['Fest', ['🎉', '🥳', '🍻', '🍺', '🥂', '🍾', '🍷', '🥃', '🕺', '💃', '🎶', '🪩']],
+  ['Mad', ['🍽️', '🐟', '🦐', '🥩', '🍖', '🦆', '🍚', '🍒', '🧀', '🍞', '🧈', '🥔']],
+  ['Sport', ['🎾', '🏆', '🥇', '💪', '🔥', '🧖', '💦', '🧊', '🏃', '😅', '🥵', '🤕']],
+  ['Dyr', ['🐑', '🐻‍❄️', '🐐', '🐷', '🦊', '🐧', '🦭', '🐻', '🦉', '🐴', '🐶', '🐓']],
+  ['Oktoberfest', ['🍺', '🍻', '🥨', '🌭', '🍖', '🎺', '🪗', '🎩', '👒', '🇩🇪', '🥴', '😵‍💫']],
+  ['Piger', ['💃', '👯‍♀️', '👸', '🙋‍♀️', '💁‍♀️', '👩', '👱‍♀️', '👩‍🦰', '😘', '🥰', '😉', '💋']],
+  ['Ansigter', ['😂', '🤣', '😍', '😎', '🤩', '😇', '😴', '🙈', '🤦', '🫡', '😬', '🤔']],
+  ['Hænder', ['👍', '👏', '🙌', '🤝', '✌️', '🤙', '🫶', '❤️', '🙏', '👀', '✅', '💯']]
+];
+const emojiGitter = (data) => EMOJI.map(([navn, l]) => '<div class="jf-eg"><b>' + navn + '</b><div>' + l.map((e) => '<button type="button" ' + data + '="' + e + '" aria-label="' + e + '">' + e + '</button>').join('') + '</div></div>').join('');
+function tegnChat(ny) {
+  let ol = $('chatListe');
+  const vedBund = !ol || (innerHeight + scrollY >= document.body.scrollHeight - 120);
+  if (!ol || ny) {
+    $('vis').innerHTML = (pushSlaaet() ? '' : '<div class="card jf-boks jf-push" id="pushBoks"></div>') + '<ol class="jf-chat" id="chatListe"></ol><div class="jf-emojier jf-skjult" id="skrivEmoji">' + emojiGitter('data-ind') + '</div><form class="jf-skriv" id="skriv"><button type="button" class="jf-ekn" id="emojiKnap" aria-label="Emojis" aria-expanded="false">😀</button><textarea id="tekst" rows="1" maxlength="4000" placeholder="Skriv til alle" aria-label="Skriv til alle"></textarea><button class="gr-send" aria-label="Send" type="submit"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5 21 12 3 3.5l.01 6.6L15 12 3.01 13.9z"/></svg></button></form>';
+    ol = $('chatListe');
+    const ta = $('tekst');
+    ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(150, ta.scrollHeight) + 'px'; });
+    ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey && !matchMedia('(pointer: coarse)').matches) { e.preventDefault(); $('skriv').requestSubmit(); } });
+    $('skriv').addEventListener('submit', send);
+    tegnPush();
+    $('emojiKnap').addEventListener('click', () => { const g = $('skrivEmoji'); const skjult = g.classList.toggle('jf-skjult'); $('emojiKnap').setAttribute('aria-expanded', String(!skjult)); });
+    $('skrivEmoji').querySelectorAll('[data-ind]').forEach((k) => k.addEventListener('click', () => {
+      const e = k.getAttribute('data-ind'), a = ta.selectionStart || ta.value.length, b2 = ta.selectionEnd || ta.value.length;
+      ta.value = ta.value.slice(0, a) + e + ta.value.slice(b2); ta.selectionStart = ta.selectionEnd = a + e.length; ta.dispatchEvent(new Event('input'));
+    }));
+  }
+  let h = '', fDag = '', fFra = null;
+  if (!S.besk.length) h += '<li class="gr-sys">Ingen beskeder endnu. Sig hej! 👋</li>';
+  S.besk.forEach((b) => {
+    const d = dato(b.tid) || new Date();
+    const dk = d.toDateString();
+    if (dk !== fDag) { h += '<li class="gr-dag">' + esc(dagNavn(d)) + '</li>'; fDag = dk; fFra = null; }
+    if (b.fra === 'system') { h += '<li class="gr-sys">' + esc(b.tekst) + '</li>'; fFra = null; return; }
+    const egen = b.fra === S.pid;
+    const navn = navnPaa(b.fra) || '…';
+    h += '<li class="gr-b jf-gr' + (egen ? ' egen' : '') + (b.slettet ? ' slettet' : '') + '" data-id="' + esc(b.id) + '">';
+    if (!egen && fFra !== b.fra) h += '<span class="gr-afsender">' + esc(navn) + '</span>';
+    h += '<div class="gr-raekke">' + (!egen ? (fFra !== b.fra ? avatar(b.fra, 36) : '<span class="gr-av tom"></span>') : '') +
+      '<div class="gr-boble" tabindex="0" role="button" aria-label="' + esc((egen ? 'Din besked' : navn) + ': ' + (b.tekst || '')) + '">' + (b.slettet ? (b.fjernet ? 'Fjernet af arrangøren' : 'Slettet') : esc(b.tekst)) + '</div></div>';
+    const r = b.reaktioner || {}, t = {};
+    Object.keys(r).forEach((p) => { t[r[p]] = (t[r[p]] || 0) + 1; });
+    if (!b.slettet && Object.keys(t).length) h += '<div class="gr-reak">' + Object.keys(t).map((e) => '<button type="button" class="gr-reak-k' + (r[S.pid] === e ? ' min' : '') + '" data-e="' + esc(e) + '">' + esc(e) + ' ' + t[e] + '</button>').join('') + '</div>';
+    if (S.aaben === b.id && !b.slettet) {
+      const t3 = egen && Date.now() - d.getTime() < 170000;
+      h += '<div class="jf-hand">' + REAK.map((e) => '<button type="button" data-r="' + e + '" aria-pressed="' + (r[S.pid] === e) + '">' + e + '</button>').join('') +
+        '<button type="button" data-flere="1" aria-label="Flere emojis" aria-expanded="' + !!S.flere + '">' + (S.flere ? '✕' : '➕') + '</button>' +
+        (S.flere ? '<div class="jf-emojier">' + emojiGitter('data-r') + '</div>' : '') +
+        (t3 ? '<button type="button" class="tekst" data-slet="1">Slet</button>' : '') + (S.arr && !egen ? '<button type="button" class="tekst" data-fjern="1">Fjern</button>' : '') + '</div>';
+    }
+    h += '<span class="gr-info">' + kl(d) + (b.rettet ? ' · rettet' : '') + '</span></li>';
+    fFra = b.fra;
+  });
+  ol.innerHTML = h;
+  ol.querySelectorAll('.gr-b').forEach((li) => {
+    const id = li.getAttribute('data-id');
+    const b = S.besk.find((x) => x.id === id);
+    const bob = li.querySelector('.gr-boble');
+    const aab = () => { S.aaben = S.aaben === id ? null : id; S.flere = false; tegnChat(); };
+    bob.addEventListener('click', aab); bob.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); aab(); } });
+    const fl = li.querySelector('[data-flere]'); if (fl) fl.addEventListener('click', () => { S.flere = !S.flere; tegnChat(); });
+    li.querySelectorAll('[data-r]').forEach((k) => k.addEventListener('click', () => reager(b, (b.reaktioner || {})[S.pid] === k.getAttribute('data-r') ? null : k.getAttribute('data-r'))));
+    li.querySelectorAll('[data-e]').forEach((k) => k.addEventListener('click', () => reager(b, (b.reaktioner || {})[S.pid] === k.getAttribute('data-e') ? null : k.getAttribute('data-e'))));
+    const sl = li.querySelector('[data-slet]'); if (sl) sl.addEventListener('click', () => slet(b, false));
+    const fj = li.querySelector('[data-fjern]'); if (fj) fj.addEventListener('click', () => { if (fj.dataset.ok) slet(b, true); else { fj.dataset.ok = '1'; fj.textContent = 'Tryk igen for at fjerne'; } });
+  });
+  if (vedBund || ny) requestAnimationFrame(() => scrollTo(0, document.body.scrollHeight));
+  gem('rtk.jul.laest.' + S.bid, String(Date.now()));
+  tegnUlaest();
+}
+async function send(e) {
+  e.preventDefault();
+  const ta = $('tekst'); const tekst = ta.value.trim();
+  if (!tekst) return;
+  const F = S.fb;
+  ta.value = ''; ta.style.height = 'auto'; $('skrivEmoji').classList.add('jf-skjult');
+  try {
+    const ref = F.fs.doc(F.fs.collection(F.db, 'jul/' + S.bid + '/beskeder'));
+    await F.fs.setDoc(ref, { fra: S.pid, tekst: tekst.slice(0, 4000), tid: F.fs.serverTimestamp() });
+    motor('jul', 'varsl', { id: ref.id }, nyId()).catch((err) => console.warn('varsl', err));
+  } catch (err) { console.warn(err); ta.value = tekst; alert('Beskeden blev ikke sendt. Tjek net og prøv igen.'); }
+}
+async function reager(b, e) {
+  const F = S.fb;
+  const r = Object.assign({}, b.reaktioner || {});
+  if (e) r[S.pid] = e; else delete r[S.pid];
+  S.aaben = null;
+  try { await F.fs.updateDoc(F.fs.doc(F.db, 'jul/' + S.bid + '/beskeder/' + b.id), { reaktioner: r }); } catch (err) { console.warn(err); }
+}
+async function slet(b, fjern) {
+  const F = S.fb;
+  const d = { tekst: '', slettet: F.fs.serverTimestamp() };
+  if (fjern) d.fjernet = true;
+  S.aaben = null;
+  try { await F.fs.updateDoc(F.fs.doc(F.db, 'jul/' + S.bid + '/beskeder/' + b.id), d); } catch (err) { alert(fjern ? 'Beskeden kunne ikke fjernes.' : 'Beskeden kan kun slettes de første 3 minutter.'); tegnChat(); }
+}
+
+// ---------- Billeder
+function tilJpeg(fil, maks, maksTegn, kvadrat) {
+  return new Promise((ok, nej) => {
+    const url = URL.createObjectURL(fil);
+    const img = new Image();
+    img.onload = () => {
+      let sw = img.naturalWidth, sh = img.naturalHeight, sx = 0, sy = 0;
+      if (kvadrat) { const s = Math.min(sw, sh); sx = (sw - s) / 2; sy = (sh - s) / 2; sw = sh = s; }
+      const k = Math.min(1, maks / Math.max(sw, sh));
+      const c = document.createElement('canvas'); c.width = Math.round(sw * k); c.height = Math.round(sh * k);
+      c.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      let q = 0.85, d = c.toDataURL('image/jpeg', q);
+      while (d.length > maksTegn && q > 0.3) { q -= 0.1; d = c.toDataURL('image/jpeg', q); }
+      let cc = c;
+      while (d.length > maksTegn && cc.width > 64) {
+        const n = document.createElement('canvas'); n.width = Math.round(cc.width * 0.75); n.height = Math.round(cc.height * 0.75);
+        n.getContext('2d').drawImage(cc, 0, 0, n.width, n.height); cc = n; d = cc.toDataURL('image/jpeg', 0.6);
+      }
+      if (d.length > maksTegn) nej(new Error('Billedet er for stort')); else ok(d);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); nej(new Error('Billedet kunne ikke læses')); };
+    img.src = url;
+  });
+}
+function tegnBilleder() {
+  // Filvælgeren ligger uden for det, der tegnes igen, så et valgt billede ikke går tabt, hvis listen opdateres imens
+  let h = '<button type="button" class="primary" id="laegOpKnap" style="width:100%;margin-bottom:10px">📸 Læg billeder op</button><div class="msg jf-msg' + (S.bilMsg ? ' ' + S.bilMsg.k : '') + '" id="bilMsg" role="status">' + esc(S.bilMsg ? S.bilMsg.t : '') + '</div>';
+  if (!S.bill.length) h += '<p class="hint">Ingen billeder endnu.</p>';
+  h += '<div class="jf-gitter">' + S.bill.map((b, i) => '<button type="button" data-i="' + i + '" aria-label="Billede ' + (i + 1) + ' fra ' + esc(navnPaa(b.af)) + '" style="background-image:url(' + (JPG.test(b.mini) ? b.mini : '') + ')"></button>').join('') + '</div>';
+  h += '<p class="jf-lille" style="margin-top:10px">' + S.bill.length + ' billeder · tryk for fuld skærm. Du kan slette dine egne.</p><p class="jf-lille">Kun de ' + ((S.b.deltagerIder || []).length) + ' ser billederne. Læg kun billeder op af nogen, der har sagt ja.</p>';
+  $('vis').innerHTML = h;
+  $('laegOpKnap').addEventListener('click', () => $('filer').click());
+  document.querySelectorAll('.jf-gitter button').forEach((k) => k.addEventListener('click', () => fuld(Number(k.getAttribute('data-i')))));
+}
+async function laegOp(e) {
+  const filer = Array.from(e.target.files || []).slice(0, 20);
+  if (!filer.length) return;
+  const F = S.fb;
+  // Beskeden huskes, så den står der, også når listen tegnes igen, mens billederne lægges op
+  const vis = (t, k) => { S.bilMsg = { t, k: k || '' }; const m = $('bilMsg'); if (m) { m.textContent = t; m.className = 'msg jf-msg ' + (k || ''); } };
+  let n = 0;
+  for (const f of filer) {
+    vis('Lægger billede ' + (n + 1) + ' af ' + filer.length + ' op …');
+    try {
+      const [stor, mini] = await Promise.all([tilJpeg(f, 1600, 690000), tilJpeg(f, 480, 110000)]);
+      const ref = F.fs.doc(F.fs.collection(F.db, 'jul/' + S.bid + '/billeder'));
+      const b = F.fs.writeBatch(F.db);
+      b.set(F.fs.doc(F.db, 'jul/' + S.bid + '/stor/' + ref.id), { data: stor, af: S.pid });
+      b.set(ref, { af: S.pid, mini, tid: F.fs.serverTimestamp() });
+      await b.commit(); n++;
+    } catch (err) { console.warn(err); vis('Et billede kunne ikke lægges op: ' + err.message, 'err'); }
+  }
+  if (n) vis(n === 1 ? 'Billedet er lagt op.' : n + ' billeder er lagt op.', 'okm');
+  setTimeout(() => { S.bilMsg = null; }, 8000);
+}
+async function fuld(i, liste) {
+  liste = liste || S.bill.map((b) => ({ id: b.id, af: b.af, mini: b.mini, sti: 'jul/' + S.bid + '/stor/' + b.id }));
+  const x = liste[i]; if (!x) return;
+  const gl = document.querySelector('.jf-fuld'); if (gl) gl.remove();
+  const d = document.createElement('div'); d.className = 'jf-fuld'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true');
+  const kanSlette = !liste.profil && (x.af === S.pid || S.arr);
+  d.innerHTML = '<img alt="" src="' + (JPG.test(x.mini) ? x.mini : '') + '"><div class="k v">' + (kanSlette ? '<button type="button" data-slet>Slet</button>' : '') + '</div><div class="k h"><button type="button" data-luk>Luk</button></div>' +
+    (i > 0 ? '<button type="button" class="pil f" aria-label="Forrige">‹</button>' : '') + (i < liste.length - 1 ? '<button type="button" class="pil n" aria-label="Næste">›</button>' : '');
+  document.body.append(d);
+  const luk = () => { d.remove(); removeEventListener('keydown', tast); };
+  const tast = (e) => { if (e.key === 'Escape') luk(); if (e.key === 'ArrowLeft' && i > 0) { luk(); fuld(i - 1, liste); } if (e.key === 'ArrowRight' && i < liste.length - 1) { luk(); fuld(i + 1, liste); } };
+  addEventListener('keydown', tast);
+  d.querySelector('[data-luk]').addEventListener('click', luk);
+  d.querySelector('[data-luk]').focus();
+  const f = d.querySelector('.pil.f'), n = d.querySelector('.pil.n');
+  if (f) f.addEventListener('click', () => { luk(); fuld(i - 1, liste); });
+  if (n) n.addEventListener('click', () => { luk(); fuld(i + 1, liste); });
+  let x0 = null;
+  d.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  d.addEventListener('touchend', (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (dx > 60 && i > 0) { luk(); fuld(i - 1, liste); } else if (dx < -60 && i < liste.length - 1) { luk(); fuld(i + 1, liste); } });
+  const s = d.querySelector('[data-slet]');
+  if (s) s.addEventListener('click', async () => {
+    if (!s.dataset.ok) { s.dataset.ok = '1'; s.textContent = 'Tryk igen for at slette'; return; }
+    const F = S.fb;
+    try { const b = F.fs.writeBatch(F.db); b.delete(F.fs.doc(F.db, 'jul/' + S.bid + '/billeder/' + x.id)); b.delete(F.fs.doc(F.db, 'jul/' + S.bid + '/stor/' + x.id)); await b.commit(); luk(); }
+    catch (err) { s.textContent = 'Kunne ikke slette'; }
+  });
+  try {
+    const F = S.fb; const st = await F.fs.getDoc(F.fs.doc(F.db, x.sti));
+    const data = st.exists() ? st.data().data : '';
+    if (JPG.test(data) && d.isConnected) d.querySelector('img').src = data;
+  } catch (err) { console.warn(err); }
+}
+
+// ---------- Deltagere og profilkort
+function tegnDeltagere() {
+  const alle = (S.b.deltagerIder || []).slice();
+  let h = '<button type="button" class="jf-d" id="minProfil" style="border-top:0">' + avatar(S.pid) + '<div><b>✏️ Min profil</b><span>Billede, et par ord om dig og dit niveau</span></div></button>';
+  h += '<h3 class="jf-h">Alle ' + alle.length + '</h3>';
+  alle.forEach((p) => { const x = S.del[p] || {}; h += '<button type="button" class="jf-d" data-p="' + esc(p) + '">' + avatar(p) + '<div><b>' + esc(x.navn) + (x.arrangoer ? '<span class="jf-tag">🎅 Arrangør</span>' : '') + (p === S.pid ? '<span class="jf-tag">Dig</span>' : '') + '</b><span>' + esc(statusTekst(x)) + '</span></div></button>'; });
+  h += '<p style="margin-top:20px"><button type="button" class="ghost small" id="logUd">Log ud på denne telefon</button></p><div class="msg jf-msg" id="udMsg"></div>';
+  $('vis').innerHTML = h;
+  $('minProfil').addEventListener('click', () => { location.hash = '#profil'; });
+  document.querySelectorAll('[data-p]').forEach((k) => k.addEventListener('click', () => visKort(k.getAttribute('data-p'))));
+  $('logUd').addEventListener('click', () => {
+    const k = $('logUd');
+    if (!k.dataset.ok) { k.dataset.ok = '1'; k.textContent = 'Tryk igen. Du skal bruge linket for at komme ind igen'; return; }
+    logUd();
+  });
+  const m = /^#p\/(\w+)$/.exec(location.hash); if (m) visKort(m[1]);
+}
+async function hentProfil(pid) {
+  const F = S.fb;
+  try { const d = await F.fs.getDoc(F.fs.doc(F.db, 'jul/' + S.bid + '/profiler/' + pid)); S.profiler[pid] = d.exists() ? d.data() : {}; }
+  catch (err) { S.profiler[pid] = {}; }
+  return S.profiler[pid];
+}
+const NIV = (v) => (Number(v) ? Number(v).toFixed(1).replace('.', ',') : '');
+// Niveauerne fra Mit RTK (niveauer.md): tennis efter NTRP, padel efter den danske padelskala (Lars 23. november: niveauerne skal have en guide)
+const NIVTAB = (typeof NIVEAUER !== 'undefined' && NIVEAUER) || { tennis: { niveauer: [] }, padel: { niveauer: [] } };
+const nivInfo = (sport, v) => (NIVTAB[sport].niveauer || []).find((x) => Number(x.v) === Number(v)) || null;
+const nivNavn = (sport, v) => { const x = nivInfo(sport, v); return x && x.navn && x.navn.da ? x.navn.da : ''; };
+async function visKort(pid) {
+  const x = S.del[pid] || {};
+  const ark = document.createElement('div'); ark.className = 'jf-ark'; ark.setAttribute('role', 'dialog'); ark.setAttribute('aria-modal', 'true'); ark.setAttribute('aria-label', 'Profilkort for ' + (x.navn || ''));
+  ark.innerHTML = '<div><div class="jf-greb"></div><div id="arkKrop"><p class="hint">Henter …</p></div><p style="margin-top:14px"><button type="button" class="ghost" data-luk style="width:100%">Luk</button></p></div>';
+  document.body.append(ark);
+  const luk = () => { ark.remove(); removeEventListener('keydown', esc1); };
+  const esc1 = (e) => { if (e.key === 'Escape') luk(); };
+  addEventListener('keydown', esc1);
+  ark.addEventListener('click', (e) => { if (e.target === ark) luk(); });
+  ark.querySelector('[data-luk]').addEventListener('click', luk);
+  const p = await hentProfil(pid);
+  const bil = [p.billede].concat(p.ekstra || []).map((b, i) => ({ b, i })).filter((y) => JPG.test(y.b || ''));
+  let h = '<div class="jf-pk"><div class="jf-pk-h">' + (bil[0] && bil[0].i === 0 ? '<button type="button" class="jf-pk-b" data-b="0" aria-label="Vis profilbilledet" style="background-image:url(' + p.billede + ')"></button>' : '<span class="jf-pk-b" style="background:' + farve(pid) + '">' + esc(x.initialer) + '</span>') +
+    '<div><div class="jf-pk-n">' + esc(x.navn) + '</div><div class="jf-lille">' + esc(statusTekst(x)) + '</div></div></div>';
+  if (p.tekst) h += '<h3>Om mig</h3><p style="margin:0">' + esc(p.tekst) + '</p>';
+  const n = p.niveau || {};
+  if (Number(n.tennis) || Number(n.padel)) h += '<h3>Niveau</h3><p style="margin:0">' + (Number(n.tennis) ? '🎾 Tennis <b>' + NIV(n.tennis) + '</b>&nbsp;&nbsp; ' : '') + (Number(n.padel) ? 'Padel <b>' + NIV(n.padel) + (nivNavn('padel', n.padel) ? ' · ' + esc(nivNavn('padel', n.padel)) : '') + '</b>' : '') + '</p>';
+  const ekstra = bil.filter((y) => y.i > 0);
+  if (ekstra.length) h += '<h3>Billeder ' + ekstra.length + '</h3><div class="jf-pk-g">' + ekstra.map((y) => '<button type="button" data-b="' + y.i + '" aria-label="Vis billede" style="background-image:url(' + y.b + ')"></button>').join('') + '</div>';
+  if (!p.tekst && !bil.length && !(Number(n.tennis) || Number(n.padel))) h += '<p class="jf-lille" style="margin-top:12px">' + (pid === S.pid ? 'Du har ikke lavet dit profilkort endnu.' : esc(String(x.navn || '').split(' ')[0]) + ' har ikke lavet sit profilkort endnu.') + '</p>';
+  if (pid === S.pid) h += '<p><a href="#profil" class="ghost" style="display:inline-block;padding:8px 14px;border:1px solid var(--line2);border-radius:10px;text-decoration:none">Ret mit profilkort</a></p>';
+  h += '</div>';
+  const krop = ark.querySelector('#arkKrop'); if (!krop) return;
+  krop.innerHTML = h;
+  krop.querySelectorAll('a[href="#profil"]').forEach((a) => a.addEventListener('click', luk));
+  const liste = bil.map((y) => ({ id: y.i, mini: y.b, sti: 'jul/' + S.bid + '/profilStor/' + pid + '_' + y.i }));
+  liste.profil = true;
+  krop.querySelectorAll('[data-b]').forEach((k) => k.addEventListener('click', () => fuld(bil.findIndex((y) => String(y.i) === k.getAttribute('data-b')), liste)));
+}
+
+// ---------- Ret mit profilkort
+const NIV_VALG = { tennis: [0].concat((NIVTAB.tennis.niveauer || []).map((x) => Number(x.v))), padel: [0].concat((NIVTAB.padel.niveauer || []).map((x) => Number(x.v))) };
+async function tegnProfilRet() {
+  $('vis').innerHTML = '<p class="hint">Henter …</p>';
+  const p = Object.assign({}, await hentProfil(S.pid));
+  if (fane() !== 'profil') return;
+  const R = { billede: JPG.test(p.billede || '') ? p.billede : '', stor0: null, ekstra: (p.ekstra || []).filter((b) => JPG.test(b)).slice(0, 3).map((b) => ({ b, stor: null })), aendret: false };
+  const sel = (id, sport, v) => '<select id="' + id + '" data-sport="' + sport + '">' + NIV_VALG[sport].map((n) => '<option value="' + n + '"' + (Number(v || 0) === n ? ' selected' : '') + '>' + (n ? NIV(n) + (nivNavn(sport, n) ? ' · ' + nivNavn(sport, n) : '') : 'Ikke angivet') + '</option>').join('') + '</select>';
+  const guide = (sport) => '<details class="jf-guide"><summary>Se alle niveauer i ' + sport + '</summary><dl>' + (NIVTAB[sport].niveauer || []).map((x) => '<dt>' + NIV(x.v) + (x.navn && x.navn.da ? ' · ' + esc(x.navn.da) : '') + '</dt><dd>' + esc(x.tekst.da) + '</dd>').join('') + '</dl>' + (NIVTAB[sport].fodnote ? '<p class="jf-lille">' + esc(NIVTAB[sport].fodnote.da) + '</p>' : '') + '</details>';
+  const nivTekst = (sport, v) => { const x = nivInfo(sport, v); return x ? esc(x.tekst.da) : 'Vælg det niveau, der passer bedst. Se beskrivelserne herunder.'; };
+  const tegnR = () => {
+    let h = '<a href="#deltagere" class="gr-tilbage">&#8592; Deltagere</a><h2 style="margin:10px 0 4px">Mit profilkort</h2><p class="jf-lille">Kun de ' + (S.b.deltagerIder || []).length + ' til julefrokosten kan se det.</p>';
+    h += '<form class="jf-ret" id="profForm" novalidate>';
+    h += '<label>Profilbillede</label><div class="jf-pk-h"><span class="jf-pk-b" style="' + (R.billede && JPG.test(R.billede) ? 'background-image:url(' + R.billede + ')' : 'background:' + farve(S.pid)) + '">' + (R.billede ? '' : esc(ini(S.pid))) + '</span><div><label class="ghost small" style="display:inline-block;margin:0;padding:6px 12px;border:1px solid var(--line2);border-radius:10px;cursor:pointer;font-weight:600">Vælg billede<input type="file" id="pBil" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px"></label>' + (R.billede ? ' <button type="button" class="ghost small" id="pBilFjern">Fjern</button>' : '') + '</div></div>';
+    h += '<label for="pTekst">Om mig</label><textarea id="pTekst" maxlength="300" rows="3" placeholder="Fx hvor længe du har spillet, og hvad du glæder dig til">' + esc(p.tekst || '') + '</textarea>';
+    h += '<label for="pTennis">🎾 Tennisniveau</label>' + sel('pTennis', 'tennis', (p.niveau || {}).tennis) + '<p class="jf-lille jf-nivtekst" id="tTennis">' + nivTekst('tennis', (p.niveau || {}).tennis) + '</p>' + guide('tennis');
+    h += '<label for="pPadel">Padelniveau</label>' + sel('pPadel', 'padel', (p.niveau || {}).padel) + '<p class="jf-lille jf-nivtekst" id="tPadel">' + nivTekst('padel', (p.niveau || {}).padel) + '</p>' + guide('padel');
+    h += '<label>Andre billeder (højst 3)</label><div class="jf-ekstra">' + R.ekstra.filter((x) => JPG.test(x.b)).map((x, i) => '<div><span style="background-image:url(' + x.b + ')"></span><button type="button" class="ghost" data-fjern="' + i + '" aria-label="Fjern billedet">×</button></div>').join('') +
+      (R.ekstra.length < 3 ? '<label style="display:flex;align-items:center;justify-content:center;width:84px;height:84px;border:1px dashed var(--line2);border-radius:8px;margin:0;cursor:pointer;font-size:26px;color:var(--muted)">+<input type="file" id="pEkstra" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px"></label>' : '') + '</div>';
+    h += '<p class="jf-lille">Brug kun billeder, du selv har taget eller må bruge, og kun af personer, der har sagt ja.</p>';
+    h += '<button class="primary" style="width:100%;margin-top:14px">Gem profilkortet</button><div class="msg jf-msg" id="profMsg" role="status"></div></form>';
+    $('vis').innerHTML = h;
+    S.travlt = true;
+    const msg = $('profMsg');
+    $('pTennis').addEventListener('change', () => { $('tTennis').innerHTML = nivTekst('tennis', $('pTennis').value); });
+    $('pPadel').addEventListener('change', () => { $('tPadel').innerHTML = nivTekst('padel', $('pPadel').value); });
+    $('pBil').addEventListener('change', async (e) => {
+      const f = e.target.files[0]; if (!f) return;
+      msg.textContent = 'Gør billedet klar …';
+      try { const tekst = $('pTekst').value; [R.billede, R.stor0, R.mini] = await Promise.all([tilJpeg(f, 320, 29000, true), tilJpeg(f, 1200, 390000), tilJpeg(f, 96, 7800, true)]); p.tekst = tekst; p.niveau = { tennis: Number($('pTennis').value), padel: Number($('pPadel').value) }; tegnR(); }
+      catch (err) { msg.textContent = err.message; msg.className = 'msg err jf-msg'; }
+    });
+    if ($('pBilFjern')) $('pBilFjern').addEventListener('click', () => { p.tekst = $('pTekst').value; p.niveau = { tennis: Number($('pTennis').value), padel: Number($('pPadel').value) }; R.billede = ''; R.stor0 = ''; R.mini = ''; tegnR(); });
+    if ($('pEkstra')) $('pEkstra').addEventListener('change', async (e) => {
+      const f = e.target.files[0]; if (!f) return;
+      msg.textContent = 'Gør billedet klar …';
+      try { const tekst = $('pTekst').value; const [b, stor] = await Promise.all([tilJpeg(f, 320, 29000, true), tilJpeg(f, 1200, 390000)]); R.ekstra.push({ b, stor }); p.tekst = tekst; p.niveau = { tennis: Number($('pTennis').value), padel: Number($('pPadel').value) }; tegnR(); }
+      catch (err) { msg.textContent = err.message; msg.className = 'msg err jf-msg'; }
+    });
+    document.querySelectorAll('[data-fjern]').forEach((k) => k.addEventListener('click', () => { p.tekst = $('pTekst').value; p.niveau = { tennis: Number($('pTennis').value), padel: Number($('pPadel').value) }; R.ekstra.splice(Number(k.getAttribute('data-fjern')), 1); R.ekstraAendret = true; tegnR(); }));
+    $('profForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = 'Gemmer …'; msg.className = 'msg jf-msg';
+      const F = S.fb, b = 'jul/' + S.bid + '/';
+      try {
+        const w = F.fs.writeBatch(F.db);
+        w.set(F.fs.doc(F.db, b + 'profiler/' + S.pid), { billede: R.billede || '', ekstra: R.ekstra.map((x) => x.b), tekst: $('pTekst').value.trim().slice(0, 300),
+          niveau: { tennis: Number($('pTennis').value), padel: Number($('pPadel').value) }, opdateret: F.fs.serverTimestamp() });
+        if (R.stor0 !== null) {
+          if (R.stor0) w.set(F.fs.doc(F.db, b + 'profilStor/' + S.pid + '_0'), { data: R.stor0, opdateret: F.fs.serverTimestamp() }); else w.delete(F.fs.doc(F.db, b + 'profilStor/' + S.pid + '_0'));
+          if (R.mini) w.set(F.fs.doc(F.db, b + 'mini/' + S.pid), { mini: R.mini, opdateret: F.fs.serverTimestamp() }); else w.delete(F.fs.doc(F.db, b + 'mini/' + S.pid));
+        }
+        // De store udgaver af de andre billeder følger rækkefølgen. Et billede uden ny stor udgave beholder sin gamle, hvis den ikke er flyttet
+        if (R.ekstra.some((x) => x.stor) || R.ekstraAendret) {
+          const gamle = await Promise.all([1, 2, 3].map((i) => F.fs.getDoc(F.fs.doc(F.db, b + 'profilStor/' + S.pid + '_' + i)).then((d) => (d.exists() ? d.data().data : '')).catch(() => '')));
+          const gl = (p.ekstra || []);
+          [0, 1, 2].forEach((i) => {
+            const x = R.ekstra[i];
+            const ref = F.fs.doc(F.db, b + 'profilStor/' + S.pid + '_' + (i + 1));
+            if (!x) { w.delete(ref); return; }
+            const data = x.stor || gamle[gl.indexOf(x.b)] || '';
+            if (data) w.set(ref, { data, opdateret: F.fs.serverTimestamp() }); else w.delete(ref);
+          });
+        }
+        await w.commit();
+        delete S.profiler[S.pid];
+        S.travlt = false;
+        msg.textContent = 'Gemt.'; msg.className = 'msg okm jf-msg';
+        setTimeout(() => { if (fane() === 'profil') location.hash = '#deltagere'; }, 700);
+      } catch (err) { console.warn(err); msg.textContent = 'Profilkortet blev ikke gemt. Prøv igen.'; msg.className = 'msg err jf-msg'; }
+    });
+  };
+  tegnR();
+}
+
+// ---------- Links (kun arrangøren)
+const linkTil = (kode) => location.origin + '/jul.html#k=' + kode;
+async function tegnLinks(ny) {
+  if (ny || !S.gaester) {
+    $('vis').innerHTML = '<p class="hint">Henter …</p>';
+    try { S.gaester = (await motor('jul', 'gaester')).gaester; }
+    catch (err) { $('vis').innerHTML = '<p class="msg err">' + esc(err.message) + '</p>'; return; }
+    if (fane() !== 'links') return;
+  }
+  let h = '<h2 style="margin:0 0 4px">Links og koder</h2><p class="jf-lille">Kun for dig. Send hver sit link privat, fx på WhatsApp. Et tryk på linket logger ind i 30 dage.</p>';
+  S.gaester.forEach((g) => {
+    if (g.arrangoer) return;
+    h += '<div class="jf-d" style="flex-wrap:wrap">' + avatar(g.pid, 34) + '<div style="flex:1;min-width:120px"><b>' + esc(g.navn) + '</b><span' + (g.sidstInde ? '' : ' style="color:var(--pink)"') + '>' + (g.sidstInde ? 'Logget ind ' + esc(g.sidstInde.slice(8, 10) + '/' + g.sidstInde.slice(5, 7) + ' kl. ' + g.sidstInde.slice(11).replace(':', '.')) : 'Ikke logget ind endnu') + ' · kode ' + esc(g.kode.slice(0, 4) + '-' + g.kode.slice(4)) + '</span></div>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="ghost small" data-kopi="' + esc(g.pid) + '">Kopiér link</button>' + (navigator.share ? '<button type="button" class="ghost small" data-del="' + esc(g.pid) + '">Del</button>' : '') + '<button type="button" class="ghost small" data-ny="' + esc(g.pid) + '">Ny kode</button></div></div>';
+  });
+  h += '<div class="msg jf-msg" id="linkMsg" role="status"></div>';
+  h += '<h3 class="jf-h">Ret programmet</h3><form class="jf-ret card jf-boks" id="progForm" novalidate>';
+  const b = S.b, f = b.frist && b.frist.toDate ? b.frist.toDate() : null;
+  const fdag = f ? f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0') + '-' + String(f.getDate()).padStart(2, '0') : '';
+  h += '<label for="rUnder">Underoverskrift</label><input id="rUnder" maxlength="120" value="' + esc(b.under || '') + '">';
+  h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label for="rFrist">Frist for padel</label><input type="date" id="rFrist" value="' + fdag + '"></div><div><label for="rPladser">Pladser til padel</label><input type="number" id="rPladser" min="1" max="40" value="' + (b.padelPladser || 8) + '"></div></div>';
+  h += '<label for="rBetal">Betaling for padel</label><input id="rBetal" maxlength="200" value="' + esc(b.padelBetaling || '') + '">';
+  h += '<label>Programmet</label><div id="rProg">' + (b.program || []).map((p, i) => progLinje(p, i)).join('') + '</div><button type="button" class="ghost small" id="rProgNy">+ Punkt</button>';
+  h += '<label for="rMenuT">Menu</label><input id="rMenuT" maxlength="80" value="' + esc((b.menu || {}).titel || '') + '"><textarea id="rMenu" maxlength="600" rows="4" style="margin-top:6px">' + esc((b.menu || {}).tekst || '') + '</textarea>';
+  h += '<button class="primary" style="width:100%;margin-top:14px">Gem programmet</button><div class="msg jf-msg" id="progMsg" role="status"></div></form>';
+  h += '<h3 class="jf-h">Ændr en deltagers valg</h3><div class="card jf-boks jf-ret"><p class="jf-lille" style="margin-top:0">Også efter fristen. Deltageren og chatten får det at se.</p><select id="vPid">' + (b.deltagerIder || []).map((p) => '<option value="' + esc(p) + '">' + esc(navnPaa(p)) + ' · ' + esc(statusTekst(S.del[p])) + '</option>').join('') + '</select>' +
+    '<div style="display:flex;gap:6px;margin-top:8px"><button type="button" class="ghost small" data-sv="padel">Padel og middag</button><button type="button" class="ghost small" data-sv="middag">Kun middag</button><button type="button" class="ghost small" data-sv="efter">Efter middagen</button></div><div class="msg jf-msg" id="svMsg" role="status"></div></div>';
+  $('vis').innerHTML = h;
+  const lm = $('linkMsg');
+  const find = (pid) => S.gaester.find((g) => g.pid === pid);
+  document.querySelectorAll('[data-kopi]').forEach((k) => k.addEventListener('click', async () => {
+    const g = find(k.getAttribute('data-kopi'));
+    const t = 'Hej ' + g.navn.split(' ')[0] + '. Her er dit link til julefrokosten: ' + linkTil(g.kode);
+    try { await navigator.clipboard.writeText(t); lm.textContent = 'Linket til ' + g.navn + ' er kopieret med en kort hilsen. Sæt det ind i en privat besked.'; lm.className = 'msg okm jf-msg'; }
+    catch (err) { prompt('Kopiér linket', linkTil(g.kode)); }
+  }));
+  document.querySelectorAll('[data-del]').forEach((k) => k.addEventListener('click', async () => {
+    const g = find(k.getAttribute('data-del'));
+    try { await navigator.share({ title: 'Julefrokost', text: 'Hej ' + g.navn.split(' ')[0] + '. Her er dit link til julefrokosten:', url: linkTil(g.kode) }); } catch (err) { /* annulleret */ }
+  }));
+  document.querySelectorAll('[data-ny]').forEach((k) => k.addEventListener('click', async () => {
+    const g = find(k.getAttribute('data-ny'));
+    if (!k.dataset.ok) { k.dataset.ok = '1'; k.textContent = 'Tryk igen: ' + g.navn.split(' ')[0] + ' logges ud'; return; }
+    k.disabled = true;
+    try { const r = await motor('jul', 'nyKode', { pid: g.pid }, nyId()); g.kode = r.kode; g.sidstInde = ''; tegnLinks(); $('linkMsg').textContent = g.navn + ' har fået en ny kode. Det gamle link virker ikke længere. Send det nye.'; $('linkMsg').className = 'msg okm jf-msg'; }
+    catch (err) { lm.textContent = err.message; lm.className = 'msg err jf-msg'; k.disabled = false; }
+  }));
+  $('rProgNy').addEventListener('click', () => { const d = document.createElement('div'); d.innerHTML = progLinje({}, $('rProg').children.length); $('rProg').append(d.firstChild); bindProg(); });
+  bindProg();
+  $('progForm').addEventListener('input', () => { S.travlt = true; });
+  $('progForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pm = $('progMsg'); pm.textContent = 'Gemmer …'; pm.className = 'msg jf-msg';
+    const program = Array.from(document.querySelectorAll('.jf-prog')).map((r) => ({ kl: r.querySelector('[data-f=kl]').value, ikon: r.querySelector('[data-f=ikon]').value, titel: r.querySelector('[data-f=titel]').value, tekst: r.querySelector('[data-f=tekst]').value }));
+    try {
+      await motor('jul', 'program', { under: $('rUnder').value, frist: $('rFrist').value, padelPladser: Number($('rPladser').value), padelBetaling: $('rBetal').value, program, menu: { titel: $('rMenuT').value, tekst: $('rMenu').value } }, nyId());
+      S.travlt = false; pm.textContent = 'Gemt. Alle ser det med det samme.'; pm.className = 'msg okm jf-msg';
+    } catch (err) { pm.textContent = err.message; pm.className = 'msg err jf-msg'; }
+  });
+  document.querySelectorAll('[data-sv]').forEach((k) => k.addEventListener('click', async () => {
+    const sm = $('svMsg'); sm.textContent = 'Gemmer …'; sm.className = 'msg jf-msg';
+    try { await motor('jul', 'saetValg', { pid: $('vPid').value, valg: k.getAttribute('data-sv') }, nyId()); sm.textContent = 'Gemt.'; sm.className = 'msg okm jf-msg'; }
+    catch (err) { sm.textContent = err.message; sm.className = 'msg err jf-msg'; }
+  }));
+}
+function progLinje(p, i) {
+  return '<div class="jf-prog"><input data-f="kl" maxlength="12" placeholder="Kl." aria-label="Klokken" value="' + esc(p.kl || '') + '"><input data-f="titel" maxlength="80" placeholder="Titel" aria-label="Titel" value="' + esc(p.titel || '') + '"><input data-f="ikon" maxlength="8" aria-label="Ikon" value="' + esc(p.ikon || '') + '">' +
+    '<textarea data-f="tekst" maxlength="200" rows="1" placeholder="Sted og detaljer" aria-label="Sted og detaljer">' + esc(p.tekst || '') + '</textarea><button type="button" class="ghost small" data-fjernp aria-label="Fjern punktet">×</button></div>';
+}
+function bindProg() {
+  document.querySelectorAll('[data-fjernp]').forEach((k) => { k.onclick = () => { k.closest('.jf-prog').remove(); S.travlt = true; }; });
+}
+
+// ---------- Log ud
+async function logUd() {
+  const jul = hent('rtk.jul.token');
+  try { if (jul) await motor('kerne', 'logud', hent('rtk.jul.push') ? { pushId: hent('rtk.jul.push') } : {}); } catch (e) {}
+  gem('rtk.jul.token', null); gem('rtk.jul.push', null); gem('rtk.jul.fb', null);
+  history.replaceState(null, '', location.pathname + '#program');
+  try { if (S.fb) await S.fb.auth.signOut(S.fb.au); } catch (e) {}
+  S.lyt.forEach((x) => x()); S.lyt = []; S.bid = '';
+  if (!jul) { location.href = '/'; return; }
+  visLogin();
+}
+
+// ---------- Gå i gang: koden i linket (#k=ABCD2345) logger ind og fjernes fra adressen med det samme
+const km = /[#&]k=([A-Za-z0-9-]{6,24})/.exec(location.hash);
+if (km) logIndMedKode(km[1], null);
+else if (KODE_URL && !hent('rtk.jul.token')) logIndMedKode(KODE_URL, null, true);
+else { if (KODE_URL) S.kode = KODE_URL; start(false); }
+$('filer').addEventListener('change', (e) => { laegOp(e).finally(() => { e.target.value = ''; }); });
+window.RTK_JUL = S; // til test
+})();
+</script>
+</body>
+</html>
