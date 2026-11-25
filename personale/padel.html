@@ -1,0 +1,1783 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta name="rtk-version" content="83b34c1857a6">
+<script src="/opdater.js?v=f299a739b234" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3D3A">
+<meta name="apple-mobile-web-app-title" content="RTK personale">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="ikon-personale-180.png">
+<link rel="icon" type="image/png" href="ikon-personale-180.png">
+<title>Padel · RTK personale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../rtk.css?v=cc78992e33b4">
+<style>
+/* Padel på personalesiden (Lars 8. november 2026, mockup padel.png version 2) */
+.pd-tag{display:inline-block;border:1.5px solid;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 8px;margin-right:6px;vertical-align:2px;background:#fff}
+.pd-snart{background:var(--soft);border-left:4px solid var(--pink);border-radius:6px;padding:10px 14px;margin:0 0 14px;font-size:15px}
+.pd-snart-t{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--pink);margin-bottom:4px}
+.pd-snart a{color:inherit;text-decoration:none;display:block;margin:4px 0;line-height:1.35}
+.pd-vis{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:6px}
+.pd-vis .chips button,.pd-form .chips button,.pd-boks .chips button{min-height:38px;padding:4px 12px;font-size:14px}
+.pd-skift{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.pd-skift button{border:0;border-radius:0;min-height:38px;padding:4px 14px;font-size:14px;background:#fff;color:var(--ink);font-weight:600}
+.pd-skift button[aria-pressed="true"]{background:var(--teal);color:#fff;font-weight:700}
+.pd-uge{font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin:16px 0 6px;color:var(--muted)}
+.pd-l{display:flex;gap:10px;padding:9px 0 9px 8px;border-top:1px solid var(--line);border-left:4px solid transparent;text-decoration:none;color:inherit;cursor:pointer}
+.pd-l:hover{background:var(--soft)}
+.pd-d{width:40px;flex:0 0 40px;text-align:center;font-size:12px;color:var(--muted);line-height:1.2}.pd-d b{display:block;font-size:18px;color:var(--ink)}
+.pd-m{font-size:15px;line-height:1.3;min-width:0}.pd-u{display:block;font-size:13px;color:var(--muted)}
+.pd-l.gjort .pd-m b{text-decoration:line-through;color:var(--muted)}
+.pd-laas{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+/* Billeder (8. november 2026, mockup padel_billeder.png) */
+.pd-laas2{margin:6px 0 0}.pd-nyk{display:inline-flex;align-items:center;border:2px solid var(--pink);border-radius:6px;padding:6px 12px;text-decoration:none;color:inherit;font-weight:700}
+.pd-nyk2{display:inline-flex;align-items:center;padding:6px 12px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:6px}
+.pd-beg{display:flex;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--line);text-decoration:none;color:inherit}.pd-beg:hover b{text-decoration:underline}
+.pd-begf{width:84px;height:64px;flex:0 0 84px;border-radius:8px;background:var(--soft) center/cover no-repeat}
+.pd-begt b{display:block;font-size:16px;line-height:1.3}.pd-begt .u{display:block;font-size:13px;color:var(--muted)}.pd-kal{display:block;font-size:12px;color:var(--teal)}
+.pd-gr3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:6px 0}@media (min-width:700px){.pd-gr3{grid-template-columns:repeat(5,1fr)}}
+.pd-gr3>a,.pd-gr3>button,.pd-gr3>span{all:unset;display:block;aspect-ratio:1;background:var(--soft) center/cover no-repeat;border-radius:4px;position:relative;cursor:pointer}
+.pd-gr3>button:focus-visible,.pd-gr3>a:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.pd-valgt>span button{all:unset;position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;text-align:center;line-height:26px;font-size:17px;cursor:pointer}
+.pd-tilf{display:flex!important;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:1;border:2px dashed var(--line);border-radius:4px;color:var(--teal);font-size:26px;font-weight:400;margin:0!important;cursor:pointer}.pd-tilf small{font-size:12px}
+.pd-filin{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+/* Venteliste (11. november 2026, mockup padel_venteliste_fane.png) */
+.vl-tal{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 10px}.vl-tal div{background:var(--soft);border-radius:10px;padding:8px;text-align:center}.vl-tal b{display:block;font-size:22px}.vl-tal span{font-size:12px;color:var(--muted)}
+.vl-send{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#FDE8F1;border-radius:12px;padding:10px 12px;margin:0 0 10px}.vl-send b{display:block;font-size:15px}.vl-send span{font-size:13px;color:var(--muted)}
+.vl-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 8px}.vl-chips b{font-size:12px;color:var(--muted);width:40px}
+.vl-chips button{min-height:32px;padding:0 10px;font-size:13px;border-radius:99px;border:1px solid var(--line);background:#fff;color:var(--ink)}.vl-chips button[aria-pressed="true"]{background:var(--teal);color:#fff;border-color:var(--teal)}
+.vl-rk{all:unset;box-sizing:border-box;display:flex;justify-content:space-between;gap:10px;width:100%;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.vl-rk:focus-visible{outline:3px solid var(--teal)}.vl-rv b{display:block;font-size:15px}.vl-rv span{font-size:13px;color:var(--muted)}.vl-rv i{font-style:normal;font-weight:700;color:var(--teal)}
+.vl-rh{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:0 0 auto;text-align:right}.vl-nr{font-size:12px;color:var(--muted)}.vl-st{color:#C08A00;font-size:14px;letter-spacing:1px}
+.vl-m{display:inline-block;font-size:12px;font-weight:700;border-radius:99px;padding:2px 8px;background:#F8EFDB;color:#7A5A12}.vl-m.ok{background:#E7F3EC;color:#1E6B45}.vl-m.af{background:var(--soft);color:var(--muted)}
+.vl-bok{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:10px}.vl-bh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 4px}.vl-bh b{font-size:16px}
+.vl-giv{display:flex;gap:8px;margin-top:8px}.vl-giv select{flex:1;min-width:0}
+/* Faner i to rækker og Om projektet (8. november 2026) */
+.pd-faner{margin:0 0 12px}.pd-fgr{margin:0 0 4px}.pd-fl{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 0 4px}
+.pd-faner .tabs{flex-wrap:wrap;margin:0;gap:6px}
+@media (min-width:900px){.pd-faner{display:flex;gap:18px;align-items:flex-end}.pd-fgr+.pd-fgr{border-left:1px solid var(--line);padding-left:18px}}
+.pd-oekt{width:100%;border-collapse:collapse;font-size:15px;margin:4px 0}.pd-oekt td{padding:5px 0;border-top:1px solid var(--line);vertical-align:top}.pd-oekt tr:first-child td{border-top:0}
+.pd-oekt td.t{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700;padding-left:12px}
+.pd-oekl{display:flex;gap:6px;align-items:center;margin:0 0 8px}.pd-oekl .n{flex:1;min-width:0}.pd-oekl .v{width:96px;text-align:right}.pd-oekl .e{width:56px}
+.pd-fil{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.pd-filik{width:40px;height:40px;flex:0 0 40px;border-radius:8px;background:#E7F0EE;color:var(--teal);font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center}
+.pd-filt{flex:1;min-width:0}.pd-filt b{display:block;font-size:15px;line-height:1.3;word-break:break-word}.pd-filt span{font-size:13px;color:var(--muted)}.pd-filk{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.pd-afs{border-top:1px solid var(--line);padding:10px 0 6px}.pd-afsh{display:flex;align-items:center;gap:8px}.pd-afsh .pd-sh{flex:1;margin:0}
+.pd-sh{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--teal);margin:14px 0 6px}
+.pd-ret{font-size:14px;color:var(--teal)}.pd-retk{display:flex;gap:6px;align-items:center}
+.pd-p2{margin:4px 0 6px;font-size:15px;line-height:1.45}.pd-ul{margin:4px 0 6px;padding-left:20px;font-size:15px;line-height:1.45}
+.pd-tb{width:100%;border-collapse:collapse;font-size:15px;margin:4px 0}.pd-tb td{padding:5px 0;border-bottom:1px solid var(--line)}.pd-tb td:first-child{white-space:nowrap;padding-right:14px;color:var(--muted);font-weight:600;width:1%}.pd-tb td.tal{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink)}
+.pd-andre{margin:2px 0 6px}
+.pd-mini{all:unset;cursor:pointer;font-size:13px;border:1px solid var(--line);border-radius:6px;padding:3px 8px;color:var(--ink);background:#fff}.pd-mini:focus-visible{outline:2px solid var(--teal)}
+.pd-fs{border:0;padding:0;margin:12px 0 0}.pd-fs legend{font-weight:700;font-size:14px;padding:0;margin:0 0 6px}
+.pd-rk{display:grid;grid-template-columns:120px 1fr;gap:8px;align-items:center;margin:4px 0;font-size:14px}
+.pd-rk3{display:grid;grid-template-columns:1.6fr 1fr 1fr auto;gap:6px;align-items:center;margin:4px 0}
+@media (max-width:560px){.pd-rk3{grid-template-columns:1fr 1fr auto}.pd-rk3 input[data-f="tekst"]{grid-column:1/-1}}
+.pd-to{display:grid;grid-template-columns:2fr 1fr;gap:8px}
+.pd-cb{display:flex;gap:8px;align-items:center;font-weight:400;margin-top:10px}.pd-cb input{width:auto}
+.pd-ref,.pd-ide{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--line);text-decoration:none;color:inherit}.pd-ref:hover b,.pd-ide:hover b{text-decoration:underline}
+.pd-ide{flex-direction:column;gap:2px}
+.pd-rd{width:44px;flex:0 0 44px;text-align:center;font-size:20px;font-weight:700;line-height:1.1}.pd-rd b{display:block;font-size:12px;color:var(--muted);font-weight:600}
+.pd-rm b,.pd-ide b{display:block;font-size:16px;line-height:1.3}.pd-rm .u,.pd-ide .u{display:block;font-size:13px;color:var(--muted)}
+.pd-hd{display:grid;grid-template-columns:90px 1fr;gap:4px 10px;font-size:14px;margin:8px 0;padding:10px 12px;background:var(--soft);border-radius:8px}.pd-hd dt{color:var(--muted);font-weight:700}.pd-hd dd{margin:0}
+.pd-opg{list-style:none;padding:0;margin:0}.pd-opg li{border-left:3px solid #E6005C;padding:5px 10px;margin:6px 0}.pd-opg li.gjort b{text-decoration:line-through;color:var(--muted)}.pd-opg b{display:block;font-size:15px}.pd-opg .u{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.pd-bil{margin:12px 0 4px;font-size:15px}.pd-link{all:unset;cursor:pointer;color:var(--teal);text-decoration:underline}
+.pd-ideb{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:5px;font-size:13px;color:var(--muted)}
+.pd-st{border:1px solid;border-radius:99px;padding:1px 8px;font-size:12px;font-weight:700}
+.pd-ko{font-size:15px;padding:7px 0;border-top:1px solid var(--line)}
+.pd-gemmer{display:inline-block;margin:6px 0 0 8px;font-size:14px;color:var(--muted)}
+.pd-koh{display:flex;gap:8px;align-items:baseline;margin-bottom:2px}.pd-koh span{font-size:13px;color:var(--muted)}.pd-koh .pd-mini{margin-left:auto}
+.pd-adm{margin-top:14px;padding:10px 12px;background:var(--soft);border-radius:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.pd-mnd{display:flex;align-items:center;gap:10px;margin:6px 0}.pd-mnd b{min-width:150px;text-align:center}
+.pd-gitter{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:6px 0}
+.pd-gh{font-size:12px;text-align:center;color:var(--muted);font-weight:700}
+.pd-c{border:1px solid var(--line);border-radius:6px;min-height:50px;font-size:13px;padding:3px 4px;display:flex;flex-direction:column;gap:3px;background:#fff;cursor:pointer;text-align:left;font-weight:500;min-width:0}
+.pd-cn{all:unset;cursor:pointer;font-size:13px;font-weight:600;align-self:flex-start;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:99px}
+.pd-cn:focus-visible{outline:2px solid var(--teal)}
+.pd-c.idag .pd-cn{background:var(--pink);color:#fff}
+.pd-streger{display:flex;flex-direction:column;gap:2px;margin-top:auto}.pd-streger i{display:block;height:4px;border-radius:2px}
+.pd-chips{display:none}
+.pd-gk{display:inline}.pd-gl{display:none}
+.pd-idag{margin-left:auto}
+.pd-tommnd{margin:8px 0}
+@media (min-width:700px){
+  .pd-c{min-height:104px;padding:4px 5px}
+  .pd-streger{display:none}.pd-chips{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .pd-gk{display:none}.pd-gl{display:inline}
+  .pd-chip{display:block;font-size:12.5px;line-height:1.25;padding:2px 5px 2px 6px;border-left:3px solid var(--f);background:color-mix(in srgb,var(--f) 10%,#fff);border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink);text-decoration:none}
+  .pd-chip:hover{text-decoration:underline}.pd-chip.gjort{text-decoration:line-through;color:var(--muted)}
+  .pd-chiplaas{font-size:10px}
+  .pd-mere{all:unset;cursor:pointer;font-size:12px;color:var(--muted);text-decoration:underline}
+}
+.pd-c.tom{border-color:transparent;background:transparent;cursor:default}
+.pd-c.roed{background:#FBE9E7}.pd-c.valgt{outline:2px solid var(--pink)}
+.pd-prikker{display:flex;flex-wrap:wrap;gap:3px}.pd-prik{width:8px;height:8px;border-radius:50%;display:inline-block}
+.pd-leg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--muted);margin-top:6px}.pd-leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+.pd-boks{padding:14px 16px;margin:0 0 12px}
+.pd-frist{margin:10px 0 4px;font-size:15px}.pd-frist b{color:var(--pink)}
+.pd-kvote{height:10px;background:var(--soft);border:1px solid var(--line);border-radius:99px;margin-top:8px;overflow:hidden}.pd-kvote i{display:block;height:100%;background:var(--teal)}
+.pd-knapper{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.pd-form label{margin-top:12px}
+.pd-form .pd-to{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pd-chk{display:flex !important;align-items:center;gap:10px;font-weight:500;min-height:44px}.pd-chk input{width:22px;height:22px;min-height:0;margin:0;accent-color:#E6005C}
+.pd-fp{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.pd-g{border-top:1px solid var(--line);padding:12px 0}.pd-g-n{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:16px}
+.pd-g-h{font-size:13px;color:var(--muted)}
+.pd-p{display:flex;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left;border-radius:0;min-height:0;font-weight:400}
+.pd-p b{display:block;font-size:15px}.pd-p span.u{font-size:13px;color:var(--muted)}
+.pd-av{width:42px;height:42px;border-radius:50%;flex:0 0 42px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;background:var(--frost);background-size:cover;background-position:center}
+.pd-url{font-size:13px;word-break:break-all;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-top:8px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <a class="hjem" href="./" aria-label="Til forsiden" title="Til forsiden"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/></svg></a>
+      <a class="logo" href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span class="navn titel"><b>Padel</b><span>Personale og frivillige</span></span>
+    </div>
+  </div>
+</header>
+
+<main class="side">
+  <div class="monster lav" aria-hidden="true"></div>
+  <div class="wrap indhold smal">
+  <div id="testBanner" class="card hidden" style="padding:10px 14px;font-size:14px;background:var(--soft);color:var(--muted)">Testmiljø med opdigtede data.</div>
+  <div id="omraade" class="hidden">
+    <div class="who"><span id="hvem"></span><button class="ghost small" id="logud" type="button">Log ud</button></div>
+    <div id="ingenAdgang" class="card hidden"><b>Kun for padel</b><p class="hint">Siden er for Styregruppen, Padel Team og RTK Padelcircle. Mener du, at du burde have adgang, så skriv til klubbens administratorer.</p></div>
+    <!-- Fanerne i to rækker (Lars 8. november 2026 kl. 18.23): Til daglig og Om projektet. Økonomi kun for rollen padel (Lars 9. november 2026 kl. 13.16) -->
+    <nav id="faner" class="pd-faner" aria-label="Padel">
+      <div class="pd-fgr"><span class="pd-fl" id="flDaglig">Til daglig</span>
+        <div class="tabs" role="tablist" aria-labelledby="flDaglig">
+          <button type="button" role="tab" id="fane-kalender" aria-selected="true" data-fane="kalender">Kalender</button>
+          <button type="button" role="tab" id="fane-chat" aria-selected="false" data-fane="chat">Chat</button>
+          <button type="button" role="tab" id="fane-billeder" aria-selected="false" data-fane="billeder">Billeder</button>
+          <button type="button" role="tab" id="fane-ideer" aria-selected="false" data-fane="ideer">Idéboks</button>
+          <button type="button" role="tab" id="fane-personer" aria-selected="false" data-fane="personer">Personer</button>
+          <button type="button" role="tab" id="fane-vl" aria-selected="false" data-fane="venteliste" class="hidden">Venteliste</button>
+        </div></div>
+      <div class="pd-fgr"><span class="pd-fl" id="flProjekt">Om projektet</span>
+        <div class="tabs" role="tablist" aria-labelledby="flProjekt">
+          <button type="button" role="tab" id="fane-formaal" aria-selected="false" data-fane="formaal">Formål og plan</button>
+          <button type="button" role="tab" id="fane-org" aria-selected="false" data-fane="org">Organisering</button>
+          <button type="button" role="tab" id="fane-referater" aria-selected="false" data-fane="referater">Mødereferater</button>
+          <button type="button" role="tab" id="fane-oek" aria-selected="false" data-fane="oekonomi" class="hidden">Økonomi</button>
+        </div></div>
+    </nav>
+    <div id="hentMsg" class="msg" aria-live="polite">Henter …</div>
+
+    <!-- Kalender -->
+    <section id="vKalender">
+      <div id="snart"></div>
+      <div class="pd-vis">
+        <div class="chips" id="filtre" role="group" aria-label="Vis"></div>
+      </div>
+      <div class="pd-vis">
+        <div class="pd-skift" role="group" aria-label="Visning"><button type="button" id="visListe" aria-pressed="true">Liste</button><button type="button" id="visMaaned" aria-pressed="false">Måned</button></div>
+        <button type="button" class="ok small hidden" id="nyKnap">+ Ny i kalenderen</button>
+      </div>
+      <div id="liste"></div>
+      <div id="maaned" class="hidden"></div>
+      <div class="pd-knapper" id="aarshjulBoks"></div>
+      <section class="card pd-boks" id="abBoks" style="margin-top:18px"></section>
+      <section class="card pd-boks" id="pushBoks"></section>
+    </section>
+
+    <!-- Et punkt -->
+    <section id="vPunkt" class="hidden"></section>
+
+    <!-- Ny eller ret (kun administratorer) -->
+    <section id="vForm" class="hidden"></section>
+
+    <!-- Chat -->
+    <section id="vChat" class="hidden"></section>
+
+    <!-- Personer (hed Holdet) -->
+    <section id="vHoldet" class="hidden"></section>
+
+    <!-- Om projektet og Idéboks (Lars 8. november 2026 kl. 19.09, mockups padel_org.png og padel_alle.png) -->
+    <section id="vFormaal" class="hidden"></section>
+    <section id="vOrg" class="hidden"></section>
+    <section id="vRef" class="hidden"></section>
+    <section id="vIde" class="hidden"></section>
+    <section id="vBil" class="hidden"></section>
+    <section id="vOek" class="hidden"></section>
+    <!-- Venteliste fra mitrtk.dk/padel (trin 2, Lars 11. november 2026, mockup padel_venteliste_fane.png) -->
+    <section id="vVl" class="hidden"></section>
+  </div>
+  </div>
+  <div class="wrap partnere">
+    <img class="p-babolat" src="../ikoner/babolat.png" alt="Babolat">
+    <span>Officielle partnere</span>
+    <a class="p-racketlife" href="https://racketlife.dk" target="_blank" rel="noopener" aria-label="Racketlife (åbner i ny fane)"><img src="../ikoner/racketlife.png" alt=""></a>
+  </div>
+</main>
+
+<footer class="bund">
+  <div class="wrap">
+    <span class="klub">
+      <a href="https://roskildetennisklub.dk" target="_blank" rel="noopener" aria-label="Roskilde Tennis Klubs hjemmeside (åbner i ny fane)"><img src="../ikoner/rtk-hvid.png" alt=""></a>
+      <span><b>Roskilde Tennis Klub</b> · mitrtk.dk</span>
+    </span>
+    <span class="hoejre">
+      <span>Testversion. Data er opdigtede.</span>
+      <a class="diskret" href="../">Til medlemssiden</a>
+      <a class="privat" href="../privatliv.html">Privatliv</a>
+    </span>
+  </div>
+</footer>
+
+<script src="../konfig.js?v=869b7a78d104"></script>
+<script src="../adminpin.js?v=072d3999ca21"></script>
+<script src="../visning.js?v=491810b71d5d"></script>
+<script src="../niveauer.js?v=4cc686edce45"></script>
+<script src="../profilkort.js?v=c76b2fa856d0"></script>
+<script>
+// Padel på personalesiden (Lars 8. november 2026 kl. 05.36 til 06.19). Kalender med årshjulet fra aftalen med PADELPIT,
+// chat i grupper for personale og frivillige og Holdet med profilkortene. Motoren styrer, hvad den enkelte ser: et punkt,
+// der ikke er for RTK Padelcircle, kommer aldrig til siden for en med kun rollen padelcircle. Kun administratorer retter.
+const MILJOE = window.RTK_KONFIG.miljoe;
+const URL_MOTOR = window.RTK_KONFIG.motor;
+const $ = (id) => document.getElementById(id);
+const gem = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+const hent = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const nyId = () => (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2));
+let token = hent('rtk.token') || '';
+let person = null;
+if (MILJOE === 'test') $('testBanner').classList.remove('hidden');
+function besked(el, t, s) { el.textContent = t || ''; el.className = 'msg' + (s ? ' ' + s : ''); }
+
+// ---------- Motoren
+const SIDST = {}, LAEST = {};
+// Fanerne med en kopi i Firebase pr. person (Lars 9. november 2026 kl. 08.11): handlingen og navnet på kopien
+const KOPI = { projekt: 'padelProjekt', referater: 'padelRef', ideer: 'padelIdeer', hold: 'padelHold', oekonomi: 'padelOek' };
+// "Gemmer …" alle steder (Lars 9. november 2026 kl. 11.29, mockup padel_gemmer.png godkendt 11.32): den knap, valgliste
+// eller afkrydsning, man sidst rørte, viser "Gemmer …" og er låst, mens motoren gemmer (kald med id).
+let sidstRoert = null;
+const roer = (el) => { if (el) sidstRoert = { el, t: Date.now() }; };
+document.addEventListener('click', (e) => roer(e.target.closest && e.target.closest('button')), true);
+document.addEventListener('change', (e) => roer(e.target.closest && e.target.closest('select, input[type="checkbox"], input[type="radio"]')), true);
+document.addEventListener('submit', (e) => roer(e.submitter || e.target.querySelector('button[type="submit"], button:not([type])')), true);
+function gemmerPaa() {
+  const r = sidstRoert; sidstRoert = null;
+  if (!r || Date.now() - r.t > 5000 || !r.el.isConnected || r.el.dataset.gemmer) return null;
+  const el = r.el, varLaast = el.disabled;
+  el.dataset.gemmer = '1'; el.disabled = true; el.setAttribute('aria-busy', 'true');
+  const slip = () => { el.disabled = varLaast; el.removeAttribute('aria-busy'); delete el.dataset.gemmer; };
+  if (el.tagName === 'BUTTON') {
+    const gl = el.innerHTML; el.textContent = 'Gemmer …';
+    return () => { if (el.isConnected && el.dataset.gemmer) { el.innerHTML = gl; slip(); } };
+  }
+  const t = document.createElement('span'); t.className = 'pd-gemmer'; t.setAttribute('role', 'status'); t.textContent = 'Gemmer …';
+  (el.closest('label') || el).insertAdjacentElement('afterend', t);
+  return () => { t.remove(); if (el.isConnected) slip(); };
+}
+// Efter en vellykket gemning bliver "Gemmer …" stående, til siden har hentet og vist resultatet (Lars 9. november 2026 kl. 12.21:
+// "Gemmer" forsvandt, før kommentaren var flyttet fra feltet op til de andre). Ved en fejl slippes knappen med det samme.
+let iGang = 0;
+function slipBagefter(slip) {
+  const start = Date.now();
+  setTimeout(function tjek() { if (iGang > 0 && Date.now() - start < 20000) setTimeout(tjek, 100); else slip(); }, 60);
+}
+async function motor(modul, handling, data, id) {
+  const slip = id ? gemmerPaa() : null;
+  let ok = false;
+  iGang++;
+  try { const r = await motorKald(modul, handling, data, id); ok = true; return r; }
+  finally { iGang--; if (slip) { if (ok) slipBagefter(slip); else slip(); } }
+}
+async function motorKald(modul, handling, data, id) {
+  let res;
+  try { res = await fetch(URL_MOTOR, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ modul, handling, data: data || {}, token, apin: (window.RTK_APIN ? RTK_APIN.bevis() : ''), id: id || '' }) }); }
+  catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  let svar;
+  try { svar = await res.json(); } catch (e) { throw new Error('Ingen forbindelse. Tjek net og prøv igen.'); }
+  if (!svar.ok && svar.apin && window.RTK_APIN) { await RTK_APIN.spoerg(motor); return motorKald(modul, handling, data, id); }
+  if (!svar.ok && svar.igang) { await new Promise((r) => setTimeout(r, 1500)); return motorKald(modul, handling, data, id); }
+  if (!svar.ok) { if (svar.login) logUd(true); throw new Error(svar.fejl || 'Noget gik galt'); }
+  SIDST[handling] = svar.tid || 0;
+  // En skrivning gør kopier og svar, der er læst før den, forældede (kalenderen og fanerne med kopi)
+  if (id) ['start'].concat(Object.keys(KOPI)).forEach((k) => { LAEST[k] = Math.max(LAEST[k] || 0, svar.tidSlut || svar.tid || 0); });
+  return svar.data;
+}
+function logUd(udloebet) {
+  if (window.RTK_UD) return; window.RTK_UD = true;
+  if (!udloebet && token) motor('kerne', 'logud').catch(() => {});
+  token = ''; person = null; gem('rtk.token', null); gem('rtk.mig', null); gem('rtk.padel.navne', null);
+  (window.RTKV ? RTKV.logUd() : Promise.resolve()).then(() => location.replace(udloebet ? './?til=padel.html&igen=1' : './'));
+}
+$('logud').addEventListener('click', () => logUd(false));
+
+// ---------- Tid og tekst
+const MDR = ['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'];
+const UGEDAG = ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'];
+const UG3 = ['søn', 'man', 'tir', 'ons', 'tor', 'fre', 'lør'];
+const dagD = (dag) => new Date(dag + 'T12:00:00Z');
+const iDag = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+const plusDage = (dag, n) => new Date(dagD(dag).getTime() + n * 86400000).toISOString().slice(0, 10);
+const dagTekst = (dag) => { const d = dagD(dag); return UGEDAG[d.getUTCDay()] + ' ' + d.getUTCDate() + '. ' + MDR[d.getUTCMonth()]; };
+const kortDag = (dag) => { const d = dagD(dag); return d.getUTCDate() + '. ' + MDR[d.getUTCMonth()].slice(0, 3); };
+const kl = (t) => String(t || '').replace(':', '.');
+const dageTil = (dag) => Math.round((dagD(dag) - dagD(iDag())) / 86400000);
+const omTekst = (n) => n === 0 ? 'I dag' : n === 1 ? 'I morgen' : n > 1 ? 'Om ' + n + ' dage' : n === -1 ? 'I går' : 'For ' + (-n) + ' dage siden';
+// ISO-uge (mandag først)
+function ugeNr(dag) { const d = dagD(dag); const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())); const dn = (t.getUTCDay() + 6) % 7; t.setUTCDate(t.getUTCDate() - dn + 3); const f = new Date(Date.UTC(t.getUTCFullYear(), 0, 4)); return 1 + Math.round(((t - f) / 86400000 - 3 + ((f.getUTCDay() + 6) % 7)) / 7); }
+const mandagAf = (dag) => plusDage(dag, -((dagD(dag).getUTCDay() + 6) % 7));
+
+// ---------- Tilstand
+let data = null;          // svaret fra padel.start
+let visning = 'liste';    // liste eller maaned
+let filter = 'alle';
+let mnd = null;           // 'yyyy-mm' i månedsvisningen
+let valgtDag = '';
+let visTidligere = false;
+let chatData = null, holdData = null, personerData = null;
+const typeAf = (id) => (data && data.typer.find((t) => t.id === id)) || { id, navn: id, farve: '#4A5560' };
+const tag = (id) => { const t = typeAf(id); return '<span class="pd-tag" style="border-color:' + t.farve + ';color:' + t.farve + '">' + esc(t.navn) + '</span>'; };
+const erAdmin = () => !!(data && data.mig.admin);
+const erFuld = () => !!(data && data.mig.fuld);
+const FILTRE = {
+  alle: { navn: 'Alt', typer: null },
+  traening: { navn: 'Træning', typer: ['tr', 'darup', 'camp', 'roed'] },
+  frister: { navn: 'Frister', typer: ['frist', 'beslut'], fuld: true },
+  moeder: { navn: 'Møder', typer: ['moede'], fuld: true },
+  oekonomi: { navn: 'Fakturaer', typer: ['faktura'], fuld: true },
+  andet: { navn: 'Milepæle og ferie', typer: ['mile', 'ferie'] }
+};
+const iFilter = (p) => !FILTRE[filter] || !FILTRE[filter].typer || FILTRE[filter].typer.includes(p.type);
+
+// ---------- Faner og ruter: #kalender  #k/<id>  #ny  #ret/<id>  #chat  #chat/ny  #personer (og det gamle #holdet)
+document.querySelectorAll('#faner button').forEach((b) => b.addEventListener('click', () => { location.hash = b.dataset.fane; }));
+window.addEventListener('hashchange', rute);
+const FANE_AF = { vChat: 'chat', vHoldet: 'personer', vFormaal: 'formaal', vOrg: 'org', vRef: 'referater', vIde: 'ideer', vBil: 'billeder', vOek: 'oekonomi', vVl: 'venteliste' };
+function vis(id) {
+  ['vKalender', 'vPunkt', 'vForm', 'vChat', 'vHoldet', 'vFormaal', 'vOrg', 'vRef', 'vIde', 'vBil', 'vOek', 'vVl'].forEach((v) => $(v).classList.toggle('hidden', v !== id));
+  const fane = FANE_AF[id] || 'kalender';
+  document.querySelectorAll('#faner button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.fane === fane)));
+}
+function rute() {
+  if (!data) return;
+  $('fane-oek').classList.toggle('hidden', !erFuld());
+  $('fane-vl').classList.toggle('hidden', !erFuld());
+  const h = location.hash.replace(/^#/, '').split('/').map((x) => { try { return decodeURIComponent(x); } catch (e) { return ''; } });
+  if (h[0] === 'k' && h[1]) return visPunkt(h[1]);
+  if (h[0] === 'ny' && erAdmin()) return visForm(null, h[1] || '');
+  if (h[0] === 'ret' && h[1] && erAdmin()) return visForm(h[1]);
+  if (h[0] === 'chat') return visChat(h[1] || '');
+  if (h[0] === 'personer' || h[0] === 'holdet') return visHoldet();
+  if (h[0] === 'formaal') return visFormaal(h[1] === 'ret' && erAdmin() ? h[2] : '');
+  if (h[0] === 'org') return visOrg(h[1] === 'ret' && erAdmin() ? (h[2] || 'ny') : '');
+  if (h[0] === 'referater') return visReferater();
+  if (h[0] === 'r' && h[1]) return visReferat(h[1]);
+  if (h[0] === 'referat' && h[1] === 'ny' && erAdmin()) return visRefForm('');
+  if (h[0] === 'referat' && h[1] === 'ret' && h[2] && erAdmin()) return visRefForm(h[2]);
+  if (h[0] === 'billeder') return h[1] === 'ny' ? visBilNy(h[2] || '') : visBilleder();
+  if (h[0] === 'bil' && h[1]) return visBeg(h[1]);
+  if (h[0] === 'ideer') return visIdeer();
+  if (h[0] === 'ide' && h[1] === 'ny') return visIdeNy();
+  if (h[0] === 'ide' && h[1]) return visIde(h[1]);
+  if (h[0] === 'venteliste') return visVl(h[1] || 'liste');
+  if (h[0] === 'vl' && h[1]) return visVlFam(h[1]);
+  if (h[0] === 'oekonomi') return visOek(h[1] === 'filer' ? 'filer' : 'forud', h[1] === 'ret' && erAdmin() ? (h[2] || 'ny') : '');
+  vis('vKalender'); tegnKalender();
+}
+
+// ---------- Kalenderen
+function tegnFiltre() {
+  const ok = Object.keys(FILTRE).filter((k) => !FILTRE[k].fuld || erFuld());
+  $('filtre').innerHTML = ok.map((k) => '<button type="button" data-f="' + k + '" aria-pressed="' + (filter === k) + '">' + esc(FILTRE[k].navn) + '</button>').join('');
+  $('filtre').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { filter = b.dataset.f; tegnKalender(); }));
+}
+function tegnSnart() {
+  // Frister, beslutninger, møder, milepæle og camps de næste 30 dage, som ikke er gjort
+  const vigtige = data.poster.filter((p) => !['tr', 'darup', 'ferie', 'roed'].includes(p.type) && !p.gjort && dageTil(p.dag) >= 0 && dageTil(p.dag) <= 30);
+  // Frister for at frigive en dag, der skal frigives, men ikke er det endnu (kun padel)
+  const frigiv = erFuld() ? data.poster.filter((p) => p.brug === 'frigiv' && !p.frigivet && p.fristFrigiv && dageTil(p.fristFrigiv) >= -1 && dageTil(p.fristFrigiv) <= 30) : [];
+  if (!vigtige.length && !frigiv.length) { $('snart').innerHTML = ''; return; }
+  const linjer = vigtige.slice(0, 6).map((p) => '<a href="#k/' + encodeURIComponent(p.id) + '"><b>' + omTekst(dageTil(p.dag)) + '</b> · ' + esc(p.titel) + ' (' + kortDag(p.dag) + ')' + (p.ansvarligNavn ? ' · <i>' + esc(p.ansvarligNavn.split(' ').filter((x) => x !== 'Test')[0]) + '</i>' : '') + '</a>')
+    .concat(frigiv.map((p) => '<a href="#k/' + encodeURIComponent(p.id) + '"><b>' + omTekst(dageTil(p.fristFrigiv)) + '</b> · Frist: frigiv ' + esc(dagTekst(p.dag)) + ' hos PadelPit Roskilde</a>'));
+  $('snart').innerHTML = '<div class="pd-snart"><div class="pd-snart-t">Snart</div>' + linjer.join('') + '</div>';
+}
+function linje(p, medDag) {
+  const d = dagD(p.dag);
+  const tid = p.heldag ? (p.slutDag && p.slutDag !== p.dag ? 'til ' + dagTekst(p.slutDag) : 'Hele dagen') : 'kl. ' + kl(p.start) + (p.slut ? ' til ' + kl(p.slut) : '');
+  const under = [tid, p.baner ? p.baner + (p.baner === 1 ? ' bane' : ' baner') : '', p.sted && p.type !== 'tr' ? p.sted : '', p.ansvarligNavn ? 'Ansvarlig ' + p.ansvarligNavn.replace(/^Test /, '') : ''].filter(Boolean).join(' · ');
+  const status = p.gjort ? ' · Gjort' : p.frigivet ? ' · Frigivet' : p.brug === 'camp' ? ' · Camp' : p.brug === 'frigiv' ? ' · Skal frigives' : '';
+  const t = typeAf(p.type);
+  return '<a class="pd-l' + (p.gjort ? ' gjort' : '') + '" href="#k/' + encodeURIComponent(p.id) + '" style="border-left-color:' + t.farve + '">'
+    + '<div class="pd-d">' + (medDag ? UG3[d.getUTCDay()] + '<b>' + d.getUTCDate() + '</b>' : '') + '</div>'
+    + '<div class="pd-m">' + (p.titel.indexOf(t.navn) === 0 && p.type !== 'frist' ? '' : tag(p.type)) + '<b' + (p.type === 'frist' ? ' style="color:var(--pink)"' : '') + '>' + esc(p.titel) + '</b>'
+    + '<span class="pd-u">' + esc(under + status) + '</span>'
+    + (p.synlighed === 'intern' && erFuld() ? '<span class="pd-laas">&#128274; Ikke Padelcircle</span>' : '') + '</div></a>';
+}
+// Listen viser 8 uger ad gangen fra denne uge (eller fra det første, der kommer), så kalenderen og abonnementet ikke forsvinder
+// under et helt år. "Vis 8 uger mere" udvider
+let uger = 8;
+function tegnListe() {
+  const fra = visTidligere ? '0000' : mandagAf(iDag());
+  const alle = data.poster.filter((p) => iFilter(p) && ((p.slutDag || p.dag) >= fra));
+  const foerste = alle.length ? mandagAf(alle.find((p) => p.dag >= fra) ? alle.find((p) => p.dag >= fra).dag : alle[0].dag) : fra;
+  const til = plusDage(foerste > mandagAf(iDag()) ? foerste : mandagAf(iDag()), uger * 7);
+  const poster = alle.filter((p) => p.dag < til);
+  const flere = alle.length - poster.length;
+  let html = '';
+  if (!visTidligere && data.poster.some((p) => iFilter(p) && (p.slutDag || p.dag) < fra)) html += '<button type="button" class="ghost small" id="tidligere">Vis tidligere</button>';
+  if (!poster.length) html += '<p class="hint">Intet i kalenderen her.</p>';
+  let uge = '', sidstDag = '';
+  poster.forEach((p) => {
+    const m = mandagAf(p.dag);
+    if (m !== uge) { uge = m; sidstDag = ''; html += '<h3 class="pd-uge">Uge ' + ugeNr(p.dag) + ' · ' + kortDag(m) + ' til ' + kortDag(plusDage(m, 6)) + ' ' + p.dag.slice(0, 4) + '</h3>'; }
+    html += linje(p, p.dag !== sidstDag); sidstDag = p.dag;
+  });
+  if (flere > 0) html += '<div class="pd-knapper"><button type="button" class="ghost small" id="flere">Vis 8 uger mere</button><span class="hint" style="margin:0;align-self:center">' + flere + ' mere i kalenderen</span></div>';
+  $('liste').innerHTML = html;
+  const t = $('tidligere'); if (t) t.addEventListener('click', () => { visTidligere = true; tegnListe(); });
+  const f = $('flere'); if (f) f.addEventListener('click', () => { uger += 8; tegnListe(); });
+}
+// Månedsvisningen (Lars 8. november 2026 kl. 18.11, mockup padel_maaned.png): på en stor skærm op til 3 punkter med farve,
+// klokkeslæt og kort titel i hver dag, på telefonen en farvestreg pr. punkt og den valgte dag under kalenderen
+function kortTitel(p) {
+  if (p.type === 'tr') return /^Første/.test(p.titel) ? 'Første træning' : 'Træning';
+  if (p.type === 'darup') return 'Darup';
+  return p.titel;
+}
+function tegnMaaned() {
+  if (!mnd) mnd = iDag() >= '2027-01-01' || !data.poster.length ? iDag().slice(0, 7) : data.poster[0].dag.slice(0, 7);
+  const [aa, mm] = mnd.split('-').map(Number);
+  const foerste = mnd + '-01';
+  const dage = new Date(Date.UTC(aa, mm, 0)).getUTCDate();
+  const skub = (dagD(foerste).getUTCDay() + 6) % 7;
+  const pr = {};
+  const synlige = data.poster.filter(iFilter);
+  synlige.forEach((p) => {
+    // Et punkt over flere dage (fx sommerferien) vises på hver dag
+    let d = p.dag; const slut = p.slutDag || p.dag; let n = 0;
+    while (d <= slut && n < 130) { (pr[d] = pr[d] || []).push(p); d = plusDage(d, 1); n++; }
+  });
+  const iMnd = Object.keys(pr).filter((d) => d.slice(0, 7) === mnd).sort();
+  // Den valgte dag fra start: i dag, hvis det er denne måned, ellers den første dag med noget
+  if (!valgtDag || valgtDag.slice(0, 7) !== mnd) valgtDag = iDag().slice(0, 7) === mnd ? iDag() : (iMnd[0] || '');
+  const MN = MDR[mm - 1].charAt(0).toUpperCase() + MDR[mm - 1].slice(1);
+  let h = '<div class="pd-mnd"><button type="button" class="ghost small" id="mFoer" aria-label="Forrige måned">&#8592;</button><b>' + MN + ' ' + aa + '</b><button type="button" class="ghost small" id="mEfter" aria-label="Næste måned">&#8594;</button>'
+    + (iDag().slice(0, 7) !== mnd ? '<button type="button" class="ghost small pd-idag" id="mIdag">I dag</button>' : '') + '</div>';
+  if (!iMnd.length && filter !== 'alle') {
+    // Intet med filteret i måneden: sig det, og vis det næste
+    const naeste = synlige.filter((p) => p.dag > mnd + '-31').sort((a, b) => a.ms - b.ms)[0];
+    h += '<p class="hint pd-tommnd">Ingen ' + esc(FILTRE[filter].navn.toLowerCase()) + ' i ' + MDR[mm - 1] + '.'
+      + (naeste ? ' Næste: <a href="#k/' + encodeURIComponent(naeste.id) + '">' + esc(dagTekst(naeste.dag).replace(/^\S+ /, '')) + ', ' + esc(naeste.titel) + '</a>.' : '') + '</p>';
+  }
+  h += '<div class="pd-gitter">' + ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'].map((x) => '<div class="pd-gh"><span class="pd-gl">' + x + '</span><span class="pd-gk">' + x.charAt(0) + '</span></div>').join('');
+  for (let i = 0; i < skub; i++) h += '<div class="pd-c tom"></div>';
+  for (let n = 1; n <= dage; n++) {
+    const dag = mnd + '-' + String(n).padStart(2, '0');
+    const ps = (pr[dag] || []).slice().sort((a, b) => (a.heldag === b.heldag ? a.ms - b.ms : a.heldag ? 1 : -1));
+    const cls = 'pd-c' + (ps.some((p) => p.type === 'roed') ? ' roed' : '') + (dag === valgtDag ? ' valgt' : '') + (dag === iDag() ? ' idag' : '');
+    h += '<div class="' + cls + '" data-dag="' + dag + '"><button type="button" class="pd-cn" data-dag="' + dag + '" aria-label="' + esc(dagTekst(dag)) + (ps.length ? ', ' + ps.length + ' i kalenderen' : '') + '">' + n + '</button>';
+    h += '<span class="pd-streger" aria-hidden="true">' + ps.slice(0, 3).map((p) => '<i style="background:' + typeAf(p.type).farve + '"></i>').join('') + '</span>';
+    h += '<span class="pd-chips">' + ps.slice(0, 3).map((p) => '<a class="pd-chip' + (p.gjort ? ' gjort' : '') + '" href="#k/' + encodeURIComponent(p.id) + '" style="--f:' + typeAf(p.type).farve + '" title="' + esc(p.titel) + '">'
+      + (p.heldag ? '' : '<b>' + esc(p.start.replace(/^0/, '').replace(':00', '').replace(':', '.')) + '</b> ') + esc(kortTitel(p)) + (p.synlighed === 'intern' ? ' <span class="pd-chiplaas" aria-label="Ikke Padelcircle">&#128274;</span>' : '') + '</a>').join('')
+      + (ps.length > 3 ? '<button type="button" class="pd-mere" data-dag="' + dag + '">+' + (ps.length - 3) + ' mere</button>' : '') + '</span></div>';
+  }
+  h += '</div><div class="pd-leg">' + data.typer.map((t) => '<span><i style="background:' + t.farve + '"></i>' + esc(t.navn) + '</span>').join('') + '</div>';
+  if (valgtDag) {
+    const ps = pr[valgtDag] || [];
+    h += '<h3 class="pd-uge" id="mDag">' + esc(dagTekst(valgtDag)) + '</h3>' + (ps.length ? ps.map((p) => linje(p, false)).join('') : '<p class="hint">Intet denne dag.</p>');
+  }
+  $('maaned').innerHTML = h;
+  const skift = (d) => { const t = new Date(Date.UTC(aa, mm - 1 + d, 1)); mnd = t.toISOString().slice(0, 7); valgtDag = ''; tegnMaaned(); };
+  $('mFoer').addEventListener('click', () => skift(-1)); $('mEfter').addEventListener('click', () => skift(1));
+  if ($('mIdag')) $('mIdag').addEventListener('click', () => { mnd = iDag().slice(0, 7); valgtDag = ''; tegnMaaned(); });
+  const vaelg = (dag) => { valgtDag = dag; tegnMaaned(); const d = $('mDag'); if (d && d.scrollIntoView && window.innerWidth < 700) d.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); };
+  $('maaned').querySelectorAll('.pd-cn, .pd-mere').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); vaelg(b.dataset.dag); }));
+  $('maaned').querySelectorAll('.pd-c[data-dag]').forEach((c) => c.addEventListener('click', (e) => { if (!e.target.closest('a')) vaelg(c.dataset.dag); }));
+}
+function tegnKalender() {
+  if (!data) return;
+  tegnFiltre(); tegnSnart();
+  $('nyKnap').classList.toggle('hidden', !erAdmin());
+  $('visListe').setAttribute('aria-pressed', String(visning === 'liste')); $('visMaaned').setAttribute('aria-pressed', String(visning === 'maaned'));
+  $('liste').classList.toggle('hidden', visning !== 'liste'); $('maaned').classList.toggle('hidden', visning !== 'maaned');
+  if (visning === 'liste') tegnListe(); else tegnMaaned();
+  $('aarshjulBoks').innerHTML = data.aarshjul ? '<button type="button" class="ghost small" id="pdfKnap">Årshjul 2027 (PDF)</button><span class="msg" id="pdfMsg"></span>' : '';
+  if (data.aarshjul) $('pdfKnap').addEventListener('click', hentPdf);
+  tegnAbonnement(); tegnPush();
+}
+$('visListe').addEventListener('click', () => { visning = 'liste'; tegnKalender(); });
+$('visMaaned').addEventListener('click', () => { visning = 'maaned'; tegnKalender(); });
+$('nyKnap').addEventListener('click', () => { location.hash = 'ny'; });
+
+async function hentPdf() {
+  besked($('pdfMsg'), 'Henter …');
+  // Vinduet åbnes med det samme, så telefonen ikke blokerer det
+  const vindue = window.open('', '_blank');
+  try {
+    const r = await motor('padel', 'pdf');
+    const bin = atob(r.data); const b = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+    const url = URL.createObjectURL(new Blob([b], { type: 'application/pdf' }));
+    if (vindue) vindue.location.href = url; else location.href = url;
+    besked($('pdfMsg'), '');
+  } catch (err) { if (vindue) vindue.close(); besked($('pdfMsg'), err.message, 'err'); }
+}
+
+// ---------- Et punkt
+function visPunkt(id) {
+  const p = data.poster.find((x) => x.id === id);
+  vis('vPunkt');
+  if (!p) { $('vPunkt').innerHTML = '<a class="gr-tilbage" href="#kalender">&#8592; Kalender</a><p class="hint">Punktet findes ikke længere, eller du kan ikke se det.</p>'; return; }
+  const t = typeAf(p.type);
+  const tid = p.heldag ? (p.slutDag && p.slutDag !== p.dag ? dagTekst(p.dag) + ' til ' + dagTekst(p.slutDag) : dagTekst(p.dag) + ' ' + p.dag.slice(0, 4)) : dagTekst(p.dag) + ' ' + p.dag.slice(0, 4) + ' · kl. ' + kl(p.start) + (p.slut ? ' til ' + kl(p.slut) : '');
+  let h = '<a class="gr-tilbage" href="#kalender">&#8592; Kalender</a>';
+  h += '<p style="margin:12px 0 4px">' + tag(p.type) + (p.synlighed === 'intern' && erFuld() ? '<span class="pd-laas" style="display:inline">&#128274; Ikke Padelcircle</span>' : '') + '</p>';
+  h += '<h2 style="margin:0 0 4px">' + esc(p.titel) + '</h2>';
+  h += '<p class="hint" style="margin:0 0 12px">' + esc([tid, p.sted, p.baner ? p.baner + (p.baner === 1 ? ' bane' : ' baner') + (p.baner && !p.heldag && p.slut ? ' · ' + (p.baner * Math.round((Number(p.slut.slice(0, 2)) * 60 + Number(p.slut.slice(3)) - Number(p.start.slice(0, 2)) * 60 - Number(p.start.slice(3))) / 60)) + ' banetimer' : '') : ''].filter(Boolean).join(' · ')) + '</p>';
+  if (p.note) h += '<div class="card pd-boks"><b>Note</b><p style="margin:4px 0 0;white-space:pre-wrap">' + esc(p.note) + '</p></div>';
+  if (p.ansvarligNavn) h += '<p style="margin:0 0 10px">Ansvarlig: <b>' + esc(p.ansvarligNavn) + '</b></p>';
+  if (p.gjort) h += '<div class="tak" style="margin-bottom:12px"><b>Gjort</b>' + esc(p.gjort.tid) + (p.gjort.af ? ' af ' + esc(p.gjort.af) : '') + '</div>';
+  // Frigivelse hos PADELPIT: kun padel ser fristen og kvoten. Kun administratorer ændrer
+  if ((p.type === 'tr' || p.type === 'roed') && erFuld()) {
+    h += '<div class="card pd-boks"><b>Hvad bruger vi dagen til?</b>';
+    const brug = p.frigivet ? 'frigivet' : p.brug;
+    if (erAdmin()) h += '<div class="chips" style="margin-top:8px" id="brugValg">' + [['camp', 'Camp'], ['frigiv', 'Frigiv'], ['', p.type === 'tr' ? 'Træning som planlagt' : 'Ikke besluttet']].map(([v, n]) => '<button type="button" data-b="' + v + '" aria-pressed="' + (brug === v || (brug === 'frigivet' && v === 'frigiv')) + '">' + n + '</button>').join('') + '</div>';
+    else h += '<p style="margin:6px 0 0">' + (p.frigivet ? 'Frigivet' : p.brug === 'camp' ? 'Camp' : p.brug === 'frigiv' ? 'Skal frigives' : p.type === 'tr' ? 'Træning som planlagt' : 'Ikke besluttet') + '</p>';
+    if (p.frigivet) h += '<p class="pd-frist">Frigivet ' + esc(dagTekst(p.frigivet.dag)) + ' (' + (p.frigivet.baner === 1 ? 'halv dag, 1 bane' : 'hel dag, 2 baner') + ')</p>';
+    else h += '<p class="pd-frist">Sidste frist for at frigive: <b>' + esc(dagTekst(p.fristFrigiv)) + '</b> (' + omTekst(dageTil(p.fristFrigiv)).toLowerCase() + ')</p>';
+    h += '<p class="hint" style="margin:0">Frigivelse sker med skriftlig besked til PadelPit Roskilde mindst 4 uger før (aftalen punkt 4). '
+      + (p.type === 'roed' && p.dag < '2027-07-01' ? 'Frigivne timer, der ikke lejes ud, koster ikke noget på røde datoer i 1. halvår 2027.' : p.type === 'roed' ? 'Røde datoer tæller ikke med i kvoten.' : 'Frigivne timer, der ikke lejes ud, koster 100 kr. inkl. moms pr. banetime.') + '</p>';
+    if (erAdmin()) h += '<div class="pd-knapper">' + (p.frigivet ? '<button type="button" class="ghost small" id="fortrydFrigiv">Fortryd frigivet</button>' : '<button type="button" class="ghost small" id="frigivHel">Markér som frigivet: hel dag</button><button type="button" class="ghost small" id="frigivHalv">Halv dag (1 bane)</button>') + '</div>';
+    h += '<div class="msg" id="frigivMsg" aria-live="polite"></div></div>';
+    if (p.type === 'tr' && data.kvote) {
+      const hv = p.dag.slice(0, 4) + (Number(p.dag.slice(5, 7)) <= 6 ? '-1' : '-2');
+      const brugt = data.kvote.pr[hv] || 0;
+      h += '<div class="card pd-boks"><b>Frigivet i ' + (hv.endsWith('-1') ? '1.' : '2.') + ' halvår ' + hv.slice(0, 4) + '</b><div class="pd-kvote"><i style="width:' + Math.min(100, brugt / data.kvote.af * 100) + '%;' + (brugt > data.kvote.af ? 'background:var(--bad)' : '') + '"></i></div>'
+        + '<p class="hint" style="margin:6px 0 0">Træningsdage: ' + String(brugt).replace('.', ',') + ' af ' + data.kvote.af + ' hele dage. Røde datoer og julitimer tæller ikke med.</p></div>';
+    }
+  }
+  if (p.paamind.length && erFuld()) h += '<p class="hint">Påmindelse ' + p.paamind.map((k) => ({ '4u': '4 uger før', '2u': '2 uger før', '1u': '1 uge før', '2d': '2 dage før', '1d': 'dagen før', '0d': 'samme dag' }[k])).join(', ') + ' til ' + p.paamindTil.map((k) => k === 'ansvarlig' ? 'den ansvarlige' : k === 'fuld' ? 'Styregruppen og Padel Team' : k === 'alle' ? 'alle i padel' : (gruppeNavn(k) || 'en gruppe')).join(', ') + '.</p>';
+  h += '<div class="pd-knapper"><button type="button" class="ghost small" id="iKal">Læg i min kalender</button>';
+  if (erAdmin()) {
+    h += '<button type="button" class="ok small" id="retKnap">Ret</button>';
+    h += '<button type="button" class="ghost small" id="gjortKnap">' + (p.gjort ? 'Ikke gjort alligevel' : 'Markér som gjort') + '</button>';
+    h += '<button type="button" class="ghost small gr-farlig" id="sletKnap">Slet</button>';
+  }
+  h += '</div><div class="msg" id="punktMsg" aria-live="polite"></div>';
+  $('vPunkt').innerHTML = h;
+  $('iKal').addEventListener('click', () => hentIcs([p], p.titel));
+  if (!erAdmin()) return;
+  $('retKnap').addEventListener('click', () => { location.hash = 'ret/' + encodeURIComponent(p.id); });
+  $('gjortKnap').addEventListener('click', () => gemHandling('gjort', { id: p.id, ikke: !!p.gjort }, $('punktMsg'), p.gjort ? 'Ikke gjort' : 'Gjort. Der kommer ikke flere påmindelser.'));
+  let slet = false;
+  $('sletKnap').addEventListener('click', () => {
+    if (!slet) { slet = true; $('sletKnap').textContent = 'Tryk igen for at slette'; $('sletKnap').classList.add('fyldt'); return; }
+    gemHandling('slet', { id: p.id }, $('punktMsg'), 'Slettet', () => { location.hash = 'kalender'; });
+  });
+  const bv = $('brugValg');
+  if (bv) bv.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => gemHandling('brug', { id: p.id, brug: b.dataset.b }, $('frigivMsg'), 'Gemt')));
+  const fr = (baner) => gemHandling('frigivet', { id: p.id, baner }, $('frigivMsg'), 'Markeret som frigivet. Husk den skriftlige besked til PadelPit Roskilde.');
+  if ($('frigivHel')) $('frigivHel').addEventListener('click', () => fr(2));
+  if ($('frigivHalv')) $('frigivHalv').addEventListener('click', () => fr(1));
+  if ($('fortrydFrigiv')) $('fortrydFrigiv').addEventListener('click', () => gemHandling('frigivet', { id: p.id, fortryd: true }, $('frigivMsg'), 'Fortrudt'));
+}
+const gruppeNavn = (k) => { const g = chatData && chatData.grupper.find((x) => 'g:' + x.id === k); return g ? esc(g.navn) : ''; }; // escapes: navnet kan rettes af gruppen (gennemgangen 8. november, fund 3)
+async function gemHandling(handling, d, msgEl, ok, efter) {
+  besked(msgEl, '');
+  try {
+    const r = await motor('padel', handling, d, nyId());
+    await hentStart();
+    if (efter) efter(); else rute();
+    const el = $(msgEl.id) || msgEl;
+    besked(el, ok + (r && r.advarsler && r.advarsler.length ? ' ' + r.advarsler.join(' ') : ''), r && r.advarsler && r.advarsler.length ? 'err' : 'okm');
+  } catch (err) { besked(msgEl, err.message, 'err'); }
+}
+
+// ---------- Læg i min kalender (en kalenderfil med alarm 1 dag før, Lars 06.04)
+function icsTekst(poster, navn) {
+  const e = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+  const utc = (ms) => new Date(ms).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Roskilde Tennis Klub//Mit RTK padel//DA', 'METHOD:PUBLISH', 'X-WR-CALNAME:' + e(navn)];
+  poster.forEach((p) => {
+    L.push('BEGIN:VEVENT', 'UID:' + p.id + '@padel.mitrtk.dk', 'DTSTAMP:' + utc(Date.now()));
+    if (p.heldag) L.push('DTSTART;VALUE=DATE:' + p.dag.replace(/-/g, ''), 'DTEND;VALUE=DATE:' + plusDage(p.slutDag || p.dag, 1).replace(/-/g, ''));
+    else L.push('DTSTART:' + utc(p.ms), 'DTEND:' + utc(p.slutMs || p.ms + 3600000));
+    L.push('SUMMARY:' + e(p.titel), 'DESCRIPTION:' + e(typeAf(p.type).navn + (p.note ? '\n\n' + p.note : '')));
+    if (p.sted) L.push('LOCATION:' + e(p.sted));
+    L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + e(p.titel), 'TRIGGER:' + (p.heldag ? '-PT15H' : '-P1D'), 'END:VALARM', 'END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  return L.join('\r\n') + '\r\n';
+}
+function hentIcs(poster, navn) {
+  const url = URL.createObjectURL(new Blob([icsTekst(poster, navn)], { type: 'text/calendar;charset=utf-8' }));
+  const a = document.createElement('a'); a.href = url; a.download = (navn || 'padel').replace(/[^\wæøåÆØÅ -]/g, '').slice(0, 40) + '.ics';
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+
+// ---------- Abonnement på hele kalenderen eller en del af den (Lars 06.02, alarm 1 dag før 06.04)
+let abTyper = [], abMine = false, abUrl = '';
+function tegnAbonnement() {
+  const ab = data.abonnement;
+  let h = '<b>Din egen kalender</b><p class="hint" style="margin:4px 0 0">Abonnér på padelkalenderen i Google, Apple eller Outlook. Den opdaterer sig selv, og alt får en alarm 1 dag før. Google Kalender bruger sine egne påmindelser for et abonnement: slå dem til for kalenderen i Google.</p>';
+  if (abUrl) {
+    h += '<p style="margin:10px 0 0"><b>Dit personlige link</b> (vises kun nu):</p><div class="pd-url" id="abUrl">' + esc(abUrl) + '</div>'
+      + '<div class="pd-knapper"><button type="button" class="ok small" id="abKopi">Kopiér linket</button><a class="ghost small" style="display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:6px;padding:6px 12px;text-decoration:none;color:inherit;font-weight:600" href="' + esc(abUrl.replace(/^https:/, 'webcal:')) + '">Åbn i min kalender</a></div>'
+      + '<p class="hint">Del ikke linket. Den, der har det, kan se kalenderen. Lav et nyt link, hvis det er delt ved en fejl.</p>';
+  } else if (ab) {
+    h += '<p style="margin:10px 0 0">Du har et abonnement fra ' + esc(ab.oprettet) + ': ' + (ab.typer.length ? ab.typer.map((x) => typeAf(x).navn).join(', ') : 'alt') + (ab.kunMine ? ', kun det, du er ansvarlig for' : '') + '.</p>';
+  }
+  h += '<p style="margin:12px 0 4px;font-weight:500">Hvad skal med?</p><div class="chips" id="abValg">' + data.typer.map((t) => '<button type="button" data-t="' + t.id + '" aria-pressed="' + abTyper.includes(t.id) + '"><i class="pd-fp" style="background:' + t.farve + '"></i>' + esc(t.navn) + '</button>').join('') + '</div>'
+    + '<p class="hint" style="margin:6px 0 0">Vælger du ingen, kommer det hele med.</p>'
+    + (erFuld() ? '<label class="pd-chk"><input type="checkbox" id="abMine"' + (abMine ? ' checked' : '') + '> Kun det, jeg er ansvarlig for</label>' : '')
+    + '<div class="pd-knapper"><button type="button" class="' + (ab ? 'ghost' : 'ok') + ' small" id="abLav">' + (ab ? 'Lav et nyt link' : 'Lav mit link') + '</button>' + (ab ? '<button type="button" class="ghost small" id="abStop">Stop abonnementet</button>' : '') + '</div><div class="msg" id="abMsg" aria-live="polite"></div>';
+  $('abBoks').innerHTML = h;
+  $('abValg').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { const t = b.dataset.t; abTyper = abTyper.includes(t) ? abTyper.filter((x) => x !== t) : abTyper.concat([t]); b.setAttribute('aria-pressed', String(abTyper.includes(t))); }));
+  if ($('abMine')) $('abMine').addEventListener('change', (e) => { abMine = e.target.checked; });
+  if ($('abKopi')) $('abKopi').addEventListener('click', () => { navigator.clipboard.writeText(abUrl).then(() => besked($('abMsg'), 'Kopieret', 'okm')).catch(() => besked($('abMsg'), 'Markér linket og kopiér det', 'err')); });
+  $('abLav').addEventListener('click', async () => {
+    besked($('abMsg'), 'Laver linket …');
+    try { const r = await motor('padel', 'abonnement', { typer: abTyper, kunMine: abMine }, nyId()); abUrl = URL_MOTOR + '?modul=padel&handling=ics&n=' + r.noegle; await hentStart(); tegnAbonnement(); besked($('abMsg'), 'Linket er klar. Det gamle virker ikke længere.', 'okm'); }
+    catch (err) { besked($('abMsg'), err.message, 'err'); }
+  });
+  if ($('abStop')) $('abStop').addEventListener('click', async () => {
+    try { await motor('padel', 'abonnement', { slet: true }, nyId()); abUrl = ''; await hentStart(); tegnAbonnement(); besked($('abMsg'), 'Abonnementet er stoppet. Fjern også kalenderen i din kalender-app.', 'okm'); }
+    catch (err) { besked($('abMsg'), err.message, 'err'); }
+  });
+}
+
+// ---------- Notifikationer på denne telefon (påmindelser om frister). Samme som under Beskeder på medlemssiden
+let pushStatus = null;
+const pushKan = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+const pushIos = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const pushHjem = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const pushId = () => hent('rtk.push.id') || '';
+function enhedsnavn() {
+  const ua = navigator.userAgent;
+  const hvad = /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ? 'iPad' : /Android/.test(ua) ? 'Android' : /Mac/.test(ua) ? 'Mac' : /Windows/.test(ua) ? 'Windows' : 'Computer';
+  const br = /Edg\//.test(ua) ? 'Edge' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : '';
+  return hvad === 'iPhone' || hvad === 'iPad' ? hvad : hvad + (br ? ', ' + br : '');
+}
+async function pushFirebase() {
+  const fb = 'https://www.gstatic.com/firebasejs/' + window.RTK_KONFIG.firebaseVersion + '/';
+  const [a, m] = await Promise.all([import(fb + 'firebase-app.js'), import(fb + 'firebase-messaging.js')]);
+  const app = a.getApps().find((x) => x.name === 'push') || a.initializeApp(window.RTK_KONFIG.firebase, 'push');
+  return { m, messaging: m.getMessaging(app) };
+}
+function tegnPush() {
+  let h = '<b>Påmindelser på denne telefon</b>';
+  const her = pushStatus && (pushStatus.enheder || []).some((e) => e.id === pushId() && Notification.permission === 'granted');
+  if (pushIos() && !pushHjem()) h += '<p class="hint" style="margin:4px 0 0">På iPhone skal personalesiden først lægges på hjemmeskærmen: tryk Del og "Føj til hjemmeskærm", og åbn den derfra. Så kan du slå påmindelser til her.</p>';
+  else if (!pushKan()) h += '<p class="hint" style="margin:4px 0 0">Denne browser kan ikke vise notifikationer. Påmindelser om frister, du er ansvarlig for, kommer så på mail.</p>';
+  else if (Notification.permission === 'denied') h += '<p class="hint" style="margin:4px 0 0">Notifikationer er slået fra for Mit RTK i telefonens indstillinger.</p>';
+  else if (her) h += '<p style="margin:4px 0 0">Slået til på denne telefon.</p><div class="pd-knapper"><button type="button" class="ghost small" id="pushProeve">Send en prøve</button></div>';
+  else h += '<p class="hint" style="margin:4px 0 0">Få en notifikation, når en frist eller et møde nærmer sig.</p><div class="pd-knapper"><button type="button" class="ok small" id="pushTil">Slå påmindelser til</button></div>';
+  h += '<div class="msg" id="pushMsg" aria-live="polite"></div>';
+  $('pushBoks').innerHTML = h;
+  if ($('pushTil')) $('pushTil').addEventListener('click', slaaPushTil);
+  if ($('pushProeve')) $('pushProeve').addEventListener('click', async () => { try { const r = await motor('push', 'proeve', {}, nyId()); besked($('pushMsg'), r && r.sendt ? 'Sendt til ' + r.sendt + (r.sendt === 1 ? ' enhed' : ' enheder') + '. Kommer der ingen notifikation, så tjek, at notifikationer er slået til for browseren i telefonens eller computerens indstillinger.' : 'Firebase tog ikke imod prøven. Slå påmindelser fra og til igen på denne enhed.', r && r.sendt ? 'okm' : 'err'); } catch (err) { besked($('pushMsg'), err.message, 'err'); } });
+}
+async function slaaPushTil() {
+  besked($('pushMsg'), 'Slår til …');
+  try {
+    const svar = await Notification.requestPermission();
+    if (svar !== 'granted') { besked($('pushMsg'), 'Telefonen sagde nej til notifikationer.', 'err'); return; }
+    const reg = await navigator.serviceWorker.register('../firebase-messaging-sw.js', { scope: '/' });
+    await navigator.serviceWorker.ready;
+    const fb = await pushFirebase();
+    const t = await fb.m.getToken(fb.messaging, { vapidKey: window.RTK_KONFIG.vapid, serviceWorkerRegistration: reg });
+    if (!t) throw new Error('ingen nøgle');
+    const r = await motor('push', 'registrer', { token: t, enhed: enhedsnavn() }, nyId());
+    gem('rtk.push.id', r.id);
+    pushStatus = Object.assign({}, pushStatus || {}, { enheder: r.enheder });
+    tegnPush(); besked($('pushMsg'), 'Påmindelser er slået til på denne telefon.', 'okm');
+  } catch (err) { console.warn('push', err); besked($('pushMsg'), /Log ind|forbindelse/.test(err.message) ? err.message : 'Det lykkedes ikke. Prøv igen om lidt.', 'err'); }
+}
+
+// ---------- Ny eller ret (kun administratorer)
+const PAAMIND = [['4u', '4 uger før'], ['2u', '2 uger før'], ['1u', '1 uge før'], ['2d', '2 dage før'], ['1d', 'Dagen før'], ['0d', 'Samme dag']];
+async function visForm(id, dag) {
+  vis('vForm');
+  const p = id ? data.poster.find((x) => x.id === id) : null;
+  if (id && !p) { $('vForm').innerHTML = '<a class="gr-tilbage" href="#kalender">&#8592; Kalender</a><p class="hint">Punktet findes ikke længere.</p>'; return; }
+  $('vForm').innerHTML = '<p class="hint">Henter personer og grupper …</p>';
+  try { if (!personerData) personerData = await motor('padel', 'personer'); if (!chatData) chatData = await motor('padel', 'chat'); }
+  catch (err) { $('vForm').innerHTML = '<a class="gr-tilbage" href="#kalender">&#8592; Kalender</a><p class="msg err">' + esc(err.message) + '</p>'; return; }
+  const f = p ? Object.assign({}, p) : { type: 'frist', titel: '', dag: dag || iDag(), heldag: true, start: '', slut: '', slutDag: '', sted: '', baner: 0, note: '', ansvarlig: '', synlighed: '', paamind: [], paamindTil: [], gentag: '' };
+  const til = [['ansvarlig', 'Den ansvarlige'], ['fuld', 'Styregruppen og Padel Team'], ['alle', 'Alle i padel']].concat((chatData.grupper || []).map((g) => ['g:' + g.id, g.navn]));
+  let h = '<a class="gr-tilbage" href="' + (p ? '#k/' + encodeURIComponent(p.id) : '#kalender') + '">&#8592; ' + (p ? 'Tilbage' : 'Kalender') + '</a><h2 style="margin:10px 0 6px">' + (p ? 'Ret i kalenderen' : 'Ny i kalenderen') + '</h2><form class="pd-form" id="form" novalidate>';
+  h += '<label>Hvad er det?</label><div class="chips" id="fType">' + data.typer.map((t) => '<button type="button" data-t="' + t.id + '" aria-pressed="' + (f.type === t.id) + '" style="border-color:' + t.farve + '"><i class="pd-fp" style="background:' + t.farve + '"></i>' + esc(t.navn) + '</button>').join('') + '</div>';
+  h += '<label for="fTitel">Titel</label><input id="fTitel" maxlength="80" value="' + esc(f.titel) + '">';
+  h += '<label class="pd-chk"><input type="checkbox" id="fHeldag"' + (f.heldag ? ' checked' : '') + '> Hele dagen</label>';
+  h += '<div class="pd-to"><div><label for="fDag">Dato</label><input type="date" id="fDag" value="' + esc(f.dag) + '"></div><div id="fSlutDagB"><label for="fSlutDag">Til og med (valgfri)</label><input type="date" id="fSlutDag" value="' + esc(f.slutDag && f.slutDag !== f.dag ? f.slutDag : '') + '"></div></div>';
+  h += '<div class="pd-to" id="fTider"><div><label for="fStart">Fra kl.</label><input type="time" id="fStart" value="' + esc(f.start) + '"></div><div><label for="fSlut">Til kl.</label><input type="time" id="fSlut" value="' + esc(f.slut) + '"></div></div>';
+  h += '<div class="pd-to"><div><label for="fSted">Sted</label><input id="fSted" maxlength="80" value="' + esc(f.sted) + '"></div><div><label for="fBaner">Baner hos PadelPit Roskilde</label><select id="fBaner"><option value="0">Ingen</option><option value="1"' + (f.baner === 1 ? ' selected' : '') + '>1 bane</option><option value="2"' + (f.baner === 2 ? ' selected' : '') + '>2 baner</option></select></div></div>';
+  h += '<label for="fAnsvarlig">Ansvarlig</label><select id="fAnsvarlig"><option value="">Ingen</option>' + personerData.map((x) => '<option value="' + esc(x.id) + '"' + (f.ansvarlig === x.id ? ' selected' : '') + '>' + esc(x.navn) + (x.kreds === 'circle' ? ' (Padelcircle)' : '') + '</option>').join('') + '</select>';
+  h += '<label>Hvem kan se den?</label><div class="chips" id="fSyn"><button type="button" data-s="alle">Alle i padel</button><button type="button" data-s="intern">&#128274; Ikke Padelcircle</button></div>';
+  h += '<label>Påmind</label><div class="chips" id="fPaamind">' + PAAMIND.map(([k, n]) => '<button type="button" data-k="' + k + '" aria-pressed="' + f.paamind.includes(k) + '">' + n + '</button>').join('') + '</div>';
+  h += '<label>Hvem får påmindelsen?</label><div class="chips" id="fTil">' + til.map(([k, n]) => '<button type="button" data-k="' + esc(k) + '" aria-pressed="' + f.paamindTil.includes(k) + '">' + esc(n) + '</button>').join('') + '</div>';
+  h += '<p class="hint" style="margin:6px 0 0">Påmindelserne kommer som notifikation. Den ansvarlige får en mail, hvis telefonen ikke har notifikationer slået til. Er den ikke for Padelcircle, får de den ikke.</p>';
+  h += '<label for="fNote">Note</label><textarea id="fNote" maxlength="1000" rows="3">' + esc(f.note) + '</textarea>';
+  h += '<button type="submit" style="width:100%;margin-top:14px">Gem</button><div class="msg" id="formMsg" aria-live="polite"></div></form>';
+  $('vForm').innerHTML = h;
+  let type = f.type, syn = f.synlighed, synRoert = !!p;
+  const synVis = () => { const s = syn || (data.typer.find((t) => t.id === type) || {}).syn || 'alle'; $('fSyn').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === s))); };
+  $('fType').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { type = b.dataset.t; $('fType').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); if (!synRoert) syn = ''; synVis(); }));
+  $('fSyn').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { syn = b.dataset.s; synRoert = true; synVis(); }));
+  ['fPaamind', 'fTil'].forEach((id) => $(id).querySelectorAll('button').forEach((b) => b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')))));
+  const heldag = () => { const hd = $('fHeldag').checked; $('fTider').classList.toggle('hidden', hd); $('fSlutDagB').classList.toggle('hidden', !hd); };
+  $('fHeldag').addEventListener('change', heldag); heldag(); synVis();
+  const reg = nyId();
+  $('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const valgte = (id) => [...$(id).querySelectorAll('button[aria-pressed="true"]')].map((b) => b.dataset.k);
+    const hd = $('fHeldag').checked;
+    const d = {
+      type, titel: $('fTitel').value, dag: $('fDag').value, start: hd ? '' : $('fStart').value, slut: hd ? '' : $('fSlut').value,
+      slutDag: hd ? $('fSlutDag').value : '', sted: $('fSted').value, baner: Number($('fBaner').value), ansvarlig: $('fAnsvarlig').value,
+      synlighed: syn || '', paamind: valgte('fPaamind'), paamindTil: valgte('fTil'), gentag: '', note: $('fNote').value
+    };
+    if (!hd && !d.start) { besked($('formMsg'), 'Vælg fra kl., eller sæt flueben ved Hele dagen', 'err'); return; }
+    if (p) d.id = p.id;
+    besked($('formMsg'), '');
+    try {
+      const r = await motor('padel', p ? 'ret' : 'ny', d, p ? nyId() : reg);
+      await hentStart();
+      location.hash = 'k/' + encodeURIComponent(r.id);
+    } catch (err) { besked($('formMsg'), err.message, 'err'); }
+  });
+}
+
+// ---------- Chat: grupperne for personale og frivillige i padel. Selve chatten er den samme som i Grupper
+async function visChat(under) {
+  vis('vChat');
+  if (!chatData) $('vChat').innerHTML = '<p class="hint">Henter grupperne …</p>';
+  try { chatData = await motor('padel', 'chat'); } catch (err) { $('vChat').innerHTML = '<p class="msg err">' + esc(err.message) + '</p>'; return; }
+  if (under === 'ny' && chatData.kanOprette) return visNyGruppe();
+  const gr = chatData.grupper;
+  let h = gr.length ? '' : '<p class="hint">Du er ikke med i nogen grupper for padel endnu. Klubbens administratorer opretter grupperne og tager folk med.</p>';
+  gr.forEach((g) => {
+    h += '<div class="pd-g"><div class="pd-g-n"><b>' + esc(g.navn) + '</b>' + (g.mig ? '<a class="ok small" style="display:inline-flex;align-items:center;border:2px solid var(--pink);border-radius:6px;padding:4px 12px;text-decoration:none;color:inherit;font-weight:700;font-size:15px" href="../grupper.html?padel=1#g/' + encodeURIComponent(g.id) + '/chat">Åbn chatten</a>' : '<span class="hint" style="margin:0">Du er ikke med</span>') + '</div>'
+      + '<div class="pd-g-h">' + esc(g.medlemmer.map((x) => x.navn.replace(/^Test /, '').split(' ')[0]).join(', ')) + ' · ' + g.antal + (g.antal === 1 ? ' person' : ' personer') + '</div>'
+      + (g.beskrivelse ? '<p class="hint" style="margin:4px 0 0">' + esc(g.beskrivelse) + '</p>' : '')
+      + (chatData.kanOprette ? '<details style="margin-top:6px"><summary class="hint" style="cursor:pointer;margin:0">Medlemmer</summary><div data-g="' + esc(g.id) + '" class="pd-medl"></div></details>' : '') + '</div>';
+  });
+  if (chatData.kanOprette) h += '<div class="pd-knapper" style="margin-top:14px"><button type="button" class="ok small" id="nyGruppe">+ Ny gruppe</button></div><p class="hint">Kun klubbens administratorer kan oprette grupper og tage folk med. Kun dem, der er med i en gruppe, kan se den.</p>';
+  else h += '<p class="hint">Svar på en besked, reagér med en emoji, og få en notifikation, når der er nyt. Kun dem, der er med i en gruppe, kan se den.</p>';
+  h += '<div class="msg" id="chatMsg" aria-live="polite"></div>';
+  $('vChat').innerHTML = h;
+  if ($('nyGruppe')) $('nyGruppe').addEventListener('click', () => { location.hash = 'chat/ny'; });
+  if (chatData.kanOprette) $('vChat').querySelectorAll('.pd-medl').forEach((el) => el.closest('details').addEventListener('toggle', () => tegnMedlemmer(el), { once: true }));
+}
+async function tegnMedlemmer(el) {
+  const g = chatData.grupper.find((x) => x.id === el.dataset.g);
+  try { if (!personerData) personerData = await motor('padel', 'personer'); } catch (err) { el.innerHTML = '<p class="msg err">' + esc(err.message) + '</p>'; return; }
+  const med = new Set(g.medlemmer.map((x) => x.id));
+  el.innerHTML = g.medlemmer.map((x) => '<div class="linje" style="align-items:center;margin:6px 0"><span>' + esc(x.navn) + '</span><button type="button" class="ghost small" data-fjern="' + esc(x.id) + '">Fjern</button></div>').join('')
+    + '<div style="display:flex;gap:8px;margin-top:8px"><select data-tilfoej><option value="">Tag en med …</option>' + personerData.filter((x) => !med.has(x.id)).map((x) => '<option value="' + esc(x.id) + '">' + esc(x.navn) + (x.kreds === 'circle' ? ' (Padelcircle)' : '') + '</option>').join('') + '</select><button type="button" class="ok small" data-ok>Tilføj</button></div><div class="msg" aria-live="polite"></div>';
+  const msg = el.querySelector('.msg');
+  const gemMed = async (pid, tilf) => {
+    besked(msg, '');
+    try { await motor('padel', 'gruppeMedlem', { gid: g.id, pid, til: tilf }, nyId()); chatData = await motor('padel', 'chat'); Object.assign(g, chatData.grupper.find((x) => x.id === g.id) || g); tegnMedlemmer(el); }
+    catch (err) { besked(msg, err.message, 'err'); }
+  };
+  el.querySelectorAll('[data-fjern]').forEach((b) => b.addEventListener('click', () => gemMed(b.dataset.fjern, false)));
+  el.querySelector('[data-ok]').addEventListener('click', () => { const v = el.querySelector('[data-tilfoej]').value; if (v) gemMed(v, true); });
+}
+async function visNyGruppe() {
+  try { if (!personerData) personerData = await motor('padel', 'personer'); } catch (err) { $('vChat').innerHTML = '<p class="msg err">' + esc(err.message) + '</p>'; return; }
+  let h = '<a class="gr-tilbage" href="#chat">&#8592; Chat</a><h2 style="margin:10px 0 6px">Ny gruppe</h2><form class="pd-form" id="gForm">';
+  h += '<label for="gNavn">Navn</label><input id="gNavn" maxlength="60" placeholder="Fx Styregruppen">';
+  h += '<label for="gBeskr">Beskrivelse (valgfri)</label><textarea id="gBeskr" maxlength="1000" rows="2"></textarea>';
+  h += '<label>Hvem skal være med?</label>' + personerData.filter((x) => x.id !== data.mig.id).map((x) => '<label class="pd-chk"><input type="checkbox" value="' + esc(x.id) + '"> ' + esc(x.navn) + (x.kreds === 'circle' ? ' (Padelcircle)' : '') + '</label>').join('');
+  h += '<p class="hint">Du kommer selv med som gruppeadministrator. Klubbens administratorer bliver også gruppeadministratorer.</p><button type="submit" style="width:100%;margin-top:12px">Opret gruppen</button><div class="msg" id="gMsg" aria-live="polite"></div></form>';
+  $('vChat').innerHTML = h;
+  const reg = nyId();
+  $('gForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    besked($('gMsg'), 'Opretter …');
+    try {
+      await motor('padel', 'gruppeOpret', { navn: $('gNavn').value, beskrivelse: $('gBeskr').value, medlemmer: [...$('gForm').querySelectorAll('input[type=checkbox]:checked')].map((x) => x.value) }, reg);
+      location.hash = 'chat';
+    } catch (err) { besked($('gMsg'), err.message, 'err'); }
+  });
+}
+
+// ---------- Holdet: profilkortene fra Grupper (ét kort pr. person, Lars 06.04)
+/** Initialer af de første to ord, der starter med et bogstav ("Helle (test)" giver H, ikke "H("). */
+function initialer(n) { return String(n || '').replace(/^Test /, '').split(/\s+/).map((w) => (w.match(/\p{L}/u) || [''])[0]).filter(Boolean).slice(0, 2).join('').toUpperCase(); }
+// Fanen hed Holdet. Lars 8. november 2026 kl. 09.02: "Personer". #holdet virker stadig
+async function visHoldet() {
+  vis('vHoldet');
+  try { await sikr('hold', $('vHoldet'), 'Henter personerne …'); } catch (err) { $('vHoldet').innerHTML = '<p class="msg err">' + esc(err.message) + '</p>'; return; }
+  const ini = (n) => initialer(n);
+  const fuld = holdData.personer.filter((x) => x.kreds === 'fuld'), circle = holdData.personer.filter((x) => x.kreds === 'circle');
+  const p = (x) => '<button type="button" class="pd-p" data-pid="' + esc(x.id) + '"><span class="pd-av" data-av="' + esc(x.id) + '">' + esc(ini(x.navn)) + '</span><span><b>' + esc(x.navn) + '</b><span class="u">' + esc((x.grupper.length ? x.grupper.join(', ') : x.kreds === 'circle' ? 'RTK Padelcircle' : 'Padel')) + '</span></span></button>';
+  let h = '<div class="pd-knapper" style="margin:0 0 10px"><a class="ok small" style="display:inline-flex;align-items:center;border:2px solid var(--pink);border-radius:6px;padding:6px 12px;text-decoration:none;color:inherit;font-weight:700" href="../grupper.html?padel=1#profil">Mit profilkort</a></div>';
+  h += '<p class="hint" style="margin:0 0 8px">Dit profilkort: billeder, lidt om dig, niveau i tennis og padel og evt. telefonnummer og mail, hvis du vil.</p>';
+  if (fuld.length) h += '<h3 class="pd-uge">Styregruppen og Padel Team</h3>' + fuld.map(p).join('');
+  if (circle.length) h += '<h3 class="pd-uge">RTK Padelcircle</h3>' + circle.map(p).join('');
+  $('vHoldet').innerHTML = h;
+  $('vHoldet').querySelectorAll('.pd-p').forEach((b) => b.addEventListener('click', () => visProfil(b.dataset.pid)));
+  // Små profilbilleder fra Firebase (profilMini)
+  if (!window.RTKV) return;
+  try {
+    const f = await RTKV.db(motor);
+    holdData.personer.forEach(async (x) => {
+      try {
+        const d = await f.fs.getDoc(f.fs.doc(f.db, 'profilMini', x.id));
+        const el = $('vHoldet').querySelector('[data-av="' + x.id + '"]');
+        if (el && d.exists() && d.data().mini) { el.style.backgroundImage = 'url("' + d.data().mini + '")'; el.textContent = ''; }
+      } catch (e) { /* intet billede */ }
+    });
+  } catch (e) { /* uden Firebase vises initialerne */ }
+}
+// ---------- Om projektet og Idéboks (Lars 8. november 2026 kl. 18.06 til 19.09)
+let projData = null, refData = null, ideData = null, ideEmne = '';
+/** En tekst med linjer: "- " giver punkter, "a | b" giver en tabel, ellers afsnit. */
+function tekstHtml(t) {
+  const linjer = String(t || '').split('\n');
+  let h = '', ul = [], tb = [];
+  const tom = () => { if (ul.length) { h += '<ul class="pd-ul">' + ul.map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul>'; ul = []; } if (tb.length) { h += '<table class="pd-tb">' + tb.map((x) => '<tr><td>' + esc(x[0]) + '</td><td' + (/^[\d.,\s]+(kr\.?|%)?$/.test(x[1]) ? ' class="tal"' : '') + '>' + esc(x[1]) + '</td></tr>').join('') + '</table>'; tb = []; } };
+  linjer.forEach((l) => {
+    const x = l.trim();
+    if (/^[-•]\s+/.test(x)) { if (tb.length) tom(); ul.push(x.replace(/^[-•]\s+/, '')); }
+    else if (x.includes('|')) { if (ul.length) tom(); const i = x.indexOf('|'); tb.push([x.slice(0, i).trim(), x.slice(i + 1).trim()]); }
+    else { tom(); if (x) h += '<p class="pd-p2">' + esc(x) + '</p>'; }
+  });
+  tom();
+  return h;
+}
+// ---------- Kopierne i Firebase (Lars 9. november 2026 kl. 08.11, handoff afsnit 7 punkt 0)
+// Fanen vises med det, siden har (kopien fra Firebase eller sidste svar), og motoren spørges bagefter i baggrunden.
+// Formularer til at rette henter altid det nyeste fra motoren først.
+const FDATA = {
+  projekt: { faa: () => projData, saet: (d) => { projData = d; }, ruter: ['formaal', 'org'] },
+  referater: { faa: () => refData, saet: (d) => { refData = d; }, ruter: ['referater', 'r'] },
+  ideer: { faa: () => ideData, saet: (d) => { ideData = d; }, ruter: ['ideer'] },
+  hold: { faa: () => holdData, saet: (d) => { holdData = d; }, ruter: ['personer', 'holdet'] },
+  oekonomi: { faa: () => oekData, saet: (d) => { oekData = d; }, ruter: ['oekonomi'] }
+};
+const HENTER = {};
+/** Det nyeste fra motoren. Et svar, der er læst før en skrivning eller en nyere kopi, bruges ikke. */
+function hentFane(k) {
+  if (HENTER[k]) return HENTER[k];
+  HENTER[k] = motor('padel', k).then((d) => {
+    if (LAEST[k] && SIDST[k] < LAEST[k] && FDATA[k].faa()) return FDATA[k].faa();
+    LAEST[k] = SIDST[k]; FDATA[k].saet(d); return d;
+  }).finally(() => { HENTER[k] = null; });
+  return HENTER[k];
+}
+let stille = false;
+/** Sørg for data til fanen k. Har siden noget, vises det med det samme, og motoren spørges bagefter i baggrunden. */
+async function sikr(k, el, tekst) {
+  if (FDATA[k].faa()) {
+    if (!stille && !HENTER[k]) {
+      const gl = JSON.stringify(FDATA[k].faa());
+      hentFane(k).then(() => { if (JSON.stringify(FDATA[k].faa()) !== gl) genTegn(k); }).catch(() => {});
+    }
+    return;
+  }
+  el.innerHTML = '<p class="hint">' + esc(tekst || 'Henter …') + '</p>';
+  await hentFane(k);
+}
+/** Tegn fanen igen, når der er kommet noget nyt, men kun hvis man står på den og ikke er i gang med at rette. */
+function genTegn(k) {
+  if (!data) return;
+  const h = location.hash.replace(/^#/, '').split('/');
+  if (!FDATA[k].ruter.includes(h[0]) || h[1] === 'ret' || h[1] === 'ny') return;
+  // Tegnes fanen igen på grund af nyt, spørges motoren ikke igen
+  stille = true;
+  try { rute(); } finally { stille = false; }
+}
+/** En kopi fra Firebase. Kun nyere end det, siden har. */
+function fraKopi(k) {
+  return (x) => {
+    if (!x || !x.laest || x.svar === undefined) return;
+    if (LAEST[k] && x.laest <= LAEST[k]) return;
+    const gl = FDATA[k].faa();
+    LAEST[k] = x.laest; FDATA[k].saet(x.svar);
+    if (!gl || JSON.stringify(gl) !== JSON.stringify(x.svar)) genTegn(k);
+  };
+}
+let lytter = false;
+/** Lyt på kopierne, når kalenderen står, så fanerne er klar ved første tryk. */
+function lytFaner() {
+  if (lytter || !window.RTKV) return;
+  lytter = true;
+  Object.keys(KOPI).filter((k) => k !== 'oekonomi' || erFuld()).forEach((k) => RTKV.lyt(motor, KOPI[k], fraKopi(k)));
+}
+const fejlHtml = (err) => '<p class="msg err">' + esc(err.message) + '</p>';
+
+async function visFormaal(ret) {
+  vis('vFormaal');
+  try { if (ret) { if (!projData) $('vFormaal').innerHTML = '<p class="hint">Henter …</p>'; await hentFane('projekt'); } else await sikr('projekt', $('vFormaal')); } catch (err) { $('vFormaal').innerHTML = fejlHtml(err); return; }
+  const a = ret && projData.formaal.find((x) => x.id === ret);
+  if (a) {
+    $('vFormaal').innerHTML = '<a class="gr-tilbage" href="#formaal">&#8592; Formål og plan</a><h2 class="lille" style="margin:8px 0">' + esc(a.navn) + '</h2>'
+      + '<p class="hint">En linje, der starter med "- ", bliver et punkt. "Tekst | tal" bliver en række i en tabel.</p>'
+      + '<label for="fTekst">Tekst</label><textarea id="fTekst" rows="9" maxlength="3000">' + esc(a.tekst) + '</textarea>'
+      + '<div class="pd-knapper"><button type="button" class="ok" id="fGem">Gem</button><a class="ghost" style="display:inline-flex;align-items:center;padding:6px 14px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:6px" href="#formaal">Annullér</a></div><div class="msg" id="fMsg" aria-live="polite"></div>';
+    $('fGem').addEventListener('click', async () => {
+      besked($('fMsg'), '');
+      try { await motor('padel', 'formaalRet', { id: a.id, tekst: $('fTekst').value }, nyId()); projData = null; location.hash = 'formaal'; } catch (err) { besked($('fMsg'), err.message, 'err'); }
+    });
+    return;
+  }
+  let h = '';
+  projData.formaal.forEach((x) => {
+    h += '<section class="pd-afs"><div class="pd-afsh"><h3 class="pd-sh">' + esc(x.navn) + '</h3>' + (erAdmin() ? '<a class="pd-ret" href="#formaal/ret/' + x.id + '">Ret</a>' : '') + '</div>'
+      + (x.tekst ? tekstHtml(x.tekst) : '<p class="hint">Intet endnu.</p>') + '</section>';
+  });
+  $('vFormaal').innerHTML = h;
+}
+
+async function visOrg(ret) {
+  vis('vOrg');
+  try { if (ret) { if (!projData) $('vOrg').innerHTML = '<p class="hint">Henter …</p>'; await hentFane('projekt'); } else await sikr('projekt', $('vOrg')); } catch (err) { $('vOrg').innerHTML = fejlHtml(err); return; }
+  if (ret) return visOrgRet(ret);
+  let h = erAdmin() ? '<div class="pd-knapper" style="margin:0 0 6px"><a class="pd-ret" href="#org/ret/ny">+ Ny gruppe</a></div>' : '';
+  projData.org.forEach((g, i) => {
+    h += '<section class="pd-afs"><div class="pd-afsh"><h3 class="pd-sh">' + esc(g.navn) + '</h3>' + (erAdmin() ? '<span class="pd-retk">'
+      + (i > 0 ? '<button type="button" class="pd-mini" data-flyt="-1" data-id="' + esc(g.id) + '" aria-label="Flyt ' + esc(g.navn) + ' op">&#8593;</button>' : '')
+      + (i < projData.org.length - 1 ? '<button type="button" class="pd-mini" data-flyt="1" data-id="' + esc(g.id) + '" aria-label="Flyt ' + esc(g.navn) + ' ned">&#8595;</button>' : '')
+      + '<a class="pd-ret" href="#org/ret/' + encodeURIComponent(g.id) + '">Ret</a></span>' : '') + '</div>';
+    if (g.opgaver) h += '<p class="pd-p2">' + esc(g.opgaver) + '</p>';
+    h += g.personer.map((x) => '<button type="button" class="pd-p" data-pid="' + esc(x.pid) + '"><span class="pd-av" data-av="' + esc(x.pid) + '">' + esc(initialer(x.navn)) + '</span><span><b>' + esc(x.navn) + '</b>' + (x.linje ? '<span class="u">' + esc(x.linje) + '</span>' : '') + '</span></button>').join('');
+    if (g.andre) h += '<p class="hint pd-andre">' + esc(g.andre) + '</p>';
+    h += '</section>';
+  });
+  $('vOrg').innerHTML = h;
+  $('vOrg').querySelectorAll('.pd-p').forEach((b) => b.addEventListener('click', () => visProfilFra(b.dataset.pid, projData.personer)));
+  $('vOrg').querySelectorAll('[data-flyt]').forEach((b) => b.addEventListener('click', async () => {
+    try { await motor('padel', 'orgRet', { id: b.dataset.id, flyt: Number(b.dataset.flyt) }, nyId()); projData = null; visOrg(''); } catch (err) { alert(err.message); }
+  }));
+  miniBilleder($('vOrg'), projData.personer);
+}
+function visOrgRet(id) {
+  const g = id === 'ny' ? { id: '', navn: '', opgaver: '', personer: [], andre: '' } : projData.org.find((x) => x.id === id);
+  if (!g) { location.hash = 'org'; return; }
+  const valgt = {}; g.personer.forEach((x) => { if (!(g.auto === 'circle' && !x.linje && projData.personer.find((y) => y.id === x.pid && y.kreds === 'circle'))) valgt[x.pid] = x.linje || ''; });
+  let h = '<a class="gr-tilbage" href="#org">&#8592; Organisering</a><h2 class="lille" style="margin:8px 0">' + (g.id ? 'Ret: ' + esc(g.navn) : 'Ny gruppe') + '</h2>';
+  h += '<label for="oNavn">Navn</label><input id="oNavn" maxlength="60" value="' + esc(g.navn) + '">';
+  h += '<label for="oOpg">Opgaver</label><textarea id="oOpg" rows="3" maxlength="1000">' + esc(g.opgaver) + '</textarea>';
+  h += '<fieldset class="pd-fs"><legend>Personer</legend><div class="chips pd-vaelg">' + projData.personer.map((x) => '<button type="button" data-pid="' + esc(x.id) + '" aria-pressed="' + (x.id in valgt) + '">' + esc(x.navn) + '</button>').join('') + '</div></fieldset>';
+  if (g.auto === 'circle') h += '<p class="hint">Alle i RTK Padelcircle står her af sig selv.</p>';
+  h += '<div id="oLinjer"></div>';
+  h += '<label for="oAndre">Andre, der ikke har en rolle i padel</label><input id="oAndre" maxlength="200" value="' + esc(g.andre) + '">';
+  h += '<div class="pd-knapper"><button type="button" class="ok" id="oGem">Gem</button><a class="ghost" style="display:inline-flex;align-items:center;padding:6px 14px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:6px" href="#org">Annullér</a>'
+    + (g.id ? '<button type="button" class="ghost" id="oSlet">Slet gruppen</button>' : '') + '</div><div class="msg" id="oMsg" aria-live="polite"></div>';
+  $('vOrg').innerHTML = h;
+  const linjer = () => {
+    const ids = Object.keys(valgt);
+    $('oLinjer').innerHTML = ids.length ? '<label>Linje under en person (fx opgave)</label>' + ids.map((pid) => { const x = projData.personer.find((y) => y.id === pid); return '<div class="pd-rk"><span>' + esc(x ? x.navn : pid) + '</span><input data-linje="' + esc(pid) + '" maxlength="60" value="' + esc(valgt[pid]) + '" aria-label="Linje under ' + esc(x ? x.navn : pid) + '"></div>'; }).join('') : '';
+    $('oLinjer').querySelectorAll('input').forEach((i) => i.addEventListener('input', () => { valgt[i.dataset.linje] = i.value; }));
+  };
+  linjer();
+  $('vOrg').querySelectorAll('.pd-vaelg button').forEach((b) => b.addEventListener('click', () => {
+    if (b.dataset.pid in valgt) delete valgt[b.dataset.pid]; else valgt[b.dataset.pid] = '';
+    b.setAttribute('aria-pressed', String(b.dataset.pid in valgt)); linjer();
+  }));
+  $('oGem').addEventListener('click', async () => {
+    besked($('oMsg'), '');
+    try {
+      await motor('padel', 'orgRet', { id: g.id, navn: $('oNavn').value, opgaver: $('oOpg').value, andre: $('oAndre').value, personer: Object.keys(valgt).map((pid) => ({ pid, linje: valgt[pid] })) }, nyId());
+      projData = null; location.hash = 'org';
+    } catch (err) { besked($('oMsg'), err.message, 'err'); }
+  });
+  if ($('oSlet')) {
+    let sikker = false;
+    $('oSlet').addEventListener('click', async () => {
+      if (!sikker) { sikker = true; $('oSlet').textContent = 'Tryk igen for at slette'; return; }
+      try { await motor('padel', 'orgRet', { id: g.id, slet: true }, nyId()); projData = null; location.hash = 'org'; } catch (err) { besked($('oMsg'), err.message, 'err'); }
+    });
+  }
+}
+/** Profilkortet for en person i en liste (Organisering, referater og idéer). */
+function visProfilFra(pid, personer) {
+  const x = (personer || []).find((y) => (y.id || y.pid) === pid);
+  if (!holdData) holdData = { personer: [] };
+  if (x && !holdData.personer.find((y) => y.id === pid)) holdData.personer.push({ id: pid, navn: x.navn, kreds: x.kreds || 'fuld', grupper: [] });
+  visProfil(pid);
+}
+async function miniBilleder(rod, personer) {
+  if (!window.RTKV) return;
+  try {
+    const f = await RTKV.db(motor);
+    (personer || []).forEach(async (x) => {
+      const id = x.id || x.pid;
+      try {
+        const d = await f.fs.getDoc(f.fs.doc(f.db, 'profilMini', id));
+        rod.querySelectorAll('[data-av="' + id + '"]').forEach((el) => { if (d.exists() && d.data().mini) { el.style.backgroundImage = 'url("' + d.data().mini + '")'; el.textContent = ''; } });
+      } catch (e) { /* intet billede */ }
+    });
+  } catch (e) { /* uden Firebase vises initialerne */ }
+}
+
+// ---------- Mødereferater
+const datoTekst = (dag) => dag ? dagTekst(dag).charAt(0).toUpperCase() + dagTekst(dag).slice(1) + ' ' + dag.slice(0, 4) : '';
+async function visReferater() {
+  vis('vRef');
+  try { await sikr('referater', $('vRef')); } catch (err) { $('vRef').innerHTML = fejlHtml(err); return; }
+  let h = erAdmin() ? '<div class="pd-knapper" style="margin:0 0 8px"><a class="ok small" style="display:inline-flex;align-items:center;border:2px solid var(--pink);border-radius:6px;padding:6px 12px;text-decoration:none;color:inherit;font-weight:700" href="#referat/ny">+ Nyt referat</a></div>' : '';
+  if (!refData.referater.length) h += '<p class="hint">Ingen referater endnu.</p>';
+  h += refData.referater.map((r) => {
+    const d = r.dag ? dagD(r.dag) : null;
+    const hvem = r.deltagere.map((x) => x.navn.replace(/^Test /, '').split(' ')[0]).concat(r.andre ? [r.andre] : []).join(', ');
+    return '<a class="pd-ref" href="#r/' + encodeURIComponent(r.id) + '"><span class="pd-rd">' + (d ? d.getUTCDate() + '<b>' + MDR[d.getUTCMonth()].slice(0, 3) + '</b>' : '') + '</span><span class="pd-rm"><b>' + esc(r.titel) + '</b><span class="u">' + esc(hvem)
+      + (r.opgaver.length ? ' · ' + r.opgaver.length + (r.opgaver.length === 1 ? ' opgave' : ' opgaver') : '') + (r.fil ? ' · fil' : '') + '</span>'
+      + (r.synlighed === 'intern' ? '<span class="pd-laas">&#128274; Ikke Padelcircle</span>' : '') + '</span></a>';
+  }).join('');
+  $('vRef').innerHTML = h;
+}
+async function visReferat(id) {
+  vis('vRef');
+  try { await sikr('referater', $('vRef')); } catch (err) { $('vRef').innerHTML = fejlHtml(err); return; }
+  const r = refData.referater.find((x) => x.id === id);
+  if (!r) { $('vRef').innerHTML = '<a class="gr-tilbage" href="#referater">&#8592; Mødereferater</a><p class="hint">Referatet findes ikke, eller du kan ikke se det.</p>'; return; }
+  let h = '<a class="gr-tilbage" href="#referater">&#8592; Mødereferater</a><h2 class="lille" style="margin:8px 0 6px">' + esc(r.titel) + '</h2>';
+  const kal = r.kalId && data.poster.find((x) => x.id === r.kalId);
+  h += '<dl class="pd-hd"><dt>Dato</dt><dd>' + esc(datoTekst(r.dag)) + (r.kl ? ' kl. ' + esc(kl(r.kl)) : '') + '</dd>'
+    + '<dt>Deltagere</dt><dd>' + esc(r.deltagere.map((x) => x.navn).concat(r.andre ? [r.andre] : []).join(', ') || 'Ikke skrevet') + '</dd>'
+    + (r.formaal ? '<dt>Formål</dt><dd>' + esc(r.formaal) + '</dd>' : '')
+    + (kal ? '<dt>Kalender</dt><dd><a href="#k/' + encodeURIComponent(kal.id) + '">' + esc(kal.titel) + '</a></dd>' : '') + '</dl>';
+  if (r.punkter) h += '<div class="pd-punkter">' + r.punkter.split('\n').map((l) => /^\s*\d+\.\s+\S/.test(l) && l.length < 80 ? '<h3 class="pd-sh">' + esc(l.trim()) + '</h3>' : l.trim() ? '<p class="pd-p2">' + esc(l) + '</p>' : '').join('') + '</div>';
+  if (r.opgaver.length) {
+    h += '<h3 class="pd-sh">Det, mødet udløser</h3><ul class="pd-opg">' + r.opgaver.map((o, i) => '<li class="' + (o.gjort ? 'gjort' : '') + '"><b>' + esc(o.tekst) + '</b><span class="u">'
+      + [o.ansvarligNavn, o.frist ? 'senest ' + kortDag(o.frist) : '', o.kalId ? '<a href="#k/' + encodeURIComponent(o.kalId) + '">i kalenderen</a>' : '', o.gjort ? '&#10003; gjort' : ''].filter(Boolean).map((x, j) => (j === 2 && o.kalId) || x === '&#10003; gjort' ? x : esc(x)).join(' · ')
+      + '</span>' + (erAdmin() ? '<button type="button" class="pd-mini pd-gjortk" data-nr="' + i + '">' + (o.gjort ? 'Ikke gjort' : 'Markér som gjort') + '</button>' : '') + '</li>').join('') + '</ul>';
+  }
+  if (r.fil) h += '<p class="pd-bil">&#128206; <button type="button" class="pd-link" id="rFil">' + esc(r.fil.navn) + '</button> (' + Math.max(1, Math.round(r.fil.str / 1024)) + ' kB)</p><div class="msg" id="rFilMsg"></div>';
+  if (r.synlighed === 'intern') h += '<span class="pd-laas">&#128274; Ikke Padelcircle</span>';
+  if (erAdmin()) h += '<div class="pd-knapper"><a class="ghost small" style="display:inline-flex;align-items:center;padding:6px 12px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:6px" href="#referat/ret/' + encodeURIComponent(r.id) + '">Ret</a><button type="button" class="ghost small" id="rSlet">Slet</button></div><div class="msg" id="rMsg"></div>';
+  $('vRef').innerHTML = h;
+  $('vRef').querySelectorAll('.pd-gjortk').forEach((b) => b.addEventListener('click', async () => {
+    const o = r.opgaver[Number(b.dataset.nr)];
+    try { await motor('padel', 'opgaveGjort', { id: r.id, nr: Number(b.dataset.nr), ikke: o.gjort }, nyId()); refData = null; if (o.kalId) await hentStart(); visReferat(r.id); } catch (err) { besked($('rMsg'), err.message, 'err'); }
+  }));
+  if ($('rFil')) $('rFil').addEventListener('click', async () => {
+    besked($('rFilMsg'), 'Henter filen …');
+    try { const f = await motor('padel', 'referatFil', { id: r.id }); gemFil(f); besked($('rFilMsg'), ''); } catch (err) { besked($('rFilMsg'), err.message, 'err'); }
+  });
+  if ($('rSlet')) { let sikker = false; $('rSlet').addEventListener('click', async () => {
+    if (!sikker) { sikker = true; $('rSlet').textContent = 'Tryk igen for at slette'; return; }
+    try { await motor('padel', 'referatSlet', { id: r.id }, nyId()); refData = null; location.hash = 'referater'; } catch (err) { besked($('rMsg'), err.message, 'err'); }
+  }); }
+}
+function gemFil(f) {
+  const bin = atob(f.data); const b = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+  const url = URL.createObjectURL(new Blob([b], { type: f.type || 'application/octet-stream' }));
+  const a = document.createElement('a'); a.href = url; a.download = f.navn; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+async function visRefForm(id) {
+  vis('vRef');
+  if (!refData) $('vRef').innerHTML = '<p class="hint">Henter …</p>';
+  try { await hentFane('referater'); } catch (err) { $('vRef').innerHTML = fejlHtml(err); return; }
+  if (!personerData) { try { personerData = await motor('padel', 'personer'); } catch (err) { $('vRef').innerHTML = fejlHtml(err); return; } }
+  const r = id ? refData.referater.find((x) => x.id === id) : null;
+  if (id && !r) { location.hash = 'referater'; return; }
+  const v = r || { titel: '', dag: iDag(), kl: '', kalId: '', deltagere: [], andre: '', formaal: '', punkter: '', opgaver: [], synlighed: 'intern', fil: null };
+  const valgt = new Set(v.deltagere.map((x) => x.id));
+  let opg = v.opgaver.map((o) => Object.assign({}, o));
+  let fil = null, filFjern = false;
+  let h = '<a class="gr-tilbage" href="' + (r ? '#r/' + encodeURIComponent(r.id) : '#referater') + '">&#8592; ' + (r ? 'Tilbage' : 'Mødereferater') + '</a><h2 class="lille" style="margin:8px 0">' + (r ? 'Ret referatet' : 'Nyt referat') + '</h2><form id="rForm" novalidate>';
+  h += '<label for="rTitel">Titel</label><input id="rTitel" maxlength="100" value="' + esc(v.titel) + '">';
+  h += '<div class="pd-to"><div><label for="rDag">Dato</label><input id="rDag" type="date" value="' + esc(v.dag) + '"></div><div><label for="rKl">Kl.</label><input id="rKl" type="time" value="' + esc(v.kl) + '"></div></div>';
+  h += '<label for="rKal">Møde i kalenderen (valgfrit)</label><select id="rKal"><option value="">Intet</option>' + refData.moeder.map((m) => '<option value="' + esc(m.id) + '"' + (m.id === v.kalId ? ' selected' : '') + '>' + esc(m.titel + ', ' + kortDag(m.dag)) + '</option>').join('') + '</select>';
+  h += '<fieldset class="pd-fs"><legend>Deltagere</legend><div class="chips pd-vaelg">' + personerData.map((x) => '<button type="button" data-pid="' + esc(x.id) + '" aria-pressed="' + valgt.has(x.id) + '">' + esc(x.navn) + '</button>').join('') + '</div></fieldset>';
+  h += '<label for="rAndre">Andre deltagere</label><input id="rAndre" maxlength="200" placeholder="Fx PadelPit Roskilde" value="' + esc(v.andre) + '">';
+  h += '<label for="rFormaal">Formål</label><input id="rFormaal" maxlength="300" value="' + esc(v.formaal) + '">';
+  h += '<label for="rPunkter">Punkter</label><p class="hint" style="margin:0 0 4px">En linje som "1. Status" bliver en overskrift.</p><textarea id="rPunkter" rows="10" maxlength="20000">' + esc(v.punkter) + '</textarea>';
+  h += '<label>Det, mødet udløser</label><div id="rOpg"></div><button type="button" class="ghost small" id="rOpgNy">+ Opgave</button>';
+  h += '<label class="pd-cb"><input type="checkbox" id="rKalOpg" checked> Læg opgaver med frist og ansvarlig i kalenderen</label>';
+  h += '<label for="rFilInput">Fil (valgfrit): PDF, Word, Excel eller billede, højst 5 MB</label><div id="rFilVis"></div><input type="file" id="rFilInput" accept=".pdf,.docx,.xlsx,.png,.jpg,.jpeg">';
+  h += '<fieldset class="pd-fs"><legend>Hvem kan se det?</legend><div class="chips" id="rSyn"><button type="button" data-s="alle" aria-pressed="' + (v.synlighed === 'alle') + '">Alle i padel</button><button type="button" data-s="intern" aria-pressed="' + (v.synlighed === 'intern') + '">Ikke Padelcircle</button></div></fieldset>';
+  h += '<div class="pd-knapper"><button type="submit" class="ok" id="rGem">Gem referatet</button></div><div class="msg" id="rMsg" aria-live="polite"></div></form>';
+  $('vRef').innerHTML = h;
+  let syn = v.synlighed;
+  $('rSyn').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { syn = b.dataset.s; $('rSyn').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.s === syn))); }));
+  $('vRef').querySelectorAll('.pd-vaelg button').forEach((b) => b.addEventListener('click', () => { if (valgt.has(b.dataset.pid)) valgt.delete(b.dataset.pid); else valgt.add(b.dataset.pid); b.setAttribute('aria-pressed', String(valgt.has(b.dataset.pid))); }));
+  const tegnOpg = () => {
+    $('rOpg').innerHTML = opg.map((o, i) => '<div class="pd-rk3"><input data-i="' + i + '" data-f="tekst" maxlength="200" placeholder="Opgave" aria-label="Opgave ' + (i + 1) + '" value="' + esc(o.tekst) + '"' + (o.kalId ? ' disabled' : '') + '>'
+      + '<select data-i="' + i + '" data-f="ansvarlig" aria-label="Ansvarlig for opgave ' + (i + 1) + '"' + (o.kalId ? ' disabled' : '') + '><option value="">Ansvarlig</option>' + personerData.map((x) => '<option value="' + esc(x.id) + '"' + (x.id === o.ansvarlig ? ' selected' : '') + '>' + esc(x.navn) + '</option>').join('') + '</select>'
+      + '<input type="date" data-i="' + i + '" data-f="frist" aria-label="Frist for opgave ' + (i + 1) + '" value="' + esc(o.frist) + '"' + (o.kalId ? ' disabled' : '') + '>'
+      + '<button type="button" class="pd-mini" data-fjern="' + i + '" aria-label="Fjern opgave ' + (i + 1) + '">&#215;</button></div>' + (o.kalId ? '<p class="hint pd-andre">Står i kalenderen. Ret den dér.</p>' : '')).join('');
+    $('rOpg').querySelectorAll('[data-f]').forEach((e) => e.addEventListener('input', () => { opg[Number(e.dataset.i)][e.dataset.f] = e.value; }));
+    $('rOpg').querySelectorAll('[data-fjern]').forEach((b) => b.addEventListener('click', () => { opg.splice(Number(b.dataset.fjern), 1); tegnOpg(); }));
+  };
+  tegnOpg();
+  $('rOpgNy').addEventListener('click', () => { opg.push({ tekst: '', ansvarlig: '', frist: '' }); tegnOpg(); });
+  const tegnFil = () => {
+    const navn = fil ? fil.navn : (!filFjern && v.fil ? v.fil.navn : '');
+    $('rFilVis').innerHTML = navn ? '<p class="pd-bil">&#128206; ' + esc(navn) + ' <button type="button" class="pd-mini" id="rFilFjern">Fjern</button></p>' : '';
+    if ($('rFilFjern')) $('rFilFjern').addEventListener('click', () => { if (fil) fil = null; else filFjern = true; $('rFilInput').value = ''; tegnFil(); });
+  };
+  tegnFil();
+  $('rFilInput').addEventListener('change', () => {
+    const f = $('rFilInput').files[0]; if (!f) return;
+    if (f.size > 5 * 1024 * 1024) { besked($('rMsg'), 'Filen må højst fylde 5 MB', 'err'); $('rFilInput').value = ''; return; }
+    const rd = new FileReader();
+    rd.onload = () => { fil = { navn: f.name, data: String(rd.result).split(',')[1] || '' }; tegnFil(); besked($('rMsg'), ''); };
+    rd.readAsDataURL(f);
+  });
+  const regId = nyId();
+  $('rForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    besked($('rMsg'), '');
+    $('rGem').disabled = true;
+    try {
+      const svar = await motor('padel', 'referatGem', { id: r ? r.id : '', titel: $('rTitel').value, dag: $('rDag').value, kl: $('rKl').value, kalId: $('rKal').value, deltagere: [...valgt], andre: $('rAndre').value,
+        formaal: $('rFormaal').value, punkter: $('rPunkter').value, opgaver: opg, kalender: $('rKalOpg').checked, synlighed: syn, fil, filFjern }, regId);
+      refData = null;
+      if (opg.some((o) => o.frist && o.ansvarlig && !o.kalId) && $('rKalOpg').checked) await hentStart();
+      location.hash = 'r/' + encodeURIComponent(svar.id);
+    } catch (err) { besked($('rMsg'), err.message, 'err'); $('rGem').disabled = false; }
+  });
+}
+
+// ---------- Idéboks
+// ---------- Venteliste (trin 2, Lars 11. november 2026 kl. 12.57, mockup padel_venteliste_fane.png)
+// Tilmeldingerne fra mitrtk.dk/padel. Kun Styregruppen og Padel Team. Kun administratorer sætter på hold, ændrer status og sender tilbud.
+// Persondata, så intet lægges i Firebase: fanen spørger altid motoren.
+let vlData = null;
+const vlF = { hold: '', dag: '', vis: 'alle', sorter: 'frivillighed', liste: 'Voksne nybegyndere' };
+const vlStj = (n) => '&#9733;'.repeat(n);
+const vlMaerke = (sp) => sp.status === 'Betalt' ? '<span class="vl-m ok">' + (sp.tilbud ? 'Tilbud sendt' : 'Betalt') + '</span>'
+  : sp.status === 'Venter på betaling' ? '<span class="vl-m">Venter ' + Math.max(0, Math.round((Date.now() - new Date(sp.tid.replace(' ', 'T')).getTime()) / 3600000)) + ' t</span>'
+  : '<span class="vl-m af">' + esc(sp.status) + '</span>';
+const vlHoldNavn = (h) => h.indexOf('Junior+') === 0 ? 'Junior+' : h.indexOf('Junior') === 0 ? 'Junior' : h;
+// Lukkedatoen kommer som tekst eller som en dato fra arket. Vises som "15. december kl. 23.59".
+function vlDato(v) {
+  const t = String(v || ''), d = new Date(/^\d{4}-\d\d-\d\d \d/.test(t) ? t.replace(' ', 'T') : t);
+  if (isNaN(d.getTime())) return t;
+  return d.toLocaleDateString('da-DK', { day: 'numeric', month: 'long', timeZone: 'Europe/Copenhagen' }) + ' kl. '
+    + d.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Copenhagen' }).replace(':', '.');
+}
+async function vlHent() { vlData = await motor('padel', 'vl', {}); return vlData; }
+function vlCsv(raekker, navn) {
+  const csv = raekker.map((r) => r.map((v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"').join(';')).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = navn; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+async function visVl(del) {
+  vis('vVl');
+  if (!erFuld()) { $('vVl').innerHTML = '<p class="hint">Ventelisten er kun for Styregruppen og Padel Team.</p>'; return; }
+  if (!vlData) $('vVl').innerHTML = '<p class="hint">Henter …</p>';
+  try { await vlHent(); } catch (err) { $('vVl').innerHTML = fejlHtml(err); return; }
+  const d = vlData, sp = d.spillere, adm = d.admin;
+  const nyb = d.interesse.filter((x) => x.liste === 'Voksne nybegyndere').length, sen = d.interesse.length - nyb;
+  let h = '<p class="hint" style="margin:0 0 8px">&#128274; Kun Styregruppen og Padel Team. Listen lukker ' + esc(vlDato(d.lukker)) + '.</p>';
+  h += '<div class="pd-skift" role="group" aria-label="Venteliste" style="display:flex;margin:0 0 10px">'
+    + [['liste', 'Venteliste · ' + sp.length], ['tvivl', 'Tvivl'], ['uden', 'Uden depositum · ' + d.interesse.length]]
+      .map((x) => '<button type="button" style="flex:1" data-vldel="' + x[0] + '" aria-pressed="' + (del === x[0]) + '">' + esc(x[1]) + '</button>').join('') + '</div>';
+  if (del === 'tvivl') {
+    h += '<div class="card"><b>Tvivlstilfælde kommer med betalingerne</b><p class="hint">Når betalingerne hentes fra ForeningLet (trin 3), lander de betalinger her, som ikke kan kobles sikkert til en tilmelding. Indtil da markerer administratorerne "Betalt" på familien.</p></div>';
+  } else if (del === 'uden') {
+    const vlListeOk = (x) => (x.liste === 'Voksne nybegyndere') === (vlF.liste === 'Voksne nybegyndere');
+    const l = d.interesse.filter(vlListeOk);
+    h += '<div class="vl-chips">' + [['Voksne nybegyndere', nyb], ['Seniorpadel (60+) i dagtimerne', sen]].map((x) => '<button type="button" data-vlliste="' + esc(x[0]) + '" aria-pressed="' + (vlF.liste === x[0]) + '">' + esc(x[0]) + ' · ' + x[1] + '</button>').join('') + '</div>';
+    h += l.length ? l.map((x) => '<div class="vl-rk" style="cursor:default"><div class="vl-rv"><b>' + esc(x.navn) + '</b><span>' + esc([x.aar ? (2027 - Number(x.aar)) + ' år' : '', x.erfaring && x.liste !== 'Voksne nybegyndere' ? x.erfaring : '', x.fraNr ? 'fra ' + x.fraNr : '', x.andet ? '"' + x.andet + '"' : ''].filter(Boolean).join(' · ')) + '</span></div><div class="vl-rh"><span class="vl-nr">' + esc(x.tid.slice(0, 10)) + '</span></div></div>').join('') : '<p class="hint">Ingen på listen endnu.</p>';
+    h += '<div class="pd-knapper"><button type="button" class="ghost small" id="vlUdenCsv">Hent som regneark</button> <button type="button" class="ghost small" id="vlUdenMails">Kopiér mails</button></div><p class="msg" id="vlMsg"></p>';
+    h += '<p class="hint">Ingen betaling og ingen frist. Når I har et tilbud, kan I skrive til listen med de kopierede mails (brug Bcc).</p>';
+  } else {
+    const betalt = sp.filter((x) => x.status === 'Betalt').length, venter = sp.filter((x) => x.status === 'Venter på betaling').length;
+    h += '<div class="vl-tal"><div><b>' + sp.length + '</b><span>spillere</span></div><div><b>' + betalt + '</b><span>betalt</span></div><div><b>' + venter + '</b><span>venter</span></div><div><b>' + (sp.length - betalt - venter) + '</b><span>taget af m.m.</span></div></div>';
+    if (adm) {
+      const paa = sp.filter((x) => x.paaHold), klar = paa.filter((x) => x.status === 'Betalt' && !x.tilbud);
+      h += '<div class="vl-send"><div><b>Tilbud: ' + paa.length + ' sat på hold</b><span>' + klar.length + ' er betalt og har ikke fået tilbuddet' + (d.tilbudLink ? '' : '. Linket til ForeningLet mangler i indstillingen padel.vl.tilbud.fl') + '</span></div>'
+        + '<button type="button" class="ok small" id="vlSend"' + (klar.length ? '' : ' disabled') + '>Send tilbud</button></div><p class="msg" id="vlMsg"></p>';
+    }
+    const holdene = [...new Set(sp.map((x) => vlHoldNavn(x.hold)))].filter(Boolean);
+    h += '<div class="vl-chips"><b>Hold</b>' + [''].concat(holdene).map((x) => '<button type="button" data-vlf="hold" data-v="' + esc(x) + '" aria-pressed="' + (vlF.hold === x) + '">' + esc(x || 'Alle') + '</button>').join('') + '</div>';
+    h += '<div class="vl-chips"><b>Dag</b>' + [['', 'Alle'], ['Onsdag', 'Onsdag'], ['Lørdag', 'Lørdag']].map((x) => '<button type="button" data-vlf="dag" data-v="' + x[0] + '" aria-pressed="' + (vlF.dag === x[0]) + '">' + x[1] + '</button>').join('') + '</div>';
+    h += '<div class="vl-chips"><b>Vis</b>' + [['alle', 'Alle'], ['betalt', 'Betalt'], ['venter', 'Venter'], ['af', 'Taget af m.m.'], ['voksen', 'Prøv voksen'], ['hold', 'Sat på hold']].map((x) => '<button type="button" data-vlf="vis" data-v="' + x[0] + '" aria-pressed="' + (vlF.vis === x[0]) + '">' + x[1] + '</button>').join('') + '</div>';
+    h += '<div class="vl-chips"><b>Sortér</b>' + [['frivillighed', 'Frivillighed'], ['alder', 'Alder'], ['tid', 'Tilmeldt']].map((x) => '<button type="button" data-vlf="sorter" data-v="' + x[0] + '" aria-pressed="' + (vlF.sorter === x[0]) + '">' + x[1] + '</button>').join('') + '</div>';
+    let l = sp.filter((x) => (!vlF.hold || vlHoldNavn(x.hold) === vlF.hold) && (!vlF.dag || x.dage.indexOf(vlF.dag) >= 0));
+    l = l.filter((x) => vlF.vis === 'alle' || (vlF.vis === 'betalt' && x.status === 'Betalt') || (vlF.vis === 'venter' && x.status === 'Venter på betaling')
+      || (vlF.vis === 'af' && x.status !== 'Betalt' && x.status !== 'Venter på betaling') || (vlF.vis === 'voksen' && x.proev) || (vlF.vis === 'hold' && x.paaHold));
+    l.sort((a, b) => vlF.sorter === 'alder' ? a.alder - b.alder : vlF.sorter === 'tid' ? (a.tid < b.tid ? -1 : 1) : b.stjerner - a.stjerner || (a.tid < b.tid ? -1 : 1));
+    h += l.length ? l.map((x) => '<button type="button" class="vl-rk" data-vlnr="' + esc(x.nr) + '"><span class="vl-rv"><b>' + esc(x.navn) + '</b><span>' + esc([x.hold, x.alder + ' år', x.dage, x.erfaring].join(' · ')) + (x.proev ? ' · prøv voksen' : '') + '</span>'
+      + (x.paaHold ? '<span><i>' + esc(x.paaHold) + '</i></span>' : '') + '</span><span class="vl-rh">' + vlMaerke(x) + '<span class="vl-st" aria-label="' + x.stjerner + ' stjerner for frivillighed">' + vlStj(x.stjerner) + '</span><span class="vl-nr">' + esc(x.nr) + '</span></span></button>').join('')
+      : '<p class="hint">Ingen spillere her.</p>';
+    h += '<div class="pd-knapper"><button type="button" class="ghost small" id="vlCsv">Hent som regneark</button></div>';
+    h += '<p class="hint">Stjernerne viser frivilligheden: hvor mange ting de har krydset af, og hvor ofte. Klik på en spiller for at se familien.</p>';
+  }
+  $('vVl').innerHTML = h;
+  $('vVl').querySelectorAll('[data-vldel]').forEach((b) => b.addEventListener('click', () => { location.hash = 'venteliste/' + b.dataset.vldel; }));
+  $('vVl').querySelectorAll('[data-vlf]').forEach((b) => b.addEventListener('click', () => { vlF[b.dataset.vlf] = b.dataset.v; visVl('liste'); }));
+  $('vVl').querySelectorAll('[data-vlliste]').forEach((b) => b.addEventListener('click', () => { vlF.liste = b.dataset.vlliste; visVl('uden'); }));
+  $('vVl').querySelectorAll('[data-vlnr]').forEach((b) => b.addEventListener('click', () => { location.hash = 'vl/' + encodeURIComponent(b.dataset.vlnr); }));
+  if ($('vlCsv')) $('vlCsv').addEventListener('click', () => vlCsv([['Nr', 'Navn', 'Fødselsdato', 'Alder', 'Køn', 'Hold', 'Dage', 'Erfaring', 'Niveau', 'Prøv voksen', 'Kontakt', 'Mail', 'Mobil', 'Medlem', 'Hjælp', 'Hvem hjælper', 'Hyppighed', 'Stjerner', 'Andet', 'Status', 'Sat på hold', 'Tilbud sendt', 'Tilmeldt', 'Kilde']]
+    .concat(sp.map((x) => [x.nr, x.navn, x.foed, x.alder, x.koen, x.hold, x.dage, x.erfaring, x.niveau, x.proev ? 'Ja' : '', x.kontakt, x.mail, x.mobil, x.medlem, x.hjaelp, x.hvemHjaelper, x.hyppighed, x.stjerner, x.andet, x.status, x.paaHold, x.tilbud, x.tid, x.kilde])), 'venteliste_padel.csv'));
+  if ($('vlUdenCsv')) $('vlUdenCsv').addEventListener('click', () => vlCsv([['Liste', 'Navn', 'Fødselsår', 'Mail', 'Mobil', 'Erfaring', 'Andet', 'Fra nr', 'Tilmeldt']]
+    .concat(d.interesse.filter((x) => (x.liste === 'Voksne nybegyndere') === (vlF.liste === 'Voksne nybegyndere')).map((x) => [x.liste, x.navn, x.aar, x.mail, x.mobil, x.erfaring, x.andet, x.fraNr, x.tid])), 'liste_padel.csv'));
+  if ($('vlUdenMails')) $('vlUdenMails').addEventListener('click', async () => {
+    const m = [...new Set(d.interesse.filter((x) => (x.liste === 'Voksne nybegyndere') === (vlF.liste === 'Voksne nybegyndere')).map((x) => x.mail))].join(', ');
+    try { await navigator.clipboard.writeText(m); besked($('vlMsg'), 'Mails kopieret: ' + m.split(', ').filter(Boolean).length, 'ok'); } catch (e) { besked($('vlMsg'), m, ''); }
+  });
+  if ($('vlSend')) $('vlSend').addEventListener('click', async () => {
+    let p; try { p = await motor('padel', 'vlSendTilbud', { proeve: true }, nyId()); } catch (err) { besked($('vlMsg'), err.message, 'err'); return; }
+    if (!p.familier) { besked($('vlMsg'), 'Der er ingen tilbud at sende.', ''); return; }
+    if (!confirm('Send tilbud til ' + p.familier + ' familier (' + p.spillere + ' spillere) nu? De får to dage til at betale første kvartal.')) return;
+    $('vlSend').disabled = true; besked($('vlMsg'), 'Sender …', '');
+    try { const r = await motor('padel', 'vlSendTilbud', {}, nyId()); vlData = r.liste; await visVl('liste'); besked($('vlMsg'), r.sendt + ' tilbud sendt.', 'ok'); }
+    catch (err) { besked($('vlMsg'), err.message, 'err'); $('vlSend').disabled = false; }
+  });
+}
+async function visVlFam(nr) {
+  vis('vVl');
+  if (!erFuld()) { $('vVl').innerHTML = '<p class="hint">Ventelisten er kun for Styregruppen og Padel Team.</p>'; return; }
+  if (!vlData) { $('vVl').innerHTML = '<p class="hint">Henter …</p>'; try { await vlHent(); } catch (err) { $('vVl').innerHTML = fejlHtml(err); return; } }
+  const rk = vlData.spillere.filter((x) => x.nr === nr).sort((a, b) => a.s - b.s);
+  if (!rk.length) { location.hash = 'venteliste'; return; }
+  const k = rk[0], adm = vlData.admin;
+  const efternavn = (k.kontakt.split(' ').slice(-1)[0] || '');
+  let h = '<a class="gr-tilbage" href="#venteliste">&#8592; Venteliste</a><h2 class="lille" style="margin:8px 0 2px">' + esc(nr) + ' · ' + esc(rk.length > 1 ? 'Familien ' + efternavn : k.navn) + '</h2>';
+  h += '<p class="hint" style="margin:0">Tilmeldt ' + esc(k.tid) + (k.kilde ? ' fra ' + esc(k.kilde) : '') + '. Medlem af RTK: ' + esc(k.medlem || 'ikke svaret') + '.</p>';
+  h += '<div class="vl-bok"><div class="vl-bh"><b>Betaling</b>' + vlMaerke(k) + '</div><p class="hint" style="margin:0">' + esc(k.antal + ' × 500 kr. = ' + k.beloeb.toLocaleString('da-DK') + ' kr.') + (k.betalt ? ' · betalt ' + esc(k.betalt) : '') + (k.betaling ? ' · ' + esc(k.betaling) : '') + '</p>';
+  if (adm) h += '<div class="pd-knapper">' + [['betalt', 'Markér betalt'], ['venter', 'Venter på betaling'], ['taget', 'Tag af listen'], ['tilbage', 'Betales tilbage'], ['retur', 'Betalt tilbage']]
+    .filter((x) => vlData.status[x[0]] !== k.status).map((x) => '<button type="button" class="ghost small" data-vlstatus="' + x[0] + '">' + x[1] + '</button>').join(' ') + '</div>';
+  h += '</div>';
+  h += '<div class="vl-bok"><div class="vl-bh"><b>Kontakt</b></div><p style="margin:0">' + esc(k.kontakt) + '<br><span class="hint"><a href="mailto:' + esc(k.mail) + '">' + esc(k.mail) + '</a> · <a href="tel:+' + esc(k.mobil) + '">' + esc(k.mobil.replace(/^45/, '')) + '</a></span></p></div>';
+  rk.forEach((x) => {
+    h += '<div class="vl-bok"><div class="vl-bh"><b>' + esc(x.navn.split(' ')[0]) + ', ' + x.alder + ' år</b><span class="hint">' + esc([x.koen, x.erfaring].filter(Boolean).join(' · ')) + '</span></div>';
+    h += '<p class="hint" style="margin:0">' + esc(x.hold + ' · ' + x.dage) + (x.proev ? ' · vil prøve voksenholdet' : '') + '</p>';
+    if (x.niveau) h += '<p style="margin:6px 0 0;font-size:15px">"' + esc(x.niveau) + '"</p>';
+    if (adm && !x.tilbud) h += '<div class="vl-giv"><select data-vlhold="' + x.s + '" aria-label="Hold for ' + esc(x.navn) + '"><option value="">Ikke sat på hold</option>' + vlData.hold.map((o) => '<option' + (o === x.paaHold ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select><button type="button" class="ok small" data-vlgem="' + x.s + '">Sæt på hold</button></div>';
+    else h += '<p style="margin:6px 0 0"><b>' + esc(x.paaHold || 'Ikke sat på hold') + '</b>' + (x.tilbud ? ' · tilbud sendt ' + esc(x.tilbud) : '') + '</p>';
+    h += '</div>';
+  });
+  h += '<div class="vl-bok"><div class="vl-bh"><b>Frivillighed</b><span class="vl-st">' + vlStj(k.stjerner) + '</span></div>';
+  h += '<p class="hint" style="margin:0">' + esc([k.hjaelp || 'Intet krydset af', k.hvemHjaelper, k.hyppighed].filter(Boolean).join(' · ')) + '</p>';
+  if (k.andet) h += '<p style="margin:6px 0 0;font-size:15px">"' + esc(k.andet) + '"</p>';
+  h += '<p style="margin:6px 0 0">' + (k.forventning ? '<span class="vl-m ok">Forventning accepteret</span>' : '<span class="vl-m af">Forventning ikke krydset af</span>') + (k.camps ? ' <span class="vl-m af">Vil høre om camps</span>' : '') + '</p></div>';
+  h += '<p class="msg" id="vlFMsg"></p>';
+  if (k.note) h += '<p class="hint" style="white-space:pre-line;margin-top:10px">Historik:\n' + esc(k.note) + '</p>';
+  if (adm) h += '<p class="hint">Sæt på hold sender intet. Tilbuddene sendes samlet fra oversigten.</p>';
+  $('vVl').innerHTML = h;
+  $('vVl').querySelectorAll('[data-vlstatus]').forEach((b) => b.addEventListener('click', async () => {
+    if (b.dataset.vlstatus === 'taget' && !confirm('Tage ' + nr + ' af listen?')) return;
+    b.disabled = true;
+    try { vlData = await motor('padel', 'vlStatus', { nr, status: b.dataset.vlstatus }, nyId()); visVlFam(nr); } catch (err) { besked($('vlFMsg'), err.message, 'err'); b.disabled = false; }
+  }));
+  $('vVl').querySelectorAll('[data-vlgem]').forEach((b) => b.addEventListener('click', async () => {
+    const hold = $('vVl').querySelector('[data-vlhold="' + b.dataset.vlgem + '"]').value;
+    b.disabled = true;
+    try { vlData = await motor('padel', 'vlHold', { nr, spiller: Number(b.dataset.vlgem), hold }, nyId()); await visVlFam(nr); besked($('vlFMsg'), hold ? 'Sat på ' + hold + '.' : 'Fjernet fra hold.', 'ok'); }
+    catch (err) { besked($('vlFMsg'), err.message, 'err'); b.disabled = false; }
+  }));
+}
+
+// ---------- Økonomi (Lars 9. november 2026 kl. 13.16, mockup padel_oekonomi.png)
+// Forudsætninger i grupper (kun administratorer retter) og filer (alle i padel lægger op og henter). Aldrig for Padelcircle.
+let oekData = null;
+const oekTal = (v) => (/^\d{4,}$/.test(String(v)) ? Number(v).toLocaleString('da-DK') : String(v));
+const oekStr = (b) => (b >= 1048576 ? (b / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(b / 1024)) + ' kB');
+async function visOek(del, ret) {
+  vis('vOek');
+  if (!erFuld()) { $('vOek').innerHTML = '<p class="hint">Økonomi er kun for Styregruppen og Padel Team.</p>'; return; }
+  try {
+    if (ret) { if (!oekData) $('vOek').innerHTML = '<p class="hint">Henter …</p>'; await hentFane('oekonomi'); }
+    else await sikr('oekonomi', $('vOek'));
+  } catch (err) { $('vOek').innerHTML = fejlHtml(err); return; }
+  if (ret) return visOekRet(ret);
+  const o = oekData;
+  let h = '<p class="hint" style="margin:0 0 8px">&#128274; Ikke Padelcircle.' + (del === 'forud' ? ' Kun administratorer retter.' : '') + '</p>';
+  h += '<div class="pd-skift" role="group" aria-label="Økonomi" style="display:flex;margin:0 0 10px"><button type="button" style="flex:1" data-del="forud" aria-pressed="' + (del === 'forud') + '">Forudsætninger</button>'
+    + '<button type="button" style="flex:1" data-del="filer" aria-pressed="' + (del === 'filer') + '">Filer · ' + o.filer.length + '</button></div>';
+  if (del === 'forud') {
+    o.grupper.forEach((g, i) => {
+      h += '<section class="pd-afs"><div class="pd-afsh"><h3 class="pd-sh">' + esc(g.navn) + '</h3>' + (erAdmin() ? '<span class="pd-retk">'
+        + (i > 0 ? '<button type="button" class="pd-mini" data-flyt="-1" data-id="' + esc(g.id) + '" aria-label="Flyt ' + esc(g.navn) + ' op">&#8593;</button>' : '')
+        + (i < o.grupper.length - 1 ? '<button type="button" class="pd-mini" data-flyt="1" data-id="' + esc(g.id) + '" aria-label="Flyt ' + esc(g.navn) + ' ned">&#8595;</button>' : '')
+        + '<a class="pd-ret" href="#oekonomi/ret/' + encodeURIComponent(g.id) + '">Ret</a></span>' : '') + '</div>';
+      h += g.linjer.length ? '<table class="pd-oekt">' + g.linjer.map((l) => '<tr><td>' + esc(l.navn) + '</td><td class="t">' + esc(oekTal(l.vaerdi) + (l.enhed ? ' ' + l.enhed : '')) + '</td></tr>').join('') + '</table>' : '<p class="hint">Ingen linjer.</p>';
+      if (g.note) h += '<p class="hint" style="margin:2px 0 0">' + esc(g.note) + '</p>';
+      h += '</section>';
+    });
+    if (o.sidst) h += '<p class="hint" style="margin-top:10px">Sidst rettet' + (o.sidst.af ? ' af ' + esc(o.sidst.af) : '') + ' ' + esc(omTid(o.sidst.tid)) + '.</p>';
+    if (erAdmin()) h += '<div class="pd-knapper"><a class="pd-ret" href="#oekonomi/ret/ny">+ Ny gruppe</a></div>';
+  } else {
+    h += '<input type="file" id="oekFilInput" class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.png,.jpg,.jpeg">';
+    h += '<button type="button" class="ok" id="oekFilNy">+ Læg en fil op</button><p class="hint" style="margin:4px 0 0">Regneark, PDF, Word eller billeder. Højst 10 MB.</p><div class="msg" id="oekMsg" aria-live="polite"></div>';
+    h += o.filer.length ? o.filer.map((f) => {
+      const ext = (f.navn.split('.').pop() || '').slice(0, 4).toUpperCase();
+      return '<div class="pd-fil"><span class="pd-filik" aria-hidden="true">' + esc(ext) + '</span><span class="pd-filt"><b>' + esc(f.navn) + '</b><span>'
+        + esc(fornavn(f.afNavn) || 'Ukendt') + ' · ' + esc(omTid(f.tid)) + ' · ' + oekStr(f.str) + '</span></span><span class="pd-filk">'
+        + '<button type="button" class="pd-mini" data-hent="' + esc(f.id) + '">Hent</button>'
+        + (f.kanSlette ? '<button type="button" class="pd-mini" data-slet="' + esc(f.id) + '">Slet</button>' : '') + '</span></div>';
+    }).join('') : '<p class="hint" style="margin-top:12px">Ingen filer endnu.</p>';
+  }
+  $('vOek').innerHTML = h;
+  $('vOek').querySelectorAll('[data-del]').forEach((b) => b.addEventListener('click', () => { location.hash = b.dataset.del === 'filer' ? 'oekonomi/filer' : 'oekonomi'; }));
+  $('vOek').querySelectorAll('[data-flyt]').forEach((b) => b.addEventListener('click', async () => {
+    try { await motor('padel', 'oekonomiRet', { id: b.dataset.id, flyt: Number(b.dataset.flyt) }, nyId()); oekData = null; visOek('forud', ''); } catch (err) { alert(err.message); }
+  }));
+  if (del !== 'filer') return;
+  $('oekFilNy').addEventListener('click', () => $('oekFilInput').click());
+  $('oekFilInput').addEventListener('change', () => {
+    const f = $('oekFilInput').files[0]; if (!f) return;
+    if (f.size > o.filMaks) { besked($('oekMsg'), 'Filen må højst fylde 10 MB', 'err'); $('oekFilInput').value = ''; return; }
+    const knap = $('oekFilNy'); knap.disabled = true; knap.textContent = 'Gemmer …'; besked($('oekMsg'), '');
+    const rd = new FileReader(), reg = nyId();
+    rd.onload = async () => {
+      try { await motor('padel', 'oekonomiFilNy', { navn: f.name, data: String(rd.result).split(',')[1] || '' }, reg); oekData = null; await visOek('filer', ''); }
+      catch (err) { besked($('oekMsg'), err.message, 'err'); knap.disabled = false; knap.textContent = '+ Læg en fil op'; $('oekFilInput').value = ''; }
+    };
+    rd.readAsDataURL(f);
+  });
+  $('vOek').querySelectorAll('[data-hent]').forEach((b) => b.addEventListener('click', async () => {
+    const t = b.textContent; b.disabled = true; b.textContent = 'Henter …';
+    try { gemFil(await motor('padel', 'oekonomiFil', { id: b.dataset.hent })); } catch (err) { besked($('oekMsg'), err.message, 'err'); }
+    b.disabled = false; b.textContent = t;
+  }));
+  $('vOek').querySelectorAll('[data-slet]').forEach((b) => b.addEventListener('click', async () => {
+    if (b.dataset.sikker !== '1') { b.dataset.sikker = '1'; b.textContent = 'Tryk igen for at slette'; return; }
+    try { await motor('padel', 'oekonomiFilSlet', { id: b.dataset.slet }, nyId()); oekData = null; await visOek('filer', ''); } catch (err) { besked($('oekMsg'), err.message, 'err'); }
+  }));
+}
+function visOekRet(id) {
+  const g = id === 'ny' ? { id: '', navn: '', linjer: [{ navn: '', vaerdi: '', enhed: 'kr.' }], note: '' } : oekData.grupper.find((x) => x.id === id);
+  if (!g) { location.hash = 'oekonomi'; return; }
+  const linjer = g.linjer.map((l) => Object.assign({}, l));
+  let h = '<a class="gr-tilbage" href="#oekonomi">&#8592; Økonomi</a><h2 class="lille" style="margin:8px 0">' + (g.id ? 'Ret: ' + esc(g.navn) : 'Ny gruppe') + '</h2>';
+  h += '<label for="eNavn">Navn på gruppen</label><input id="eNavn" maxlength="60" value="' + esc(g.navn) + '">';
+  h += '<label>Linjer</label><div id="eLinjer"></div><button type="button" class="ghost small" id="eNy">+ Linje</button>';
+  h += '<label for="eNote">Note (valgfrit)</label><input id="eNote" maxlength="300" value="' + esc(g.note) + '">';
+  h += '<p class="hint">Tal og tekst, ingen formler. Tomme linjer fjernes, når der gemmes.</p>';
+  h += '<div class="pd-knapper"><button type="button" class="ok" id="eGem">Gem</button><a class="ghost" style="display:inline-flex;align-items:center;padding:6px 14px;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:6px" href="#oekonomi">Annullér</a>'
+    + (g.id ? '<button type="button" class="ghost" id="eSlet">Slet gruppen</button>' : '') + '</div><div class="msg" id="eMsg" aria-live="polite"></div>';
+  $('vOek').innerHTML = h;
+  const tegn = () => {
+    $('eLinjer').innerHTML = linjer.map((l, i) => '<div class="pd-oekl"><input class="n" data-i="' + i + '" data-f="navn" maxlength="80" value="' + esc(l.navn) + '" aria-label="Linje ' + (i + 1) + '">'
+      + '<input class="v" data-i="' + i + '" data-f="vaerdi" maxlength="30" inputmode="decimal" value="' + esc(l.vaerdi) + '" aria-label="Tal i linje ' + (i + 1) + '">'
+      + '<input class="e" data-i="' + i + '" data-f="enhed" maxlength="12" value="' + esc(l.enhed) + '" aria-label="Enhed i linje ' + (i + 1) + '">'
+      + '<button type="button" class="pd-mini" data-fjern="' + i + '" aria-label="Fjern linje ' + (i + 1) + '">&#215;</button></div>').join('');
+    $('eLinjer').querySelectorAll('input').forEach((x) => x.addEventListener('input', () => { linjer[Number(x.dataset.i)][x.dataset.f] = x.value; }));
+    $('eLinjer').querySelectorAll('[data-fjern]').forEach((b) => b.addEventListener('click', () => { linjer.splice(Number(b.dataset.fjern), 1); tegn(); }));
+  };
+  tegn();
+  $('eNy').addEventListener('click', () => { linjer.push({ navn: '', vaerdi: '', enhed: 'kr.' }); tegn(); const n = $('eLinjer').querySelectorAll('input.n'); if (n.length) n[n.length - 1].focus(); });
+  const reg = nyId();
+  $('eGem').addEventListener('click', async () => {
+    besked($('eMsg'), '');
+    try { await motor('padel', 'oekonomiRet', { id: g.id, navn: $('eNavn').value, linjer, note: $('eNote').value }, g.id ? nyId() : reg); oekData = null; location.hash = 'oekonomi'; }
+    catch (err) { besked($('eMsg'), err.message, 'err'); }
+  });
+  if ($('eSlet')) $('eSlet').addEventListener('click', async () => {
+    const b = $('eSlet');
+    if (b.dataset.sikker !== '1') { b.dataset.sikker = '1'; b.textContent = 'Tryk igen for at slette'; return; }
+    try { await motor('padel', 'oekonomiRet', { id: g.id, slet: true }, nyId()); oekData = null; location.hash = 'oekonomi'; } catch (err) { besked($('eMsg'), err.message, 'err'); }
+  });
+}
+async function hentIdeer(id) { ideData = await motor('padel', 'ideer', id ? { id } : {}); return ideData; }
+const STATUSFARVE = { 'Ny': '#4A5560', 'Tages op på næste møde': '#3B6E8F', 'Vi prøver det': '#5A8F3C', 'Afprøvet': '#0B3D3A', 'Ikke nu': '#8FA9A6' };
+const statusTag = (s) => '<span class="pd-st" style="border-color:' + (STATUSFARVE[s] || '#4A5560') + ';color:' + (STATUSFARVE[s] || '#4A5560') + '">' + esc(s) + '</span>';
+async function visIdeer() {
+  vis('vIde');
+  try { await sikr('ideer', $('vIde')); } catch (err) { $('vIde').innerHTML = fejlHtml(err); return; }
+  let h = '<div class="pd-knapper" style="margin:0 0 8px"><a class="ok small" style="display:inline-flex;align-items:center;border:2px solid var(--pink);border-radius:6px;padding:6px 12px;text-decoration:none;color:inherit;font-weight:700" href="#ide/ny">+ Ny idé</a></div>';
+  h += '<div class="chips" id="iEmner" role="group" aria-label="Emne">' + [''].concat(ideData.emner).map((e) => '<button type="button" data-e="' + esc(e) + '" aria-pressed="' + (ideEmne === e) + '">' + esc(e || 'Alle') + '</button>').join('') + '</div>';
+  const liste = ideData.ideer.filter((i) => !ideEmne || i.emne === ideEmne);
+  if (!liste.length) h += '<p class="hint">' + (ideData.ideer.length ? 'Ingen idéer om ' + esc(ideEmne.toLowerCase()) + ' endnu.' : 'Ingen idéer endnu. Skriv den første.') + '</p>';
+  h += liste.map((i) => '<a class="pd-ide" href="#ide/' + encodeURIComponent(i.id) + '"><b>' + esc(i.titel) + '</b><span class="u">' + esc(i.afNavn) + ' · ' + esc(omTid(i.tid)) + (i.emne ? ' · ' + esc(i.emne) : '') + '</span>'
+    + '<span class="pd-ideb">' + statusTag(i.status) + '<span>&#128077; ' + i.tommel + '</span><span>&#128172; ' + i.antalKomm + '</span>' + (i.antalKomm && i.sidstKomm ? '<span>Seneste kommentar ' + esc(omTid(i.sidstKomm)) + '</span>' : '') + '</span></a>').join('');
+  $('vIde').innerHTML = h;
+  $('iEmner').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { ideEmne = b.dataset.e; visIdeer(); }));
+}
+/** Tidspunkt for idéer og kommentarer (Lars 9. november 2026 kl. 10.58): "i dag kl. 10.47", "i går kl. 21.15" eller "4. nov kl. 14.10".
+ *  lang giver ugedag, dato og år ("mandag 9. november 2026 kl. 10.47"). Året står også i den korte, når det ikke er i år. */
+function omTid(t, lang) {
+  if (!t) return '';
+  const dag = String(t).slice(0, 10), kl = String(t).slice(11, 16).replace(':', '.'), aar = dag.slice(0, 4);
+  const n = dageTil(dag);
+  const s = lang ? dagTekst(dag) + ' ' + aar
+    : n === 0 ? 'i dag' : n === -1 ? 'i går' : kortDag(dag) + (aar !== iDag().slice(0, 4) ? ' ' + aar : '');
+  return kl ? s + ' kl. ' + kl : s;
+}
+function visIdeNy() {
+  vis('vIde');
+  const emner = (ideData && ideData.emner) || ['Arrangementer', 'Spil og turneringer', 'Juniorer', 'Seniorer', 'Kommunikation', 'Sponsorer', 'Andet'];
+  let h = '<a class="gr-tilbage" href="#ideer">&#8592; Idéboks</a><h2 class="lille" style="margin:8px 0">Ny idé</h2><form id="iForm" novalidate>';
+  h += '<label for="iTitel">Overskrift</label><input id="iTitel" maxlength="120" placeholder="Fx Americano med pizza fredag aften">';
+  h += '<label for="iTekst">Fortæl lidt mere (valgfrit)</label><textarea id="iTekst" rows="5" maxlength="3000"></textarea>';
+  h += '<fieldset class="pd-fs"><legend>Emne</legend><div class="chips" id="iEmneValg">' + emner.map((e) => '<button type="button" data-e="' + esc(e) + '" aria-pressed="false">' + esc(e) + '</button>').join('') + '</div></fieldset>';
+  h += '<p class="hint">Dit navn står på idéen. Alle i padel kan se den.</p><div class="pd-knapper"><button type="submit" class="ok" id="iGem">Del idéen</button></div><div class="msg" id="iMsg" aria-live="polite"></div></form>';
+  $('vIde').innerHTML = h;
+  let emne = '';
+  $('iEmneValg').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => { emne = emne === b.dataset.e ? '' : b.dataset.e; $('iEmneValg').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.e === emne))); }));
+  const regId = nyId();
+  $('iForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); besked($('iMsg'), '');
+    try { const svar = await motor('padel', 'ideNy', { titel: $('iTitel').value, tekst: $('iTekst').value, emne }, regId); ideData = null; location.hash = 'ide/' + encodeURIComponent(svar.id); }
+    catch (err) { besked($('iMsg'), err.message, 'err'); $('iGem').disabled = false; }
+  });
+  $('iTitel').focus();
+}
+/** svar: svaret fra en skrivende handling. Har motoren sendt idéen med (visning), tegnes den uden et nyt kald (Lars 9. november 2026 kl. 12.37). */
+async function visIde(id, svar) {
+  vis('vIde');
+  if (svar && svar.visning && svar.visning.ideer) { ideData = svar.visning; LAEST.ideer = Math.max(LAEST.ideer || 0, SIDST.ideer || 0); }
+  else {
+    if (!ideData || !ideData.ideer.find((x) => x.id === id && x.kommentarer)) $('vIde').innerHTML = '<p class="hint">Henter …</p>';
+    try { await hentIdeer(id); } catch (err) { $('vIde').innerHTML = fejlHtml(err); return; }
+  }
+  const i = ideData.ideer.find((x) => x.id === id);
+  if (!i) { $('vIde').innerHTML = '<a class="gr-tilbage" href="#ideer">&#8592; Idéboks</a><p class="hint">Idéen findes ikke længere.</p>'; return; }
+  let h = '<a class="gr-tilbage" href="#ideer">&#8592; Idéboks</a><h2 class="lille" style="margin:8px 0 4px">' + esc(i.titel) + '</h2><p class="hint" style="margin:0 0 8px">' + esc(i.afNavn) + ' · ' + esc(omTid(i.tid, true)) + (i.emne ? ' · ' + esc(i.emne) : '') + '</p>';
+  if (i.tekst) h += tekstHtml(i.tekst);
+  h += '<div class="pd-ideb"><button type="button" class="ghost small" id="iTommel" aria-pressed="' + i.minTommel + '">&#128077; ' + (i.minTommel ? 'Du synes godt om den' : 'Godt') + ' · ' + i.tommel + '</button>' + statusTag(i.status) + '</div>';
+  h += '<h3 class="pd-sh">Kommentarer</h3>' + (i.kommentarer.length ? i.kommentarer.map((k) => '<div class="pd-ko"><div class="pd-koh"><b>' + esc(k.afNavn.replace(/^Test /, '')) + '</b><span>' + esc(omTid(k.tid)) + '</span>'
+    + (k.kanSlette ? '<button type="button" class="pd-mini" data-k="' + esc(k.id) + '" aria-label="Slet kommentaren">Slet</button>' : '') + '</div><div>' + esc(k.tekst) + '</div></div>').join('') : '<p class="hint">Ingen endnu.</p>');
+  h += '<form id="kForm" novalidate><label for="kTekst" class="sr">Skriv en kommentar</label><textarea id="kTekst" rows="2" maxlength="1000" placeholder="Skriv en kommentar"></textarea><div class="pd-knapper"><button type="submit" class="ok small">Send</button></div></form><div class="msg" id="iMsg" aria-live="polite"></div>';
+  if (erAdmin()) h += '<div class="pd-adm"><b>For administratorer</b><label for="iStatus">Status</label><select id="iStatus">' + ideData.status.map((s) => '<option' + (s === i.status ? ' selected' : '') + '>' + esc(s) + '</option>').join('') + '</select></div>';
+  if (i.kanSlette) h += '<div class="pd-knapper"><button type="button" class="ghost small" id="iSlet">Slet idéen</button></div>';
+  $('vIde').innerHTML = h;
+  $('iTommel').addEventListener('click', async () => { try { visIde(id, await motor('padel', 'ideTommel', { id, fjern: i.minTommel, vis: id }, nyId())); } catch (err) { besked($('iMsg'), err.message, 'err'); } });
+  const regId = nyId();
+  $('kForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); if (!$('kTekst').value.trim()) return;
+    try { visIde(id, await motor('padel', 'ideKommenter', { id, tekst: $('kTekst').value, vis: id }, regId)); } catch (err) { besked($('iMsg'), err.message, 'err'); }
+  });
+  $('vIde').querySelectorAll('[data-k]').forEach((b) => b.addEventListener('click', async () => { try { visIde(id, await motor('padel', 'ideSlet', { kommentar: b.dataset.k, vis: id }, nyId())); } catch (err) { besked($('iMsg'), err.message, 'err'); } }));
+  if ($('iStatus')) $('iStatus').addEventListener('change', async () => { try { visIde(id, await motor('padel', 'ideStatus', { id, status: $('iStatus').value, vis: id }, nyId())); } catch (err) { besked($('iMsg'), err.message, 'err'); } });
+  if ($('iSlet')) { let sikker = false; $('iSlet').addEventListener('click', async () => {
+    if (!sikker) { sikker = true; $('iSlet').textContent = 'Tryk igen for at slette'; return; }
+    try { await motor('padel', 'ideSlet', { id }, nyId()); ideData = null; location.hash = 'ideer'; } catch (err) { besked($('iMsg'), err.message, 'err'); }
+  }); }
+}
+
+// ---------- Billeder (Lars 8. november 2026 kl. 19.09 til 21.03, mockup padel_billeder.png)
+// Billederne ligger i Firestore (padelBeg, padelBilleder og padelStor) og ses kun af voksne i padel. Motoren giver adgangen
+// (padelAdgang). Alle kan lægge op og hente. Den, der lagde et billede op, og administratorerne kan slette det.
+let bilAdg = null, bilBeg = null, bilOk = null;
+const BIL_MAKS = 20;
+/** Motoren giver adgangen (padelAdgang) og navnene. Kun når adgangen mangler, eller et navn er ukendt. */
+function bilAdgMotor() {
+  if (!bilAdg) bilAdg = motor('padel', 'billederAdgang').then((a) => { gem('rtk.padel.navne', JSON.stringify({ t: token.slice(-16), tid: Date.now(), n: a.navne || {} })); return a; })
+    .catch((e) => { bilAdg = null; throw e; });
+  return bilAdg;
+}
+/**
+ * Firebase til billederne uden at vente på motoren (Lars 9. november 2026 kl. 08.11). Adgangen står i padelAdgang/{pid}, som man
+ * selv kan læse. Mangler den, eller afviser Firebase, spørges motoren, der skriver den, og så prøves der igen.
+ */
+async function bilFB() {
+  if (!window.RTKV) throw new Error('Billederne kan ikke hentes lige nu.');
+  const f = await RTKV.db(motor);
+  if (bilOk) return Object.assign({ admin: bilOk.admin }, f);
+  let d = null;
+  try { d = await f.fs.getDoc(f.fs.doc(f.db, 'padelAdgang', RTKV.hvem() || data.mig.id)); }
+  catch (e) { if (!/permission/.test(String(e && e.code || e))) throw e; }
+  if (d && d.exists()) bilOk = { admin: !!d.data().admin };
+  else { const a = await bilAdgMotor(); bilOk = { admin: !!a.admin }; }
+  return Object.assign({ admin: bilOk.admin }, f);
+}
+/** Kør en læsning fra Firebase. Afvises den, fordi adgangen er væk eller ny, spørges motoren én gang, og der prøves igen. */
+async function bilProev(fn) {
+  try { return await fn(await bilFB()); }
+  catch (e) {
+    if (!/permission/.test(String(e && e.code || e))) throw e;
+    bilOk = null; bilAdg = null;
+    const a = await bilAdgMotor(); bilOk = { admin: !!a.admin };
+    return fn(await bilFB());
+  }
+}
+/** Navnene på dem, der har lagt billeder op: husket fra motoren (6 timer), Personer og en selv. Kun ved ukendte navne spørges motoren. */
+async function bilNavne(ider) {
+  const n = {};
+  let husk = null;
+  try { husk = JSON.parse(hent('rtk.padel.navne') || 'null'); } catch (e) { husk = null; }
+  const frisk = husk && husk.t === token.slice(-16) && Date.now() - husk.tid < 6 * 3600000;
+  if (husk && husk.t === token.slice(-16)) Object.assign(n, husk.n || {});
+  ((holdData && holdData.personer) || []).forEach((x) => { n[x.id] = n[x.id] || x.navn; });
+  if (data && data.mig) n[data.mig.id] = n[data.mig.id] || person.navn;
+  if ((ider || []).some((id) => !n[id]) && !frisk) { try { Object.assign(n, (await bilAdgMotor()).navne || {}); } catch (e) { /* navnene mangler bare */ } }
+  return n;
+}
+const fornavn = (n) => String(n || '').replace(/^Test /, '').split(' ')[0];
+const tsMs = (t) => t && t.toMillis ? t.toMillis() : 0;
+function tidTekst(ms) {
+  if (!ms) return '';
+  const d = new Date(ms);
+  const dag = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  return kortDag(dag) + ' kl. ' + String(d.getHours()).padStart(2, '0') + '.' + String(d.getMinutes()).padStart(2, '0');
+}
+async function hentBeg(f) {
+  const snap = await f.fs.getDocs(f.fs.collection(f.db, 'padelBeg'));
+  bilBeg = snap.docs.map((d) => Object.assign({ id: d.id }, d.data())).sort((a, b) => a.dag < b.dag ? 1 : a.dag > b.dag ? -1 : tsMs(b.sidst) - tsMs(a.sidst));
+  return bilBeg;
+}
+async function visBilleder() {
+  vis('vBil');
+  $('vBil').innerHTML = '<p class="hint">Henter billederne …</p>';
+  let f, beg, senest;
+  try {
+    await bilProev(async (x) => {
+      f = x;
+      beg = (await hentBeg(f)).filter((b) => b.antal > 0);
+      const q = f.fs.query(f.fs.collection(f.db, 'padelBilleder'), f.fs.orderBy('tid', 'desc'), f.fs.limit(6));
+      senest = (await f.fs.getDocs(q)).docs.map((d) => Object.assign({ id: d.id }, d.data()));
+    });
+  } catch (err) { $('vBil').innerHTML = fejlHtml(err); return; }
+  const forsider = {};
+  await Promise.all(beg.map(async (b) => {
+    if (!b.forside) return;
+    const s = senest.find((x) => x.id === b.forside);
+    if (s) { forsider[b.id] = s.mini; return; }
+    try { const d = await f.fs.getDoc(f.fs.doc(f.db, 'padelBilleder', b.forside)); if (d.exists()) forsider[b.id] = d.data().mini; } catch (e) { /* intet */ }
+  }));
+  let h = '<div class="pd-knapper" style="margin:0 0 6px"><a class="ok small pd-nyk" href="#billeder/ny">+ Læg billeder op</a></div>';
+  h += '<p class="hint pd-laas2">&#128274; Kun for dem i padel. Billederne lægges aldrig offentligt.</p>';
+  if (!beg.length) h += '<p class="hint">Ingen billeder endnu. Læg de første op.</p>';
+  else {
+    h += '<h3 class="pd-sh">Begivenheder</h3>';
+    h += beg.map((b) => '<a class="pd-beg" href="#bil/' + encodeURIComponent(b.id) + '"><span class="pd-begf"' + (forsider[b.id] ? ' style="background-image:url(&quot;' + forsider[b.id] + '&quot;)"' : '') + '></span><span class="pd-begt"><b>' + esc(b.navn) + '</b><span class="u">'
+      + esc(datoTekst(b.dag)) + ' · ' + b.antal + (b.antal === 1 ? ' billede' : ' billeder') + '</span>' + (b.kalId ? '<span class="pd-kal">&#128197; Fra kalenderen</span>' : '') + '</span></a>').join('');
+    if (senest.length) h += '<h3 class="pd-sh">Senest lagt op</h3><div class="pd-gr3">' + senest.map((x) => '<a href="#bil/' + encodeURIComponent(x.beg) + '" style="background-image:url(&quot;' + x.mini + '&quot;)" aria-label="Billede fra ' + esc((beg.find((b) => b.id === x.beg) || {}).navn || '') + '"></a>').join('') + '</div>';
+  }
+  $('vBil').innerHTML = h;
+}
+async function visBeg(eid) {
+  vis('vBil');
+  $('vBil').innerHTML = '<p class="hint">Henter billederne …</p>';
+  let f, b, bil, navne;
+  try {
+    let d;
+    await bilProev(async (x) => {
+      f = x;
+      d = await f.fs.getDoc(f.fs.doc(f.db, 'padelBeg', eid));
+      if (!d.exists()) return;
+      const snap = await f.fs.getDocs(f.fs.query(f.fs.collection(f.db, 'padelBilleder'), f.fs.where('beg', '==', eid)));
+      bil = snap.docs.map((x) => Object.assign({ id: x.id }, x.data())).sort((a, c) => tsMs(a.tid) - tsMs(c.tid));
+    });
+    if (!d.exists()) { $('vBil').innerHTML = '<a class="gr-tilbage" href="#billeder">&#8592; Billeder</a><p class="hint">Begivenheden findes ikke længere.</p>'; return; }
+    b = Object.assign({ id: d.id }, d.data());
+    navne = await bilNavne(bil.map((x) => x.af));
+  } catch (err) { $('vBil').innerHTML = fejlHtml(err); return; }
+  const mig = data.mig.id, kanRette = b.af === mig || f.admin;
+  const fra = [...new Set(bil.map((x) => fornavn(navne[x.af] || '')).filter(Boolean))];
+  let h = '<a class="gr-tilbage" href="#billeder">&#8592; Billeder</a><h2 class="lille" style="margin:6px 0 2px">' + esc(b.navn) + '</h2>';
+  h += '<p class="hint" style="margin:0 0 6px">' + esc(datoTekst(b.dag)) + ' · ' + bil.length + (bil.length === 1 ? ' billede' : ' billeder') + (fra.length ? ' fra ' + esc(fra.length > 1 ? fra.slice(0, -1).join(', ') + ' og ' + fra[fra.length - 1] : fra[0]) : '') + '</p>';
+  h += '<div id="bTekst">' + (b.tekst ? '<p class="pd-p2">' + esc(b.tekst) + '</p>' : '') + '</div>';
+  if (kanRette) h += '<button type="button" class="pd-mini" id="bRet">' + (b.tekst ? 'Ret teksten' : 'Skriv en tekst') + '</button>';
+  h += bil.length ? '<div class="pd-gr3 pd-gr3s">' + bil.map((x, i) => '<button type="button" data-i="' + i + '" style="background-image:url(&quot;' + x.mini + '&quot;)" aria-label="Billede ' + (i + 1) + ' af ' + bil.length + ', lagt op af ' + esc(fornavn(navne[x.af] || '')) + '"></button>').join('') + '</div>' : '<p class="hint">Ingen billeder tilbage.</p>';
+  h += '<div class="pd-knapper"><a class="ghost small pd-nyk2" href="#billeder/ny/' + encodeURIComponent(eid) + '">+ Læg flere op</a></div><div class="msg" id="bMsg" aria-live="polite"></div>';
+  $('vBil').innerHTML = h;
+  if ($('bRet')) $('bRet').addEventListener('click', () => {
+    $('bTekst').innerHTML = '<label for="bTekstF" class="sr">Tekst til begivenheden</label><textarea id="bTekstF" rows="3" maxlength="500">' + esc(b.tekst || '') + '</textarea><div class="pd-knapper"><button type="button" class="ok small" id="bTekstGem">Gem</button></div>';
+    $('bRet').remove();
+    $('bTekstGem').addEventListener('click', async () => {
+      try { await f.fs.updateDoc(f.fs.doc(f.db, 'padelBeg', eid), { tekst: $('bTekstF').value.trim().slice(0, 500), sidst: f.fs.serverTimestamp() }); visBeg(eid); }
+      catch (err) { besked($('bMsg'), 'Teksten kunne ikke gemmes.', 'err'); }
+    });
+  });
+  const liste = bil.map((x) => ({ thumb: x.mini, id: x.id, af: x.af, tid: x.tid }));
+  let slettet = false; // Når fuld skærm lukkes efter en sletning, tegnes siden igen
+  $('vBil').querySelectorAll('.pd-gr3s button').forEach((k) => k.addEventListener('click', () => RTKPK.fuld({
+    navn: b.navn, billeder: liste, i: Number(k.dataset.i), sprog: 'da', vedLuk: () => { if (slettet) visBeg(eid); },
+    hentStort: async (x) => { const d = await f.fs.getDoc(f.fs.doc(f.db, 'padelStor', x.id)); return d.exists() ? d.data().data : null; },
+    info: (x) => 'Lagt op af ' + (fornavn(navne[x.af] || '') || 'en, der ikke længere er i padel') + (tsMs(x.tid) ? ' · ' + tidTekst(tsMs(x.tid)) : ''),
+    knapper: [
+      { tekst: 'Hent', fn: (x, styr) => hentBillede(styr.stort(), b.navn, liste.indexOf(x) + 1) },
+      { tekst: 'Slet', klasse: 'slet', vis: (x) => x.af === mig || f.admin, fn: async (x, styr, knap) => {
+        if (knap.dataset.sikker !== '1') { knap.dataset.sikker = '1'; knap.textContent = 'Tryk igen for at slette'; return; }
+        knap.disabled = true; knap.textContent = 'Gemmer …';
+        try {
+          const rest = liste.filter((y) => y.id !== x.id);
+          const w = f.fs.writeBatch(f.db);
+          w.delete(f.fs.doc(f.db, 'padelStor', x.id));
+          w.delete(f.fs.doc(f.db, 'padelBilleder', x.id));
+          const ret = { antal: f.fs.increment(-1), sidst: f.fs.serverTimestamp() };
+          if (b.forside === x.id) { ret.forside = rest.length ? rest[0].id : ''; b.forside = ret.forside; }
+          w.update(f.fs.doc(f.db, 'padelBeg', eid), ret);
+          await w.commit();
+          slettet = true;
+          styr.fjern();
+        } catch (err) { knap.disabled = false; knap.textContent = 'Kunne ikke slette'; }
+      } }
+    ]
+  })));
+}
+/** Gem billedet på telefonen: del-arket, hvor det findes (iPhone og Android), ellers en almindelig hentning. */
+async function hentBillede(url, navn, nr) {
+  const ascii = String(navn || 'padel').replace(/æ/g, 'ae').replace(/ø/g, 'oe').replace(/å/g, 'aa').replace(/Æ/g, 'Ae').replace(/Ø/g, 'Oe').replace(/Å/g, 'Aa');
+  const filnavn = (ascii.replace(/[^A-Za-z0-9 -]/g, '').trim().replace(/\s+/g, '-') || 'padel') + '-' + nr + '.jpg';
+  try {
+    const blob = await (await fetch(url)).blob();
+    const fil = new File([blob], filnavn, { type: 'image/jpeg' });
+    if (navigator.canShare && navigator.canShare({ files: [fil] }) && /Mobi|Android|iPhone|iPad/.test(navigator.userAgent)) { await navigator.share({ files: [fil] }); return; }
+    const u = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = u; a.download = filnavn; document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 60000);
+  } catch (e) { /* annulleret eller ikke muligt */ }
+}
+/** Gør et billede mindre som JPEG under en grænse: først lavere kvalitet, så mindre. */
+async function bilSkaler(fil, side, tegn) {
+  const url = URL.createObjectURL(fil);
+  try {
+    const img = await new Promise((ok, nej) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => nej(new Error('billede')); i.src = url; });
+    let q = 0.85;
+    for (let k = 0; k < 12; k++) {
+      const s = Math.min(1, side / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(img.naturalWidth * s)); c.height = Math.max(1, Math.round(img.naturalHeight * s));
+      const x = c.getContext('2d'); x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+      const d = c.toDataURL('image/jpeg', q);
+      if (d.length <= tegn && d.indexOf('data:image/jpeg;base64,') === 0) return d;
+      if (q > 0.6) q -= 0.1; else side = Math.round(side * 0.8);
+    }
+    throw new Error('stort');
+  } finally { URL.revokeObjectURL(url); }
+}
+const bilId = () => { const t = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; const r = crypto.getRandomValues(new Uint8Array(20)); return [...r].map((x) => t[x % t.length]).join(''); };
+async function visBilNy(eid) {
+  vis('vBil');
+  $('vBil').innerHTML = '<p class="hint">Henter …</p>';
+  let f;
+  try { await bilProev(async (x) => { f = x; await hentBeg(f); }); } catch (err) { $('vBil').innerHTML = fejlHtml(err); return; }
+  const kendte = new Set(bilBeg.map((b) => b.kalId).filter(Boolean));
+  const kal = (data.poster || []).filter((p) => p.dag && dageTil(p.dag) <= 1 && dageTil(p.dag) >= -120 && !kendte.has(p.id)).sort((a, b) => a.dag < b.dag ? 1 : -1).slice(0, 25);
+  const valgt = eid || (bilBeg[0] ? bilBeg[0].id : (kal[0] ? 'k:' + kal[0].id : '_ny'));
+  let h = '<a class="gr-tilbage" href="' + (eid ? '#bil/' + encodeURIComponent(eid) : '#billeder') + '">&#8592; ' + (eid ? 'Tilbage' : 'Billeder') + '</a><h2 class="lille" style="margin:6px 0 8px">Læg billeder op</h2><form id="nForm" novalidate>';
+  h += '<label for="nBeg">Begivenhed</label><select id="nBeg">';
+  if (bilBeg.length) h += '<optgroup label="Begivenheder">' + bilBeg.map((b) => '<option value="' + esc(b.id) + '"' + (b.id === valgt ? ' selected' : '') + '>' + esc(b.navn + ', ' + kortDag(b.dag)) + '</option>').join('') + '</optgroup>';
+  if (kal.length) h += '<optgroup label="Fra kalenderen">' + kal.map((p) => '<option value="k:' + esc(p.id) + '"' + ('k:' + p.id === valgt ? ' selected' : '') + '>' + esc(p.titel + ', ' + kortDag(p.dag)) + '</option>').join('') + '</optgroup>';
+  h += '<option value="_ny"' + (valgt === '_ny' ? ' selected' : '') + '>Ny begivenhed …</option></select>';
+  h += '<div id="nNy" class="hidden"><label for="nNavn">Navn</label><input id="nNavn" maxlength="80" placeholder="Fx Americano med pizza"><label for="nDag">Dato</label><input id="nDag" type="date" value="' + iDag() + '"></div>';
+  h += '<label for="nFiler">Billeder</label><div class="pd-gr3 pd-valgt" id="nVis"></div><input type="file" id="nFiler" accept="image/*" multiple class="pd-filin">';
+  h += '<p class="hint" id="nAntal">Højst ' + BIL_MAKS + ' ad gangen. De gøres mindre, før de lægges op.</p>';
+  h += '<div id="nTekstBoks" class="hidden"><label for="nTekst">Tekst til begivenheden (valgfrit)</label><textarea id="nTekst" rows="2" maxlength="500"></textarea></div>';
+  h += '<div class="pd-knapper"><button type="submit" class="ok" id="nGem" disabled>Læg billeder op</button></div><div class="msg" id="nMsg" aria-live="polite"></div>';
+  h += '<p class="hint pd-laas2">&#128274; Kun dem i padel kan se billederne. Du kan selv slette dine billeder igen.</p></form>';
+  $('vBil').innerHTML = h;
+  let filer = [];
+  const nyBeg = () => $('nBeg').value === '_ny' || $('nBeg').value.indexOf('k:') === 0;
+  const opd = () => {
+    $('nNy').classList.toggle('hidden', $('nBeg').value !== '_ny');
+    $('nTekstBoks').classList.toggle('hidden', !nyBeg());
+    $('nGem').disabled = !filer.length;
+    $('nGem').textContent = filer.length ? 'Læg ' + filer.length + (filer.length === 1 ? ' billede' : ' billeder') + ' op' : 'Læg billeder op';
+    $('nAntal').textContent = (filer.length ? filer.length + (filer.length === 1 ? ' billede. ' : ' billeder. ') : '') + 'Højst ' + BIL_MAKS + ' ad gangen. De gøres mindre, før de lægges op.';
+  };
+  const tegn = () => {
+    $('nVis').innerHTML = filer.map((x, i) => '<span style="background-image:url(&quot;' + x.url + '&quot;)"><button type="button" data-fjern="' + i + '" aria-label="Fjern billede ' + (i + 1) + '">&#215;</button></span>').join('')
+      + (filer.length < BIL_MAKS ? '<label for="nFiler" class="pd-tilf">+<small>' + (filer.length ? 'Vælg flere' : 'Vælg billeder') + '</small></label>' : '');
+    $('nVis').querySelectorAll('[data-fjern]').forEach((k) => k.addEventListener('click', () => { const x = filer.splice(Number(k.dataset.fjern), 1)[0]; URL.revokeObjectURL(x.url); tegn(); }));
+    opd();
+  };
+  $('nBeg').addEventListener('change', opd);
+  $('nFiler').addEventListener('change', () => {
+    const nye = [...$('nFiler').files].filter((x) => /^image\//.test(x.type) || /\.(jpe?g|png|heic|webp)$/i.test(x.name));
+    nye.slice(0, BIL_MAKS - filer.length).forEach((x) => filer.push({ fil: x, url: URL.createObjectURL(x) }));
+    if (nye.length > BIL_MAKS - filer.length + nye.slice(0, BIL_MAKS - filer.length).length) besked($('nMsg'), 'Højst ' + BIL_MAKS + ' billeder ad gangen.', 'err'); else besked($('nMsg'), '');
+    $('nFiler').value = '';
+    tegn();
+  });
+  tegn();
+  $('nForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!filer.length) return;
+    const v = $('nBeg').value;
+    let id, ny = null;
+    if (v === '_ny') {
+      const navn = $('nNavn').value.trim().replace(/\s+/g, ' ').slice(0, 80);
+      if (!navn) { besked($('nMsg'), 'Giv begivenheden et navn.', 'err'); $('nNavn').focus(); return; }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test($('nDag').value)) { besked($('nMsg'), 'Vælg en dato.', 'err'); return; }
+      id = 'e' + bilId().slice(0, 16); ny = { navn, dag: $('nDag').value, kalId: '' };
+    } else if (v.indexOf('k:') === 0) {
+      const p = data.poster.find((x) => x.id === v.slice(2));
+      id = ('k' + p.id).replace(/[^A-Za-z0-9_-]/g, '_').slice(0, 40); ny = { navn: String(p.titel).slice(0, 80), dag: p.dag, kalId: String(p.id).slice(0, 20) };
+    } else id = v;
+    $('nGem').disabled = true; $('nBeg').disabled = true;
+    let lagt = 0;
+    try {
+      // Findes begivenheden allerede (en anden har lige lagt op til det samme punkt), lægges billederne bare i den
+      let findes = !ny || (await f.fs.getDoc(f.fs.doc(f.db, 'padelBeg', id))).exists();
+      for (const x of filer) {
+        besked($('nMsg'), 'Lægger billede ' + (lagt + 1) + ' af ' + filer.length + ' op …');
+        const stor = await bilSkaler(x.fil, 1600, 650000);
+        const mini = await bilSkaler(x.fil, 480, 110000);
+        const bid = bilId();
+        const w = f.fs.writeBatch(f.db);
+        if (!findes) w.set(f.fs.doc(f.db, 'padelBeg', id), { navn: ny.navn, dag: ny.dag, kalId: ny.kalId, tekst: $('nTekst').value.trim().slice(0, 500), af: data.mig.id, oprettet: f.fs.serverTimestamp(), antal: 1, forside: bid, sidst: f.fs.serverTimestamp() });
+        else w.update(f.fs.doc(f.db, 'padelBeg', id), { antal: f.fs.increment(1), sidst: f.fs.serverTimestamp() });
+        w.set(f.fs.doc(f.db, 'padelStor', bid), { data: stor, af: data.mig.id });
+        w.set(f.fs.doc(f.db, 'padelBilleder', bid), { beg: id, af: data.mig.id, mini, tid: f.fs.serverTimestamp() });
+        await w.commit();
+        findes = true; lagt++;
+      }
+      filer.forEach((x) => URL.revokeObjectURL(x.url));
+      location.hash = 'bil/' + encodeURIComponent(id);
+    } catch (err) {
+      besked($('nMsg'), (lagt ? lagt + ' billeder er lagt op. ' : '') + (String(err && err.message) === 'stort' || String(err && err.message) === 'billede' ? 'Et billede kunne ikke læses. Prøv et andet.' : 'Resten kunne ikke lægges op. Prøv igen.'), 'err');
+      filer = filer.slice(lagt); tegn(); $('nBeg').disabled = false;
+      if (lagt && ny) { $('nBeg').innerHTML = '<option value="' + esc(id) + '">' + esc(ny.navn) + '</option>'; opd(); }
+    }
+  });
+}
+
+async function visProfil(pid) {
+  // Det fælles profilkort fra Grupper i et ark nedefra (site/profilkort.js, Lars 8. november 2026 kl. 08.52)
+  const x = holdData.personer.find((y) => y.id === pid);
+  if (!x) return;
+  const linje = x.rolle || (x.kreds === 'fuld' ? 'Styregruppen og Padel Team' : 'RTK Padelcircle');
+  const ini = initialer(x.navn);
+  const a = RTKPK.ark('da', x.navn);
+  const vis = (p) => { a.krop.innerHTML = ''; a.krop.append(RTKPK.kort({ pid, navn: x.navn, linje, p, sprog: 'da', farve: x.kreds === 'fuld' ? '#0B3D3A' : '#4A5560', initialer: ini, egen: pid === data.mig.id ? 'dig' : '',
+    onBillede: (bil, i) => RTKPK.fuld({ navn: x.navn, billeder: bil, i, sprog: 'da', hentStort: hentStort(pid) }) })); };
+  vis(null);
+  a.krop.append(Object.assign(document.createElement('p'), { className: 'hint', textContent: 'Henter profilkortet …' }));
+  try {
+    const f = await RTKV.db(motor);
+    const d = await f.fs.getDoc(f.fs.doc(f.db, 'profiler', pid));
+    if (!a.krop.isConnected) return;
+    vis(d.exists() ? d.data() : null);
+    if (!d.exists()) a.krop.append(Object.assign(document.createElement('p'), { className: 'hint', textContent: x.navn.replace(/^Test /, '').split(' ')[0] + ' har ikke lavet et profilkort endnu.' }));
+  } catch (e) {
+    if (a.krop.isConnected) a.krop.append(Object.assign(document.createElement('p'), { className: 'hint', textContent: 'Profilkortet kunne ikke hentes lige nu.' }));
+  }
+}
+/** Det store billede fra Firebase (profilBilleder/<pid>_<plads>), som i Grupper. */
+function hentStort(pid) {
+  return async (b) => {
+    const f = await RTKV.db(motor);
+    const d = await f.fs.getDoc(f.fs.doc(f.db, 'profilBilleder', pid + '_' + b.i));
+    return d.exists() && d.data().data ? d.data().data : null;
+  };
+}
+
+// ---------- Start
+function fraVis(x) {
+  if (!x || !x.laest || x.svar === undefined) return;
+  if (LAEST.start && x.laest <= LAEST.start) return;
+  LAEST.start = x.laest; data = x.svar; besked($('hentMsg'), ''); rute(); lytFaner();
+}
+async function hentStart() {
+  const d = await motor('padel', 'start');
+  if (LAEST.start && SIDST.start < LAEST.start && data) return;
+  LAEST.start = SIDST.start; data = d;
+}
+function start() {
+  $('omraade').classList.remove('hidden');
+  $('hvem').textContent = 'Logget ind som ' + person.navn;
+  const r = person.roller || [];
+  if (!r.some((x) => x === 'admin' || x === 'padel' || x === 'padelcircle')) { besked($('hentMsg'), ''); $('faner').classList.add('hidden'); $('vKalender').classList.add('hidden'); $('ingenAdgang').classList.remove('hidden'); return; }
+  if (window.RTKV) RTKV.lyt(motor, 'padelStart', fraVis);
+  hentStart().then(() => { besked($('hentMsg'), ''); rute(); lytFaner(); }).catch((err) => besked($('hentMsg'), err.message, 'err'));
+  motor('push', 'status').then((s) => { pushStatus = s; if (data) tegnPush(); }).catch(() => {});
+}
+function migHusket() { try { const m = JSON.parse(hent('rtk.mig') || 'null'); return m && token && m.t === token.slice(-16) ? m.p : null; } catch (e) { return null; } }
+function migHent() { return motor('kerne', 'mig').then((p) => { gem('rtk.mig', JSON.stringify({ t: token.slice(-16), p: p })); return p; }); }
+if (!token) location.replace('./?til=' + encodeURIComponent('padel.html' + location.hash));
+else { const husket = migHusket(); if (husket) { person = husket; start(); migHent().then((p) => { if (JSON.stringify(husket.roller || []) !== JSON.stringify(p.roller || [])) location.reload(); }).catch(() => {}); } else migHent().then((p) => { person = p; start(); }).catch(() => {}); }
+</script>
+<script src="../velkomst.js?v=0c6d2cc815a7"></script>
+<script src="../ace.js?v=8c46fe7cee29"></script>
+</body>
+</html>
