@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="b36d46502583">
+<meta name="rtk-version" content="2d81b72b1a93">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -14,6 +14,10 @@
 <link rel="apple-touch-icon" href="ikoner/jul-180.png">
 <link rel="icon" type="image/svg+xml" href="ikoner/jul-logo.svg">
 <title>Julefrokost 3. december</title>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://firestore.googleapis.com">
+<link rel="preconnect" href="https://securetoken.googleapis.com">
+<link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -206,7 +210,12 @@ async function logIndMedKode(kode, msg, fraUrl) {
 }
 
 // ---------- Firebase
-async function hentFirebase() {
+// Ét kald ad gangen: start() henter Firebase med det samme, og logIndFirebase venter på det samme kald
+function hentFirebase() {
+  if (!S.fbP) S.fbP = hentFirebase1().catch((e) => { S.fbP = null; throw e; });
+  return S.fbP;
+}
+async function hentFirebase1() {
   if (S.fb) return S.fb;
   const base = 'https://www.gstatic.com/firebasejs/' + KONFIG.firebaseVersion + '/';
   const [app, auth, fs] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-firestore.js')]);
@@ -222,41 +231,80 @@ async function hentFirebase() {
 async function logIndFirebase() {
   const F = await hentFirebase();
   await F.au.authStateReady();
-  const binding = String(token()).slice(-12);
+  const bind = binding();
   let u = F.au.currentUser;
-  if (u && (u.uid !== S.pid || hent('rtk.jul.fb') !== binding)) { await F.auth.signOut(F.au).catch(() => {}); u = null; }
+  if (u && (u.uid !== S.pid || hent('rtk.jul.fb') !== bind)) { await F.auth.signOut(F.au).catch(() => {}); u = null; }
   if (!u) {
     const t = await motor('kerne', 'firebase');
     await F.auth.signInWithCustomToken(F.au, t.token);
-    gem('rtk.jul.fb', binding);
+    gem('rtk.jul.fb', bind);
   }
 }
 
 // ---------- Start
+// Hurtig start (Lars 25. november 2026 kl. 12.23: siden var langsom at åbne). Før ventede siden på motoren ("hvem er du",
+// målt 6 sekunder i testen), før den hentede noget fra Firebase. Nu husker telefonen svaret, siden åbner med det samme ud fra
+// Firebase, og motoren tjekker i baggrunden, ligesom Grupper. Svaret hører til login-sessionen og glemmes ved log ud.
+const START_K = 'rtk.jul.start';
+const binding = () => String(token()).slice(-12);
+function husketStart() {
+  try { const c = JSON.parse(hent(START_K) || 'null'); return c && c.tok === binding() && c.bid && c.pid ? c : null; } catch (e) { return null; }
+}
+function gemStart(s) { gem(START_K, JSON.stringify({ tok: binding(), bid: s.bid, pid: s.pid, arr: !!s.arrangoer, navn: s.navn || '' })); }
+function stopAlt() { S.lyt.forEach((x) => x()); S.lyt = []; S.bid = ''; }
+function startFejl(err, baggrund) {
+  if (err.login && hent('rtk.jul.token') && KODE_URL && !S.provetUrl) { S.provetUrl = true; stopAlt(); gem(START_K, null); gem('rtk.jul.token', null); logIndMedKode(KODE_URL, null, true); return; }
+  if (err.login || /ikke med/.test(err.message)) {
+    stopAlt(); gem(START_K, null); gem('rtk.jul.token', null);
+    if (S.fb) S.fb.auth.signOut(S.fb.au).catch(() => {});
+    visLogin(err.login ? 'Dit link er ikke gyldigt længere. Bed Lars om et nyt.' : (hent('rtk.token') ? 'Du er logget ind på Mit RTK, men du er ikke med i julefrokosten.' : ''));
+    return;
+  }
+  if (baggrund) { console.warn('start', err); return; } // fx ingen net: siden kører videre på det, Firebase har
+  $('login').classList.add('jf-skjult'); $('app').classList.add('jf-skjult'); $('vent').classList.remove('jf-skjult');
+  $('vent').innerHTML = '<p class="msg err">' + esc(err.message) + '</p><button class="ghost" onclick="location.reload()">Prøv igen</button>';
+}
 async function start(fraLink) {
   if (!token()) { visLogin(); return; }
-  let s;
-  try { s = await motor('jul', 'start'); }
-  catch (err) {
-    if (err.login && hent('rtk.jul.token') && KODE_URL && !S.provetUrl) { S.provetUrl = true; gem('rtk.jul.token', null); return logIndMedKode(KODE_URL, null, true); }
-    if (err.login || /ikke med/.test(err.message)) { gem('rtk.jul.token', null); visLogin(err.login ? 'Dit link er ikke gyldigt længere. Bed Lars om et nyt.' : (hent('rtk.token') ? 'Du er logget ind på Mit RTK, men du er ikke med i julefrokosten.' : '')); return; }
-    $('login').classList.add('jf-skjult'); $('vent').classList.remove('jf-skjult');
-    $('vent').innerHTML = '<p class="msg err">' + esc(err.message) + '</p><button class="ghost" onclick="location.reload()">Prøv igen</button>'; return;
+  hentFirebase().catch(() => {}); // Firebase hentes imens
+  const c = husketStart();
+  if (c) {
+    S.bid = c.bid; S.pid = c.pid; S.arr = c.arr; S.navn = c.navn;
+    motor('jul', 'start').then((s) => {
+      gemStart(s);
+      if (s.bid !== c.bid || s.pid !== c.pid || !!s.arrangoer !== c.arr) location.reload();
+    }).catch((err) => startFejl(err, true));
+    return aabn(fraLink);
   }
+  let s;
+  try { s = await motor('jul', 'start'); } catch (err) { startFejl(err); return; }
+  gemStart(s);
   S.bid = s.bid; S.pid = s.pid; S.arr = !!s.arrangoer; S.navn = s.navn;
+  return aabn(fraLink);
+}
+async function aabn(fraLink) {
   try { await logIndFirebase(); }
-  catch (err) { console.warn('firebase', err); $('login').classList.add('jf-skjult'); $('vent').classList.remove('jf-skjult'); $('vent').innerHTML = '<p class="msg err">Chatten kan ikke åbnes lige nu. Prøv igen om lidt.</p><button class="ghost" onclick="location.reload()">Prøv igen</button>'; return; }
+  catch (err) {
+    if (err && err.login) { startFejl(err); return; }
+    console.warn('firebase', err); $('login').classList.add('jf-skjult'); $('vent').classList.remove('jf-skjult'); $('vent').innerHTML = '<p class="msg err">Chatten kan ikke åbnes lige nu. Prøv igen om lidt.</p><button class="ghost" onclick="location.reload()">Prøv igen</button>'; return;
+  }
+  if (!S.bid) return; // logget ud imens
   $('login').classList.add('jf-skjult'); $('vent').classList.add('jf-skjult'); $('app').classList.remove('jf-skjult');
   $('fLinks').classList.toggle('jf-skjult', !S.arr);
   lyt();
   if (fraLink) S.velkommen = true;
   rute();
+  // jul.html?tid=1 viser, hvor mange millisekunder der gik, før indholdet stod der
+  if (/[?&]tid=1/.test(location.search)) {
+    const vis = () => { const b = document.createElement('pre'); b.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:3000;background:#0B3D3A;color:#fff;font-size:12px;padding:6px 8px;border-radius:6px;margin:0'; b.textContent = 'Indhold efter ' + Math.round(performance.now()) + ' ms'; document.body.append(b); };
+    const t = setInterval(() => { if (S.b) { clearInterval(t); vis(); } }, 20);
+  }
 }
 
 function lyt() {
   const F = S.fb, fs = F.fs, db = F.db, b = 'jul/' + S.bid;
   S.lyt.forEach((x) => x()); S.lyt = [];
-  const fejl = (e) => { console.warn(e); if (/permission/i.test(String(e && e.code || e))) { gem('rtk.jul.token', null); visLogin('Dit link er ikke gyldigt længere. Bed Lars om et nyt.'); } };
+  const fejl = (e) => { console.warn(e); if (/permission/i.test(String(e && e.code || e))) { stopAlt(); gem(START_K, null); gem('rtk.jul.token', null); visLogin('Dit link er ikke gyldigt længere. Bed Lars om et nyt.'); } };
   S.lyt.push(fs.onSnapshot(fs.doc(db, b), (d) => { S.b = d.data() || null; if (S.b && S.b.under) $('topUnder').textContent = S.b.under; tegn(); }, fejl));
   S.lyt.push(fs.onSnapshot(fs.collection(db, b + '/deltagere'), (q) => { S.del = {}; q.forEach((d) => { S.del[d.id] = d.data(); }); tegn(); }, fejl));
   S.lyt.push(fs.onSnapshot(fs.query(fs.collection(db, b + '/beskeder'), fs.orderBy('tid', 'desc'), fs.limit(300)), (q) => {
@@ -748,7 +796,10 @@ async function tegnProfilRet() {
 }
 
 // ---------- Links (kun arrangøren)
-const linkTil = (kode) => location.origin + '/jul.html#k=' + kode;
+// ?k= i stedet for #k= (Lars 24. november kl. 17.28): nogle sms-apps klipper linket ved #. Gamle links med #k= virker stadig
+const linkTil = (kode) => location.origin + '/jul.html?k=' + kode;
+const kodeTekst = (kode) => String(kode).slice(0, 4) + '-' + String(kode).slice(4);
+const reserve = (kode) => 'Virker linket ikke, så gå ind på ' + location.host + '/jul.html og skriv koden ' + kodeTekst(kode) + '.';
 async function tegnLinks(ny) {
   if (ny || !S.gaester) {
     $('vis').innerHTML = '<p class="hint">Henter …</p>';
@@ -779,13 +830,13 @@ async function tegnLinks(ny) {
   const find = (pid) => S.gaester.find((g) => g.pid === pid);
   document.querySelectorAll('[data-kopi]').forEach((k) => k.addEventListener('click', async () => {
     const g = find(k.getAttribute('data-kopi'));
-    const t = 'Hej ' + g.navn.split(' ')[0] + '. Her er dit link til julefrokosten: ' + linkTil(g.kode);
+    const t = 'Hej ' + g.navn.split(' ')[0] + '. Her er dit link til julefrokosten: ' + linkTil(g.kode) + '\n\n' + reserve(g.kode);
     try { await navigator.clipboard.writeText(t); lm.textContent = 'Linket til ' + g.navn + ' er kopieret med en kort hilsen. Sæt det ind i en privat besked.'; lm.className = 'msg okm jf-msg'; }
     catch (err) { prompt('Kopiér linket', linkTil(g.kode)); }
   }));
   document.querySelectorAll('[data-del]').forEach((k) => k.addEventListener('click', async () => {
     const g = find(k.getAttribute('data-del'));
-    try { await navigator.share({ title: 'Julefrokost', text: 'Hej ' + g.navn.split(' ')[0] + '. Her er dit link til julefrokosten:', url: linkTil(g.kode) }); } catch (err) { /* annulleret */ }
+    try { await navigator.share({ title: 'Julefrokost', text: 'Hej ' + g.navn.split(' ')[0] + '. Her er dit link til julefrokosten: ' + linkTil(g.kode) + '\n\n' + reserve(g.kode) }); } catch (err) { /* annulleret */ }
   }));
   document.querySelectorAll('[data-ny]').forEach((k) => k.addEventListener('click', async () => {
     const g = find(k.getAttribute('data-ny'));
@@ -824,7 +875,7 @@ function bindProg() {
 async function logUd() {
   const jul = hent('rtk.jul.token');
   try { if (jul) await motor('kerne', 'logud', hent('rtk.jul.push') ? { pushId: hent('rtk.jul.push') } : {}); } catch (e) {}
-  gem('rtk.jul.token', null); gem('rtk.jul.push', null); gem('rtk.jul.fb', null);
+  gem('rtk.jul.token', null); gem('rtk.jul.push', null); gem('rtk.jul.fb', null); gem(START_K, null);
   history.replaceState(null, '', location.pathname + '#program');
   try { if (S.fb) await S.fb.auth.signOut(S.fb.au); } catch (e) {}
   S.lyt.forEach((x) => x()); S.lyt = []; S.bid = '';
