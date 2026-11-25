@@ -125,5 +125,8 @@
   /** Hvem er logget ind i Firebase lige nu (til test og fejlfinding). */
   function hvem() { return fb && fb.au.currentUser ? fb.au.currentUser.uid : null; }
 
-  window.RTKV = { lyt: lyt, logUd: logUd, logInd: logInd, glemFirebase: glemFirebase, hvem: hvem };
+  /** Firestore efter login, til sider, der læser andet end visninger (Padel læser profilkortene, 8. november 2026). */
+  function db(motor) { return logInd(motor).then(function () { return { fs: fb.fs, db: fb.db }; }); }
+
+  window.RTKV = { lyt: lyt, logUd: logUd, logInd: logInd, glemFirebase: glemFirebase, hvem: hvem, db: db };
 })();

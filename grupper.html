@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="c52d031cbe44">
+<meta name="rtk-version" content="6c22ea027bbb">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -455,6 +455,13 @@
           <label for="prTekst" data-t="prOmMig">Lidt om mig</label><textarea id="prTekst" maxlength="300" rows="3" data-t-ph="prOmMigPh"></textarea>
           <div class="gr-knapper"><button type="button" class="ok" id="prGemTekst" data-t="gem">Gem</button></div>
         </section>
+        <section class="sb-boks gr-form">
+          <h2 data-t="prKontakt">Kontakt</h2>
+          <p class="hint" data-t="prKontaktHint">Frivilligt. Står der et nummer eller en mail, kan andre voksne medlemmer se det på dit kort.</p>
+          <label for="prMobil" data-t="prMobilL">Telefonnummer</label><input id="prMobil" type="tel" inputmode="tel" maxlength="20" autocomplete="tel">
+          <label for="prMail" data-t="prMailL">Mail</label><input id="prMail" type="email" inputmode="email" maxlength="120" autocomplete="email">
+          <div class="gr-knapper"><button type="button" class="ok" id="prGemKontakt" data-t="gem">Gem</button></div>
+        </section>
         <section class="sb-boks"><h2 data-t="prSaadan">Sådan ser andre dit kort</h2><div id="prVis"></div></section>
         <div class="gr-knapper"><button type="button" class="ghost" id="prSlet" data-t="prSlet">Slet mit profilkort</button></div>
       </div>
@@ -550,7 +557,7 @@ window.TEKSTER = {
     sys_boersEt1: '{a} søger 1 spiller til {titel} på spillerbørsen', sys_boersEt: '{a} søger {n} spillere til {titel} på spillerbørsen',
     sys_boersFast1: '{a} søger 1 fast spiller på spillerbørsen', sys_boersFast: '{a} søger {n} faste spillere på spillerbørsen',
     sys_boersMed: '{a} er med i {titel} via spillerbørsen', sys_boersGruppe: '{a} er kommet med i gruppen via spillerbørsen',
-    sys_meldtFra: '{a} har meldt fra til {titel}', sys_meldtFraB: '{a} har meldt fra til {titel}: "{besked}"', sys_invJa: '{a} sagde ja til invitationen og er med i gruppen',
+    sys_meldtFra: '{a} har meldt fra til {titel}', sys_meldtFraB: '{a} har meldt fra til {titel}: "{besked}"', sys_invJa: '{a} sagde ja til invitationen og er med i gruppen', sys_rolleUd: '{a} har ikke længere en rolle i padel og er taget ud af gruppen',
     kommende: 'Kommende spil og arrangementer', nytSpil: '+ Nyt spil', ingenSpil: 'Ingen spil planlagt. Opret det næste.',
     duErMed: 'Du er med', duVenter: 'Venteliste nr. {nr}', duMaaske: 'Måske', ikkeSvaret: 'Ikke svaret', aflyst: 'Aflyst', booket: 'booket', ikkeBooket: 'ikke booket',
     pladserAf: '{a} af {b}', paaVente: '{n} på venteliste',
@@ -676,9 +683,9 @@ window.TEKSTER = {
     prSamtykke: 'Læg kun billeder op af andre, hvis de har sagt ja. Billeder af børn kun af dine egne.',
     prProfilbillede: 'Profilbillede', prEkstraN: 'Billede {n}', prFjern: 'Fjern', prFjernNavn: 'Fjern {navn}', prFjernet: 'Billedet er fjernet.',
     prBehandler: 'Gør billedet klar …', prForStort: 'Billedet kunne ikke gøres lille nok. Prøv et andet.', prKanIkkeLaese: 'Billedet kan ikke læses. Prøv et JPEG- eller PNG-billede.', prKunBilleder: 'Vælg et billede.',
-    prNiveauer: 'Niveau', prIkkeAngivet: 'Ikke angivet', prOmMig: 'Lidt om mig', prOmMigPh: 'Fx Har spillet i 8 år, mest double.',
+    prNiveauer: 'Niveau', prIkkeAngivet: 'Ikke angivet', prOmMig: 'Lidt om mig', prKontakt: 'Kontakt', prKontaktHint: 'Frivilligt. Står der et nummer eller en mail, kan andre voksne medlemmer se det på dit kort.', prMobilL: 'Telefonnummer', prMailL: 'Mail', prMobilFejl: 'Skriv telefonnummeret med 8 cifre, gerne med landekode, fx +45 12 34 56 78', prMailFejl: 'Det ligner ikke en mailadresse', prOmMigPh: 'Fx Har spillet i 8 år, mest double.',
     prSaadan: 'Sådan ser andre dit kort', prSlet: 'Slet mit profilkort', prSletIgen: 'Tryk igen for at slette kortet og billederne', prSlettet: 'Dit profilkort og dine billeder er slettet.',
-    prVisBillede: 'Vis billedet af {navn} i fuld skærm', prVisBilledeN: 'Vis billede {n} af {navn} i fuld skærm', prBillederAf: 'Billeder af {navn}', prBilledeAfN: 'Billede {n} af {af} fra {navn}', prNAf: '{n} af {af}',
+    prVisBillede: 'Vis billedet af {navn} i fuld skærm', prVisBilledeN: 'Vis billede {n} af {navn} i fuld skærm', prBillederAf: 'Billeder af {navn}', prBilledeAfN: 'Billede {n} af {af} fra {navn}', prNAf: '{n} af {af}', seProfil: 'Se profilkortet for {navn}', prIntroPadel: 'Frivilligt. Kortet ses under Holdet i Padel og i chatten. Andre voksne medlemmer kan se det. Navnet kommer fra klubbens medlemsliste.',
     prLuk: 'Luk', prForrige: 'Forrige billede', prNaeste: 'Næste billede',
     afNy: '+ Afstemning', afNyHint: 'Find en tid, der passer de fleste', afNyH: 'Find en tid', afNyKick: 'ny afstemning',
     afTitelL: 'Hvad skal I?', afTitelPh: 'Fx Double i næste uge', afFjernTid: 'Fjern tiden',
@@ -763,7 +770,7 @@ window.TEKSTER = {
     sys_boersEt1: '{a} is looking for 1 player for {titel} on the player exchange', sys_boersEt: '{a} is looking for {n} players for {titel} on the player exchange',
     sys_boersFast1: '{a} is looking for 1 regular player on the player exchange', sys_boersFast: '{a} is looking for {n} regular players on the player exchange',
     sys_boersMed: '{a} joined {titel} via the player exchange', sys_boersGruppe: '{a} joined the group via the player exchange',
-    sys_meldtFra: '{a} dropped out of {titel}', sys_meldtFraB: '{a} dropped out of {titel}: "{besked}"', sys_invJa: '{a} accepted the invitation and joined the group',
+    sys_meldtFra: '{a} dropped out of {titel}', sys_meldtFraB: '{a} dropped out of {titel}: "{besked}"', sys_invJa: '{a} accepted the invitation and joined the group', sys_rolleUd: '{a} no longer has a role in padel and has been removed from the group',
     kommende: 'Upcoming games and events', nytSpil: '+ New game', ingenSpil: 'No games planned. Create the next one.',
     duErMed: 'You are in', duVenter: 'Waiting list no. {nr}', duMaaske: 'Maybe', ikkeSvaret: 'Not answered', aflyst: 'Cancelled', booket: 'booked', ikkeBooket: 'not booked',
     pladserAf: '{a} of {b}', paaVente: '{n} waiting',
@@ -889,9 +896,9 @@ window.TEKSTER = {
     prSamtykke: 'Only upload photos of other people if they have said yes. Photos of children only of your own.',
     prProfilbillede: 'Profile photo', prEkstraN: 'Photo {n}', prFjern: 'Remove', prFjernNavn: 'Remove {navn}', prFjernet: 'The photo has been removed.',
     prBehandler: 'Preparing the photo …', prForStort: 'The photo could not be made small enough. Try another one.', prKanIkkeLaese: 'The photo cannot be read. Try a JPEG or PNG photo.', prKunBilleder: 'Choose a photo.',
-    prNiveauer: 'Level', prIkkeAngivet: 'Not stated', prOmMig: 'A little about me', prOmMigPh: 'E.g. Have played for 8 years, mostly doubles.',
+    prNiveauer: 'Level', prIkkeAngivet: 'Not stated', prOmMig: 'A little about me', prKontakt: 'Contact', prKontaktHint: 'Optional. If you add a number or an email, other adult members can see it on your card.', prMobilL: 'Phone number', prMailL: 'Email', prMobilFejl: 'Write the phone number with at least 8 digits, preferably with country code, e.g. +45 12 34 56 78', prMailFejl: 'That does not look like an email address', prOmMigPh: 'E.g. Have played for 8 years, mostly doubles.',
     prSaadan: 'How others see your card', prSlet: 'Delete my profile card', prSletIgen: 'Tap again to delete the card and the photos', prSlettet: 'Your profile card and photos have been deleted.',
-    prVisBillede: 'Show the photo of {navn} full screen', prVisBilledeN: 'Show photo {n} of {navn} full screen', prBillederAf: 'Photos of {navn}', prBilledeAfN: 'Photo {n} of {af} from {navn}', prNAf: '{n} of {af}',
+    prVisBillede: 'Show the photo of {navn} full screen', prVisBilledeN: 'Show photo {n} of {navn} full screen', prBillederAf: 'Photos of {navn}', prBilledeAfN: 'Photo {n} of {af} from {navn}', prNAf: '{n} of {af}', seProfil: 'See the profile card for {navn}', prIntroPadel: 'Optional. The card is shown under the team in Padel and in the chat. Other adult members can see it. The name comes from the club membership list.',
     prLuk: 'Close', prForrige: 'Previous photo', prNaeste: 'Next photo',
     afNy: '+ Poll', afNyHint: 'Find a time that suits most people', afNyH: 'Find a time', afNyKick: 'new poll',
     afTitelL: 'What is it for?', afTitelPh: 'E.g. Doubles next week', afFjernTid: 'Remove the time',
@@ -924,7 +931,8 @@ window.TEKSTER = {
 <script src="konto.js?v=d800da682950"></script>
 <script src="sprog.js?v=889007325426"></script>
 <script src="velkomst.js?v=0c6d2cc815a7"></script>
-<script src="ace.js?v=f16258091977"></script>
+<script src="ace.js?v=8c46fe7cee29"></script>
+<script src="profilkort.js?v=c76b2fa856d0"></script>
 <script type="module">
 // Lavet af niveauer.py ud fra niveauer.md. Ret i niveauer.md, ikke her.
 const NIVEAUER = {"tennis": {"niveauer": [{"v": 1.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har begrænset erfaring med slagene og arbejder primært på at få bolden i spil.", "en": "You have limited experience with the strokes and are mainly working on getting the ball into play."}}, {"v": 2.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har brug for spilletid og har svært ved at finde det rigtige træfpunkt. Du kender endnu ikke de grundlæggende positioner i single og double.", "en": "You need court time and find it hard to judge where to meet the ball. You do not yet know the basic positions in singles and doubles."}}, {"v": 2.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du kan holde en duel i lavt tempo fra baglinjen med spillere på dit niveau og lærer at bedømme, hvor bolden er på vej hen.", "en": "You can keep a slow-paced rally going from the baseline with players at your level and are learning to judge where the ball is going."}}, {"v": 3.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du er ret stabil på bolde i middel tempo, men mangler præcision, når du vil styre retning, dybde og fart.", "en": "You are fairly consistent on medium-paced balls but lack precision when you try to control direction, depth and pace."}}, {"v": 3.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har stabile slag med retningskontrol på moderate bolde, men mangler dybde og variation. Lob, smash og flugtninger er stadig begrænsede.", "en": "You have consistent strokes with directional control on moderate balls but lack depth and variety. Lobs, smashes and volleys are still limited."}}, {"v": 4.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du har stabile slag med retning og dybde på både forhånd og baghånd i moderat tempo og bruger lob, smash og flugtninger med succes.", "en": "You have dependable strokes with direction and depth on both forehand and backhand at moderate pace and use lobs, smashes and volleys with success."}}, {"v": 4.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du varierer fart og spin, dækker banen godt og lægger en kampplan ud fra styrker og svagheder. Du slår førsteserven med kraft og præcision.", "en": "You vary pace and spin, cover the court well and plan matches around strengths and weaknesses. You hit your first serve with power and accuracy."}}, {"v": 5.0, "navn": {"da": "", "en": ""}, "tekst": {"da": "Du forudser slagene godt og vinder jævnligt point på korte bolde og med flugtninger. Du har dybde og spin på de fleste andenserver.", "en": "You anticipate shots well and regularly win points on short balls and at the net. You have depth and spin on most second serves."}}, {"v": 5.5, "navn": {"da": "", "en": ""}, "tekst": {"da": "Fart eller stabilitet er blevet dit store våben. Du kan skifte strategi og spillestil og slå sikre slag under pres.", "en": "Power or consistency has become your main weapon. You can change strategy and style of play and hit dependable shots under pressure."}}], "kilde": "det amerikanske tennisforbunds NTRP-skala (USTA, \"NTRP General Characteristics\"), oversat tæt.", "fodnote": {"da": "Skalaen er det amerikanske tennisforbunds NTRP. 6.0 er spillere med national rangering, 6.5 og 7.0 er verdensklasse.", "en": "The scale is the US Tennis Association's NTRP. 6.0 is nationally ranked players, 6.5 and 7.0 are world class."}}, "padel": {"niveauer": [{"v": 1.0, "navn": {"da": "Begynder", "en": "Beginner"}, "tekst": {"da": "Har ingen erfaring med padel.", "en": "No experience with padel."}}, {"v": 1.5, "navn": {"da": "Begynder", "en": "Beginner"}, "tekst": {"da": "Du har spillet få gange og kan reglerne. Du har endnu ikke lært at bruge glasset ordentligt og bruger det ikke, men kan så småt få nogle dueller i gang. Du mangler stadig kontrol i dit spil og har mangler i din basisteknik.", "en": "You have played a few times and know the rules. You have not yet learned to use the glass properly and do not use it, but you can start to get some rallies going. You still lack control in your game and have gaps in your basic technique."}}, {"v": 2.0, "navn": {"da": "Let øvet", "en": "Improver"}, "tekst": {"da": "Du spiller med nogen kontrol og bruger glasset oftere og oftere. Du har evt. erfaring fra anden ketchersport og har fordel af dette. Du kan have nogle gode kampe med forholdsvis lange dueller, når du møder nogen på eget niveau.", "en": "You play with some control and use the glass more and more. You may have experience from another racket sport and benefit from it. You can have some good matches with fairly long rallies against players at your own level."}}, {"v": 2.5, "navn": {"da": "Let øvet", "en": "Improver"}, "tekst": {"da": "Du er begyndt at spille med taktisk forståelse og kan bruge forskellige padelslag gennem kampen. Du spiller fint med i americanoer.", "en": "You have started to play with tactical understanding and can use different padel shots during a match. You keep up well in americanos."}}, {"v": 3.0, "navn": {"da": "Øvet", "en": "Intermediate"}, "tekst": {"da": "Du spiller regelmæssigt og med kontrol og sikkerhed i store dele af kampen. Dog har du stadig mange uprovokerede fejl i dit spil og spiller ofte for aggressivt.", "en": "You play regularly, with control and consistency for large parts of the match. You still make many unforced errors and often play too aggressively."}}, {"v": 3.5, "navn": {"da": "Øvet", "en": "Intermediate"}, "tekst": {"da": "Du spiller ugentligt og har færre uprovokerede fejl samt længere dueller. Du har forståelse for taktik og positionering på banen. Du kan bruge glasset og kontrollere farten i dine dueller. Du kan deltage i DPF 100-turneringer og spille 2. division i Lunar Ligaen.", "en": "You play weekly, make fewer unforced errors and have longer rallies. You understand tactics and positioning on court. You can use the glass and control the pace of your rallies. You can take part in DPF 100 tournaments and play in the 2nd division of the Lunar League."}}, {"v": 4.0, "navn": {"da": "Meget øvet", "en": "Advanced"}, "tekst": {"da": "Du spiller med stor sikkerhed og er på et godt niveau taktisk og teknisk. Du har evt. spillet flere DPF-turneringer. Du har niveau til DPF 200-turneringer og 1. division i Lunar Ligaen.", "en": "You play with great consistency and are at a good level tactically and technically. You may have played several DPF tournaments. You are at the level of DPF 200 tournaments and the 1st division of the Lunar League."}}, {"v": 4.5, "navn": {"da": "Meget øvet", "en": "Advanced"}, "tekst": {"da": "Du er seedet i DPF 200-turneringer eller spiller DPF 400-turneringer. Du har niveau til Elitedivisionen i Lunar Ligaen.", "en": "You are seeded in DPF 200 tournaments or play DPF 400 tournaments. You are at the level of the Elite Division of the Lunar League."}}, {"v": 5.0, "navn": {"da": "Elite", "en": "Elite"}, "tekst": {"da": "Du er seedet i DPF 400-turneringer og har niveau til Elitedivisionen i Lunar Ligaen.", "en": "You are seeded in DPF 400 tournaments and are at the level of the Elite Division of the Lunar League."}}, {"v": 5.5, "navn": {"da": "Elite", "en": "Elite"}, "tekst": {"da": "Landsholdsspillere.", "en": "National team players."}}], "kilde": "Padelracks beskrivelser af den danske padelskala (\"Den Nye Skala\"). Teksten er fra Lars 13. oktober 2026 kl. 12.27.", "fodnote": {"da": "Lavet af spillere og padelcentre til hele landet. Beskrivelserne er Padelracks. 6.0 og 7.0 er professionelle.", "en": "Made by players and padel centres for the whole country. The descriptions are Padelrack's. 6.0 and 7.0 are professionals."}}};
@@ -939,6 +947,22 @@ const sysTekst = (b) => {
   const k = 'sys_' + b.kode, r = t(k, b.p || {});
   return r === k ? (b.tekst || '') : r;
 };
+// Grupper for personale og frivillige i padel (8. november 2026): Padel på personalesiden åbner chatten og profilkortet her med
+// ?padel=1. Så viser siden kun gruppen eller profilkortet, og pilen tilbage går til Padel. Gælder også i produktionen,
+// hvor Grupper ellers ikke er gået live (konfig.js).
+const PADEL = /(^|[?&])padel=1(&|$)/.test(location.search);
+const PADEL_SIDE = '/personale/padel.html';
+if (PADEL) document.documentElement.classList.add('padel');
+function padelTilbage() {
+  if (!PADEL) return;
+  document.querySelectorAll('a.gr-tilbage[href="#"], #prTilbage').forEach((a) => {
+    a.setAttribute('href', PADEL_SIDE + (a.id === 'prTilbage' ? '#personer' : '#chat'));
+    a.removeAttribute('data-t'); a.innerHTML = '&#8592; Padel';
+  });
+  // Grupper og spillerbørsen er ikke gået live: teksten på Mit profilkort nævner dem ikke fra Padel (Lars 8. november 2026 kl. 08.56)
+  const intro = document.querySelector('#vProfil [data-t="prIntro"]');
+  if (intro) { intro.setAttribute('data-t', 'prIntroPadel'); intro.textContent = t('prIntroPadel'); }
+}
 // Firebase-opsætningen står i konfig.js (fælles for alle sider)
 const FB_VERSION = window.RTK_KONFIG.firebaseVersion;
 const CONFIG = window.RTK_KONFIG.firebase;
@@ -979,6 +1003,8 @@ Object.assign(window.MOTOR_EN, {
   'Gruppen kan ikke genskabes automatisk, fordi der ikke er gemt medlemmer fra før': 'The group cannot be restored automatically because no earlier members were saved',
   'Ingen af medlemmerne fra før kan være med i grupper længere': 'None of the earlier members can be in groups any more',
   'Gruppen er fuld (200 medlemmer)': 'The group is full (200 members)',
+  'Det kan man ikke i en gruppe for personale og frivillige. Klubbens administratorer tager folk med.': 'That is not possible in a group for staff and volunteers. The club administrators add people.',
+  'I en gruppe for personale og frivillige er det klubbens administratorer, der styrer gruppen.': 'In a group for staff and volunteers, the club administrators manage the group.',
   'Kun gruppeadministratorer og dem, der må invitere, kan se ansøgninger': 'Only group admins and members who may invite can see requests',
   'Gruppen tager ikke imod ansøgninger. Skriv til gruppeadministratorerne.': 'The group is not taking requests. Write to the group admins.',
   'Samtalen er blevet for lang. Send ansøgningen uden besked.': 'The conversation has become too long. Send the request without a message.',
@@ -1235,6 +1261,10 @@ async function start() {
 window.addEventListener('hashchange', () => { if (mig && mig.type === 'medlem') rute(); });
 function rute() {
   const h = location.hash.replace(/^#/, '').split('/');
+  // Fra Padel: kun en gruppe (og dens spil og afstemninger) og profilkortet. Alt andet går tilbage til Padel
+  if (PADEL && !(h[0] === 'g' && h[1]) && h[0] !== 'profil') { location.replace(PADEL_SIDE + '#chat'); return; }
+  // Fra Padel: ingen spil og afstemninger, kun chat, medlemmer og om (Lars 8. november 2026 kl. 08.55)
+  if (PADEL && h[0] === 'g' && h[2] && ['chat', 'medlemmer', 'om'].indexOf(h[2]) < 0) { location.replace('#g/' + h[1] + '/chat'); return; }
   stopLyt();
   prLuk();
   tilstand.retter = null; tilstand.aaben = null;
@@ -1486,17 +1516,24 @@ function tegnGruppe() {
   const g = tilstand.gruppe;
   if (!g) return;
   $('gNavn').textContent = g.navn;
+  // En gruppe for personale og frivillige: ingen invitationer, ansøgninger, spillerbørs eller valg af synlighed (rtk.css)
+  $('vGruppe').classList.toggle('personale', !!g.personale);
+  padelTilbage();
   tegnGbTop();
   const n = tilstand.medlemmer.length || (g.medlemsIder || []).length;
   $('gUnder').textContent = (n === 1 ? t('medlemmer1') : t('medlemmerN', { n })) + ' · ' + t(g.sport || 'tennis');
   const fan = $('faner'); fan.innerHTML = '';
-  FANER.forEach(([id, navn, panel]) => {
+  // En gruppe for personale har ingen fane med spil (Lars 8. november 2026 kl. 08.55: en rest fra Grupper)
+  const faner = g.personale ? FANER.filter((f) => f[0] !== 'spil') : FANER;
+  if (g.personale && tilstand.fane === 'spil') tilstand.fane = 'chat';
+  $('pSpil').classList.add('hidden');
+  faner.forEach(([id, navn, panel]) => {
     const b = K.el('button', { type: 'button', role: 'tab', id: 'fane-' + id, 'aria-controls': panel, 'aria-selected': String(tilstand.fane === id), tabindex: tilstand.fane === id ? '0' : '-1' }, t(navn, { n }));
     if (id === 'medlemmer' && g.ansoegNye && maaSeAns()) b.append(' ', K.el('span', { 'class': 'tal', 'aria-label': t('abTalAria', { n: g.ansoegNye }) }, String(g.ansoegNye)));
     b.addEventListener('click', () => { location.hash = 'g/' + g.id + '/' + id; });
     b.addEventListener('keydown', (e) => {
-      const i = FANER.findIndex((f) => f[0] === id);
-      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const j = (i + (e.key === 'ArrowRight' ? 1 : FANER.length - 1)) % FANER.length; location.hash = 'g/' + g.id + '/' + FANER[j][0]; setTimeout(() => { const f = $('fane-' + FANER[j][0]); if (f) f.focus(); }, 30); }
+      const i = faner.findIndex((f) => f[0] === id);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); const j = (i + (e.key === 'ArrowRight' ? 1 : faner.length - 1)) % faner.length; location.hash = 'g/' + g.id + '/' + faner[j][0]; setTimeout(() => { const f = $('fane-' + faner[j][0]); if (f) f.focus(); }, 30); }
     });
     fan.append(b);
     $(panel).classList.toggle('hidden', tilstand.fane !== id);
@@ -2229,7 +2266,11 @@ function tegnMedlemmer() {
   const orden = { admin: 0, inviter: 1, medlem: 2 };
   tilstand.medlemmer.slice().sort((a, b) => (orden[a.rolle] - orden[b.rolle]) || a.navn.localeCompare(b.navn)).forEach((m) => {
     const li = K.el('li');
-    li.append(avatar(m.id, m.navn), K.el('span', { 'class': 'gr-mnavn' }, m.id === mig.uid ? medDig(m.navn) : m.navn));
+    // Et tryk på et medlem viser profilkortet i et ark (Lars 8. november 2026)
+    const mk = K.el('button', { type: 'button', 'class': 'gr-mknap', 'aria-label': t('seProfil', { navn: m.navn }) });
+    mk.append(avatar(m.id, m.navn), K.el('span', { 'class': 'gr-mnavn' }, m.id === mig.uid ? medDig(m.navn) : m.navn));
+    mk.addEventListener('click', () => prArk(m.id, m.navn));
+    li.append(mk);
     if (erAdmin() && m.id !== mig.uid) {
       const sel = K.el('select', { 'class': 'gr-rolle', 'aria-label': t('rolleFor', { navn: m.navn }) });
       ROLLER.forEach(([v, n]) => { const o = K.el('option', { value: v }, t(n)); if (v === m.rolle) o.selected = true; sel.append(o); });
@@ -3589,8 +3630,8 @@ function stopEgne() {
   egInvLyt = null; egSamLyt = null; egProfLyt = null;
   if (egFuld) prLuk();
   eg.inv = {}; eg.sam = {}; eg.prof = {}; eg.profVent = {}; eg.mini = {}; eg.venter = {}; eg.invVenter = {}; eg.kladde = {}; eg.invStatus = {}; eg.mit = null;
-  eg.mitNavn = ''; eg.ny = null; eg.prTekstRet = false; eg.prVenter = null; eg.o = null; eg.prTravl = false; eg.travl = false;
-  ['soTitel', 'soTekst', 'prTekst'].forEach((id) => { const e = document.getElementById(id); if (e) e.value = ''; });
+  eg.mitNavn = ''; eg.ny = null; eg.prTekstRet = false; eg.prKontaktRet = false; eg.prVenter = null; eg.o = null; eg.prTravl = false; eg.travl = false;
+  ['soTitel', 'soTekst', 'prTekst', 'prMobil', 'prMail'].forEach((id) => { const e = document.getElementById(id); if (e) e.value = ''; });
   clearTimeout(eg.genLyt);
 }
 
@@ -3702,41 +3743,23 @@ function prBilleder(p) {
  * linje: fx dage og tidsrum fra et opslag.
  */
 function prKort(pid, navn, linje, egen) {
-  const k = K.el('div', { 'class': 'pr-kort' });
+  // Det fælles profilkort med Om mig, Niveau og Billeder (site/profilkort.js, Lars 8. november 2026). Fuld skærm er prVis her
+  const k = K.el('div', { 'class': 'pk-hold' });
   const tegn = (p) => {
     k.innerHTML = '';
-    const billeder = prBilleder(p);
-    const hoved = K.el('div', { 'class': 'pr-hoved' });
-    if (p && p.billede) {
-      const b = K.el('button', { type: 'button', 'class': 'pr-billede', 'aria-label': t('prVisBillede', { navn }) });
-      b.style.backgroundImage = 'url("' + p.billede + '")';
-      b.addEventListener('click', () => prVis(pid, navn, billeder, 0));
-      hoved.append(b);
-    } else hoved.append(K.el('span', { 'class': 'pr-billede tom', 'aria-hidden': 'true', style: 'background:' + farve(pid) }, initialer(navn)));
-    const midt = K.el('div', { 'class': 'pr-midt' });
-    midt.append(K.el('div', { 'class': 'pr-navn' }, navn + (egen ? ' (' + t('dig') + ')' : '')));
-    const tags = K.el('div', { 'class': 'sb-tags' });
-    ['tennis', 'padel'].forEach((s) => { const v = p && p.niveau && p.niveau[s]; if (v) tags.append(K.el('span', { 'class': 'sb-tag' }, nivTag(s, v))); });
-    if (linje) tags.append(K.el('span', { 'class': 'sb-tag' }, linje));
-    if (tags.childNodes.length) midt.append(tags);
-    if (p && p.tekst) midt.append(K.el('p', { 'class': 'pr-tekst' }, p.tekst));
-    hoved.append(midt); k.append(hoved);
-    const ekstra = billeder.filter((x) => x.i > 0);
-    if (ekstra.length) {
-      const r = K.el('div', { 'class': 'pr-ekstra' });
-      ekstra.forEach((x) => {
-        const b = K.el('button', { type: 'button', 'aria-label': t('prVisBilledeN', { navn, n: billeder.indexOf(x) + 1 }) });
-        b.style.backgroundImage = 'url("' + x.thumb + '")';
-        b.addEventListener('click', () => prVis(pid, navn, billeder, billeder.indexOf(x)));
-        r.append(b);
-      });
-      k.append(r);
-    }
+    k.append(RTKPK.kort({ pid, navn, linje, p, egen: egen ? t('dig') : '', sprog: nivSprog(), farve: farve(pid), initialer: initialer(navn),
+      betegnelse: (s, v) => { const n = nivFind(s, v); return n ? n.navn[nivSprog()] : ''; },
+      onBillede: (bil, i) => prVis(pid, navn, bil, i) }));
   };
   const c = eg.prof[pid];
   tegn(c ? c.p : null);
   prHent(pid).then((p) => { if (k.isConnected || !c) tegn(p); });
   return k;
+}
+/** Et medlems profilkort i et ark nedefra (et tryk på et medlem i gruppen, Lars 8. november 2026). */
+function prArk(pid, navn) {
+  const a = RTKPK.ark(nivSprog(), navn);
+  a.krop.append(prKort(pid, navn, '', !!mig && String(pid) === String(mig.uid)));
 }
 
 // ---------- Billedet i fuld skærm. Viser det lille billede med det samme og det store, når det er hentet
@@ -4180,18 +4203,19 @@ function visProfil() {
   $('prTilbage').setAttribute('href', prFra || '#');
   $('prTilbage').setAttribute('data-t', prFra === '#boers' ? 'sbTilbage' : prFra === '#find' ? 'abTilbage' : 'tilbage');
   $('prTilbage').textContent = t($('prTilbage').getAttribute('data-t'));
+  if (typeof padelTilbage === 'function') padelTilbage(); // fra Padel går pilen tilbage til Personer
   lytEgne();
   eg.sletKlar = false;
   K.besked($('prMsg'), '');
   if (!eg.mitNavn) K.motor('kerne', 'mig').then((p) => { eg.mitNavn = p.navn; tegnProfil(); }).catch(() => {});
   tegnProfil();
 }
-function prEgne() { const p = eg.mit || {}; return { billede: p.billede || '', ekstra: [0, 1, 2].map((i) => (p.ekstra || [])[i] || ''), tekst: p.tekst || '', niveau: Object.assign({}, p.niveau || {}) }; }
+function prEgne() { const p = eg.mit || {}; return { billede: p.billede || '', ekstra: [0, 1, 2].map((i) => (p.ekstra || [])[i] || ''), tekst: p.tekst || '', niveau: Object.assign({}, p.niveau || {}), mobil: p.mobil || '', mail: p.mail || '' }; }
 function tegnProfil() {
   if (!mig || $('vProfil').classList.contains('hidden')) return;
   const p = Object.assign(prEgne(), eg.prVenter || {});
   // Billede og kort introduktion, så længe kortet er helt tomt (ikke mens profilen hentes, så den ikke blinker)
-  $('prTom').classList.toggle('hidden', eg.mit === null || !!(p.billede || p.ekstra.some(Boolean) || p.tekst || Object.keys(p.niveau).some((k) => p.niveau[k])));
+  $('prTom').classList.toggle('hidden', eg.mit === null || !!(p.billede || p.ekstra.some(Boolean) || p.tekst || p.mobil || p.mail || Object.keys(p.niveau).some((k) => p.niveau[k])));
   const pl = $('prPlads'); pl.innerHTML = '';
   [p.billede].concat(p.ekstra).forEach((x, i) => {
     const felt = K.el('div', { 'class': 'pr-plads' + (i === 0 ? ' hoved' : '') });
@@ -4216,6 +4240,7 @@ function tegnProfil() {
   });
   const ta = $('prTekst');
   if (document.activeElement !== ta && !eg.prTekstRet) ta.value = p.tekst;
+  if (!eg.prKontaktRet) { if (document.activeElement !== $('prMobil')) $('prMobil').value = p.mobil; if (document.activeElement !== $('prMail')) $('prMail').value = p.mail; }
   ['tennis', 'padel'].forEach((s) => {
     const sel = $(s === 'tennis' ? 'prNivTennis' : 'prNivPadel');
     if (document.activeElement !== sel || sel.dataset.sprog !== nivSprog()) nivSelect(sel, s, p.niveau[s] || '', t('prIkkeAngivet'));
@@ -4313,6 +4338,15 @@ async function prGemNiveau(sport, v) {
 $('prNivTennis').addEventListener('change', () => prGemNiveau('tennis', $('prNivTennis').value));
 $('prNivPadel').addEventListener('change', () => prGemNiveau('padel', $('prNivPadel').value));
 $('prTekst').addEventListener('input', () => { eg.prTekstRet = true; });
+// Telefonnummer og mail på profilkortet (Lars 8. november 2026 kl. 08.58: frivilligt, alle voksne medlemmer kan se det, man skriver selv)
+['prMobil', 'prMail'].forEach((id) => $(id).addEventListener('input', () => { eg.prKontaktRet = true; }));
+$('prGemKontakt').addEventListener('click', async () => {
+  const mobil = $('prMobil').value.replace(/\s+/g, ' ').trim(), mail = $('prMail').value.trim();
+  if (mobil && (!/^\+?[0-9 ]{8,20}$/.test(mobil) || mobil.replace(/\D/g, '').length < 8)) { K.besked($('prMsg'), t('prMobilFejl'), 'err'); $('prMobil').focus(); return; }
+  if (mail && (mail.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail))) { K.besked($('prMsg'), t('prMailFejl'), 'err'); $('prMail').focus(); return; }
+  K.besked($('prMsg'), t('gemmer'));
+  try { await prGem({ mobil, mail }); eg.prKontaktRet = false; K.besked($('prMsg'), t('gemt'), 'okm'); } catch (err) { fejl($('prMsg'), err); }
+});
 $('prGemTekst').addEventListener('click', async () => {
   const v = $('prTekst').value.trim().slice(0, 300);
   K.besked($('prMsg'), t('gemmer'));

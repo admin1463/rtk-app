@@ -22,6 +22,9 @@
       pers: 'PERSONALE',
       aiP: 'Ace er en AI og kan tage fejl. Den svarer ud fra siderne i Mit RTK og personalesiderne, klubbens hjemmeside og infoskærmen. Den kan ikke se data og kender ingen koder.',
       hej2P: 'Spørg mig om personalesiderne eller om klubben. Jeg kan ikke se data og kender ingen koder.',
+      // På padelsiden kender Ace aftalen og padelfanerne efter rollen (Lars 9. november 2026 kl. 15.02)
+      aiPadel: 'Ace er en AI og kan tage fejl. Den svarer ud fra siderne i Mit RTK, klubbens hjemmeside og infoskærmen og på padelsiden også ud fra aftalen med PADELPIT og padelfanerne, efter din rolle. Den kender ingen koder.',
+      hej2Padel: 'Spørg mig om padel, fx kalenderen, referaterne eller aftalen med PADELPIT. Jeg ser kun det, du selv kan se, og kender ingen koder.',
       sendHP: 'Send spørgsmålet til administratorerne', sendTP: 'Går til klubbens administratorer med dit navn og din mail, så de kan svare dig. Samtalen med Ace sendes med.',
       sendtP: 'Sendt til administratorerne. De svarer dig på mail.'
     },
@@ -88,7 +91,8 @@
     p_opstrengning: ['Hvordan melder jeg en ketsjer klar?', 'Hvad gør jeg, når jeg har tømt skabet?', 'Hvordan laver jeg en ny kode til skabet?', 'Noget virker ikke'],
     p_bolde: ['Hvordan tager jeg bolde til træning?', 'Hvordan fortryder jeg?', 'Hvordan tæller jeg lageret op?', 'Noget virker ikke'],
     p_arbejdstoej: ['Hvordan vælger jeg mit arbejdstøj?', 'Hvordan finder jeg min skostørrelse?', 'Hvad sker der, når fristen udløber?', 'Noget virker ikke'],
-    p_privattimer: ['Hvordan åbner jeg ledige tider?', 'Hvordan svarer jeg på en forespørgsel?', 'Hvordan kvitterer jeg for en time?', 'Noget virker ikke']
+    p_privattimer: ['Hvordan åbner jeg ledige tider?', 'Hvordan svarer jeg på en forespørgsel?', 'Hvordan kvitterer jeg for en time?', 'Noget virker ikke'],
+    p_padel: ['Hvornår er der træning hos PADELPIT?', 'Hvilke frister kommer snart?', 'Hvad står der i det seneste mødereferat?', 'Noget virker ikke']
   };
   function forslag() { return PERSONALE ? (FORSLAG_P[SIDE] || ['Hvad kan jeg på denne side?', 'Hvad kan jeg på personalesiden?', 'Noget virker ikke']) : ['f1', 'f2', 'f3', 'f4'].map(function (k) { return t(k); }); }
 
@@ -245,10 +249,10 @@
     nyK.addEventListener('click', nySamtale);
     top.appendChild(img); top.appendChild(tt); top.appendChild(nyK); top.appendChild(lukK);
     var log = el('div', 'ace-log'); log.id = 'aceLog'; log.setAttribute('aria-live', 'polite');
-    log.appendChild(el('p', 'ace-ai', t(PERSONALE ? 'aiP' : 'ai')));
+    log.appendChild(el('p', 'ace-ai', t(SIDE === 'p_padel' ? 'aiPadel' : PERSONALE ? 'aiP' : 'ai')));
     var hej = el('div', 'bob ace');
     hej.appendChild(el('p', '', t('hej', { navn: (A.start && A.start.fornavn) || '' }).replace('  ', ' ').replace(' .', '.')));
-    hej.appendChild(el('p', '', t(PERSONALE ? 'hej2P' : 'hej2')));
+    hej.appendChild(el('p', '', t(SIDE === 'p_padel' ? 'hej2Padel' : PERSONALE ? 'hej2P' : 'hej2')));
     log.appendChild(hej);
     var fs = el('div', 'ace-forslag'); fs.id = 'aceForslag';
     forslag().forEach(function (tekst) {
@@ -314,6 +318,12 @@
   }
   function rul() { if (A.log) A.log.scrollTop = A.log.scrollHeight; }
 
+  // Et link til den side, man står på, skifter kun fanen bag Ace. Så lukker Ace, så man ser den (Lars 9. november 2026 kl. 15.02)
+  function sammeSide(u) { return /^\//.test(u) && u.split('#')[0] === location.pathname; }
+  function link(a, u) {
+    if (/^https?:/.test(u)) { a.target = '_blank'; a.rel = 'noopener'; return; }
+    a.addEventListener('click', function () { window.RTK_ACE = false; if (sammeSide(u)) setTimeout(luk, 0); });
+  }
   function bobMig(tekst) { var b = el('div', 'bob mig', tekst); A.log.appendChild(b); rul(); }
   function bobAce(s) {
     var b = el('div', 'bob ace');
@@ -323,7 +333,7 @@
       k.appendChild(document.createTextNode((s.kilder.length > 1 ? t('kilder') : t('kilde')) + ': '));
       s.kilder.forEach(function (x, i) {
         if (i) k.appendChild(document.createTextNode(' · '));
-        if (linkOk(x.url)) { var a = el('a', '', x.titel); a.href = linkOk(x.url); if (/^https?:/.test(x.url)) { a.target = '_blank'; a.rel = 'noopener'; } k.appendChild(a); }
+        if (linkOk(x.url)) { var a = el('a', '', x.titel); a.href = linkOk(x.url); link(a, x.url); k.appendChild(a); }
         else k.appendChild(document.createTextNode(x.titel));
       });
       b.appendChild(k);
@@ -331,8 +341,7 @@
     if (s.knap && linkOk(s.knap.url)) {
       var r = el('div', 'ace-chips');
       var a2 = el('a', 'ace-chip', s.knap.tekst); a2.href = s.knap.url;
-      if (/^https?:/.test(s.knap.url)) { a2.target = '_blank'; a2.rel = 'noopener'; }
-      a2.addEventListener('click', function () { if (!/^https?:/.test(s.knap.url)) { window.RTK_ACE = false; } });
+      link(a2, s.knap.url);
       r.appendChild(a2); b.appendChild(r);
     }
     A.log.appendChild(b); rul();
