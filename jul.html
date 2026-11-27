@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="da">
 <head>
-<meta name="rtk-version" content="2d81b72b1a93">
+<meta name="rtk-version" content="8c30e1a4429b">
 <script src="/opdater.js?v=f299a739b234" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -294,6 +294,7 @@ async function aabn(fraLink) {
   lyt();
   if (fraLink) S.velkommen = true;
   rute();
+  flytPush();
   // jul.html?tid=1 viser, hvor mange millisekunder der gik, før indholdet stod der
   if (/[?&]tid=1/.test(location.search)) {
     const vis = () => { const b = document.createElement('pre'); b.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:3000;background:#0B3D3A;color:#fff;font-size:12px;padding:6px 8px;border-radius:6px;margin:0'; b.textContent = 'Indhold efter ' + Math.round(performance.now()) + ' ms'; document.body.append(b); };
@@ -439,21 +440,34 @@ function tegnPush() {
   bx.innerHTML = h;
   if ($('pushTil')) $('pushTil').addEventListener('click', slaaPushTil);
 }
+// Telefonen registreres som julefrokostens (kilde jul), så den kun får beskeder om julefrokosten. Er notifikationer
+// også slået til fra Mit RTK i samme browser (rtk.push.id), er det samme nøgle, og så får den alt som før (27. november 2026).
+async function registrerPush() {
+  const reg = await navigator.serviceWorker.register('firebase-messaging-sw.js', { scope: '/' });
+  await navigator.serviceWorker.ready;
+  const base = 'https://www.gstatic.com/firebasejs/' + KONFIG.firebaseVersion + '/';
+  const [a, m] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-messaging.js')]);
+  const app = a.getApps().find((x) => x.name === 'push') || a.initializeApp(KONFIG.firebase, 'push');
+  const t = await m.getToken(m.getMessaging(app), { vapidKey: KONFIG.vapid, serviceWorkerRegistration: reg });
+  if (!t) throw new Error('ingen nøgle');
+  const ua = navigator.userAgent;
+  const d = { token: t, enhed: /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) ? 'iPad' : /Android/.test(ua) ? 'Android' : 'Computer' };
+  if (!hent('rtk.push.id')) d.kilde = 'jul';
+  const r = await motor('push', 'registrer', d, nyId());
+  gem('rtk.jul.push', r.id); // rtk.push.id hører til Mit RTK og røres ikke (gennemgangen, fund 3)
+  gem('rtk.jul.kilde', '1');
+}
+// Telefoner, der blev slået til før 27. november, registreres igen i stilhed, så de får kilden jul
+function flytPush() {
+  if (!pushSlaaet() || hent('rtk.jul.kilde')) return;
+  registrerPush().catch((err) => console.warn('push flyt', err));
+}
 async function slaaPushTil() {
   const msg = $('pushMsg'); msg.textContent = 'Slår til …'; msg.className = 'msg jf-msg';
   try {
     const svar = await Notification.requestPermission();
     if (svar !== 'granted') { msg.textContent = 'Telefonen sagde nej til notifikationer.'; msg.className = 'msg err jf-msg'; return; }
-    const reg = await navigator.serviceWorker.register('firebase-messaging-sw.js', { scope: '/' });
-    await navigator.serviceWorker.ready;
-    const base = 'https://www.gstatic.com/firebasejs/' + KONFIG.firebaseVersion + '/';
-    const [a, m] = await Promise.all([import(base + 'firebase-app.js'), import(base + 'firebase-messaging.js')]);
-    const app = a.getApps().find((x) => x.name === 'push') || a.initializeApp(KONFIG.firebase, 'push');
-    const t = await m.getToken(m.getMessaging(app), { vapidKey: KONFIG.vapid, serviceWorkerRegistration: reg });
-    if (!t) throw new Error('ingen nøgle');
-    const ua = navigator.userAgent;
-    const r = await motor('push', 'registrer', { token: t, enhed: /iPhone/.test(ua) ? 'iPhone' : /iPad/.test(ua) ? 'iPad' : /Android/.test(ua) ? 'Android' : 'Computer' }, nyId());
-    gem('rtk.jul.push', r.id); // rtk.push.id hører til Mit RTK og røres ikke (gennemgangen, fund 3)
+    await registrerPush();
     tegnPush();
   } catch (err) { console.warn('push', err); msg.textContent = 'Det lykkedes ikke. Prøv igen om lidt.'; msg.className = 'msg err jf-msg'; }
 }
@@ -875,7 +889,7 @@ function bindProg() {
 async function logUd() {
   const jul = hent('rtk.jul.token');
   try { if (jul) await motor('kerne', 'logud', hent('rtk.jul.push') ? { pushId: hent('rtk.jul.push') } : {}); } catch (e) {}
-  gem('rtk.jul.token', null); gem('rtk.jul.push', null); gem('rtk.jul.fb', null); gem(START_K, null);
+  gem('rtk.jul.token', null); gem('rtk.jul.push', null); gem('rtk.jul.kilde', null); gem('rtk.jul.fb', null); gem(START_K, null);
   history.replaceState(null, '', location.pathname + '#program');
   try { if (S.fb) await S.fb.auth.signOut(S.fb.au); } catch (e) {}
   S.lyt.forEach((x) => x()); S.lyt = []; S.bid = '';

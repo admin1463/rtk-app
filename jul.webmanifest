@@ -2,7 +2,7 @@
  "name": "Julefrokost",
  "short_name": "Julefrokost",
  "lang": "da",
- "scope": "/",
+ "scope": "/jul.html",
  "display": "standalone",
  "background_color": "#FFFFFF",
  "theme_color": "#0B3D3A",
